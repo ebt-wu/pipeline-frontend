@@ -1,0 +1,14 @@
+<fdp-dynamic-page ariaLabel="Example Dynamic Page">
+  <fdp-dynamic-page-title [title]="pageTitle">
+  </fdp-dynamic-page-title>
+  <fdp-dynamic-page-header
+      [collapsible]="true"
+      [pinnable]="true"
+      [collapsed]="false"
+  >
+  </fdp-dynamic-page-header>
+  <fdp-dynamic-page-content id="basic">
+      <p>Counter: {{ counter | async }}</p>
+      <button (click)="countUp()">Count up</button>
+  </fdp-dynamic-page-content>
+</fdp-dynamic-page>

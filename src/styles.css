@@ -1,0 +1,23 @@
+@import '~@angular/cdk/a11y-prebuilt.css';
+
+/* Add SAP-fonts required by SAP Fundamental Styles */
+@font-face {
+  font-family: '72';
+  src: url('~@sap-theming/theming-base-content/content/Base/baseLib/baseTheme/fonts/72-Regular-full.woff2')
+    format('woff2');
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: '72';
+  src: url('~@sap-theming/theming-base-content/content/Base/baseLib/baseTheme/fonts/72-Bold-full.woff2')
+    format('woff2');
+  font-weight: 700;
+  font-style: normal;
+}
+
+/* Reset for body element */
+body {
+  margin: 0;
+}

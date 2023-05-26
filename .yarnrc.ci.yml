@@ -1,0 +1,9 @@
+nodeLinker: node-modules
+
+yarnPath: .yarn/releases/yarn-3.0.0.cjs
+
+npmScopes:
+  dxp:
+    npmAlwaysAuth: true
+    npmRegistryServer: https://common.repositories.cloud.sap/artifactory/api/npm/deploy-releases-hyperspace-npm
+    npmAuthToken: "${REGISTRY_REFERENCE_TOKEN}"
