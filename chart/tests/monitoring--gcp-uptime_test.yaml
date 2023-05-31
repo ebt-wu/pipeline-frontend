@@ -1,0 +1,13 @@
+suite: Test the GCP Pub/Sub from the Helm DXP Library
+templates:
+  - gcp-monitoring.yaml
+values:
+  - ../values.yaml
+  - ../stack-values.yaml
+release:
+  name: extension-manager-ui-dev
+  namespace: root-universe
+tests:
+  - it: Default Uptime Check for Extension Manager UI Site matches the Snapshot
+    asserts:
+      - matchSnapshot: {}

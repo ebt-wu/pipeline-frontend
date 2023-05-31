@@ -12,10 +12,11 @@
     "esModuleInterop": true,
     "moduleResolution": "node",
     "importHelpers": true,
-    "target": "es2015",
-    "module": "es2020",
+    "target": "ES2022",
+    "module": "ES2022",
     "resolveJsonModule": true,
-    "lib": ["es2019", "dom", "esnext.asynciterable"],
-    "allowSyntheticDefaultImports": true
+    "lib": ["ES2022", "dom", "esnext.asynciterable"],
+    "allowSyntheticDefaultImports": true,
+    "useDefineForClassFields": false
   }
 }

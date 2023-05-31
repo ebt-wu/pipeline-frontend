@@ -1,0 +1,11 @@
+suite: Microfrontend Test Suite
+templates:
+  - extensions.yaml
+values:
+  - ../values.yaml
+  - ../stack-values.yaml
+tests:
+  - it: Test Extension matches the snapshot
+    template: extensions.yaml
+    asserts:
+      - matchSnapshot: {}
