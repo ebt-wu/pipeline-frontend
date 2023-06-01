@@ -8,7 +8,6 @@
   >
   </fdp-dynamic-page-header>
   <fdp-dynamic-page-content id="basic">
-      <p>Counter: {{ counter | async }}</p>
-      <button (click)="countUp()">Count up</button>
+      <span>{{ userId | async }}</span>
   </fdp-dynamic-page-content>
 </fdp-dynamic-page>

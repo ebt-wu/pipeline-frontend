@@ -1870,15 +1870,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@dxp/config-prettier@npm:1.0.2":
-  version: 1.0.2
-  resolution: "@dxp/config-prettier@npm:1.0.2::__archiveUrl=https%3A%2F%2Fcommon.repositories.cloud.sap%2Fartifactory%2Fapi%2Fnpm%2Fdeploy-releases-hyperspace-npm%2F%40dxp%2Fconfig-prettier%2F-%2F%40dxp%2Fconfig-prettier-1.0.2.tgz"
-  peerDependencies:
-    prettier: ^2.4.1
-  checksum: 9688eb38f0996b94aacf216e98051b2f7ea57ceac88a86440e7120055827739a7762736a5aed4447b89b28fe16dda9a1da676d8461137dc85ba0d74b88d624cd
-  languageName: node
-  linkType: hard
-
 "@dxp/eslint-config-angular@npm:1.0.2":
   version: 1.0.2
   resolution: "@dxp/eslint-config-angular@npm:1.0.2::__archiveUrl=https%3A%2F%2Fcommon.repositories.cloud.sap%2Fartifactory%2Fapi%2Fnpm%2Fdeploy-releases-hyperspace-npm%2F%40dxp%2Feslint-config-angular%2F-%2F%40dxp%2Feslint-config-angular-1.0.2.tgz"
@@ -9490,7 +9481,6 @@ __metadata:
     "@angular/platform-browser": 15.2.8
     "@angular/platform-browser-dynamic": 15.2.8
     "@angular/router": 15.2.8
-    "@dxp/config-prettier": 1.0.2
     "@dxp/eslint-config-angular": 1.0.2
     "@dxp/ngx-core": 0.15.6
     "@dynatrace/dtrum-api-types": 1.257.2
