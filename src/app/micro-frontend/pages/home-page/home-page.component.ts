@@ -34,13 +34,15 @@ export class HomePageComponent implements OnInit {
             body: JSON.stringify({
                 query: `query Version($projectId: String!){version(projectId: $projectId)}`,
                 variables: {
-                    projectId: context.projectId!,
+                    projectId: context.projectId,
                 },
             }),
         });
 
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
         const { data } = await result.json();
 
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-argument,@typescript-eslint/no-unsafe-member-access
         this.userId.next(data.version);
     }
 
