@@ -3,4 +3,4 @@ protocol: https
 
 site:
   enable: true
-  cdmPath: /assets/cdm.json
+  cdmPath: /en/assets/cdm.json
