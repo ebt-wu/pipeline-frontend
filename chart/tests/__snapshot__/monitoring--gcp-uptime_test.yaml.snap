@@ -8,7 +8,7 @@ Default Uptime Check for Extension Manager UI Site matches the Snapshot:
     spec:
       displayName: HTTP Uptime Config for [extension-manager-ui-dev]
       httpCheck:
-        path: /assets/cdm.json
+        path: /en/assets/cdm.json
         requestMethod: GET
         useSsl: true
         validateSsl: true
