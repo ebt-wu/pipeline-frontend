@@ -45,12 +45,6 @@ testem.log
 .DS_Store
 Thumbs.db
 
-.yarn/*
-!.yarn/patches
-!.yarn/releases
-!.yarn/plugins
-!.yarn/sdks
-!.yarn/versions
 
 .eslintcache
 
