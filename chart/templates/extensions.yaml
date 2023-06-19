@@ -1,0 +1,33 @@
+{{- if .Values.site.enable }}
+apiVersion: extensions.dxp.sap.com/v1alpha1
+kind: ExtensionClass
+metadata:
+  name: pipeline-ui
+  namespace: root-universe
+spec:
+  cdmUrl: {{ .Values.protocol }}://{{ .Values.site.domain }}{{ .Values.site.cdmPath }}
+  description: Enables hyperspace pipeline management.
+  displayName: Pipelines
+  supportsDynamicCdmUrls: false
+  multipleInstallations: false
+  {{- if .Values.documentation }}
+  documentation:
+    url: {{ .Values.documentation.url }}
+  {{- end }}
+  image: "{{ .Files.Get "assets/image.base64.txt" }}"
+  cdm:
+  - url: {{ .Values.protocol }}://{{ .Values.site.domain }}{{ .Values.site.cdmPath }}
+  installableScopes:
+    - Cluster
+---
+apiVersion: extensions.dxp.sap.com/v1alpha1
+kind: ExtensionInstance
+metadata:
+  name: pipeline-ui
+  namespace: root-universe
+spec:
+  displayName: Pipelines
+  extensionRef:
+    name: pipeline-ui
+    namespace: root-universe
+{{- end }}

@@ -1,0 +1,11 @@
+# Stack values are provided by the stack definition, this should only serve as a guideline on what requires to be
+# provided in the Argo Application which defines this Chart
+
+domain:
+  name: dev.dxp.k8s.ondemand.com
+
+site:
+  domain: test-domain
+
+gcp:
+  projectId: "sap-gcp-dxp-test"

@@ -1,0 +1,10 @@
+apiVersion: v2
+appVersion: "1.0"
+description: Basic helm chart containing the extension for the pipeline-ui
+name: pipeline-ui
+version: 0.0.1
+
+dependencies:
+  - name: helm-dxp
+    version: 0.1.17
+    repository: oci://europe-docker.pkg.dev/sap-gcp-dxp-prod/dxp-eu/com.sap.dxp/helm-dxp/helm

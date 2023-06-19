@@ -1,0 +1,58 @@
+{
+  "_version": "3.0",
+  "payload": {
+    "visualizations": {
+      "LuigiNavConfig": {
+        "vizType": "sap.luigi.node",
+        "vizConfig": {
+          "viewGroup": {
+            "preloadSuffix": "/#/preload",
+            "requiredIFramePermissions": {
+              "allow": ["clipboard-read", "clipboard-write"]
+            }
+          },
+          "nodes": [
+            {
+              "pathSegment" : "pipeline-ui",
+              "label" : "pipeline-ui",
+              "urlSuffix" : "/{i18n.currentLocale}/#/pipeline-ui",
+              "hideSideNav": false,
+              "icon": "lab",
+              "entityType": "project.component"
+            }
+          ]
+        }
+      }
+    },
+    "targetAppConfig": {
+      "_version": "1.13.0",
+      "sap.integration": {
+        "navMode": "inplace",
+        "urlTemplateId": "urltemplate.url",
+        "urlTemplateParams": {
+          "query": {}
+        }
+      }
+    }
+  },
+  "texts": [
+    {
+      "locale": "",
+      "textDictionary": {
+        "pipeline-ui": "pipeline-ui"
+      }
+    },
+    {
+      "locale": "en",
+      "textDictionary": {
+        "pipeline-ui": "pipeline-ui"
+      }
+    },
+    {
+      "locale": "de",
+      "textDictionary": {
+        "pipeline-ui": "pipeline-ui"
+      }
+    }
+  ]
+}

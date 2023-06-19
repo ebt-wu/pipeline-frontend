@@ -1,0 +1,6 @@
+# default values - might be overwritten by the stack
+protocol: https
+
+site:
+  enable: true
+  cdmPath: /en/assets/cdm.json

@@ -1,0 +1,15 @@
+kind: Component
+metadata:
+  displayName: 'pipeline-ui'
+  description: 'Provide hyperspace pipelines for the hyperspace-portal'
+spec:
+  type:
+    name: ui
+    categories:
+      - dxp
+      - angular
+      - luigi
+  team:
+    name: ''
+    productOwner: ''
+    technicalOwner: ''

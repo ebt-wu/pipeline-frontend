@@ -1,0 +1,156 @@
+{
+  "$schema": "./node_modules/@angular/cli/lib/config/schema.json",
+  "version": 1,
+  "newProjectRoot": "projects",
+  "projects": {
+    "pipeline-ui": {
+      "projectType": "application",
+      "schematics": {},
+      "root": "",
+      "sourceRoot": "src",
+      "prefix": "app",
+      "i18n": {
+        "sourceLocale": "en-US",
+        "locales": {
+          "en": "src/locale/messages.xlf",
+          "de": "src/locale/messages.de.xlf"
+        }
+      },
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-angular:browser",
+          "options": {
+            "localize": ["en-US", "de"],
+            "outputPath": "dist/pipeline-ui",
+            "index": "src/index.html",
+            "main": "src/main.ts",
+            "polyfills": "src/polyfills.ts",
+            "tsConfig": "tsconfig.app.json",
+            "aot": true,
+            "assets": [
+              "src/favicon.ico",
+              "src/assets",
+              {
+                "glob": "**/css_variables.css",
+                "input": "./node_modules/@sap-theming/theming-base-content/content/Base/baseLib/",
+                "output": "./assets/theming-base/"
+              },
+              {
+                "glob": "**/*",
+                "input": "./node_modules/fundamental-styles/dist/theming/",
+                "output": "./assets/fundamental-styles-theming/"
+              }
+            ],
+            "styles": [
+              "src/styles.css",
+              "node_modules/fundamental-styles/dist/icon.css",
+              {
+                "input": "src/theming/sap_fiori_3_fonts.css",
+                "inject": false,
+                "bundleName": "sap_fiori_3_fonts"
+              },
+              {
+                "input": "src/theming/sap_horizon_fonts.css",
+                "inject": false,
+                "bundleName": "sap_horizon_fonts"
+              }
+            ],
+            "scripts": [],
+            "allowedCommonJsDependencies": [
+              "graphql-tag",
+              "hammerjs",
+              "zen-observable"
+            ]
+          },
+          "configurations": {
+            "production": {
+              "fileReplacements": [
+                {
+                  "replace": "src/environments/environment.ts",
+                  "with": "src/environments/environment.prod.ts"
+                }
+              ],
+              "optimization": true,
+              "outputHashing": "all",
+              "sourceMap": false,
+              "namedChunks": false,
+              "extractLicenses": true,
+              "vendorChunk": false,
+              "buildOptimizer": true,
+              "budgets": [
+                {
+                  "type": "initial",
+                  "maximumWarning": "2mb",
+                  "maximumError": "5mb"
+                },
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "6kb",
+                  "maximumError": "10kb"
+                }
+              ]
+            },
+            "development": {
+              "buildOptimizer": false,
+              "optimization": false,
+              "vendorChunk": true,
+              "extractLicenses": false,
+              "sourceMap": true,
+              "namedChunks": true,
+              "localize": false
+            },
+            "de": {
+              "localize": ["de"]
+            },
+            "en": {
+              "localize": ["en-US"]
+            }
+          }
+        },
+        "serve": {
+          "builder": "@angular-devkit/build-angular:dev-server",
+          "options": {
+            "browserTarget": "pipeline-ui:build"
+          },
+          "defaultConfiguration": "development",
+          "configurations": {
+            "production": {
+              "browserTarget": "pipeline-ui:production"
+            },
+            "development": {
+              "browserTarget": "pipeline-ui:build:development"
+            },
+            "e2e-test": {
+              "browserTarget": "pipeline-ui:build:e2e-test"
+            },
+            "de": {
+              "browserTarget": "pipeline-ui:build:de"
+            },
+            "en": {
+              "browserTarget": "pipeline-ui:build:en"
+            }
+          }
+        },
+        "extract-i18n": {
+          "builder": "@angular-devkit/build-angular:extract-i18n",
+          "options": {
+            "browserTarget": "pipeline-ui:build"
+          }
+        },
+        "lint": {
+          "builder": "@angular-eslint/builder:lint",
+          "options": {
+            "lintFilePatterns": ["src/**/*.ts", "src/**/*.html"]
+          }
+        }
+      }
+    }
+  },
+  "defaultProject": "pipeline-ui",
+  "cli": {
+    "cache": { "enabled": false },
+    "analytics": false,
+    "defaultCollection": "@angular-eslint/schematics",
+    "packageManager": "yarn"
+  }
+}
