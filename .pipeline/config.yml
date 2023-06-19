@@ -14,6 +14,8 @@ general:
   vaultServerUrl: 'https://vault.tools.sap'
   vaultNamespace: 'ies/hyperspace/pipelines'
   nativeBuild: true
+  manualConfirmation: false
+  karmaExecuteTests: false
 stages:
   Build:
 steps:
