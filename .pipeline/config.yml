@@ -19,6 +19,11 @@ general:
 stages:
   Build:
 steps:
+  npmExecuteScripts:
+    vaultCredentialPath: 'common-repository'
+    vaultCredentialKeys: ['artifactoryToken']
+    vaultCredentialEnvPrefix: 'BUILD_SECRETS_'
+    verbose: true
   artifactPrepareVersion:
     gitHttpsCredentialVaultSecretName: 'GROUP-SECRETS/github'
   sapCallStagingService:

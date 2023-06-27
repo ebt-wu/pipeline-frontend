@@ -2,7 +2,7 @@
 /***************************************************************************************************
  * Load `$localize` onto the global scope - used if i18n tags appear in Angular templates.
  */
-import '@angular/localize/init';
+import '@angular/localize/init'
 /**
  * This file includes polyfills needed by Angular and is loaded before the app.
  * You can add your own extra polyfills to this file.
@@ -60,8 +60,8 @@ import '@angular/localize/init';
 /***************************************************************************************************
  * Zone JS is required by default for Angular itself.
  */
-import 'zone.js/dist/zone'; // Included with Angular CLI.
-import 'zone.js/dist/zone-patch-rxjs';
+import 'zone.js/dist/zone' // Included with Angular CLI.
+import 'zone.js/dist/zone-patch-rxjs'
 
 /***************************************************************************************************
  * APPLICATION IMPORTS
@@ -69,5 +69,5 @@ import 'zone.js/dist/zone-patch-rxjs';
 
 // solution taken from https://github.com/ReactiveX/rxjs/issues/5409
 if (!(Symbol as any).observable) {
-  (Symbol as any).observable = Symbol('Symbol.observable polyfill');
+  ;(Symbol as any).observable = Symbol('Symbol.observable polyfill')
 }

@@ -1,9 +1,9 @@
-const { defaultTransformerOptions } = require('jest-preset-angular/presets');
+const { defaultTransformerOptions } = require('jest-preset-angular/presets')
 
 globalThis.ngJest = {
   skipNgcc: true,
   tsconfig: 'tsconfig.spec.json',
-};
+}
 
 /** @type {import('ts-jest/dist/types').JestConfigWithTsJest} */
 module.exports = {
@@ -24,4 +24,4 @@ module.exports = {
     ],
   },
   transformIgnorePatterns: ['/node_modules/?!@angular'],
-};
+}

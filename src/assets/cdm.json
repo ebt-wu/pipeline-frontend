@@ -13,9 +13,9 @@
           },
           "nodes": [
             {
-              "pathSegment" : "pipeline-ui",
-              "label" : "pipeline-ui",
-              "urlSuffix" : "/{i18n.currentLocale}/#/pipeline-ui",
+              "pathSegment": "pipeline-ui",
+              "label": "pipeline-ui",
+              "urlSuffix": "/{i18n.currentLocale}/#/pipeline-ui",
               "hideSideNav": false,
               "icon": "lab",
               "entityType": "project.component"

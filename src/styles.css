@@ -11,8 +11,7 @@
 
 @font-face {
   font-family: '72';
-  src: url('~@sap-theming/theming-base-content/content/Base/baseLib/baseTheme/fonts/72-Bold-full.woff2')
-    format('woff2');
+  src: url('~@sap-theming/theming-base-content/content/Base/baseLib/baseTheme/fonts/72-Bold-full.woff2') format('woff2');
   font-weight: 700;
   font-style: normal;
 }

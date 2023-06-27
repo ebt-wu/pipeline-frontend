@@ -8,4 +8,4 @@ site:
   domain: test-domain
 
 gcp:
-  projectId: "sap-gcp-dxp-test"
+  projectId: 'sap-gcp-dxp-test'

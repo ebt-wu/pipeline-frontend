@@ -56,11 +56,7 @@
               }
             ],
             "scripts": [],
-            "allowedCommonJsDependencies": [
-              "graphql-tag",
-              "hammerjs",
-              "zen-observable"
-            ]
+            "allowedCommonJsDependencies": ["graphql-tag", "hammerjs", "zen-observable"]
           },
           "configurations": {
             "production": {

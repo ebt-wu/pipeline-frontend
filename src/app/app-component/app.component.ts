@@ -1,10 +1,7 @@
-import { Component, ChangeDetectionStrategy } from '@angular/core';
-import { SafeResourceUrl } from '@angular/platform-browser';
-import {
-  ContentDensity,
-  ContentDensityService,
-} from '@fundamental-ngx/core/utils';
-import { ThemingService } from '@fundamental-ngx/core/theming';
+import { ChangeDetectionStrategy, Component } from '@angular/core'
+import { SafeResourceUrl } from '@angular/platform-browser'
+import { ContentDensity, ContentDensityService } from '@fundamental-ngx/core/utils'
+import { ThemingService } from '@fundamental-ngx/core/theming'
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -13,16 +10,13 @@ import { ThemingService } from '@fundamental-ngx/core/theming';
   styleUrls: ['./app.component.css'],
 })
 export class AppComponent {
-  cssUrl: SafeResourceUrl;
-  cssCustomUrl: SafeResourceUrl;
-  contentDensity: ContentDensity = 'compact';
-  readonly themeQueryParamName = 'sap-theme';
+  cssUrl: SafeResourceUrl
+  cssCustomUrl: SafeResourceUrl
+  contentDensity: ContentDensity = 'compact'
+  readonly themeQueryParamName = 'sap-theme'
 
-  constructor(
-    private themingService: ThemingService,
-    private contentDensityService: ContentDensityService
-  ) {
-    this.themingService.init();
-    this.contentDensityService.contentDensity.next(this.contentDensity);
+  constructor(private themingService: ThemingService, private contentDensityService: ContentDensityService) {
+    this.themingService.init()
+    this.contentDensityService.contentDensity.next(this.contentDensity)
   }
 }
