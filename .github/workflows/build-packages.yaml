@@ -2,9 +2,21 @@ name: Build Packages Workflow
 on: [push]
 
 jobs:
-  run:
+  buildPackages:
     uses: dxp/.github/.github/workflows/job--ng-build.yaml@main
     secrets: inherit
     with:
       artifact: pipeline-frontend
       lint: false
+
+  updateStack:
+    needs: [buildPackages]
+    if: ${{ github.ref == 'refs/heads/main' }}
+    uses: dxp/.github/.github/workflows/update-stack.yaml@main
+    with:
+      stackRepo: hyperspace/automaticd-stack
+      stackRepoBranch: dev
+      componentVersionKey: versions.pipelineFrontend
+      version: ${{ needs.buildPackages.outputs.version }}
+    secrets:
+      GH_ACCESS_TOKEN: ${{ secrets.GH_HYPERSPACE_USER_TOKEN }}
