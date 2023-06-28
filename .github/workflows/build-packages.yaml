@@ -7,3 +7,4 @@ jobs:
     secrets: inherit
     with:
       artifact: pipeline-frontend
+      lint: false
