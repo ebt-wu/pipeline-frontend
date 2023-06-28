@@ -44,8 +44,12 @@ testem.log
 # System Files
 .DS_Store
 Thumbs.db
-
-
 .eslintcache
-
 .angular/cache
+
+.yarn/*
+!.yarn/patches
+!.yarn/releases
+!.yarn/plugins
+!.yarn/sdks
+!.yarn/versions

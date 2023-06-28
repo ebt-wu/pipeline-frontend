@@ -1949,9 +1949,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@dxp/ngx-core@npm:0.15.8":
-  version: 0.15.8
-  resolution: "@dxp/ngx-core@npm:0.15.8::__archiveUrl=https%3A%2F%2Fcommon.repositories.cloud.sap%2Fartifactory%2Fapi%2Fnpm%2Fdeploy-releases-hyperspace-npm%2F%40dxp%2Fngx-core%2F-%2F%40dxp%2Fngx-core-0.15.8.tgz"
+"@dxp/ngx-core@npm:0.16.1":
+  version: 0.16.1
+  resolution: "@dxp/ngx-core@npm:0.16.1::__archiveUrl=https%3A%2F%2Feurope-npm.pkg.dev%2Fsap-gcp-dxp-prod%2Fdxp%2F%40dxp%2Fngx-core%2F-%2F%40dxp%2Fngx-core-0.16.1.tgz"
   dependencies:
     tslib: ^2.5.0
   peerDependencies:
@@ -1971,7 +1971,7 @@ __metadata:
     apollo-angular: ^4.0.0
     deepmerge: ^4.2.2
     moment: ^2.29.2
-  checksum: a8576a58fe0ccf48e2c3f1aea9ec480e51bbcce108f7cd051ab7e8453f286628b74926be04ca18479f44f9b9acc04f53b3bdbc349fa5be6fe30a11ce05aa078a
+  checksum: ba8fa80cd2a8eb145c6f3aaa23bed5fc740e9ae8c62516d53d6cfdea72a27f7eff73041526ac47cbc02bd4c8f94cb04d610931a89ab5336ec187421f0f349e8d
   languageName: node
   linkType: hard
 
@@ -9631,7 +9631,7 @@ __metadata:
     "@angular/platform-browser-dynamic": ^15.2.8
     "@angular/router": ^15.2.8
     "@apollo/client": ^3.0.0
-    "@dxp/ngx-core": 0.15.8
+    "@dxp/ngx-core": 0.16.1
     "@dynatrace/dtrum-api-types": 1.263.3
     "@fundamental-ngx/core": 0.39.2
     "@fundamental-ngx/moment-adapter": 0.39.2
@@ -11396,11 +11396,11 @@ __metadata:
 
 "typescript@patch:typescript@4.9.5#~builtin<compat/typescript>":
   version: 4.9.5
-  resolution: "typescript@patch:typescript@npm%3A4.9.5#~builtin<compat/typescript>::version=4.9.5&hash=23ec76"
+  resolution: "typescript@patch:typescript@npm%3A4.9.5#~builtin<compat/typescript>::version=4.9.5&hash=289587"
   bin:
     tsc: bin/tsc
     tsserver: bin/tsserver
-  checksum: ab417a2f398380c90a6cf5a5f74badd17866adf57f1165617d6a551f059c3ba0a3e4da0d147b3ac5681db9ac76a303c5876394b13b3de75fdd5b1eaa06181c9d
+  checksum: 1f8f3b6aaea19f0f67cba79057674ba580438a7db55057eb89cc06950483c5d632115c14077f6663ea76fd09fce3c190e6414bb98582ec80aa5a4eaf345d5b68
   languageName: node
   linkType: hard
 
