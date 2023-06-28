@@ -1,0 +1,7 @@
+name: Build Packages Workflow
+on: [push]
+
+jobs:
+  run:
+    uses: dxp/.github/.github/workflows/job--ng-build.yaml@main
+    secrets: inherit

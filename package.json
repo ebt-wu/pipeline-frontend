@@ -9,6 +9,7 @@
     "preinstall": "npx only-allow yarn",
     "start": "ng serve",
     "build": "ng build --configuration production --localize --output-path=dist",
+    "login": "gcloud auth login && echo 'You need to run:\n\n\texport GCP_REGISTRY_REFERENCE_TOKEN=$(gcloud auth print-access-token)\n\nin your current shell session'",
     "test": "yarn test:unit",
     "lint": "ng lint",
     "lint:fix": "ng lint --fix",
@@ -31,7 +32,7 @@
     "@angular/platform-browser-dynamic": "^15.2.8",
     "@angular/router": "^15.2.8",
     "@apollo/client": "^3.0.0",
-    "@dxp/ngx-core": "0.15.8",
+    "@dxp/ngx-core": "0.16.1",
     "@dynatrace/dtrum-api-types": "1.263.3",
     "@fundamental-ngx/core": "0.39.2",
     "@fundamental-ngx/moment-adapter": "0.39.2",
@@ -80,5 +81,5 @@
     "*.{ts,css,md,html,json,scss}": "prettier -w",
     "*.ts": "eslint --cache"
   },
-  "packageManager": "yarn@3.0.0"
+  "packageManager": "yarn@3.6.0"
 }
