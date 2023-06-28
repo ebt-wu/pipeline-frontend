@@ -5,3 +5,5 @@ jobs:
   run:
     uses: dxp/.github/.github/workflows/job--ng-build.yaml@main
     secrets: inherit
+    with:
+      artifact: pipeline-frontend
