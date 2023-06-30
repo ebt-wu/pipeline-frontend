@@ -11,5 +11,3 @@ export GCP_REGISTRY_REFERENCE_TOKEN=$(gcloud auth print-access-token gcr-pull@sa
 
 echo "3. Substituting the entry in yarnrc by actual token"
 sed -i -e "s#\"\${GCP_REGISTRY_REFERENCE_TOKEN-}\"#$GCP_REGISTRY_REFERENCE_TOKEN#g" .yarnrc.yml
-
-cat .yarnrc.yml
