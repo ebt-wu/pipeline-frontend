@@ -20,6 +20,7 @@ stages:
   Build:
 steps:
   shellExecute:
+    dockerImage: gcr.io/google.com/cloudsdktool/google-cloud-cli
     sources:
       - ".pipeline/scripts/gcr-auth.sh"
     vaultCredentialPath: 'gcr'
