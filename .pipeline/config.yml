@@ -20,9 +20,9 @@ stages:
   Build:
 steps:
   npmExecuteScripts:
-    vaultCredentialPath: 'common-repository'
-    vaultCredentialKeys: ['artifactoryToken']
-    vaultCredentialEnvPrefix: 'BUILD_SECRETS_'
+    vaultCredentialPath: 'gcr'
+    vaultCredentialKeys: ['REFERENCE_TOKEN']
+    vaultCredentialEnvPrefix: 'GCP_REGISTRY_'
     verbose: true
   artifactPrepareVersion:
     gitHttpsCredentialVaultSecretName: 'GROUP-SECRETS/github'
