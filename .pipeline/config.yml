@@ -19,10 +19,12 @@ general:
 stages:
   Build:
 steps:
-  npmExecuteScripts:
+  shellExecute:
+    sources:
+      - ".pipeline/scripts/gcr-auth.sh"
     vaultCredentialPath: 'gcr'
-    vaultCredentialKeys: ['REFERENCE_TOKEN']
-    vaultCredentialEnvPrefix: 'GCP_REGISTRY_'
+    vaultCredentialKeys: ['json_key']
+    vaultCredentialEnvPrefix: 'GCP_'
     verbose: true
   artifactPrepareVersion:
     gitHttpsCredentialVaultSecretName: 'GROUP-SECRETS/github'

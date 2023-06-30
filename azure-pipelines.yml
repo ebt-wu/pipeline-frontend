@@ -20,3 +20,10 @@ resources:
 
 extends:
   template: sap-piper-pipeline.yml@piper-pipeline-azure
+  parameters:
+    buildPreSteps:
+      - task: piper@1
+        name: AngularBuild
+        displayName: Retrieve Google Artifact Registry Token
+        inputs:
+          stepName: shellExecute
