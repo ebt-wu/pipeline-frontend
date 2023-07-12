@@ -18,7 +18,8 @@ if (environment.production) {
 bootstrapApplication(AppComponent, {
   providers: [
     importProvidersFrom(
-      ThemingModule.withConfig({ themeQueryParam: 'sap-theme' }), ContentDensityModule.forRoot({
+      ThemingModule.withConfig({ themeQueryParam: 'sap-theme', defaultTheme: 'sap_horizon' }),
+      ContentDensityModule.forRoot({
         storage: 'memory',
         defaultGlobalContentDensity: ContentDensityMode.COMPACT,
       }),

@@ -1,56 +1,26 @@
-import { Observable, Subject } from 'rxjs'
-import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core'
-import { MicroFrontendService } from '../../services/micro-frontend.service'
-import { DxpLuigiContextService } from '@dxp/ngx-core/luigi'
+import { ChangeDetectionStrategy, Component, signal } from '@angular/core'
 import { AsyncPipe } from '@angular/common';
 import { PlatformDynamicPageModule } from '@fundamental-ngx/platform/dynamic-page';
+import { FundamentalNgxCoreModule } from '@fundamental-ngx/core';
 
 @Component({
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    selector: 'app-home-page',
-    templateUrl: './home-page.component.html',
-    styleUrls: ['./home-page.component.scss'],
-    standalone: true,
-    imports: [PlatformDynamicPageModule, AsyncPipe]
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  selector: 'app-home-page',
+  templateUrl: './home-page.component.html',
+  styleUrls: ['./home-page.component.scss'],
+  standalone: true,
+  imports: [PlatformDynamicPageModule, AsyncPipe, FundamentalNgxCoreModule]
 })
-export class HomePageComponent implements OnInit {
-  pageTitle = 'pipeline-ui'
+export class HomePageComponent {
+  pageTitle = 'CI/CD'
 
-  constructor(
-    private microFrontendService: MicroFrontendService,
-    private luigiContextService: DxpLuigiContextService
-  ) {}
+  constructor() { }
 
-  counter: Observable<number>
-  userId: Subject<string> = new Subject()
 
-  async ngOnInit(): Promise<void> {
-    this.counter = this.microFrontendService.getCounter()
+  count = signal(0)
 
-    const context = await this.luigiContextService.getContextAsync()
-
-    const result = await fetch('http://localhost:3000/query', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${context.token}`,
-      },
-      body: JSON.stringify({
-        query: `query Version($projectId: String!){version(projectId: $projectId)}`,
-        variables: {
-          projectId: context.projectId,
-        },
-      }),
-    })
-
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-    const { data } = await result.json()
-
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-argument,@typescript-eslint/no-unsafe-member-access
-    this.userId.next(data.version)
+  createPipeline() {
+    this.count.update(v => v + 1)
   }
 
-  countUp(): void {
-    this.microFrontendService.countUp()
-  }
 }

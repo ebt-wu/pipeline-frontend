@@ -142,11 +142,12 @@
       }
     }
   },
-  "defaultProject": "pipeline-ui",
   "cli": {
     "cache": { "enabled": false },
     "analytics": false,
-    "defaultCollection": "@angular-eslint/schematics",
-    "packageManager": "yarn"
+    "packageManager": "yarn",
+    "schematicCollections": [
+      "@angular-eslint/schematics"
+    ]
   }
 }
