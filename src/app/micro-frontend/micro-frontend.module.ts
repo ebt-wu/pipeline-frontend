@@ -7,14 +7,14 @@ import { MicroFrontendRoutingModule } from './micro-frontend-routing.module'
 import { HomePageComponent } from './pages/home-page/home-page.component'
 
 @NgModule({
-  declarations: [HomePageComponent],
-  providers: [ContentDensityService, ThemesService],
-  imports: [
-    CommonModule,
-    FundamentalNgxCoreModule,
-    FundamentalNgxPlatformModule,
-    LuigiAngularSupportModule,
-    MicroFrontendRoutingModule,
-  ],
+    providers: [ContentDensityService, ThemesService],
+    imports: [
+        CommonModule,
+        FundamentalNgxCoreModule,
+        FundamentalNgxPlatformModule,
+        LuigiAngularSupportModule,
+        MicroFrontendRoutingModule,
+        HomePageComponent
+    ]
 })
 export class MicroFrontendModule {}

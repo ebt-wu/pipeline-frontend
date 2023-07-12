@@ -2,12 +2,16 @@ import { Observable, Subject } from 'rxjs'
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core'
 import { MicroFrontendService } from '../../services/micro-frontend.service'
 import { DxpLuigiContextService } from '@dxp/ngx-core/luigi'
+import { AsyncPipe } from '@angular/common';
+import { PlatformDynamicPageModule } from '@fundamental-ngx/platform/dynamic-page';
 
 @Component({
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  selector: 'app-home-page',
-  templateUrl: './home-page.component.html',
-  styleUrls: ['./home-page.component.scss'],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    selector: 'app-home-page',
+    templateUrl: './home-page.component.html',
+    styleUrls: ['./home-page.component.scss'],
+    standalone: true,
+    imports: [PlatformDynamicPageModule, AsyncPipe]
 })
 export class HomePageComponent implements OnInit {
   pageTitle = 'pipeline-ui'
