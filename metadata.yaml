@@ -3,6 +3,8 @@ metadata:
   displayName: 'pipeline-ui'
   description: 'Provide hyperspace pipelines for the hyperspace-portal'
 spec:
+  dependsOn:
+    - component:pipeline-backend
   type:
     name: ui
     categories:
@@ -11,5 +13,5 @@ spec:
       - luigi
   team:
     name: ''
-    productOwner: ''
-    technicalOwner: ''
+    productOwner: 'Areti Panou'
+    technicalOwner: 'Michael Sprauer'
