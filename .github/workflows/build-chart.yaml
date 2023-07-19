@@ -1,0 +1,17 @@
+name: Build Chart Workflow
+on:
+  workflow_dispatch:
+
+  push:
+    paths:
+      - 'chart/**'
+      - '.github/workflows/build-chart.yaml'
+      - '.github/workflows/release-chart.yaml'
+
+jobs:
+  validateChart:
+    uses: dxp/.github/.github/workflows/chart-validate.yaml@main
+    with:
+      chartFolder: chart
+      additionalTestFilesCommand: '-f chart/stack-values.yaml'
+    secrets: inherit

@@ -1,0 +1,42 @@
+name: Release Chart Workflow
+
+on:
+  workflow_run:
+    workflows: ["Build Chart Workflow"]
+    branches: ["main"]
+    types: ["completed"]
+
+jobs:
+  createVersion:
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    uses: dxp/.github/.github/workflows/job--version-create.yaml@main
+    secrets: inherit
+    with:
+      prefix: 'helm-'
+
+  publishChart:
+    needs: [createVersion]
+    uses: dxp/.github/.github/workflows/job--chart-publish.yaml@main
+    with:
+      folder: chart
+      registry: oci://europe-docker.pkg.dev/sap-gcp-dxp-prod/dxp-eu/com.sap.dxp/pipeline/helm
+      version: ${{ needs.createVersion.outputs.version }}
+    secrets: inherit
+
+  publishVersion:
+    needs: [createVersion, publishChart]
+    uses: dxp/.github/.github/workflows/job--version-publish.yaml@main
+    with:
+      version: helm-${{ needs.createVersion.outputs.version }}
+    secrets: inherit
+
+  updateStack:
+    needs: [createVersion, publishVersion]
+    uses: dxp/.github/.github/workflows/update-stack.yaml@main
+    with:
+      stackRepo: hyperspace/automaticd-stack
+      stackRepoBranch: dev
+      componentVersionKey: pipelineFrontendChart
+      version: ${{ needs.createVersion.outputs.version }}
+    secrets:
+      GH_ACCESS_TOKEN: ${{ secrets.GH_HYPERSPACE_USER_TOKEN }}
