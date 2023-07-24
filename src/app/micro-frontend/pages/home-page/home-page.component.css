@@ -1,0 +1,19 @@
+.busy-indicator {
+  height: 80vh;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.home-page-content {
+    padding: 1rem;
+}
+
+.header {
+  padding: 12px 24px;
+}
+
+.header-text {
+  font-size: 24px;
+}

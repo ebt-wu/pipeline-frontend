@@ -2,15 +2,15 @@ import { ChangeDetectionStrategy, Component } from '@angular/core'
 import { SafeResourceUrl } from '@angular/platform-browser'
 import { ContentDensity, ContentDensityService } from '@fundamental-ngx/core/utils'
 import { ThemingService } from '@fundamental-ngx/core/theming'
-import { RouterOutlet } from '@angular/router';
+import { RouterOutlet } from '@angular/router'
 
 @Component({
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    selector: 'app-root',
-    templateUrl: './app.component.html',
-    styleUrls: ['./app.component.css'],
-    standalone: true,
-    imports: [RouterOutlet]
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  selector: 'app-root',
+  templateUrl: './app.component.html',
+  styleUrls: ['./app.component.css'],
+  standalone: true,
+  imports: [RouterOutlet],
 })
 export class AppComponent {
   cssUrl: SafeResourceUrl

@@ -9,7 +9,7 @@ import { provideNoopAnimations } from '@angular/platform-browser/animations';
 import { MicroFrontendModule } from './app/micro-frontend/micro-frontend.module';
 import { BrowserModule, bootstrapApplication } from '@angular/platform-browser';
 import { AppRoutingModule } from './app/app-routing.module';
-import { ContentDensityService, ThemingModule, ContentDensityModule, ContentDensityMode } from '@fundamental-ngx/core';
+import { ContentDensityService, ThemingModule, ContentDensityModule, ContentDensityMode, FundamentalNgxCoreModule } from '@fundamental-ngx/core';
 
 if (environment.production) {
   enableProdMode()
@@ -26,13 +26,10 @@ bootstrapApplication(AppComponent, {
       AppRoutingModule,
       BrowserModule,
       MicroFrontendModule,
+      FundamentalNgxCoreModule
     ),
     ContentDensityService,
     provideNoopAnimations()
   ]
 })
-  .then((ref) => {
-    const dynatraceConfigurationService = ref.injector.get(DynatraceConfigurationService)
-    dynatraceConfigurationService.injectScript('').catch((err) => console.error(err))
-  })
   .catch((err) => console.error(err))

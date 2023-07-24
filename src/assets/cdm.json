@@ -18,7 +18,22 @@
               "urlSuffix": "/{i18n.currentLocale}/#/pipeline-ui",
               "hideSideNav": false,
               "icon": "begin",
-              "entityType": "project.component"
+              "entityType": "project.component",
+              "virtualTree": true,
+              "children": [
+                {
+                  "pathSegment": "setup",
+                  "entityType": "project.component",
+                  "urlSuffix": "/{i18n.currentLocale}/#/pipeline-ui/setup",
+                  "hideSideNav": false    
+                }
+              ]
+            },
+            {
+              "pathSegment": "modal",
+              "entityType": "project.component",
+              "urlSuffix": "/{i18n.currentLocale}/#/modal",
+              "hideSideNav": false
             }
           ]
         }

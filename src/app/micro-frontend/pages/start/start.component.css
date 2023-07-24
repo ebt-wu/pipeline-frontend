@@ -1,0 +1,100 @@
+fd-card {
+  padding: 0 !important;
+}
+
+.single-services-card {
+  min-height: calc(100% - 30px);
+  margin-top: 30px;
+}
+
+.svg-background {
+  background-color: #ebf8ff;
+  padding: 24px;
+}
+
+.paved-road-logo {
+  display: flex;
+  margin-top: 1rem;
+}
+
+.paved-road-logo-img {
+  margin: auto;
+}
+
+.headline {
+  text-align: center;
+  margin-top: 50px;
+}
+
+.grid-row {
+  gap: 3rem;
+  margin-top: 50px;
+  justify-content: center;
+}
+
+.card-text {
+  display: flex;
+  flex-direction: column;
+  margin: 1rem 3rem 1rem 3rem;
+}
+
+.card-headline {
+  margin: auto;
+  font-size: 23px;
+  text-align: center;
+}
+
+.card-description {
+  margin: auto;
+  font-size: 16px;
+  text-align: center;
+  color: #556b82;
+}
+
+.recommended-border {
+  border: var(--sapButton_Emphasized_BorderColor) solid 3px;
+  overflow: hidden;
+}
+
+.recommended-heading {
+  display: flex;
+  background-color: var(--sapButton_Emphasized_Background);
+  padding: 5px;
+}
+
+.recommended-text {
+  margin: auto;
+  color: var(--sapButton_Emphasized_TextColor);
+  letter-spacing: 2px;
+}
+
+.card-footer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+}
+
+.skeleton {
+  padding: 1rem;
+}
+
+.skeleton-heading {
+  display: flex;
+  justify-content: center;
+}
+
+.skeleton-heading-margin {
+  margin-top: 40px;
+}
+
+.skeleton-grid {
+  gap: 3rem;
+  margin-top: 50px;
+  justify-content: center;
+}
+
+.skeleton-grid-margin {
+  margin-top: 40px;
+}

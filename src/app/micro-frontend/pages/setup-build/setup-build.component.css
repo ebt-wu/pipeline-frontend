@@ -1,0 +1,7 @@
+.orchestrator-icon {
+    height: 35%; 
+    padding: 4px; 
+    border: 1px var(--sapGroup_ContentBorderColor) solid; 
+    border-radius: 8px; 
+    margin: 8px;
+}

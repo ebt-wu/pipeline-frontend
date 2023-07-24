@@ -7,7 +7,7 @@ globalThis.ngJest = {
 
 /** @type {import('ts-jest/dist/types').JestConfigWithTsJest} */
 module.exports = {
-  displayName: 'search-ui',
+  displayName: 'pipeline-ui',
   preset: 'jest-preset-angular',
   setupFilesAfterEnv: ['<rootDir>/test-setup.ts'],
   globalSetup: 'jest-preset-angular/global-setup',
