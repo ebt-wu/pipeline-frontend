@@ -8,18 +8,7 @@ import {
 
 @Component({
   selector: 'fdp-form-generator-header',
-  template: `
-    <ng-container [formGroup]="form">
-      <ng-container [formGroupName]="formGroupName">
-        <div class="bottom-margin">
-          <h2 class="header" [ngClass]="formItem.guiOptions?.additionalData?.ignoreTopMargin ? '' : 'top-margin'">
-            {{ formItem.guiOptions?.additionalData?.header }}
-          </h2>
-          <p *ngIf="subheader" class="subheader" [innerHTML]="subheader | async"></p>
-        </div>
-      </ng-container>
-    </ng-container>
-  `,
+  templateUrl: './form-generator-header.component.html',
   viewProviders: [dynamicFormFieldProvider, dynamicFormGroupChildProvider],
   standalone: true,
   imports: [CommonModule],
