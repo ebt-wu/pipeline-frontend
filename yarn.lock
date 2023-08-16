@@ -2338,17 +2338,17 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@fundamental-ngx/cdk@npm:0.39.2":
-  version: 0.39.2
-  resolution: "@fundamental-ngx/cdk@npm:0.39.2"
+"@fundamental-ngx/cdk@npm:0.42.0":
+  version: 0.42.0
+  resolution: "@fundamental-ngx/cdk@npm:0.42.0"
   dependencies:
-    "@fundamental-ngx/i18n": 0.39.2
-    "@fundamental-styles/cx": 0.26.3-rc.5
-    "@sap-theming/theming-base-content": ^11.1.0
+    "@fundamental-ngx/i18n": 0.42.0
+    "@fundamental-styles/cx": 0.28.3
+    "@sap-theming/theming-base-content": ^11.4.0
     compare-versions: ^5.0.0
     fast-deep-equal: 3.1.3
     focus-trap: ^7.1.0
-    fundamental-styles: 0.27.1
+    fundamental-styles: 0.28.3
     lodash-es: ^4.17.0
     tslib: ^2.0.0
   peerDependencies:
@@ -2359,17 +2359,17 @@ __metadata:
     "@angular/forms": ^15.0.0
     "@angular/platform-browser": ^15.0.0
     "@angular/router": ^15.0.0
-    rxjs: ^7.5.0
-  checksum: 754125870f87049433ecfe1a971393d4d948b489397a64dd8dddb777a770e026894420ceebc0a8f1b6745b342bf3ff100090e8b54c5465e78f0a941c442810a7
+    rxjs: ^7.8.0
+  checksum: 9eeebc4196d4928cfac4d4cb420846763221f1e5d3c10b3152af913b67eb5ee0b3ec789e93f23630b0c7975601db215ea4d11748103084c2d453a80e21bc07ff
   languageName: node
   linkType: hard
 
-"@fundamental-ngx/core@npm:0.39.2":
-  version: 0.39.2
-  resolution: "@fundamental-ngx/core@npm:0.39.2"
+"@fundamental-ngx/core@npm:0.42.0":
+  version: 0.42.0
+  resolution: "@fundamental-ngx/core@npm:0.42.0"
   dependencies:
-    "@fundamental-ngx/cdk": 0.39.2
-    "@fundamental-ngx/i18n": 0.39.2
+    "@fundamental-ngx/cdk": 0.42.0
+    "@fundamental-ngx/i18n": 0.42.0
     compare-versions: ^5.0.0
     fast-deep-equal: 3.1.3
     focus-trap: ^7.1.0
@@ -2383,16 +2383,16 @@ __metadata:
     "@angular/forms": ^15.0.0
     "@angular/platform-browser": ^15.0.0
     "@angular/router": ^15.0.0
-    "@sap-theming/theming-base-content": ^11.1.0
-    fundamental-styles: 0.27.1
-    rxjs: ^7.5.0
-  checksum: 89275ec7eff0acb456251443005e3db8c966aeb99c48ab7af5744d18864b1cf4ea8c7a1cb36aa1ff5d32ca0510d06675a3aaf19278151774ac7c53720f22a7c7
+    "@sap-theming/theming-base-content": ^11.4.0
+    fundamental-styles: 0.28.3
+    rxjs: ^7.8.0
+  checksum: 11ffceb1b67a6c13f6a2d5f238285fdedb12c23936ed6e5cdf2eefe3350d481a0c3a281ed270e42b00ed4ad20f62cb71dcbc967864201e3c9f23a706e934e017
   languageName: node
   linkType: hard
 
-"@fundamental-ngx/i18n@npm:0.39.2":
-  version: 0.39.2
-  resolution: "@fundamental-ngx/i18n@npm:0.39.2"
+"@fundamental-ngx/i18n@npm:0.42.0":
+  version: 0.42.0
+  resolution: "@fundamental-ngx/i18n@npm:0.42.0"
   dependencies:
     fast-deep-equal: 3.1.3
     lodash-es: ^4.17.0
@@ -2400,36 +2400,36 @@ __metadata:
   peerDependencies:
     "@angular/common": ^15.0.0
     "@angular/core": ^15.0.0
-    rxjs: ^7.5.0
-  checksum: ce5a6005efeabb9d6ce9172bf391afc7062a5a17c48190e31e8da6a6d51dee301837443d720ffa288ea6c1812cd05fcc0c1f6c996ac54cc14ab2384a8db4bc32
+    rxjs: ^7.8.0
+  checksum: 092ff53c41f4419eee2529b1d4c6a6166cc19ee5faeda9b3821eb2d7e4164c8c9d7f22aae0c20c7d0c1c78c5370bfd58cffd82b6f1dcc6c122a0394c79d8ad44
   languageName: node
   linkType: hard
 
-"@fundamental-ngx/moment-adapter@npm:0.39.2":
-  version: 0.39.2
-  resolution: "@fundamental-ngx/moment-adapter@npm:0.39.2"
+"@fundamental-ngx/moment-adapter@npm:0.42.0":
+  version: 0.42.0
+  resolution: "@fundamental-ngx/moment-adapter@npm:0.42.0"
   dependencies:
     tslib: ^2.3.0
   peerDependencies:
-    "@fundamental-ngx/core": 0.39.2
+    "@fundamental-ngx/core": 0.42.0
     moment: ^2.18.1
-  checksum: 50e9ea7d1eca9c8b68747411a46c1a83e2d2a1a82bc2bdcf88259f37bd91e017b8222fc2a7e75b15ea2621aa489820e8c6464f322eb5ace329ab14250abd60f9
+  checksum: 0fde2aa1b1ac60fb2679f0d5a5bb589774f0c9e1e5d1f664e4ff47f011443565b1ea3439c05389a10bd8e6f33061aefaa1ff150ffdbcf97c0785070a1a8530f3
   languageName: node
   linkType: hard
 
-"@fundamental-ngx/platform@npm:0.39.2":
-  version: 0.39.2
-  resolution: "@fundamental-ngx/platform@npm:0.39.2"
+"@fundamental-ngx/platform@npm:0.42.0":
+  version: 0.42.0
+  resolution: "@fundamental-ngx/platform@npm:0.42.0"
   dependencies:
-    "@fundamental-ngx/cdk": 0.39.2
-    "@fundamental-ngx/i18n": 0.39.2
+    "@fundamental-ngx/cdk": 0.42.0
+    "@fundamental-ngx/i18n": 0.42.0
     fast-deep-equal: 3.1.3
     focus-trap: ^7.1.0
     lodash-es: ^4.17.0
     tslib: ^2.0.0
   peerDependencies:
-    "@fundamental-ngx/core": 0.39.2
-  checksum: 3e583c79068fb321675169a48a351ff2ac1326ea97745c38888a0b2d822f70d74d1081c2d0e8a1d12073eee2c1f4965239e66f2bff5e7b42fd5f89b7307b21dd
+    "@fundamental-ngx/core": 0.42.0
+  checksum: b393a41aeb5e81fd9f7d4882391dbbf2074f4f6aecd54cded960aec12185c73a16294a934c5fc10c0bd939c8e9415f0eec316c6d54e0e84aa609a42b314f8025
   languageName: node
   linkType: hard
 
@@ -2442,10 +2442,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@fundamental-styles/cx@npm:0.26.3-rc.5":
-  version: 0.26.3-rc.5
-  resolution: "@fundamental-styles/cx@npm:0.26.3-rc.5"
-  checksum: ac8ced6ad3292362582f50aba187115d5b3eab7bd29a5ecf548a66a252247217824bf05bc22e6390e12c469a864af68725b80c22e17a74bd27944361f934fdf9
+"@fundamental-styles/cx@npm:0.28.3":
+  version: 0.28.3
+  resolution: "@fundamental-styles/cx@npm:0.28.3"
+  checksum: e65f2f69ad9e6f06941ad53c5b68da5bb4b40e6db43b17acf37445a9d05057150c15665ccc0c06165ba099abef80b9eee8c7c780dcd9c8c7a0e001e0bbaf5bcd
   languageName: node
   linkType: hard
 
@@ -3103,10 +3103,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@sap-theming/theming-base-content@npm:^11.1.0":
-  version: 11.5.0
-  resolution: "@sap-theming/theming-base-content@npm:11.5.0"
-  checksum: 1a59fcb5d455bf79047b1ad02fc95e72ac21652d50e8b78b10f1746b0758584f8cddef8daa074c0c98f1f10caf3bdaca1b10bc1826c6d128048ae0607e871d12
+"@sap-theming/theming-base-content@npm:^11.4.0":
+  version: 11.6.3
+  resolution: "@sap-theming/theming-base-content@npm:11.6.3"
+  checksum: 0c00b5dc77e44ea2d135341f0f1b35e114aa6f6f5ae1067eec2f64fb25a5ea6ba5606eaeba51b456704db850c938180300aaf328c350f0356309765155abe0e1
   languageName: node
   linkType: hard
 
@@ -6650,6 +6650,16 @@ __metadata:
   languageName: node
   linkType: hard
 
+"fundamental-styles@npm:0.28.3":
+  version: 0.28.3
+  resolution: "fundamental-styles@npm:0.28.3"
+  peerDependencies:
+    "@fundamental-styles/common-css": 0.28.3
+    "@sap-theming/theming-base-content": ^11.2.0
+  checksum: a2e6190d1644a9e0ae96b6ab1c18075122b0eacdbcf0f2cc4df8b30fa800735773197f774234178ea088e1ae63f7a0208d7414844ee0c158d1289918994e996c
+  languageName: node
+  linkType: hard
+
 "gauge@npm:^4.0.3":
   version: 4.0.4
   resolution: "gauge@npm:4.0.4"
@@ -9959,9 +9969,9 @@ __metadata:
     "@apollo/client": ^3.7.17
     "@dxp/ngx-core": 0.16.1
     "@dynatrace/dtrum-api-types": 1.263.3
-    "@fundamental-ngx/core": 0.39.2
-    "@fundamental-ngx/moment-adapter": 0.39.2
-    "@fundamental-ngx/platform": 0.39.2
+    "@fundamental-ngx/core": 0.42.0
+    "@fundamental-ngx/moment-adapter": 0.42.0
+    "@fundamental-ngx/platform": 0.42.0
     "@fundamental-styles/common-css": 0.27.1
     "@luigi-project/client": 2.2.1
     "@luigi-project/client-support-angular": 2.2.1

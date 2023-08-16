@@ -1,0 +1,16 @@
+.text-flexbox {
+  display: flex;
+}
+
+.error-text {
+  margin-right: 0.5rem;
+}
+
+.ticket-button {
+  margin-left: auto;
+  margin-right: 0.5rem;
+}
+
+.message-font {
+  font-size: var(--sapFontSmallSize);
+}

@@ -4,7 +4,7 @@ import { Component, Input } from '@angular/core'
 import { FundamentalNgxCoreModule } from '@fundamental-ngx/core'
 import { PlatformDynamicPageModule } from '@fundamental-ngx/platform'
 import { ApolloModule } from 'apollo-angular'
-import { PipelineType } from 'src/app/constants'
+import { PipelineType } from 'src/app/enums'
 import { PipelineService } from '../../services/pipeline.service'
 import { Observable, debounceTime, firstValueFrom } from 'rxjs'
 

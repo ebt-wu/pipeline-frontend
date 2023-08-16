@@ -1,0 +1,30 @@
+.header {
+    padding: 0;
+    margin: 0;
+  }
+  
+.top-margin {
+  margin-top: 1.5rem;
+}
+
+.bottom-margin {
+  margin-bottom: 0.5rem;
+}
+
+.subheader {
+  margin: 0;
+  margin-top: 0.5rem;
+  color: var(--sapContent_LabelColor);
+}
+
+/* needed for links in subheaders that are injected via [innerHTML] */
+::ng-deep a {
+  color: var(--sapShell_Active_TextColor);
+  text-decoration: none;
+}
+
+/* needed to enable wrap for the subheaders injected via [innerHTML] */
+::ng-deep p {
+  word-break: normal;
+  white-space: normal;
+}

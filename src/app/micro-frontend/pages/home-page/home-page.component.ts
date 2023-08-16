@@ -9,7 +9,7 @@ import { StartComponent } from '../start/start.component'
 import { Observable, debounceTime } from 'rxjs'
 import { PipelineComponent } from '../pipeline/pipeline.component'
 import { SingleServicesComponent } from '../single-services/single-services.component'
-import { PipelineType } from 'src/app/constants'
+import { PipelineType } from 'src/app/enums'
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,

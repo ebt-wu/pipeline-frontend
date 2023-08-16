@@ -4,7 +4,7 @@ import { first, map, mergeMap } from 'rxjs/operators';
 import { Observable, combineLatest } from 'rxjs';
 import { DxpLuigiContextService } from '@dxp/ngx-core/luigi';
 import { CREATE_PIPELINE, DELETE_PIPELINE, WATCH_PIPELINE } from './queries';
-import { PipelineType } from 'src/app/constants';
+import { PipelineType } from 'src/app/enums';
 
 export interface CreatePipelineResponse {
     createPipeline: string;

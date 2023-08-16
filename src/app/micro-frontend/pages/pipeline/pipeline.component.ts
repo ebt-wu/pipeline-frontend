@@ -38,7 +38,7 @@ export class PipelineComponent {
 
   openSetupWizard(e: Event) {
     e.stopPropagation()
-    this.luigiClient.linkManager().fromVirtualTreeRoot().openAsModal('setup', { size: 'm', title: 'Setup Build' })
+    this.luigiClient.linkManager().fromVirtualTreeRoot().openAsModal('setup', { size: 's', title: 'Setup Build' })
   }
 
   openBuildStage() {

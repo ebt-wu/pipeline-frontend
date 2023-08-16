@@ -1,69 +1,34 @@
-<div style="margin: 2rem">
-  <h3 fd-title style="margin-bottom: 1rem">Which build do you currently use?</h3>
-  <fd-form-group [isInline]="true" style="max-width: 25rem; column-gap: 2rem; margin-bottom: 2rem">
-    <div fd-form-item>
-      <fd-radio-button value="docker" [id]="'radio-1'" name="radio-name-3">Docker</fd-radio-button>
-    </div>
-    <div fd-form-item>
-      <fd-radio-button value="gradle" [id]="'radio-2'" name="radio-name-3">Gradle</fd-radio-button>
-    </div>
-    <div fd-form-item>
-      <fd-radio-button value="npm" [id]="'radio-3'" name="radio-name-3">npm</fd-radio-button>
-    </div>
-    <div fd-form-item>
-      <fd-radio-button value="maven" [id]="'radio-4'" name="radio-name-3">Maven</fd-radio-button>
-    </div>
-    <div fd-form-item>
-      <fd-radio-button value="python" [id]="'radio-5'" name="radio-name-3">Python</fd-radio-button>
-    </div>
-    <div fd-form-item>
-      <fd-radio-button value="mta" [id]="'radio-6'" name="radio-name-3">mta</fd-radio-button>
-    </div>
-    <div fd-form-item>
-      <fd-radio-button value="go" [id]="'radio-7'" name="radio-name-3">Golang</fd-radio-button>
-    </div>
-  </fd-form-group>
-  <h3 fd-title style="margin-bottom: 1.5rem">Select an orchestrator</h3>
-  <div style="display: flex; column-gap: 2rem; margin-bottom: 2rem">
-    <fd-tile size="s" [double]="true">
-      <div class="fd-badge">Recommended</div>
-      <div fd-tile-content style="max-height: 100% !important; height: 100% !important">
-        <img src="assets/jenkins.png" class="orchestrator-icon" />
-        <div style="display: flex; flex-direction: column; margin-left: 8px">
-          <h4 style="margin: 0; font-size: 15px">Jenkins</h4>
-          <a
-            fd-link
-            target="_blank"
-            href="https://hyperspace.tools.sap/docs/features_and_use_cases/connected_tools/jenkins.html">
-            Learn more
-          </a>
-        </div>
-      </div>
-    </fd-tile>
-    <fd-tile size="s" [double]="true">
-      <div fd-tile-content style="max-height: 100% !important; height: 100% !important">
-        <img src="assets/github.png" class="orchestrator-icon" />
-        <div style="display: flex; flex-direction: column; margin-left: 8px">
-          <h4 style="margin: 0; font-size: 15px">Github Actions</h4>
-          <a
-            fd-link
-            target="_blank"
-            href="https://hyperspace.tools.sap/docs/features_and_use_cases/connected_tools/github.html#github">
-            Learn more
-          </a>
-        </div>
-      </div>
-    </fd-tile>
+<div class="setup-build-margin">
+  <error-message
+    title="Setup build could not be completed"
+    [message]="errorMessage()"
+    (onDismiss)="dismissErrorMessage()"
+    *ngIf="errorMessage()"></error-message>
+  <div class="busy-indicator" *ngIf="loading">
+    <fd-busy-indicator [loading]="true" ariaLabel="loading" title="Please Wait"></fd-busy-indicator>
   </div>
-  <h3 fd-title style="margin-bottom: 1rem">Jenkins Credentials</h3>
-  <fd-text text="We need your credentials to set up Jenkins for you."></fd-text>
-  <div style="display: flex; gap: 4px">
-    <fd-text text="Don't have an instance yet?"></fd-text>
-    <a fd-link>Request instance.</a>
+  <div class="form-margins">
+    <fdp-form-generator
+      *ngIf="!loading"
+      [formItems]="questions"
+      (formSubmitted)="onFormSubmitted($event)"
+      (formCreated)="onFormCreated()"></fdp-form-generator>
   </div>
-  <fd-segmented-button >
-    <button fd-button label="Use Existing" value="first"></button>
-    <button fd-button label="Enter New" value="second"></button>
-</fd-segmented-button>
-
+  <div fd-bar barDesign="floating-footer" class="actions-footer">
+    <div fd-bar-right class="footer-buttons-gap">
+      <fdp-button
+        *ngIf="formCreated"
+        (click)="submitForm()"
+        [disabled]="loading"
+        type="submit"
+        buttonType="emphasized"
+        label="Setup Build"></fdp-button>
+      <fdp-button
+        *ngIf="formCreated"
+        buttonType="transparent"
+        [disabled]="loading"
+        label="Cancel"
+        (click)="cancel()"></fdp-button>
+    </div>
+  </div>
 </div>

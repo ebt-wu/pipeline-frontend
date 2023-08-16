@@ -9,6 +9,8 @@ import { SingleServicesComponent } from './pages/single-services/single-services
 import { PipelineComponent } from './pages/pipeline/pipeline.component'
 import { StartComponent } from './pages/start/start.component'
 import { SetupComponent } from './pages/setup-build/setup-build.component'
+import { ErrorMessageComponent } from './components/error-message/error-message.component'
+import { PlatformFormGeneratorCustomHeaderElementComponent } from './components/form-generator-header/form-generator-header.component'
 
 @NgModule({
   providers: [ContentDensityService, ThemesService],
@@ -20,10 +22,11 @@ import { SetupComponent } from './pages/setup-build/setup-build.component'
     MicroFrontendRoutingModule,
     HomePageComponent,
     SingleServicesComponent,
+    ErrorMessageComponent,
     PipelineComponent,
     StartComponent,
     SetupComponent,
+    PlatformFormGeneratorCustomHeaderElementComponent,
   ],
-  declarations: [],
 })
 export class MicroFrontendModule {}

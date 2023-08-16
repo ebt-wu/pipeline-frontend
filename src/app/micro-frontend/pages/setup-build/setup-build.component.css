@@ -1,7 +1,22 @@
-.orchestrator-icon {
-    height: 35%; 
-    padding: 4px; 
-    border: 1px var(--sapGroup_ContentBorderColor) solid; 
-    border-radius: 8px; 
-    margin: 8px;
+.setup-build-margin {
+  margin: 1rem 2rem;
+}
+
+.busy-indicator {
+  text-align: center;
+  margin-top: 5rem;
+}
+
+.form-margins {
+  margin-bottom: 4rem;
+  max-width: 40rem;
+}
+
+.actions-footer {
+  position: fixed;
+  margin: 1rem;
+}
+
+.footer-buttons-gap {
+  gap: 0.5rem;
 }

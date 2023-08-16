@@ -1,9 +1,5 @@
 import { enableProdMode, importProvidersFrom } from '@angular/core'
-import { platformBrowserDynamic } from '@angular/platform-browser-dynamic'
-
-
 import { environment } from './environments/environment'
-import { DynatraceConfigurationService } from '@dxp/ngx-core/dynatrace'
 import { AppComponent } from './app/app-component/app.component';
 import { provideNoopAnimations } from '@angular/platform-browser/animations';
 import { MicroFrontendModule } from './app/micro-frontend/micro-frontend.module';

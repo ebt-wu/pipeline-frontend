@@ -1,0 +1,12 @@
+<div>
+  <fd-message-strip type="error" (onDismiss)="emitOnDismiss()">
+    <div class="text-flexbox">
+      <b class="error-text">Error</b>
+      <i>{{ title }}</i>
+      <button fd-button fdType="transparent" class="ticket-button" (click)="reportError()">
+        Create Ticket
+      </button>
+    </div>
+    <div class="message-font">Message: {{ message }}</div>
+  </fd-message-strip>
+</div>
