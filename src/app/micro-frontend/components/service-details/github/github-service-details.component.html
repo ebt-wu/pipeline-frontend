@@ -1,0 +1,52 @@
+<div>
+  <div class="flex-box">
+    <h3>GitHub Repository</h3>
+    <button
+      class="auto-left-margin"
+      role="button"
+      glyph="question-mark"
+      label="Learn More"
+      [toggled]="true"
+      (click)="openDocumentation()"
+      fd-button></button>
+  </div>
+  <a [href]="serviceDetails.repositoryUrl" target="_blank">
+    {{ serviceDetails.repository }}/{{ serviceDetails.organization }}
+  </a>
+  <div class="flex-box top-margin">
+    <h3>Github Credentials</h3>
+    <button
+      class="height left-margin"
+      role="button"
+      fdType="transparent"
+      glyph="hint"
+      fd-button
+      placement="top"
+      [fd-inline-help]="credentialsHelp"
+      [triggers]="['click']"
+      [closeOnOutsideClick]="true"></button>
+    <br />
+  </div>
+  <div>
+    <b>Vault Path</b>
+  </div>
+  {{ serviceDetails.secretPath }}
+  <div class="top-margin">
+    <fd-busy-indicator [loading]="pendingShowInVault()" size="s">
+      <button
+        fd-button
+        fdType="transparent"
+        [disabled]="pendingShowInVault()"
+        label="Show in Vault"
+        (click)="showInVault(serviceDetails.secretPath)"></button>
+    </fd-busy-indicator>
+  </div>
+</div>
+
+<ng-template #credentialsHelp>
+  <div>
+    These credentials are used by the Piper Native Build and this UI
+    <br />
+    to access and manage your GitHub Repository.
+  </div>
+</ng-template>

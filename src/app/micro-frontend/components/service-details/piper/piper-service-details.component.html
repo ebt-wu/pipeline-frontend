@@ -1,0 +1,63 @@
+<div>
+  <div class="flex-box">
+    <h3>Piper Native Build Configuration</h3>
+    <button
+      class="height left-margin"
+      role="button"
+      fdType="transparent"
+      glyph="hint"
+      fd-button
+      placement="top"
+      [fd-inline-help]="nativeBuildHelp"
+      [triggers]="['click']"
+      [closeOnOutsideClick]="true"></button>
+    <button
+      class="auto-left-margin"
+      role="button"
+      glyph="question-mark"
+      label="Learn More"
+      [toggled]="true"
+      (click)="openDocumentation()"
+      fd-button></button>
+    <br />
+  </div>
+  <div *ngIf="serviceDetails.pullRequestURL">
+    <div>
+      <b>Pull Request</b>
+    </div>
+    <a [href]="serviceDetails.pullRequestURL" target="_blank">Open in GitHub</a>
+  </div>
+  <div [ngClass]="serviceDetails.pullRequestURL ? 'top-margin' : ''">
+    <b>config.yml</b>
+  </div>
+  <div class="code-box">
+    <div class="code">
+      {{ serviceDetails.configString.trim() }}
+    </div>
+    <button
+      fd-button
+      label="Copy"
+      fdType="transparent"
+      glyph="copy"
+      ariaLabel="Copy config.yml"
+      (click)="copyConfigStringToClipboard(serviceDetails.configString)"
+      class="code-button"></button>
+  </div>
+</div>
+
+<ng-template #nativeBuildHelp>
+  <div>
+    We have configured a
+    <a href="https://github.wdf.sap.corp/pages/ContinuousDelivery/piper-doc/stages/gpp/overview/" target="_blank">
+      Piper General Purpose Pipeline (GPP)
+    </a>
+    based on the
+    <br />
+    <a href="https://github.wdf.sap.corp/pages/ContinuousDelivery/piper-doc/build/native/" target="_blank">
+      Piper Native Build
+    </a>
+    for you and added it via pull request to your
+    <br />
+    GitHub repository.
+  </div>
+</ng-template>

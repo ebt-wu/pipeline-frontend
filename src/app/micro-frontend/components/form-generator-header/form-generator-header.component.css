@@ -1,8 +1,8 @@
 .header {
-    padding: 0;
-    margin: 0;
-  }
-  
+  padding: 0;
+  margin: 0;
+}
+
 .top-margin {
   margin-top: 1.5rem;
 }
@@ -19,7 +19,7 @@
 
 /* needed for links in subheaders that are injected via [innerHTML] */
 ::ng-deep a {
-  color: var(--sapShell_Active_TextColor);
+  color: var(--sapLinkColor);
   text-decoration: none;
 }
 

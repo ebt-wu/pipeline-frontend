@@ -28,11 +28,12 @@ export class ErrorMessageComponent {
 
     ghIssueURL.searchParams.append(
       'title',
-      `[Portal CI/CD UI] ${this.title} for ${context.projectId}/${context.componentId}`
+      `[Portal CI/CD] ${this.title} for ${context.projectId}/${context.componentId}`
     )
     ghIssueURL.searchParams.append(
       'body',
-      `Please describe what you tried to do and when exactly the error occurred.
+      `Thank you for taking the time to report this error.
+To help us debug, please describe what you tried to do and when the error occurred below.
 
 
 

@@ -1,0 +1,54 @@
+a {
+  color: var(--sapLinkColor);
+  text-decoration: none;
+}
+
+.flex-box {
+  display: flex;
+  align-items: center;
+}
+
+.top-margin {
+  margin-top: 1rem;
+}
+
+.left-margin {
+  margin-left: 0.4rem;
+}
+
+.height {
+  height: 1.2rem;
+}
+
+.auto-left-margin {
+  margin-left: auto;
+}
+
+.code-box {
+  background: var(--sapBackgroundColor);
+  border: 1px solid var(--sapObjectHeader_BorderColor);
+  border-radius: var(--sapTile_BorderCornerRadius);
+  border-left: 3px solid var(--sapSelectedColor);
+  margin-top: 0.8rem;
+  position: relative;
+  max-width: max-content;
+
+  .code {
+    page-break-inside: avoid;
+    font-family: monospace;
+    line-height: 1.2;
+    max-width: max-content;
+    padding: 0.8rem 1rem;
+    display: block;
+    word-wrap: break-word;
+    overflow: auto;
+    overflow-x: auto;
+    white-space: pre-wrap;
+  }
+
+  .code-button {
+    position: absolute;
+    top: 0.8rem;
+    right: 1rem;
+  }
+}

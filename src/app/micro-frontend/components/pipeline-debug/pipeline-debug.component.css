@@ -1,0 +1,50 @@
+/* Hide scrollbar for Chrome, Safari and Opera */
+.hide-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+/* Hide scrollbar for IE, Edge and Firefox */
+.hide-scrollbar {
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
+}
+
+.pipeline-json {
+  border: 1px solid var(--sapNeutralColor);
+  border-radius: var(--sapTile_BorderCornerRadius);
+  padding: 1rem;
+  background-color: var(--sapBackgroundColor);
+  max-height: 23rem;
+  overflow: scroll;
+  font-size: var(--sapFontSmallSize);
+  max-width: fit-content;
+  margin: 1rem 2rem;
+}
+
+.container {
+  margin: 1.5rem 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.watch-pipeline-header {
+  margin: 0;
+}
+
+.delete-freestyle-resource-header {
+  margin-bottom: 0;
+}
+
+.text-red {
+  color: var(--btp-Red7);
+}
+
+.shift-message {
+  margin-bottom: 1rem;
+}
+
+.delete-button {
+  width: fit-content;
+  margin-left: 1rem;
+}

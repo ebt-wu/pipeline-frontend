@@ -1,0 +1,57 @@
+<div>
+  <div class="flex-box">
+    <h3>Jenkins Instance</h3>
+    <button
+      class="auto-left-margin"
+      role="button"
+      glyph="question-mark"
+      label="Learn More"
+      [toggled]="true"
+      (click)="openDocumentation()"
+      fd-button></button>
+  </div>
+  <div>
+    <b>URL</b>
+  </div>
+  <a [href]="originURL" target="_blank">{{ originURL }}</a>
+  <div class="top-margin">
+    <b>Job</b>
+  </div>
+  <a [href]="serviceDetails.jobUrl" target="_blank">{{ serviceDetails.name }}</a>
+  <div class="flex-box top-margin">
+    <h3>Jenkins Credentials</h3>
+    <button
+      class="height left-margin"
+      role="button"
+      fdType="transparent"
+      glyph="hint"
+      fd-button
+      placement="top"
+      [fd-inline-help]="credentialsHelp"
+      [triggers]="['click']"
+      [closeOnOutsideClick]="true"></button>
+    <br />
+  </div>
+  <div>
+    <b>Vault Path</b>
+  </div>
+  {{ serviceDetails.secretPath }}
+  <div class="top-margin">
+    <fd-busy-indicator [loading]="pendingShowInVault()" size="s">
+      <button
+        fd-button
+        fdType="transparent"
+        [disabled]="pendingShowInVault()"
+        label="Show in Vault"
+        (click)="showInVault(serviceDetails.secretPath)"></button>
+    </fd-busy-indicator>
+  </div>
+</div>
+
+<ng-template #credentialsHelp>
+  <div>
+    These credentials are used to configure your Jenkins instance for the Piper Native Build
+    <br />
+    and to create a job for this pipeline.
+  </div>
+</ng-template>

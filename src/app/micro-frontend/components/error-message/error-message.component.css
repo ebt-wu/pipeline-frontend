@@ -9,8 +9,13 @@
 .ticket-button {
   margin-left: auto;
   margin-right: 0.5rem;
+  height: 1.2rem;
 }
 
 .message-font {
   font-size: var(--sapFontSmallSize);
+}
+
+.message-margin {
+  margin-top: 1rem;
 }

@@ -1,9 +1,10 @@
 import { NgModule } from '@angular/core'
 import { RouterModule, Routes } from '@angular/router'
 import { HomePageComponent } from './pages/home-page/home-page.component'
-import { TechicalUserModal } from './components/technical-user/technical-user.component'
 import { SetupComponent } from './pages/setup-build/setup-build.component'
 import { AppRouterOutlet } from './components/router-outlet/router-outlet.component'
+import { PipelineDebugModal } from './components/pipeline-debug/pipeline-debug.component'
+import { ProvideFeedbackComponent } from './components/provide-feedback-modal/provide-feedback.component'
 
 const routes: Routes = [
   {
@@ -12,19 +13,24 @@ const routes: Routes = [
     children: [
       {
         path: '',
-        component: HomePageComponent
+        component: HomePageComponent,
       },
       {
         path: 'setup',
-        component: SetupComponent
-      }
-    ]
+        component: SetupComponent,
+      },
+      {
+        path: 'pipeline-debug',
+        component: PipelineDebugModal,
+        data: { luigiRoute: '/pipeline-debug' },
+      },
+      {
+        path: 'feedback',
+        component: ProvideFeedbackComponent,
+        data: { luigiRoute: '/feedback' },
+      },
+    ],
   },
-  {
-    path: 'modal',
-    component: TechicalUserModal,
-    data: { luigiRoute: '/modal' }
-  }
 ]
 
 @NgModule({
@@ -32,5 +38,5 @@ const routes: Routes = [
   exports: [RouterModule],
 })
 export class MicroFrontendRoutingModule {
-  constructor() { }
+  constructor() {}
 }

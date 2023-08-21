@@ -3,7 +3,7 @@ import { Categories, Kinds } from './enums'
 const kindName = {}
 kindName[Kinds.CUMULUS_PIPELINE] = 'Cumulus'
 kindName[Kinds.GITHUB_REPOSITORY] = 'GitHub Repository'
-kindName[Kinds.PIPER_CONFIG] = 'Piper Configuration'
+kindName[Kinds.PIPER_CONFIG] = 'Piper Native Build'
 kindName[Kinds.STAGING_SERVICE_CREDENTIAL] = 'Staging Service'
 kindName[Kinds.JENKINS_PIPELINE] = 'Jenkins Pipeline'
 export const KindName = kindName
@@ -11,9 +11,9 @@ export const KindName = kindName
 const kindCategory = {}
 kindCategory[Kinds.CUMULUS_PIPELINE] = Categories.COMPLIANCE
 kindCategory[Kinds.GITHUB_REPOSITORY] = Categories.SOURCE_CODE_MANAGEMENT
-kindCategory[Kinds.STAGING_SERVICE_CREDENTIAL] = Categories.ARTEFACTS
+kindCategory[Kinds.STAGING_SERVICE_CREDENTIAL] = Categories.CODE_TRANSPORTATION
 kindCategory[Kinds.JENKINS_PIPELINE] = Categories.ORCHESTRATION
-kindCategory[Kinds.PIPER_CONFIG] = Categories.CICD_TURNKEY_SOLUTION
+kindCategory[Kinds.PIPER_CONFIG] = Categories.CODE_BUILD
 export const KindCategory = kindCategory
 
 const kindDocumentation = {}

@@ -271,8 +271,7 @@ export class SetupComponent {
             const orgName = context.entityContext?.component?.annotations['github.dxp.sap.com/login'] ?? ''
             const repoUrl = context.entityContext?.component?.annotations['github.dxp.sap.com/repo-url'] ?? ''
             return `Needed to configure your repository <a href="${repoUrl}" target="_blank">${orgName}/${repoName}</a>
-            for your pipeline. Stored in Vault. Please use a <a href="https://github.tools.sap/settings/tokens/new" target="_blank">PAT</a> with read
-            read and write access to your repository.`
+            for your pipeline. Stored in Vault. Please use a <a href="https://github.tools.sap/settings/tokens/new" target="_blank">PAT</a> with read and write access to your repository.`
           },
         },
       },
@@ -394,8 +393,7 @@ export class SetupComponent {
         githubPath = this.getCredentialPath(value.githubSelectCredential, context.componentId)
       }
 
-      // create resources
-      // github
+      // create resources - because of dependencies the order needs to be: github - piper - jenkins
       const repoUrl = context.entityContext?.component?.annotations['github.dxp.sap.com/repo-url'] ?? ''
       const login = context.entityContext?.component?.annotations['github.dxp.sap.com/login'] ?? ''
       const repoName = context.entityContext?.component?.annotations['github.dxp.sap.com/repo-name'] ?? ''
@@ -409,9 +407,6 @@ export class SetupComponent {
       const repositoryResource = await firstValueFrom(
         this.githubService.createGithubRepository(url.origin, login, repoName, githubPath)
       )
-      // jenkins
-      await firstValueFrom(this.jenkinsService.createJenkinsPipeline(value.jenkinsUrl, jenkinsPath, repositoryResource))
-      // piper
       await firstValueFrom(
         this.piperService.createPiperConfig(
           githubPath,
@@ -421,6 +416,7 @@ export class SetupComponent {
           value.buildTool === BuildTools.DOCKER ? context.componentId : ''
         )
       )
+      await firstValueFrom(this.jenkinsService.createJenkinsPipeline(value.jenkinsUrl, jenkinsPath, repositoryResource))
 
       this.loading = false
       this.luigiClient.uxManager().closeCurrentModal()

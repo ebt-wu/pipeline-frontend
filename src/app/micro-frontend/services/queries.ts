@@ -80,6 +80,18 @@ export const DELETE_GITHUB_REPOSITORY = gql`
   }
 `
 
+export const GET_GITHUB_REPOSITORY = gql`
+  query GetGithubRepository($projectId: String!, $resourceName: String!) {
+    getGithubRepository(projectId: $projectId, resourceName: $resourceName) {
+      repository
+      organization
+      repositoryUrl
+      secretPath
+      creationTimestamp
+    }
+  }
+`
+
 /**
  * CUMULUS QUERIES
  */
@@ -90,6 +102,16 @@ export const DELETE_CUMULUS_PIPELINE = gql`
   }
 `
 
+export const GET_CUMULUS_PIPELINE = gql`
+  query GetCumulusPipeline($projectId: String!, $resourceName: String!) {
+    getCumulusPipeline(projectId: $projectId, resourceName: $resourceName) {
+      id
+      key
+      creationTimestamp
+    }
+  }
+`
+
 /**
  * STAGING SERVICE QUERIES
  */
@@ -97,6 +119,17 @@ export const DELETE_CUMULUS_PIPELINE = gql`
 export const REMOVE_STAGING_SERVICE_CREDENTIAL = gql`
   mutation RemoveStagingServiceCredential($projectId: String!, $componentId: String!) {
     removeStagingServiceCredential(projectId: $projectId, componentId: $componentId)
+  }
+`
+
+export const GET_STAGING_SERVICE_CREDENTIAL = gql`
+  query GetStagingServiceCredential($projectId: String!) {
+    getStagingServiceCredential(projectId: $projectId) {
+      profileName
+      url
+      secretPath
+      creationTimestamp
+    }
   }
 `
 
@@ -123,6 +156,34 @@ export const CREATE_JENKINS_PIPELINE = gql`
     )
   }
 `
+
+export const GET_JENKINS_PIPELINE = gql`
+  query GetJenkinsPipeline($projectId: String!, $resourceName: String!) {
+    getJenkinsPipeline(projectId: $projectId, resourceName: $resourceName) {
+      name
+      jobUrl
+      secretPath
+      creationTimestamp
+    }
+  }
+`
+
+export const DELETE_JENKINS_PIPELINE = gql`
+  mutation DeleteJenkinsPipeline(
+    $projectId: String!
+    $componentId: String!
+    $resourceName: String!
+    $deletionPolicy: DeletionPolicy
+  ) {
+    deleteJenkinsPipeline(
+      projectId: $projectId
+      componentId: $componentId
+      resourceName: $resourceName
+      deletionPolicy: $deletionPolicy
+    )
+  }
+`
+
 /**
  * PIPER CONFIG QUERIES
  */
@@ -149,5 +210,34 @@ export const CREATE_PIPER_CONFIG = gql`
         }
       }
     )
+  }
+`
+
+export const GET_PIPER_CONFIG = gql`
+  query GetPiperConfig($projectId: String!, $resourceName: String!) {
+    getPiperConfig(projectId: $projectId, resourceName: $resourceName) {
+      pullRequestURL
+      configString
+      creationTimestamp
+    }
+  }
+`
+
+export const DELETE_PIPER_CONFIG = gql`
+  mutation DeletePiperConfig($projectId: String!, $componentId: String!, $resourceName: String!) {
+    deletePiperConfig(projectId: $projectId, componentId: $componentId, resourceName: $resourceName)
+  }
+`
+
+/**
+ * VAULT QUERIES
+ */
+
+export const ENSURE_VAULT_ONBOARDING = gql`
+  mutation EnsureVaultOnboarding($tenantId: String!, $projectId: String!) {
+    ensureVaultOnboarding(tenantId: $tenantId, projectId: $projectId) {
+      token
+      vaultUrl
+    }
   }
 `

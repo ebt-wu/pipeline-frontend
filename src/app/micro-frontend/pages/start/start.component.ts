@@ -7,6 +7,8 @@ import { ApolloModule } from 'apollo-angular'
 import { PipelineType } from 'src/app/enums'
 import { PipelineService } from '../../services/pipeline.service'
 import { Observable, debounceTime, firstValueFrom } from 'rxjs'
+import { Pipeline } from 'src/app/types'
+import { DebugModeService } from '../../services/debug-mode.service'
 
 @Component({
   selector: 'app-start',
@@ -25,9 +27,9 @@ import { Observable, debounceTime, firstValueFrom } from 'rxjs'
 export class StartComponent {
   pipelineType = PipelineType
 
-  @Input() pipeline$!: Observable<any>
+  @Input() pipeline$!: Observable<Pipeline>
 
-  constructor(private readonly pipelineService: PipelineService) {}
+  constructor(private readonly pipelineService: PipelineService, readonly debugModeService: DebugModeService) {}
 
   pipelineLoading = false
   singleServiceLoading = false

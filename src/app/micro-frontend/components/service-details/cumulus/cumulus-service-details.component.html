@@ -1,0 +1,59 @@
+<div>
+  <div class="flex-box">
+    <h3>Cumulus Pipeline</h3>
+    <button
+      class="auto-left-margin"
+      role="button"
+      glyph="question-mark"
+      label="Learn More"
+      [toggled]="true"
+      (click)="openDocumentation()"
+      fd-button></button>
+  </div>
+  <div class="flex-box">
+    <b>Pipeline ID</b>
+    <button
+      class="left-margin height"
+      role="button"
+      fdType="transparent"
+      glyph="hint"
+      fd-button
+      placement="top"
+      [fd-inline-help]="idHelp"
+      [triggers]="['click']"
+      [closeOnOutsideClick]="true"></button>
+  </div>
+  {{ serviceDetails.id }}
+  <div class="flex-box top-margin">
+    <b>Pipeline Key</b>
+    <button
+      class="height"
+      role="button"
+      fdType="transparent"
+      glyph="hint"
+      fd-button
+      placement="top"
+      [fd-inline-help]="keyHelp"
+      [triggers]="['click']"
+      [closeOnOutsideClick]="true"></button>
+  </div>
+  {{ serviceDetails.key }}
+</div>
+
+<ng-template #idHelp>
+  <div>
+    The ID of your Pipeline in Cumulus.
+    <br />
+    It is used by the
+    <a href="https://github.wdf.sap.corp/pages/ContinuousDelivery/piper-doc/steps/sapCumulusUpload/" target="_blank">
+      sapCumulusUpload
+    </a>
+    Piper step
+    <br />
+    to automatically upload compliance documents.
+  </div>
+</ng-template>
+
+<ng-template #keyHelp>
+  <div>Search for this key to find your pipeline in Sirius.</div>
+</ng-template>

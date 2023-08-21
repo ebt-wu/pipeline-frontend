@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core'
+import { ChangeDetectionStrategy, Component, HostListener } from '@angular/core'
 import { HttpClientModule } from '@angular/common/http'
 import { AsyncPipe, CommonModule } from '@angular/common'
 import { PlatformDynamicPageModule } from '@fundamental-ngx/platform/dynamic-page'
@@ -10,6 +10,8 @@ import { Observable, debounceTime } from 'rxjs'
 import { PipelineComponent } from '../pipeline/pipeline.component'
 import { SingleServicesComponent } from '../single-services/single-services.component'
 import { PipelineType } from 'src/app/enums'
+import { Pipeline } from 'src/app/types'
+import { DebugModeService } from '../../services/debug-mode.service'
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -33,11 +35,16 @@ export class HomePageComponent {
   pageTitle = 'CI/CD'
   pipelineType = PipelineType
 
-  constructor(private readonly pipelineService: PipelineService) {}
+  constructor(private readonly pipelineService: PipelineService, private readonly debugModeService: DebugModeService) {}
 
-  watch$: Observable<any>
+  watch$: Observable<Pipeline>
 
   async ngOnInit(): Promise<void> {
     this.watch$ = this.pipelineService.watchPipeline().pipe(debounceTime(50))
+  }
+
+  @HostListener('document:keydown.control.d', ['$event'])
+  handleCtrlDEvent(_: KeyboardEvent) {
+    this.debugModeService.toggleDebugMode()
   }
 }

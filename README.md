@@ -2,12 +2,15 @@
 
 **Please fill your documentation here!**
 
+## Prequisites
+1. [yarn](https://classic.yarnpkg.com/lang/en/docs/install/#mac-stable) 
+2. [gcloud cli](https://cloud.google.com/sdk/docs/install)
+
 ### Setup
 
 1. Clone the repository
-2. Login to Artifactory to fetch `@dxp` scoped packages: `yarn login --scope=@dxp --registry=https://common.repositories.cloud.sap/artifactory/api/npm/deploy-releases-hyperspace-npm`
-   - how to get token: https://pages.github.tools.sap/Common-Repository/Artifactory-Internet-Facing/setup_access/#cdi-users 
-   - set `export PIPER_VAULTCREDENTIAL_ARTIFACTORYTOKEN=` to satisfy `.npmrc` which is required for the piper build.
+2. Login to gcloud - `yarn run login-gcloud`
+3. [Get identity token from common repository](https://common.repositories.cloud.sap/ui/user_profile) and set it as environment variable to fetch `@dxp` scoped dependencies `export BUILD_SECRETS_ARTIFACTORYTOKEN=<identity token>`.
 3. Run `yarn` in the project folder to install the dependencies
 4. Run `yarn run start` in the project folder to start the application
 5. Visit http://localhost:4200/#/pipeline-ui to view the website standalone

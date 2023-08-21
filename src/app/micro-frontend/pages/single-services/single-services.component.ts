@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common'
 import { Component, Input } from '@angular/core'
 import { Observable } from 'rxjs'
+import { Pipeline } from 'src/app/types'
 
 @Component({
   selector: 'app-single-services',
@@ -10,5 +11,5 @@ import { Observable } from 'rxjs'
   imports: [CommonModule],
 })
 export class SingleServicesComponent {
-  @Input() pipeline$!: Observable<any>
+  @Input() pipeline$!: Observable<Pipeline>
 }

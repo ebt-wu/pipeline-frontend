@@ -1,99 +1,342 @@
-<fd-flexible-column-layout [(layout)]="localLayout">
-  <ng-template #startColumn>
-    <div class="pipeline-container" *ngIf="pipeline$ | async as pipeline; else skeleton">
-      <h3 class="heading">Your Pipeline</h3>
-      <fd-message-strip type="information">
-        For productive usage it is not recommended authenticating with your own user at the pipeline set up.
-        <br />
-        Request technical user upfront instead.
-      </fd-message-strip>
-      <fd-card cardType="linkList">
-        <fd-card-content>
-          <div class="card-content" (click)="openBuildStage()">
-            <fd-avatar [colorAccent]="1" size="m" glyph="wrench"></fd-avatar>
-            <div class="card-description">
-              <h1><strong>Build</strong></h1>
-              <p>Get a pipeline that builds and packages your code</p>
-            </div>
-            <div style="flex-grow: 1"></div>
-            <span
-              fd-object-status
-              status="informative"
-              glyph="message-information"
-              label="Get technical user"
-              aria-label="Get technical user"
-              (click)="openTechnicalUserModal($event)"></span>
-            <button fd-button fdCozy label="Set Up" fdType="emphasized" (click)="openSetupWizard($event)"></button>
-          </div>
-          <ul *ngIf="isBuildStageOpen()" fd-list [byline]="true" [noBorder]="true">
-            <li fd-list-item *ngFor="let resourceRef of pipeline.resourceRefs" (click)="openDetails(resourceRef.kind)">
-              <a fd-list-link>
-                <span fd-list-thumbnail>
-                  <span
-                    fd-object-status
-                    *ngIf="resourceRef.status === 'Created'"
-                    status="positive"
-                    glyph="message-success"></span>
-                  <fd-busy-indicator
-                    [loading]="true"
-                    *ngIf="resourceRef.status === 'PendingCreation'"
-                    ariaLabel="loading"
-                    title="Please Wait"></fd-busy-indicator>
-                  <span
-                    fd-object-status
-                    *ngIf="resourceRef.status === 'FailingCreation'"
-                    status="negative"
-                    glyph="message-error"></span>
-                  <span fd-object-status *ngIf="resourceRef.status === 'NotFound'" glyph="circle-task"></span>
-                </span>
-                <div style="display: flex; flex-direction: column">
-                  <b>{{ kindCategory[resourceRef.kind] }}</b>
-                  <span>{{ kindName[resourceRef.kind] }}</span>
+<div class="variable-overwrites">
+  <fd-flexible-column-layout [(layout)]="localLayout">
+    <ng-template #startColumn>
+      <div *ngIf="pipeline$ | async as pipeline; else skeleton">
+        <div class="ci-cd-header">
+          <fd-card cardType="linkList">
+            <fd-card-content class="header">
+              <div class="header-content">
+                <h1 class="header-text"><strong>CI/CD</strong></h1>
+                <div class="header-debug-mode" *ngIf="debugModeService.debugModeEnabled()">
+                  <span>Debug Mode</span>
+                  <i class="header-debug-text">disable with CTRL + D</i>
                 </div>
-              </a>
-            </li>
-          </ul>
-        </fd-card-content>
-      </fd-card>
-      <fd-card cardType="linkList" class="disabled">
-        <fd-card-content>
-          <div style="display: flex; justify-content: space-between; align-items: center">
-            <div class="card-content">
-              <fd-avatar [colorAccent]="10" size="m" glyph="shield"></fd-avatar>
-              <div class="card-description">
-                <h1><strong>Test</strong></h1>
-                <p>Get feedback on the compliance of your code</p>
+                <div class="header-buttons">
+                  <button
+                    class="header-button"
+                    fd-button
+                    label="Give Feedback"
+                    fdType="emphasized"
+                    (click)="openFeedbackSurvey()"
+                    *ngIf="isBuildPipelineSetup() && localLayout === 'OneColumnStartFullScreen'"></button>
+                  <fd-busy-indicator [loading]="pendingShowCredentials()" size="s">
+                    <button
+                      fd-button
+                      label="Show Credentials"
+                      [disabled]="pendingShowCredentials()"
+                      fdType="transparent"
+                      glyph="key"
+                      ariaLabel="Show Credentials"
+                      (click)="showCredentials()"></button>
+                  </fd-busy-indicator>
+                  <button
+                    role="button"
+                    class="header-button"
+                    fdType="transparent"
+                    glyph="sys-help"
+                    fd-button
+                    (click)="openDocumentation()"></button>
+                </div>
+              </div>
+            </fd-card-content>
+          </fd-card>
+        </div>
+        <div class="pipeline-container">
+          <div class="pipeline-header">
+            <h3 class="heading">Your Pipeline</h3>
+            <button
+              *ngIf="debugModeService.debugModeEnabled()"
+              fd-button
+              fdType="transparent"
+              glyph="detail-view"
+              ariaLabel="Pipeline Details"
+              (click)="openPipelineDebugModal($event)"></button>
+            <code *ngIf="debugModeService.debugModeEnabled()">Name: {{ pipeline.name }}</code>
+          </div>
+          <div *ngFor="let error of errors()">
+            <error-message [title]="error.title" [message]="error.message"></error-message>
+          </div>
+          <dismissible-message
+            type="information"
+            message="For productive usage it is not recommended authenticating with your own user at the pipeline set up.<br/> Request technical user upfront instead."></dismissible-message>
+          <dismissible-message
+            *ngIf="isBuildPipelineSetup()"
+            type="success"
+            message="YAY! Your build pipeline is set up."
+            displayButton="true"
+            buttonText="See It in Action"
+            [buttonPending]="pendingOpenPipeline()"
+            (onButtonClick)="openPipeline($event, pipeline)"></dismissible-message>
+          <fd-card cardType="linkList" class="stage-card">
+            <fd-card-content class="card-content-padding">
+              <div class="card-content build-stage-padding" (click)="openBuildStage(pipeline)">
+                <div class="icons">
+                  <fd-avatar *ngIf="!isBuildStageSetup()" [colorAccent]="1" size="m" glyph="wrench"></fd-avatar>
+                  <fd-icon
+                    *ngIf="!isBuildStageOpen() && isBuildStageSetup()"
+                    glyph="slim-arrow-right"
+                    class="icon"></fd-icon>
+                  <fd-icon *ngIf="isBuildStageOpen()" glyph="slim-arrow-down" class="icon"></fd-icon>
+                </div>
+                <div class="card-description">
+                  <h1 [ngClass]="isBuildStageSetup() ? 'stage-setup-header' : ''"><strong>Build</strong></h1>
+                  <p *ngIf="!isBuildStageSetup()">Get a pipeline that builds and packages your code</p>
+                </div>
+                <div class="spacer"></div>
+                <button
+                  *ngIf="!isBuildStageSetup()"
+                  fd-button
+                  label="Set Up"
+                  fdType="emphasized"
+                  (click)="openSetupWizard($event)"></button>
+                <button
+                  *ngIf="isBuildStageSetup() && !pendingDeletion()"
+                  fd-button
+                  glyph="delete"
+                  (click)="deletePipeline($event, pipeline)"></button>
+                <fd-busy-indicator [loading]="pendingOpenPipeline()" size="s">
+                  <button
+                    *ngIf="isBuildStageSetup() && !pendingDeletion() && !jenkinsPipelineError()"
+                    fd-button
+                    [disabled]="pendingOpenPipeline()"
+                    label="Open Pipeline"
+                    fdType="transparent"
+                    (click)="openPipeline($event, pipeline)"></button>
+                </fd-busy-indicator>
+                <fd-busy-indicator
+                  *ngIf="isBuildStageSetup() && pendingDeletion()"
+                  [loading]="true"
+                  ariaLabel="loading"
+                  label="Pending Deletion"></fd-busy-indicator>
+              </div>
+              <ul *ngIf="isBuildStageOpen()" fd-list [byline]="true" [noBorder]="true">
+                <li
+                  fd-list-item
+                  *ngFor="let resourceRef of pipeline.resourceRefs"
+                  (click)="openDetails(resourceRef.kind, resourceRef.name, resourceRef.status)"
+                  [ngClass]="
+                    activeTile === resourceRef.kind && localLayout != 'OneColumnStartFullScreen'
+                      ? 'list-item-selected '
+                      : ''
+                  "
+                  class="list-item-border">
+                  <a fd-list-link>
+                    <span fd-list-thumbnail>
+                      <span
+                        fd-object-status
+                        class="status-icon"
+                        size="m"
+                        *ngIf="resourceRef.status === serviceStatus.CREATED"
+                        status="positive"
+                        glyph="message-success"></span>
+                      <fd-busy-indicator
+                        [loading]="true"
+                        *ngIf="resourceRef.status === serviceStatus.PENDING_CREATION"
+                        ariaLabel="loading"
+                        size="s"
+                        title="Please Wait"></fd-busy-indicator>
+                      <span
+                        fd-object-status
+                        class="status-icon"
+                        *ngIf="resourceRef.status === serviceStatus.FAILING_CREATION"
+                        status="negative"
+                        glyph="message-error"></span>
+                      <span
+                        fd-object-status
+                        class="status-icon"
+                        *ngIf="resourceRef.status === serviceStatus.NOT_FOUND"
+                        glyph="circle-task"></span>
+                    </span>
+                    <div class="service">
+                      <div class="name">
+                        <b class="category">{{ kindCategory[resourceRef.kind] }}</b>
+                        <span class="name-details">
+                          {{ kindName[resourceRef.kind] }}
+                          <code *ngIf="debugModeService.debugModeEnabled()">- {{ resourceRef.kind }}</code>
+                        </span>
+                        <code class="debug-details" *ngIf="debugModeService.debugModeEnabled()">
+                          {{ resourceRef.name }} | {{ resourceRef.status }}
+                        </code>
+                      </div>
+                      <div class="details-icon">
+                        <fd-icon
+                          *ngIf="resourceRef.status === serviceStatus.CREATED"
+                          glyph="slim-arrow-right"
+                          class="icon"></fd-icon>
+                      </div>
+                    </div>
+                  </a>
+                </li>
+              </ul>
+            </fd-card-content>
+          </fd-card>
+          <fd-card cardType="linkList" class="stage-card disabled">
+            <fd-card-content>
+              <div class="coming-soon-stage">
+                <div class="card-content">
+                  <fd-avatar [colorAccent]="10" size="m" glyph="shield"></fd-avatar>
+                  <div class="card-description">
+                    <h1 class="disabled-headline"><strong>Validate</strong></h1>
+                    <p>Get feedback on the compliance of your code</p>
+                  </div>
+                </div>
+                <fd-info-label label="Coming Soon" [color]="10" title="Coming Soon"></fd-info-label>
+              </div>
+            </fd-card-content>
+          </fd-card>
+          <fd-card cardType="linkList" class="stage-card disabled">
+            <fd-card-content>
+              <div class="coming-soon-stage">
+                <div class="card-content">
+                  <fd-avatar [colorAccent]="10" size="m" glyph="shipping-status"></fd-avatar>
+                  <div class="card-description">
+                    <h1 class="disabled-headline"><strong>Deploy</strong></h1>
+                    <p>Enable a deployment of your packaged code</p>
+                  </div>
+                </div>
+                <fd-info-label fdCozy label="Coming Soon" [color]="10" title="Coming Soon"></fd-info-label>
+              </div>
+            </fd-card-content>
+          </fd-card>
+        </div>
+      </div>
+      <ng-template #skeleton>
+        <fd-skeleton type="rectangle" width="100%" height="6rem"></fd-skeleton>
+        <div class="pipeline-container">
+          <fd-skeleton type="text" width="15rem" textLines="2" class="skeleton-text"></fd-skeleton>
+          <fd-skeleton type="rectangle" width="100%" height="6rem" class="skeleton-top-margin"></fd-skeleton>
+          <fd-skeleton type="rectangle" width="100%" height="6rem" class="skeleton-top-margin"></fd-skeleton>
+          <fd-skeleton type="rectangle" width="100%" height="6rem" class="skeleton-top-margin"></fd-skeleton>
+        </div>
+      </ng-template>
+    </ng-template>
+    <ng-template #midColumn>
+      <div class="service-category-header">
+        <fd-card cardType="linkList">
+          <fd-card-content class="header">
+            <div class="header-items">
+              <h1 class="header-text">
+                <strong>{{ kindCategory[activeTile] }}</strong>
+              </h1>
+              <div class="buttons-seperator">
+                <button
+                  class="button-margin"
+                  fd-button
+                  fdType="transparent"
+                  glyph="resize"
+                  ariaLabel="Expand Details"
+                  *ngIf="localLayout != 'OneColumnMidFullScreen'"
+                  (click)="expandDetails()"></button>
+                <button
+                  class="button-margin hide-on-small-screen"
+                  fd-button
+                  fdType="transparent"
+                  glyph="exitfullscreen"
+                  *ngIf="localLayout === 'OneColumnMidFullScreen'"
+                  ariaLabel="Shrink Details"
+                  (click)="shrinkDetails()"></button>
+                <button
+                  fd-button
+                  fdType="transparent"
+                  glyph="decline"
+                  ariaLabel="Close Details"
+                  (click)="closeDetails()"></button>
               </div>
             </div>
-            <fd-info-label label="Coming Soon" [color]="10" title="Coming Soon"></fd-info-label>
-          </div>
-        </fd-card-content>
-      </fd-card>
-      <fd-card cardType="linkList" class="disabled">
-        <fd-card-content>
-          <div style="display: flex; justify-content: space-between; align-items: center">
-            <div class="card-content">
-              <fd-avatar [colorAccent]="10" size="m" glyph="bus-public-transport"></fd-avatar>
-              <div class="card-description">
-                <h1><strong>Deploy</strong></h1>
-                <p>Enable a deployment of your packaged code</p>
+          </fd-card-content>
+        </fd-card>
+      </div>
+      <div class="service-card">
+        <fd-card cardType="linkList" class="card">
+          <fd-card-content>
+            <div class="header">
+              <div class="text">
+                <h1 class="headline">
+                  <strong>{{ kindName[activeTile] }}</strong>
+                </h1>
+                <span class="subheader">{{ kindCategory[activeTile] }}</span>
+              </div>
+              <button
+                *ngIf="serviceUrl()"
+                class="open-service-button"
+                fd-button
+                fdType="emphasized"
+                label="Open Service"
+                (click)="openService()"
+                ariaLabel="Close Details"></button>
+            </div>
+            <div class="service-meta">
+              <fd-avatar size="s" [label]="kindName[activeTile]" [colorAccent]="10"></fd-avatar>
+              <div class="meta-info">
+                <b>Provider</b>
+                <span>Hyperspace</span>
+              </div>
+              <div class="meta-info">
+                <b>Installed On</b>
+                <span
+                  *ngIf="
+                    !serviceDetailsLoading() && serviceCreationTimestamp() && !debugModeService.debugModeEnabled()
+                  ">
+                  {{ formatDate(serviceCreationTimestamp()) }}
+                </span>
+                <span *ngIf="!serviceDetailsLoading() && debugModeService.debugModeEnabled()">
+                  {{ serviceCreationTimestamp()?.toISOString() ?? 'undefined' }}
+                </span>
+                <fd-skeleton *ngIf="serviceDetailsLoading()" width="85px" height="21px">
+                  <svg:rect x="0" y="8" width="85" height="8" rx="4"></svg:rect>
+                </fd-skeleton>
               </div>
             </div>
-            <fd-info-label fdCozy label="Coming Soon" [color]="10" title="Coming Soon"></fd-info-label>
-          </div>
-        </fd-card-content>
-      </fd-card>
-    </div>
-    <ng-template #skeleton>
-      <div class="pipeline-container">
-        <fd-skeleton type="text" width="100px" textLines="2" class="skeleton-text"></fd-skeleton>
-        <fd-skeleton type="rectangle" width="100%" height="96px"></fd-skeleton>
-        <fd-skeleton type="rectangle" width="100%" height="96px"></fd-skeleton>
-        <fd-skeleton type="rectangle" width="100%" height="96px"></fd-skeleton>
+            <fd-tab-list class="tab-list">
+              <fd-tab title="CI/CD">
+                <div class="tab-margin" *ngIf="!serviceDetailsLoading()" [ngSwitch]="activeTile">
+                  <cumulus-service-details
+                    *ngSwitchCase="'CumulusPipeline'"
+                    [serviceDetails]="serviceDetails()"></cumulus-service-details>
+                  <github-service-details
+                    *ngSwitchCase="'GithubRepository'"
+                    [serviceDetails]="serviceDetails()"></github-service-details>
+                  <jenkins-service-details
+                    *ngSwitchCase="'JenkinsPipeline'"
+                    [serviceDetails]="serviceDetails()"></jenkins-service-details>
+                  <piper-service-details
+                    *ngSwitchCase="'PiperConfig'"
+                    [serviceDetails]="serviceDetails()"></piper-service-details>
+                  <staging-service-service-details
+                    *ngSwitchCase="'StagingServiceCredential'"
+                    [serviceDetails]="serviceDetails()"></staging-service-service-details>
+                </div>
+                <div class="tab-margin">
+                  <fd-skeleton width="350px" height="10rem" *ngIf="serviceDetailsLoading()">
+                    <svg:rect x="0" y="10" width="250" height="16" rx="4"></svg:rect>
+                    <svg:rect x="0" y="45" width="160" height="8" rx="4"></svg:rect>
+                    <svg:rect x="0" y="65" width="160" height="8" rx="4"></svg:rect>
+                    <svg:rect x="0" y="85" width="100" height="8" rx="4"></svg:rect>
+                  </fd-skeleton>
+                </div>
+                <div class="tab-margin" *ngIf="debugModeService.debugModeEnabled()">
+                  <h4 class="debug-service-details-heading">Service Details:</h4>
+                  <pre class="hide-scrollbar service-details-json">{{ serviceDetails() | json }}</pre>
+                </div>
+              </fd-tab>
+              <fd-tab title="Service Info">
+                <div class="service-info">
+                  <div class="service-info-flexbox">
+                    <img src="./assets/comingSoonPage.svg" class="service-info-image" />
+                    <h2>Coming Soon</h2>
+                    <span>
+                      We are working to provide you with more details about this service, as well as links to related
+                      documentation here. For now, please visit the
+                      <a [href]="catalogUrl()" target="_blank" class="catalog-link">Hyperspace Catalog</a>
+                      to get more information on the {{ kindName[activeTile] }} service.
+                    </span>
+                  </div>
+                </div>
+              </fd-tab>
+            </fd-tab-list>
+          </fd-card-content>
+        </fd-card>
       </div>
     </ng-template>
-  </ng-template>
-  <ng-template #midColumn>
-    <h3>Column 2: {{ activeTile }}</h3>
-  </ng-template>
-</fd-flexible-column-layout>
+  </fd-flexible-column-layout>
+</div>

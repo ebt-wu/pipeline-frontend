@@ -1,0 +1,91 @@
+<div>
+  <div class="flex-box">
+    <h3>GitHub Repository</h3>
+    <button
+      class="auto-left-margin"
+      role="button"
+      glyph="question-mark"
+      label="Learn More"
+      [toggled]="true"
+      (click)="openDocumentation()"
+      fd-button></button>
+  </div>
+  <div class="flex-box">
+    <b>Instance</b>
+    <button
+      class="height left-margin"
+      role="button"
+      fdType="transparent"
+      glyph="hint"
+      fd-button
+      placement="top"
+      [fd-inline-help]="instanceHelp"
+      [triggers]="['click']"
+      [closeOnOutsideClick]="true"></button>
+    <br />
+  </div>
+  {{ serviceDetails.url }}
+  <div class="flex-box top-margin">
+    <b>Profile Name</b>
+    <button
+      class="height left-margin"
+      role="button"
+      fdType="transparent"
+      glyph="hint"
+      fd-button
+      placement="top"
+      [fd-inline-help]="profileHelp"
+      [triggers]="['click']"
+      [closeOnOutsideClick]="true"></button>
+    <br />
+  </div>
+  {{ serviceDetails.profileName }}
+  <div class="flex-box top-margin">
+    <h3>Staging Service Credentials</h3>
+    <button
+      class="height left-margin"
+      role="button"
+      fdType="transparent"
+      glyph="hint"
+      fd-button
+      placement="top"
+      [fd-inline-help]="credentialsHelp"
+      [triggers]="['click']"
+      [closeOnOutsideClick]="true"></button>
+    <br />
+  </div>
+  <div>
+    <b>Vault Path</b>
+  </div>
+  {{ serviceDetails.secretPath }}
+  <div class="top-margin">
+    <fd-busy-indicator [loading]="pendingShowInVault()" size="s">
+      <button
+        fd-button
+        fdType="transparent"
+        [disabled]="pendingShowInVault()"
+        label="Show in Vault"
+        (click)="showInVault(serviceDetails.secretPath)"></button>
+    </fd-busy-indicator>
+  </div>
+</div>
+
+<ng-template #instanceHelp>
+  <div>The Staging Service instance your artefacts will be pushed to.</div>
+</ng-template>
+
+<ng-template #profileHelp>
+  <div>
+    The name of the Staging Service profile we created for you.
+    <br />
+    Staging Service profiles are created per Hyperspace Portal project.
+  </div>
+</ng-template>
+
+<ng-template #credentialsHelp>
+  <div>
+    During a run, your pipeline uses these credentials to access the Staging Service.
+    <br />
+    We created them for you and stored them with your other credentials in Vault.
+  </div>
+</ng-template>

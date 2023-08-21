@@ -1,89 +1,85 @@
-<div *ngIf="pipeline$ | async; else skeleton">
-  <fd-layout-grid>
-    <div fdLayoutGridRow>
-      <h2 fdLayoutGridCol colGrow class="headline" fd-title>What do you want to do?</h2>
-    </div>
-    <div fdLayoutGridRow class="grid-row">
-      <div fdLayoutGridCol [fdLayoutGridCol]="10" [colMd]="6" [colLg]="4" [colXl]="3">
-        <fd-card class="single-services-card">
-          <fd-card-content>
-            <img src="./assets/bricks.svg" class="svg-background" />
-            <div class="card-text">
-              <h2 fd-card-title class="card-headline">Install single CI/CD Services</h2>
-              <span class="card-description">Get extensions for your already existing pipeline.</span>
-            </div>
-          </fd-card-content>
-          <fd-card-footer>
-            <div class="card-footer">
-              <fd-busy-indicator [loading]="singleServiceLoading" size="s" title="Inline Wrapper">
-                <button
-                  fd-button
-                  [disabled]="pipelineLoading || singleServiceLoading"
-                  fdCozy
-                  fdType="transparent"
-                  label="Add Service"
-                  glyph="add"
-                  (click)="createPipeline(pipelineType.SINGLE_SERVICE)"></button>
-              </fd-busy-indicator>
-            </div>
-          </fd-card-footer>
-        </fd-card>
+<div>
+  <fd-card cardType="linkList">
+    <fd-card-content class="header">
+      <div class="header-layout">
+        <h1 class="header-text"><strong>CI/CD</strong></h1>
+        <div class="header-debug-mode" *ngIf="debugModeService.debugModeEnabled()">
+          <span>Debug Mode</span>
+          <i class="header-debug-text">disable with CTRL + D</i>
+        </div>
       </div>
-      <div fdLayoutGridCol [fdLayoutGridCol]="10" [colMd]="6" [colLg]="4" [colXl]="3">
-        <fd-card class="recommended-border">
-          <div class="recommended-heading">
-            <span class="recommended-text">RECOMMENDED</span>
+    </fd-card-content>
+  </fd-card>
+  <div *ngIf="pipeline$ | async; else skeleton">
+    <h3 class="headline">What do you want to do?</h3>
+    <div class="card-flex-box">
+      <fd-card class="single-services-card">
+        <fd-card-content>
+          <img src="./assets/bricks.svg" class="svg-background" />
+          <div class="card-text">
+            <h2 fd-card-title class="card-headline">Install single CI/CD Services</h2>
+            <span class="card-description">Get extensions for your already existing pipeline.</span>
           </div>
-          <fd-card-content>
-            <img src="./assets/tools.svg" class="svg-background" />
-            <div class="paved-road-logo">
-              <img src="./assets/pavedRoadLogo.svg" class="paved-road-logo-img" />
-            </div>
-            <div class="card-text">
-              <h2 fd-card-title class="card-headline">Set up a pipeline</h2>
-              <span class="card-description">
-                Get a new end to end Hyperspace pipeline which is compliant by default.
-              </span>
-            </div>
-          </fd-card-content>
-          <fd-card-footer>
-            <div class="card-footer">
-              <fd-busy-indicator [loading]="pipelineLoading" size="s" title="Inline Wrapper">
-                <button
-                  fd-button
-                  [disabled]="pipelineLoading || singleServiceLoading"
-                  fdCozy
-                  fdType="emphasized"
-                  label="Set up Pipeline"
-                  (click)="createPipeline(pipelineType.FULL_PIPELINE)"></button>
-              </fd-busy-indicator>
-            </div>
-          </fd-card-footer>
-        </fd-card>
-      </div>
+        </fd-card-content>
+        <fd-card-footer>
+          <div class="card-footer">
+            <fd-busy-indicator [loading]="singleServiceLoading" size="s">
+              <button
+                fd-button
+                [disabled]="true"
+                fdType="transparent"
+                label="Coming Soon"
+                (click)="createPipeline(pipelineType.SINGLE_SERVICE)"></button>
+            </fd-busy-indicator>
+          </div>
+        </fd-card-footer>
+      </fd-card>
+      <fd-card class="recommended-border">
+        <div class="recommended-heading">
+          <span class="recommended-text">RECOMMENDED</span>
+        </div>
+        <fd-card-content>
+          <img src="./assets/tools.svg" class="svg-background" />
+          <div class="paved-road-logo">
+            <img src="./assets/pavedRoadLogo.svg" class="paved-road-logo-img" />
+          </div>
+          <div class="card-text">
+            <h2 fd-card-title class="card-headline">Set up a pipeline</h2>
+            <span class="card-description">
+              Get a new end to end Hyperspace pipeline which is compliant by default.
+            </span>
+          </div>
+        </fd-card-content>
+        <fd-card-footer>
+          <div class="card-footer">
+            <fd-busy-indicator [loading]="pipelineLoading" size="s">
+              <button
+                fd-button
+                [disabled]="pipelineLoading || singleServiceLoading"
+                fdType="emphasized"
+                label="Set up Pipeline"
+                (click)="createPipeline(pipelineType.FULL_PIPELINE)"></button>
+            </fd-busy-indicator>
+          </div>
+        </fd-card-footer>
+      </fd-card>
     </div>
-  </fd-layout-grid>
+  </div>
 </div>
 <ng-template #skeleton>
   <div class="skeleton">
     <div class="skeleton-heading">
-      <fd-skeleton width="360px" height="40px" class="skeleton-heading-margin">
-        <svg:rect x="0" y="0" width="360" height="36" rx="4"></svg:rect>
+      <fd-skeleton width="360px" height="28px" class="skeleton-heading-margin">
+        <svg:rect x="0" y="0" width="360" height="28" rx="4"></svg:rect>
       </fd-skeleton>
     </div>
-    <fd-layout-grid>
-      <div fdLayoutGridRow class="skeleton-grid">
-        <div fdLayoutGridCol [fdLayoutGridCol]="10" [colMd]="6" [colLg]="4" [colXl]="3">
-          <fd-skeleton width="100%" height="480px" class="skeleton-grid-margin">
-            <svg:rect x="0" y="0" width="100%" height="100%" rx="4"></svg:rect>
-          </fd-skeleton>
-        </div>
-        <div fdLayoutGridCol [fdLayoutGridCol]="10" [colMd]="6" [colLg]="4" [colXl]="3">
-          <fd-skeleton width="100%" height="480px" class="skeleton-grid-margin">
-            <svg:rect x="0" y="0" width="100%" height="100%" rx="4"></svg:rect>
-          </fd-skeleton>
-        </div>
-      </div>
-    </fd-layout-grid>
+    <div class="card-flex-box">
+      <fd-skeleton width="19rem" height="450px" class="skeleton-grid-margin">
+        <svg:rect x="0" y="0" width="100%" height="100%" rx="4"></svg:rect>
+      </fd-skeleton>
+      <fd-skeleton width="19rem" height="450px" class="skeleton-grid-margin">
+        <svg:rect x="0" y="0" width="100%" height="100%" rx="4"></svg:rect>
+      </fd-skeleton>
+    </div>
   </div>
 </ng-template>

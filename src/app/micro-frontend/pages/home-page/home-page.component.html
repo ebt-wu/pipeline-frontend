@@ -1,11 +1,6 @@
-<fdp-dynamic-page ariaLabel="Example Dynamic Page">
+<fdp-dynamic-page ariaLabel="CI/CD Dynamic Page">
   <fdp-dynamic-page-content id="basic">
     <div *ngIf="watch$ | async as watch; else loading" class="home-page-content">
-      <fd-card cardType="linkList">
-        <fd-card-content class="header">
-          <h1 class="header-text"><strong>CI/CD</strong></h1>
-        </fd-card-content>
-      </fd-card>
       <app-start
         [pipeline$]="watch$"
         *ngIf="

@@ -1,0 +1,13 @@
+.message-margin {
+  margin-top: 1rem;
+}
+
+.container {
+  display: flex;
+  align-items: center;
+
+  .button-height {
+    height: 1rem;
+    margin-left: 0.2rem;
+  }
+}
