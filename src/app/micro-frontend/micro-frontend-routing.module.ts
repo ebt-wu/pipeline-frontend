@@ -9,7 +9,6 @@ const routes: Routes = [
   {
     path: 'pipeline-ui',
     component: AppRouterOutlet,
-    data: { luigiRoute: '/pipeline-ui' },
     children: [
       {
         path: '',
