@@ -1,6 +1,6 @@
 kind: Component
 metadata:
-  displayName: 'pipeline-ui'
+  displayName: 'pipeline-frontend'
   description: 'Provide hyperspace pipelines for the hyperspace-portal'
 spec:
   dependsOn:
@@ -8,7 +8,8 @@ spec:
   type:
     name: ui
     categories:
-      - dxp
+      - portal
+      - ci/cd
       - angular
       - luigi
   team:
