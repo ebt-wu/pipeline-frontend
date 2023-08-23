@@ -413,7 +413,7 @@ export class SetupComponent {
           repositoryResource,
           value.buildTool,
           true,
-          value.buildTool === BuildTools.DOCKER ? context.componentId : ''
+          (value.buildTool === BuildTools.DOCKER || BuildTools.GO || BuildTools.GRADLE) ? context.componentId : ''
         )
       )
       await firstValueFrom(this.jenkinsService.createJenkinsPipeline(value.jenkinsUrl, jenkinsPath, repositoryResource))
