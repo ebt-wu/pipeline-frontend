@@ -158,6 +158,19 @@
                           {{ resourceRef.name }} | {{ resourceRef.status }}
                         </code>
                       </div>
+                      <div class="spacer"></div>
+                      <button
+                        *ngIf="
+                          localLayout === 'OneColumnStartFullScreen' &&
+                          (debugModeService.debugModeEnabled() || resourceRef.status === serviceStatus.FAILING_CREATION)
+                        "
+                        fd-button
+                        label="Retry"
+                        glyph="refresh"
+                        fdType="transparent"
+                        ariaLabel="Retry"
+                        class="retry-button"
+                        (click)="retryService($event, resourceRef)"></button>
                       <div class="details-icon">
                         <fd-icon
                           *ngIf="resourceRef.status === serviceStatus.CREATED"

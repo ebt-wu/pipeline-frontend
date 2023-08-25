@@ -62,6 +62,7 @@ export class PiperService {
         return client
           .query<GetPiperConfigResponse>({
             query: GET_PIPER_CONFIG,
+            fetchPolicy: "no-cache",
             variables: {
               projectId: ctx.context.projectId,
               resourceName: resourceName,

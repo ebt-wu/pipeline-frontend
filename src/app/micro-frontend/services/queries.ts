@@ -241,3 +241,13 @@ export const ENSURE_VAULT_ONBOARDING = gql`
     }
   }
 `
+
+/**
+ * FORCE RECONCILIATION
+ */
+
+export const FORCE_DEBUG_RECONCILIATION = gql`
+  mutation ForceDebugReconciliation($projectId: String!, $kind: String!, $resourceName: String!) {
+    forceDebugReconciliation(projectId: $projectId, kind: $kind, resourceName: $resourceName) 
+  }
+`

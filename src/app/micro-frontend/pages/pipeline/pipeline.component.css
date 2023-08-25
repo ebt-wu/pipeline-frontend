@@ -164,9 +164,15 @@ fd-card-content {
       }
     }
 
-    .details-icon {
-      margin-left: auto;
+    .spacer {
+      flex-grow: 1;
+    }
 
+    .retry-button {
+      margin-right: 0.5rem;
+    }
+
+    .details-icon {
       .icon {
         margin-right: 1rem;
         font-size: 20px;

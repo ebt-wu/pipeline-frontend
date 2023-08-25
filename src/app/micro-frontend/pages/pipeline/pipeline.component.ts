@@ -19,8 +19,8 @@ import { CumlusServiceDetailsComponent } from '../../components/service-details/
 import { GithubServiceDetailsComponent } from '../../components/service-details/github/github-service-details.component'
 import { JenkinServiceDetailsComponent } from '../../components/service-details/jenkins/jenkins-service-details.component'
 import { PiperServiceDetailsComponent } from '../../components/service-details/piper/piper-service-details.component'
-import { StagingServiceServiceDetailsComponent } from '../../components/service-details/staging-service/staging-service-service-details.component'
 import { DebugModeService } from '../../services/debug-mode.service'
+import { StagingServiceServiceDetailsComponent } from '../../components/service-details/staging-service/staging-service-service-details.component'
 
 type Error = {
   title: string
@@ -177,7 +177,7 @@ export class PipelineComponent implements OnInit, OnDestroy {
 
   openFeedbackSurvey() {
     // TODO: get correct survey links
-    window.open('https://github.tools.sap/hyper-pipe/portal/issues/2623', '_blank')
+    window.open('https://preview.userzoom.com/s/tti.aspx?s=C883S8286&sid=1', '_blank')
   }
 
   openDocumentation() {
@@ -269,6 +269,13 @@ export class PipelineComponent implements OnInit, OnDestroy {
 
   shrinkDetails() {
     this.localLayout = 'TwoColumnsMidExpanded'
+  }
+
+  async retryService(e: Event, resourceRef: ResourceRef) {
+    if (e) {
+      e.stopPropagation()
+    }
+    await firstValueFrom(this.debugModeService.forceDebugReconciliation(resourceRef.kind, resourceRef.name))
   }
 
   closeDetails() {

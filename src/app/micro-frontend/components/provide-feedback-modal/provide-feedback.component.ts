@@ -14,8 +14,8 @@ export class ProvideFeedbackComponent {
   constructor(private luigiClient: LuigiClient) {}
 
   openFeedbackSurvey() {
-    // TODO: get correct survey links
-    window.open('https://github.tools.sap/hyper-pipe/portal/issues/2623', '_blank')
+    // TODO: update with live survey links
+    window.open('https://preview.userzoom.com/s/tti.aspx?s=C883S8286&sid=1', '_blank')
     this.luigiClient.uxManager().closeCurrentModal()
   }
 

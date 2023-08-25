@@ -57,6 +57,7 @@ export class GithubService {
         return client
           .query<GetGithubRepositoryResponse>({
             query: GET_GITHUB_REPOSITORY,
+            fetchPolicy: "no-cache",
             variables: {
               projectId: ctx.context.projectId,
               resourceName: resourceName,

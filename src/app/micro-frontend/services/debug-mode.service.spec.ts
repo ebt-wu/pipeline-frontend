@@ -4,7 +4,7 @@ describe('DebugModeService', () => {
   let debugModeService: DebugModeService
 
   beforeEach(() => {
-    debugModeService = new DebugModeService(null)
+    debugModeService = new DebugModeService(null, null, null)
   })
 
   it('should create', () => {

@@ -55,6 +55,7 @@ export class JenkinsService {
         return client
           .query<GetJenkinsPipelineResponse>({
             query: GET_JENKINS_PIPELINE,
+            fetchPolicy: "no-cache",
             variables: {
               projectId: ctx.context.projectId,
               resourceName: resourceName,
