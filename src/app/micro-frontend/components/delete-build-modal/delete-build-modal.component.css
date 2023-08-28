@@ -1,0 +1,17 @@
+.advanced-settings {
+  margin-bottom: 1rem;
+
+  .advanced-hint {
+    margin-left: 1.5rem;
+    font-size: var(--sapFontSmallSize);
+    color: var(--sapNeutralColor);
+  }
+}
+
+.not-undone-message {
+  margin-bottom: 0;
+}
+
+.component-name-input {
+  margin-top: 0.5rem !important;
+}

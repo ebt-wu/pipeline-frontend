@@ -30,6 +30,7 @@
                       (click)="showCredentials()"></button>
                   </fd-busy-indicator>
                   <button
+                    title="Show documentation"
                     role="button"
                     class="header-button"
                     fdType="transparent"
@@ -56,9 +57,6 @@
           <div *ngFor="let error of errors()">
             <error-message [title]="error.title" [message]="error.message"></error-message>
           </div>
-          <dismissible-message
-            type="information"
-            message="For productive usage it is not recommended authenticating with your own user at the pipeline set up.<br/> Request technical user upfront instead."></dismissible-message>
           <dismissible-message
             *ngIf="isBuildPipelineSetup()"
             type="success"
@@ -302,47 +300,53 @@
             </div>
             <fd-tab-list class="tab-list">
               <fd-tab title="CI/CD">
-                <div class="tab-margin" *ngIf="!serviceDetailsLoading()" [ngSwitch]="activeTile">
-                  <cumulus-service-details
-                    *ngSwitchCase="'CumulusPipeline'"
-                    [serviceDetails]="serviceDetails()"></cumulus-service-details>
-                  <github-service-details
-                    *ngSwitchCase="'GithubRepository'"
-                    [serviceDetails]="serviceDetails()"></github-service-details>
-                  <jenkins-service-details
-                    *ngSwitchCase="'JenkinsPipeline'"
-                    [serviceDetails]="serviceDetails()"></jenkins-service-details>
-                  <piper-service-details
-                    *ngSwitchCase="'PiperConfig'"
-                    [serviceDetails]="serviceDetails()"></piper-service-details>
-                  <staging-service-service-details
-                    *ngSwitchCase="'StagingServiceCredential'"
-                    [serviceDetails]="serviceDetails()"></staging-service-service-details>
-                </div>
-                <div class="tab-margin">
-                  <fd-skeleton width="350px" height="10rem" *ngIf="serviceDetailsLoading()">
-                    <svg:rect x="0" y="10" width="250" height="16" rx="4"></svg:rect>
-                    <svg:rect x="0" y="45" width="160" height="8" rx="4"></svg:rect>
-                    <svg:rect x="0" y="65" width="160" height="8" rx="4"></svg:rect>
-                    <svg:rect x="0" y="85" width="100" height="8" rx="4"></svg:rect>
-                  </fd-skeleton>
-                </div>
-                <div class="tab-margin" *ngIf="debugModeService.debugModeEnabled()">
-                  <h4 class="debug-service-details-heading">Service Details:</h4>
-                  <pre class="hide-scrollbar service-details-json">{{ serviceDetails() | json }}</pre>
+                <!-- title="" is required to prevent the title attribute from being transferred from fd-tab to downstream elements -->
+                <div title="">
+                  <div class="tab-margin" *ngIf="!serviceDetailsLoading()" [ngSwitch]="activeTile">
+                    <cumulus-service-details
+                      *ngSwitchCase="'CumulusPipeline'"
+                      [serviceDetails]="serviceDetails()"></cumulus-service-details>
+                    <github-service-details
+                      *ngSwitchCase="'GithubRepository'"
+                      [serviceDetails]="serviceDetails()"></github-service-details>
+                    <jenkins-service-details
+                      *ngSwitchCase="'JenkinsPipeline'"
+                      [serviceDetails]="serviceDetails()"></jenkins-service-details>
+                    <piper-service-details
+                      *ngSwitchCase="'PiperConfig'"
+                      [serviceDetails]="serviceDetails()"></piper-service-details>
+                    <staging-service-service-details
+                      *ngSwitchCase="'StagingServiceCredential'"
+                      [serviceDetails]="serviceDetails()"></staging-service-service-details>
+                  </div>
+                  <div class="tab-margin">
+                    <fd-skeleton width="350px" height="10rem" *ngIf="serviceDetailsLoading()">
+                      <svg:rect x="0" y="10" width="250" height="16" rx="4"></svg:rect>
+                      <svg:rect x="0" y="45" width="160" height="8" rx="4"></svg:rect>
+                      <svg:rect x="0" y="65" width="160" height="8" rx="4"></svg:rect>
+                      <svg:rect x="0" y="85" width="100" height="8" rx="4"></svg:rect>
+                    </fd-skeleton>
+                  </div>
+                  <div class="tab-margin" *ngIf="debugModeService.debugModeEnabled()">
+                    <h4 class="debug-service-details-heading">Service Details:</h4>
+                    <pre class="hide-scrollbar service-details-json">{{ serviceDetails() | json }}</pre>
+                  </div>
                 </div>
               </fd-tab>
               <fd-tab title="Service Info">
-                <div class="service-info">
-                  <div class="service-info-flexbox">
-                    <img src="./assets/comingSoonPage.svg" class="service-info-image" />
-                    <h2>Coming Soon</h2>
-                    <span>
-                      We are working to provide you with more details about this service, as well as links to related
-                      documentation here. For now, please visit the
-                      <a [href]="catalogUrl()" target="_blank" class="catalog-link">Hyperspace Catalog</a>
-                      to get more information on the {{ kindName[activeTile] }} service.
-                    </span>
+                <!-- title="" is required to prevent the title attribute from being transferred from fd-tab to downstream elements -->
+                <div title="">
+                  <div class="service-info">
+                    <div class="service-info-flexbox">
+                      <img src="./assets/comingSoonPage.svg" class="service-info-image" />
+                      <h2>Coming Soon</h2>
+                      <span>
+                        We are working to provide you with more details about this service, as well as links to related
+                        documentation here. For now, please visit the
+                        <a [href]="catalogUrl()" target="_blank" class="catalog-link">Hyperspace Catalog</a>
+                        to get more information on the {{ kindName[activeTile] }} service.
+                      </span>
+                    </div>
                   </div>
                 </div>
               </fd-tab>

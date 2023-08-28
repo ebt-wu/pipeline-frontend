@@ -5,6 +5,7 @@ import { SetupComponent } from './pages/setup-build/setup-build.component'
 import { AppRouterOutlet } from './components/router-outlet/router-outlet.component'
 import { PipelineDebugModal } from './components/pipeline-debug/pipeline-debug.component'
 import { ProvideFeedbackComponent } from './components/provide-feedback-modal/provide-feedback.component'
+import { ImportExistingPipelineModal } from './components/import-existing-pipeline-modal/import-existing-pipeline.component'
 
 const routes: Routes = [
   {
@@ -22,13 +23,15 @@ const routes: Routes = [
       {
         path: 'pipeline-debug',
         component: PipelineDebugModal,
-        data: { luigiRoute: '/pipeline-debug' },
       },
       {
         path: 'feedback',
         component: ProvideFeedbackComponent,
-        data: { luigiRoute: '/feedback' },
       },
+      {
+        path: 'import-pipeline',
+        component: ImportExistingPipelineModal,
+      }
     ],
   },
 ]

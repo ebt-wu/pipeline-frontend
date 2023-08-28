@@ -9,7 +9,8 @@ export type SetupBuildFormValue = {
   githubToken?: string
   githubUserID?: string
   jenkinsCredentialType?: CredentialTypes
-  jenkinsHeader?: string
+  jenkinsInstanceHeader?: string
+  jenkinsCredentialHeader?: string
   jenkinsSelectCredential?: string
   jenkinsToken?: string
   jenkinsUrl?: string

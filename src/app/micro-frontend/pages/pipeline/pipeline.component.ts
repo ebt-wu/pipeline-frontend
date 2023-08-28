@@ -1,8 +1,8 @@
 import { CommonModule } from '@angular/common'
 import { Component, Input, OnDestroy, OnInit, signal } from '@angular/core'
-import { FlexibleColumnLayout, FundamentalNgxCoreModule, IconModule } from '@fundamental-ngx/core'
+import { FlexibleColumnLayout, FundamentalNgxCoreModule, IconModule, MessageBoxService } from '@fundamental-ngx/core'
 import { Observable, Subscription, firstValueFrom } from 'rxjs'
-import { DxpLuigiContextService, LuigiClient } from '@dxp/ngx-core/luigi'
+import { DxpLuigiContextService, LuigiClient, LuigiDialogUtil } from '@dxp/ngx-core/luigi'
 import { KindCategory, KindDocumentation, KindName } from 'src/app/constants'
 import { RouterModule } from '@angular/router'
 import { Pipeline, ResourceRef } from 'src/app/types'
@@ -21,6 +21,7 @@ import { JenkinServiceDetailsComponent } from '../../components/service-details/
 import { PiperServiceDetailsComponent } from '../../components/service-details/piper/piper-service-details.component'
 import { DebugModeService } from '../../services/debug-mode.service'
 import { StagingServiceServiceDetailsComponent } from '../../components/service-details/staging-service/staging-service-service-details.component'
+import { DeleteBuildModal } from '../../components/delete-build-modal/delete-build-modal.component'
 
 type Error = {
   title: string
@@ -44,6 +45,7 @@ type Error = {
     JenkinServiceDetailsComponent,
     PiperServiceDetailsComponent,
     StagingServiceServiceDetailsComponent,
+    DeleteBuildModal,
   ],
 })
 export class PipelineComponent implements OnInit, OnDestroy {
@@ -92,6 +94,8 @@ export class PipelineComponent implements OnInit, OnDestroy {
     private readonly piperService: PiperService,
     private readonly cumulusService: CumulusService,
     private readonly stagingServiceService: StagingServiceService,
+    private messageBoxService: MessageBoxService,
+    private luigiDialogUtil: LuigiDialogUtil,
     private readonly secretService: SecretService,
     private readonly luigiService: DxpLuigiContextService,
     readonly debugModeService: DebugModeService
@@ -181,8 +185,7 @@ export class PipelineComponent implements OnInit, OnDestroy {
   }
 
   openDocumentation() {
-    // TODO: get correct documentation link
-    alert('TODO This button should open some documentation')
+    window.open('https://pages.github.tools.sap/hyper-pipe/portal-jenkins-pilot-docs/', '_blank')
   }
 
   openSetupWizard(e: Event) {
@@ -233,6 +236,30 @@ export class PipelineComponent implements OnInit, OnDestroy {
   async deletePipeline(e: Event, pipeline: Pipeline) {
     e.stopPropagation()
 
+    const componentId = (await this.luigiService.getContextAsync()).componentId
+
+    const mb = this.messageBoxService.open(DeleteBuildModal, {
+      type: 'warning',
+      width: '30rem',
+      showSemanticIcon: true,
+      data: {
+        componentId,
+      },
+    })
+
+    this.luigiDialogUtil.manageLuigiBackdrops(mb as any)
+
+    const action = await firstValueFrom(mb.afterClosed)
+
+    if (action === 'cancel') {
+      return
+    }
+
+    let jenkinsDeletionPolicy = DeletionPolicy.ORPHAN
+    if (action === 'hard-delete') {
+      jenkinsDeletionPolicy = DeletionPolicy.DELETE
+    }
+
     this.localLayout = 'OneColumnStartFullScreen'
     this.activeTile = ''
 
@@ -240,7 +267,6 @@ export class PipelineComponent implements OnInit, OnDestroy {
     const jenkinsRef = pipeline.resourceRefs.find((ref) => ref.kind == Kinds.JENKINS_PIPELINE)
     const piperRef = pipeline.resourceRefs.find((ref) => ref.kind == Kinds.PIPER_CONFIG)
 
-    // TODO: build proper deletion
     this.pendingDeletion.set(true)
     setTimeout(() => {
       this.pendingDeletion.set(false)
@@ -249,7 +275,7 @@ export class PipelineComponent implements OnInit, OnDestroy {
     try {
       await Promise.all([
         firstValueFrom(this.githubService.deleteGithubRepository(githubRef.name)),
-        firstValueFrom(this.jenkinsService.deleteJenkinsPipeline(jenkinsRef.name, DeletionPolicy.DELETE)),
+        firstValueFrom(this.jenkinsService.deleteJenkinsPipeline(jenkinsRef.name, jenkinsDeletionPolicy)),
         firstValueFrom(this.piperService.deletePiperConfig(piperRef.name)),
       ])
     } catch (e) {

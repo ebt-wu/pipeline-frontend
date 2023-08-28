@@ -6,7 +6,7 @@ fd-card {
   padding: 12px 24px;
 
   .header-text {
-    font-size: 24px;
+    font-size: var(--sapFontHeader3Size);
     margin: 1rem;
   }
 
@@ -26,84 +26,98 @@ fd-card {
   }
 }
 
-.headline {
-  text-align: center;
-  margin-top: 3rem;
-  font-size: 24px;
-  font-weight: bold;
-}
-
-.card-flex-box {
+.flex-wrapper {
   display: flex;
-  justify-content: center;
-  gap: 2.5rem;
-  margin-top: 3rem;
-  flex-wrap: wrap;
+  flex-direction: column;
+  align-items: center;
 
-  .single-services-card {
-    min-height: calc(100% - 30px);
-    margin-top: 30px;
-    width: 19rem;
+  .headline {
+    text-align: center;
+    margin-top: 2.5rem;
+    margin-bottom: 0rem;
+    font-size: var(--sapFontHeader3Size);
+    font-weight: bold;
   }
 
-  .svg-background {
-    background-color: #ebf8ff;
-    padding: 24px;
-  }
-
-  .paved-road-logo {
+  .card-flex-box {
     display: flex;
     justify-content: center;
-    margin-top: 1rem;
-  }
+    gap: 2.5rem;
+    margin-top: 2rem;
+    flex-wrap: wrap;
 
-  .paved-road-logo-img {
-    margin: auto;
-  }
-
-  .card-text {
-    display: flex;
-    flex-direction: column;
-    margin: 1rem 3rem 1rem 3rem;
-
-    .card-headline {
-      margin: auto;
-      font-size: 1.4rem;
-      text-align: center;
+    .single-services-card {
+      min-height: calc(100% - 30px);
+      margin-top: 30px;
+      width: 19rem;
     }
 
-    .card-description {
-      margin: auto;
-      margin-top: 0.5rem;
-      font-size: 0.9rem;
-      text-align: center;
-      color: #556b82;
+    .svg-background {
+      background-color: #ebf8ff;
+      padding: 1.5rem;
     }
-  }
 
-  .card-footer {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 100%;
-    height: 100%;
-  }
-
-  .recommended-border {
-    border: var(--sapButton_Emphasized_BorderColor) solid 3px;
-    overflow: hidden;
-    width: 19rem;
-
-    .recommended-heading {
+    .paved-road-logo {
       display: flex;
-      background-color: var(--sapButton_Emphasized_Background);
-      padding: 5px;
+      justify-content: center;
+      margin-top: 1rem;
     }
 
-    .recommended-text {
+    .paved-road-logo-img {
       margin: auto;
-      color: var(--sapButton_Emphasized_TextColor);
-      letter-spacing: 2px;
+    }
+
+    .card-text {
+      display: flex;
+      flex-direction: column;
+      margin: 1rem 3rem 1rem 3rem;
+
+      .card-headline {
+        margin: auto;
+        font-size: 1.4rem;
+        text-align: center;
+      }
+
+      .card-description {
+        margin: auto;
+        margin-top: 0.5rem;
+        font-size: 0.9rem;
+        text-align: center;
+        color: var(--sapNeutralColor);
+      }
+    }
+
+    .card-footer {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+      height: 100%;
+    }
+
+    .recommended-border {
+      border: var(--sapButton_Emphasized_BorderColor) solid 3px;
+      overflow: hidden;
+      width: 19rem;
+
+      .recommended-heading {
+        display: flex;
+        background-color: var(--sapButton_Emphasized_Background);
+        padding: 5px;
+      }
+
+      .recommended-text {
+        margin: auto;
+        color: var(--sapButton_Emphasized_TextColor);
+        letter-spacing: 2px;
+      }
+    }
+  }
+
+  .import-button {
+    margin-top: 2rem;
+    .sap-icon--add {
+      margin-right: 0.3rem;
     }
   }
 }

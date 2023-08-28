@@ -8,6 +8,7 @@ import { PipelineType } from 'src/app/enums'
 import { PipelineService } from '../../services/pipeline.service'
 import { Observable, debounceTime, firstValueFrom } from 'rxjs'
 import { Pipeline } from 'src/app/types'
+import { LuigiClient } from '@dxp/ngx-core/luigi'
 import { DebugModeService } from '../../services/debug-mode.service'
 
 @Component({
@@ -29,7 +30,11 @@ export class StartComponent {
 
   @Input() pipeline$!: Observable<Pipeline>
 
-  constructor(private readonly pipelineService: PipelineService, readonly debugModeService: DebugModeService) {}
+  constructor(
+    private readonly luigiClient: LuigiClient,
+    private readonly pipelineService: PipelineService,
+    readonly debugModeService: DebugModeService
+  ) {}
 
   pipelineLoading = false
   singleServiceLoading = false
@@ -45,5 +50,13 @@ export class StartComponent {
 
     this.pipelineLoading = false
     this.singleServiceLoading = false
+  }
+
+  openImportPipelineModal() {
+    this.luigiClient.linkManager().fromVirtualTreeRoot().openAsModal('import-pipeline', {
+      title: 'Import Existing Pipeline',
+      width: '30rem',
+      height: '26rem',
+    })
   }
 }

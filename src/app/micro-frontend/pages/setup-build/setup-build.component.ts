@@ -160,43 +160,26 @@ export class SetupComponent {
       type: 'radio',
       name: 'orchestrator',
       message: '',
-      choices: [Orchestrators.JENKINS, Orchestrators.AZURE_PIPELINES, Orchestrators.GITHUB_ACTIONS],
+      choices: [Orchestrators.JENKINS],
+      default: Orchestrators.JENKINS,
       guiOptions: {
         inline: true,
       },
       validators: [Validators.required],
-      validate: (result: string) =>
-        result === Orchestrators.JENKINS ? null : 'Currently, the only available orchestrator is Jenkins.',
     },
     {
       type: 'header',
-      name: 'jenkinsHeader',
+      name: 'jenkinsInstanceHeader',
       message: '',
       guiOptions: {
         additionalData: {
-          header: 'Jenkins Credentials',
+          header: 'Jenkins instance',
           subheader: async () => {
-            return `Your credentials are stored in Vault and needed to create a pipeline
-            in your Jenkins instance. Don't have an instance yet? 
+            return ` Don't have an instance yet? 
             <a href="https://jenx.int.sap.eu2.hana.ondemand.com/#/imageOverview" target="_blank">Request one.</a>`
           },
         },
       },
-    },
-    {
-      type: 'radio',
-      name: 'jenkinsCredentialType',
-      message: '',
-      default: CredentialTypes.NEW,
-      choices: [CredentialTypes.EXISTING, CredentialTypes.NEW],
-      when: async () => {
-        const secrets = await lastValueFrom(this.secretService.getPipelineSecrets())
-        return secrets.some((value) => value.includes('jenkins'))
-      },
-      guiOptions: {
-        inline: true,
-      },
-      validators: [Validators.required],
     },
     {
       type: 'input',
@@ -212,6 +195,41 @@ export class SetupComponent {
           /https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)?/gi
         const regex = new RegExp(urlValidation)
         return regex.test(value) ? null : 'Please provide a valid URL'
+      },
+      validators: [Validators.required],
+    },
+    {
+      type: 'header',
+      name: 'jenkinsCredentialHeader',
+      message: '',
+      guiOptions: {
+        additionalData: {
+          header: 'Jenkins credentials',
+          subheader: async () => {
+            return `Your credentials are stored in Vault and needed to create a pipeline
+            in your Jenkins instance.`
+          },
+        },
+      },
+    },
+    {
+      type: 'radio',
+      name: 'jenkinsCredentialType',
+      message: '',
+      default: async () => {
+        const secrets = await lastValueFrom(this.secretService.getPipelineSecrets())
+        if (secrets.some((value) => value.includes('jenkins'))) {
+          return CredentialTypes.EXISTING
+        }
+        return CredentialTypes.NEW
+      },
+      choices: [CredentialTypes.EXISTING, CredentialTypes.NEW],
+      when: async () => {
+        const secrets = await lastValueFrom(this.secretService.getPipelineSecrets())
+        return secrets.some((value) => value.includes('jenkins'))
+      },
+      guiOptions: {
+        inline: true,
       },
       validators: [Validators.required],
     },
@@ -245,7 +263,8 @@ export class SetupComponent {
     {
       type: 'list',
       name: 'jenkinsSelectCredential',
-      message: 'Select Credential',
+      message: 'Credential',
+      placeholder: 'Select Credential',
       guiOptions: {
         hint: 'Existing Jenkins credentials in Vault.',
       },
@@ -264,14 +283,14 @@ export class SetupComponent {
       message: '',
       guiOptions: {
         additionalData: {
-          header: 'GitHub Credentials',
+          header: 'GitHub credentials',
           subheader: async () => {
             const context = (await this.luigiService.getContextAsync()) as any
             const repoName = context.entityContext?.component?.annotations['github.dxp.sap.com/repo-name'] ?? ''
             const orgName = context.entityContext?.component?.annotations['github.dxp.sap.com/login'] ?? ''
             const repoUrl = context.entityContext?.component?.annotations['github.dxp.sap.com/repo-url'] ?? ''
             return `Needed to configure your repository <a href="${repoUrl}" target="_blank">${orgName}/${repoName}</a>
-            for your pipeline. Stored in Vault. Please use a <a href="https://github.tools.sap/settings/tokens/new" target="_blank">PAT</a> with read and write access to your repository.`
+            for your pipeline. Please use a <a href="https://github.tools.sap/settings/tokens/new" target="_blank">PAT</a> with read and write access to your repository.`
           },
         },
       },
@@ -280,7 +299,13 @@ export class SetupComponent {
       type: 'radio',
       name: 'githubCredentialType',
       message: '',
-      default: CredentialTypes.NEW,
+      default: async () => {
+        const secrets = await lastValueFrom(this.secretService.getPipelineSecrets())
+        if (secrets.some((value) => value.includes('github'))) {
+          return CredentialTypes.EXISTING
+        }
+        return CredentialTypes.NEW
+      },
       choices: [CredentialTypes.EXISTING, CredentialTypes.NEW],
       when: async () => {
         const secrets = await lastValueFrom(this.secretService.getPipelineSecrets())
@@ -339,7 +364,8 @@ export class SetupComponent {
     {
       type: 'list',
       name: 'githubSelectCredential',
-      message: 'Select Credential',
+      message: 'Credential',
+      placeholder: 'Select Credential',
       guiOptions: {
         hint: 'Existing GitHub credentials in Vault.',
       },
@@ -413,7 +439,7 @@ export class SetupComponent {
           repositoryResource,
           value.buildTool,
           true,
-          (value.buildTool === BuildTools.DOCKER || BuildTools.GO || BuildTools.GRADLE) ? context.componentId : ''
+          value.buildTool === BuildTools.DOCKER || BuildTools.GO || BuildTools.GRADLE ? context.componentId : ''
         )
       )
       await firstValueFrom(this.jenkinsService.createJenkinsPipeline(value.jenkinsUrl, jenkinsPath, repositoryResource))

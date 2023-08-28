@@ -25,7 +25,25 @@
                   "pathSegment": "setup",
                   "entityType": "project.component",
                   "urlSuffix": "/{i18n.currentLocale}/#/pipeline-ui/setup",
-                  "hideSideNav": false    
+                  "hideSideNav": false
+                },
+                {
+                  "pathSegment": "pipeline-debug",
+                  "entityType": "project.component",
+                  "urlSuffix": "/{i18n.currentLocale}/#/pipeline-ui/pipeline-debug",
+                  "hideSideNav": false
+                },
+                {
+                  "pathSegment": "feedback",
+                  "entityType": "project.component",
+                  "urlSuffix": "/{i18n.currentLocale}/#/pipeline-ui/feedback",
+                  "hideSideNav": false
+                },
+                {
+                  "pathSegment": "import-pipeline",
+                  "entityType": "project.component",
+                  "urlSuffix": "/{i18n.currentLocale}/#/pipeline-ui/import-pipeline",
+                  "hideSideNav": false
                 }
               ]
             },

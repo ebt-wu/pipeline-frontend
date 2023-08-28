@@ -11,63 +11,66 @@
     </fd-card-content>
   </fd-card>
   <div *ngIf="pipeline$ | async; else skeleton">
-    <h3 class="headline">What do you want to do?</h3>
-    <div class="card-flex-box">
-      <fd-card class="single-services-card">
-        <fd-card-content>
-          <img src="./assets/bricks.svg" class="svg-background" />
-          <div class="card-text">
-            <h2 fd-card-title class="card-headline">Install single CI/CD Services</h2>
-            <span class="card-description">Get extensions for your already existing pipeline.</span>
+    <div class="flex-wrapper">
+      <h3 class="headline">What do you want to do?</h3>
+      <div class="card-flex-box">
+        <fd-card class="single-services-card">
+          <fd-card-content>
+            <img src="./assets/bricks.svg" class="svg-background" />
+            <div class="card-text">
+              <h2 fd-card-title class="card-headline">Install single CI/CD Services</h2>
+              <span class="card-description">Get extensions for your already existing pipeline.</span>
+            </div>
+          </fd-card-content>
+          <fd-card-footer>
+            <div class="card-footer">
+              <fd-busy-indicator [loading]="singleServiceLoading" size="s">
+                <button
+                  fd-button
+                  [disabled]="true"
+                  fdType="transparent"
+                  label="Coming Soon"
+                  (click)="createPipeline(pipelineType.SINGLE_SERVICE)"></button>
+              </fd-busy-indicator>
+            </div>
+          </fd-card-footer>
+        </fd-card>
+        <fd-card class="recommended-border">
+          <div class="recommended-heading">
+            <span class="recommended-text">RECOMMENDED</span>
           </div>
-        </fd-card-content>
-        <fd-card-footer>
-          <div class="card-footer">
-            <fd-busy-indicator [loading]="singleServiceLoading" size="s">
-              <button
-                fd-button
-                [disabled]="true"
-                fdType="transparent"
-                label="Coming Soon"
-                (click)="createPipeline(pipelineType.SINGLE_SERVICE)"></button>
-            </fd-busy-indicator>
-          </div>
-        </fd-card-footer>
-      </fd-card>
-      <fd-card class="recommended-border">
-        <div class="recommended-heading">
-          <span class="recommended-text">RECOMMENDED</span>
-        </div>
-        <fd-card-content>
-          <img src="./assets/tools.svg" class="svg-background" />
-          <div class="paved-road-logo">
-            <img src="./assets/pavedRoadLogo.svg" class="paved-road-logo-img" />
-          </div>
-          <div class="card-text">
-            <h2 fd-card-title class="card-headline">Set up a pipeline</h2>
-            <span class="card-description">
-              Get a new end to end Hyperspace pipeline which is compliant by default.
-            </span>
-          </div>
-        </fd-card-content>
-        <fd-card-footer>
-          <div class="card-footer">
-            <fd-busy-indicator [loading]="pipelineLoading" size="s">
-              <button
-                fd-button
-                [disabled]="pipelineLoading || singleServiceLoading"
-                fdType="emphasized"
-                label="Set up Pipeline"
-                (click)="createPipeline(pipelineType.FULL_PIPELINE)"></button>
-            </fd-busy-indicator>
-          </div>
-        </fd-card-footer>
-      </fd-card>
+          <fd-card-content>
+            <img src="./assets/tools.svg" class="svg-background" />
+            <div class="paved-road-logo">
+              <img src="./assets/pavedRoadLogo.svg" class="paved-road-logo-img" />
+            </div>
+            <div class="card-text">
+              <h2 fd-card-title class="card-headline">Set up a pipeline</h2>
+              <span class="card-description">
+                Get a new end to end Hyperspace pipeline which is compliant by default.
+              </span>
+            </div>
+          </fd-card-content>
+          <fd-card-footer>
+            <div class="card-footer">
+              <fd-busy-indicator [loading]="pipelineLoading" size="s">
+                <button
+                  fd-button
+                  [disabled]="pipelineLoading || singleServiceLoading"
+                  fdType="emphasized"
+                  label="Set up Pipeline"
+                  (click)="createPipeline(pipelineType.FULL_PIPELINE)"></button>
+              </fd-busy-indicator>
+            </div>
+          </fd-card-footer>
+        </fd-card>
+      </div>
+      <button fd-button fdType="transparent" class="import-button" glyph="add" (click)="openImportPipelineModal()">Import Existing Pipelilne</button>
     </div>
   </div>
 </div>
 <ng-template #skeleton>
-  <div class="skeleton">
+  <div class="skeleton flex-wrapper">
     <div class="skeleton-heading">
       <fd-skeleton width="360px" height="28px" class="skeleton-heading-margin">
         <svg:rect x="0" y="0" width="360" height="28" rx="4"></svg:rect>
