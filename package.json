@@ -80,5 +80,5 @@
     "*.{ts,css,md,html,json,scss}": "prettier -w",
     "*.ts": "eslint --cache"
   },
-  "packageManager": "yarn@3.6.1"
+  "packageManager": "yarn@3.6.3"
 }
