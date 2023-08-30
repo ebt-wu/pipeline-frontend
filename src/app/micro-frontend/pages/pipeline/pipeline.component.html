@@ -35,6 +35,7 @@
                     class="header-button"
                     fdType="transparent"
                     glyph="sys-help"
+                    *ngIf="localLayout === 'OneColumnStartFullScreen'"
                     fd-button
                     (click)="openDocumentation()"></button>
                 </div>
@@ -90,6 +91,7 @@
                 <button
                   *ngIf="isBuildStageSetup() && !pendingDeletion()"
                   fd-button
+                  title="Delete"
                   glyph="delete"
                   (click)="deletePipeline($event, pipeline)"></button>
                 <fd-busy-indicator [loading]="pendingOpenPipeline()" size="s">

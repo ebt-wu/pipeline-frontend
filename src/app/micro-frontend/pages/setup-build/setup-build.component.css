@@ -20,3 +20,11 @@
 .footer-buttons-gap {
   gap: 0.5rem;
 }
+
+.message-popover-colors {
+  .fd-button {
+    --fdButtonColor: var(--sapButton_Negative_TextColor);
+    --fdButtonBackgroundColor: var(--sapButton_Negative_Background);
+    --fdButtonBorderColor: var(--sapButton_Negative_BorderColor);
+  }
+}

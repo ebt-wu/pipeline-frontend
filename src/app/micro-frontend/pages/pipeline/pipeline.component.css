@@ -89,6 +89,7 @@ fd-card-content {
       display: flex;
       align-items: center;
       justify-content: center;
+      cursor: pointer;
 
       .icon {
         margin-left: 1rem;
@@ -134,6 +135,10 @@ fd-card-content {
     border-top: 1px !important;
     border-color: var(--sapList_BorderColor) !important;
     border-style: solid !important;
+  }
+
+  .list-item-border:hover {
+    background: var(--sapList_Hover_Background);
   }
 
   .status-icon {
@@ -309,7 +314,7 @@ fd-info-label {
           }
 
           .catalog-link {
-            color: var(--sapShell_Active_TextColor);
+            color: var(--sapLinkColor);
             text-decoration: none;
           }
         }

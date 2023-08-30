@@ -7,6 +7,14 @@
           <span>Debug Mode</span>
           <i class="header-debug-text">disable with CTRL + D</i>
         </div>
+        <button
+          title="Show documentation"
+          role="button"
+          class="header-button"
+          fdType="transparent"
+          glyph="sys-help"
+          fd-button
+          (click)="openDocumentation()"></button>
       </div>
     </fd-card-content>
   </fd-card>
@@ -65,7 +73,9 @@
           </fd-card-footer>
         </fd-card>
       </div>
-      <button fd-button fdType="transparent" class="import-button" glyph="add" (click)="openImportPipelineModal()">Import Existing Pipelilne</button>
+      <button fd-button fdType="transparent" class="import-button" glyph="add" (click)="openImportPipelineModal()">
+        Import Existing Pipelilne
+      </button>
     </div>
   </div>
 </div>

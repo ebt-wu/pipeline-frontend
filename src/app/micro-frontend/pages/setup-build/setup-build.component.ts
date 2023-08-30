@@ -18,6 +18,7 @@ import { SetupBuildFormValue } from 'src/app/types'
 import { GithubService } from '../../services/github.service'
 import { JenkinsService } from '../../services/jenkins.service'
 import { ErrorMessageComponent } from '../../components/error-message/error-message.component'
+import { PlatformMessagePopoverModule } from '@fundamental-ngx/platform/message-popover';
 import { PiperService } from '../../services/piper.service'
 import { PlatformFormGeneratorCustomHeaderElementComponent } from '../../components/form-generator-header/form-generator-header.component'
 
@@ -38,6 +39,7 @@ export interface HeaderDynamicFormControl extends BaseDynamicFormFieldItem {
     FormattedTextModule,
     FundamentalNgxPlatformModule,
     ErrorMessageComponent,
+    PlatformMessagePopoverModule
   ],
 })
 export class SetupComponent {
@@ -52,6 +54,15 @@ export class SetupComponent {
   ) {
     this._formGeneratorService.addComponent(PlatformFormGeneratorCustomHeaderElementComponent, ['header'])
   }
+
+
+  ngOnInit() {
+    setTimeout(() => {
+      console.log(this.formGenerator)
+    }, 3000)
+    
+  }
+
 
   @ViewChild(FormGeneratorComponent) formGenerator: FormGeneratorComponent
 
@@ -268,6 +279,10 @@ export class SetupComponent {
       guiOptions: {
         hint: 'Existing Jenkins credentials in Vault.',
       },
+      default: async () => {
+        const secrets = await lastValueFrom(this.secretService.getPipelineSecrets())
+        return secrets.filter((value) => value.includes('jenkins'))[0] ?? null
+      },
       choices: async () => {
         const secrets = await lastValueFrom(this.secretService.getPipelineSecrets())
         return secrets.filter((value) => value.includes('jenkins'))
@@ -368,6 +383,10 @@ export class SetupComponent {
       placeholder: 'Select Credential',
       guiOptions: {
         hint: 'Existing GitHub credentials in Vault.',
+      },
+      default: async () => {
+        const secrets = await lastValueFrom(this.secretService.getPipelineSecrets())
+        return secrets.filter((value) => value.includes('github'))[0] ?? null
       },
       choices: async () => {
         const secrets = await lastValueFrom(this.secretService.getPipelineSecrets())

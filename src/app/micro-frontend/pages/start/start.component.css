@@ -24,6 +24,11 @@ fd-card {
   .header-debug-text {
     font-size: var(--sapFontSmallSize);
   }
+
+  .header-button {
+    margin-left: auto;
+    margin-right: 1rem;
+  }
 }
 
 .flex-wrapper {

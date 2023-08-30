@@ -59,4 +59,8 @@ export class StartComponent {
       height: '26rem',
     })
   }
+
+  openDocumentation() {
+    window.open('https://pages.github.tools.sap/hyper-pipe/portal-jenkins-pilot-docs/', '_blank')
+  }
 }

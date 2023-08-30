@@ -8,13 +8,21 @@
     <fd-busy-indicator [loading]="true" ariaLabel="loading" title="Please Wait"></fd-busy-indicator>
   </div>
   <div class="form-margins">
-    <fdp-form-generator
-      *ngIf="!loading"
-      [formItems]="questions"
-      (formSubmitted)="onFormSubmitted($event)"
-      (formCreated)="onFormCreated()"></fdp-form-generator>
+    <fdp-message-popover-form-wrapper
+      #formGeneratorWrapper
+      [forms]="formGenerator?.formGroup"
+      [formFields]="formGenerator?.formFields">
+      <fdp-form-generator
+        *ngIf="!loading"
+        [formItems]="questions"
+        (formSubmitted)="onFormSubmitted($event)"
+        (formCreated)="onFormCreated()"></fdp-form-generator>
+    </fdp-message-popover-form-wrapper>
   </div>
   <div fd-bar barDesign="floating-footer" class="actions-footer">
+    <div fd-bar-left>
+      <fdp-message-popover class="message-popover-colors" [wrapper]="formGeneratorWrapper"></fdp-message-popover>
+    </div>
     <div fd-bar-right class="footer-buttons-gap">
       <fdp-button
         *ngIf="formCreated"

@@ -3,11 +3,7 @@
     <h1 fd-title>Delete Build Pipeline</h1>
   </fd-message-box-header>
   <fd-message-box-body>
-    <div>
-      You are about to delete the below services.
-      <br />
-      (The credentials are not affected by this action.)
-    </div>
+    <div>You are about to delete the below services. The credentials are not affected by this action.</div>
     <ul>
       <li>Jenkins Pipeline</li>
     </ul>
@@ -27,13 +23,11 @@
       </div>
     </div>
     <p class="not-undone-message">
-      This action
-      <b>cannot</b>
-      be undone.
-      <br />
       Please type the name of your component
       <b>{{ messageBoxRef.data.componentId }}</b>
-      to confirm.
+      to confirm. This action
+      <b>cannot
+      be undone.</b>
     </p>
     <input
       fd-form-control
