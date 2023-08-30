@@ -180,8 +180,7 @@ export class PipelineComponent implements OnInit, OnDestroy {
   }
 
   openFeedbackSurvey() {
-    // TODO: get correct survey links
-    window.open('https://preview.userzoom.com/s/tti.aspx?s=C883S8286&sid=1', '_blank')
+    window.open('https://s.userzoom.com/m/MyBDODgzUzgyODYg', '_blank')
   }
 
   openDocumentation() {

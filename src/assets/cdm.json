@@ -14,7 +14,7 @@
           "nodes": [
             {
               "pathSegment": "pipeline-ui",
-              "label": "CI/CD",
+              "label": "CI/CD Setup",
               "urlSuffix": "/{i18n.currentLocale}/#/pipeline-ui",
               "hideSideNav": false,
               "icon": "begin",

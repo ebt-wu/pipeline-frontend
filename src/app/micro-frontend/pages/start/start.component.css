@@ -122,7 +122,7 @@ fd-card {
   .import-button {
     margin-top: 2rem;
     .sap-icon--add {
-      margin-right: 0.3rem;
+      margin-right: 0.3rem !important;
     }
   }
 }

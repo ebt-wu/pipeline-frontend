@@ -305,7 +305,7 @@ export class SetupComponent {
             const orgName = context.entityContext?.component?.annotations['github.dxp.sap.com/login'] ?? ''
             const repoUrl = context.entityContext?.component?.annotations['github.dxp.sap.com/repo-url'] ?? ''
             return `Needed to configure your repository <a href="${repoUrl}" target="_blank">${orgName}/${repoName}</a>
-            for your pipeline. Please use a <a href="https://github.tools.sap/settings/tokens/new" target="_blank">PAT</a> with read and write access to your repository.`
+            for your pipeline. Please use a <a href="https://github.tools.sap/settings/tokens/new" target="_blank">personal access token</a> with read and write access to your repository.`
           },
         },
       },

@@ -14,8 +14,7 @@ export class ImportExistingPipelineModal {
   constructor(private luigiClient: LuigiClient) {}
 
   openFeedbackSurvey() {
-    // TODO: update with live survey link
-    window.open('https://preview.userzoom.com/mpaap/MTAgQzg4M1M4Mjg3/1', '_blank')
+    window.open('https://s.userzoom.com/m/MSBDODgzUzgyODcg', '_blank')
     this.luigiClient.uxManager().closeCurrentModal()
   }
 
