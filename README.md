@@ -15,5 +15,4 @@
 3. [Get identity token from common repository](https://common.repositories.cloud.sap/ui/user_profile) and set it as environment variable to fetch `@dxp` scoped dependencies `export BUILD_SECRETS_ARTIFACTORYTOKEN=<identity token>`.
 3. Run `yarn` in the project folder to install the dependencies
 4. Run `yarn run start` in the project folder to start the application
-5. Visit http://localhost:4200/#/pipeline-ui to view the website standalone
-6. You can also visit https://sap.dev.dxp.k8s.ondemand.com/pipeline-ui to view the MFE within DXP
+5. Visit https://sap.dev.dxp.k8s.ondemand.com/pipeline-ui to view the MFE within DXP
