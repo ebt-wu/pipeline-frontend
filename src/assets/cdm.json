@@ -17,7 +17,7 @@
               "label": "CI/CD Setup",
               "urlSuffix": "/{i18n.currentLocale}/#/pipeline-ui",
               "hideSideNav": false,
-              "icon": "begin",
+              "icon": "process",
               "entityType": "project.component",
               "virtualTree": true,
               "children": [
