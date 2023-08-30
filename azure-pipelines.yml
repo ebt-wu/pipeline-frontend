@@ -1,5 +1,7 @@
 # Using Piper general purpose pipeline for Azure with pipeline optimization
 
+trigger:
+  - main
 
 schedules:
   - cron: '0 0 * * *' # cron: "*/5 * * * *"
