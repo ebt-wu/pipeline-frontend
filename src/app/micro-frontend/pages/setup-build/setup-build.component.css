@@ -21,10 +21,8 @@
   gap: 0.5rem;
 }
 
-.message-popover-colors {
-  .fd-button {
-    --fdButtonColor: var(--sapButton_Negative_TextColor);
-    --fdButtonBackgroundColor: var(--sapButton_Negative_Background);
-    --fdButtonBorderColor: var(--sapButton_Negative_BorderColor);
-  }
+#message-popover {
+  --sapButton_TextColor: var(--sapButton_Negative_TextColor);
+  --sapButton_BorderColor: var(--sapButton_Negative_Background);
+  --sapButton_Background: var(--sapButton_Negative_BorderColor);
 }
