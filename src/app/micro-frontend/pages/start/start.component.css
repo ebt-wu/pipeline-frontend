@@ -122,11 +122,9 @@ fd-card {
   .import-button {
     margin-top: 2rem;
   }
-
-  .import-button > * {
-    margin-right: 0.3rem !important;
-  }
 }
+
+
 
 .skeleton {
   padding: 1rem;
