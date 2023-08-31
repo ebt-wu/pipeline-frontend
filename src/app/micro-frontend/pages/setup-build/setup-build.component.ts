@@ -18,7 +18,7 @@ import { SetupBuildFormValue } from 'src/app/types'
 import { GithubService } from '../../services/github.service'
 import { JenkinsService } from '../../services/jenkins.service'
 import { ErrorMessageComponent } from '../../components/error-message/error-message.component'
-import { PlatformMessagePopoverModule } from '@fundamental-ngx/platform/message-popover';
+import { PlatformMessagePopoverModule } from '@fundamental-ngx/platform/message-popover'
 import { PiperService } from '../../services/piper.service'
 import { PlatformFormGeneratorCustomHeaderElementComponent } from '../../components/form-generator-header/form-generator-header.component'
 
@@ -39,7 +39,7 @@ export interface HeaderDynamicFormControl extends BaseDynamicFormFieldItem {
     FormattedTextModule,
     FundamentalNgxPlatformModule,
     ErrorMessageComponent,
-    PlatformMessagePopoverModule
+    PlatformMessagePopoverModule,
   ],
 })
 export class SetupComponent {
@@ -55,14 +55,11 @@ export class SetupComponent {
     this._formGeneratorService.addComponent(PlatformFormGeneratorCustomHeaderElementComponent, ['header'])
   }
 
-
   ngOnInit() {
     setTimeout(() => {
       console.log(this.formGenerator)
     }, 3000)
-    
   }
-
 
   @ViewChild(FormGeneratorComponent) formGenerator: FormGeneratorComponent
 
@@ -197,9 +194,6 @@ export class SetupComponent {
       name: 'jenkinsUrl',
       message: 'Jenkins URL',
       placeholder: 'Enter URL',
-      guiOptions: {
-        hint: 'The URL of your Jenkins instance.',
-      },
       validate: async (value) => {
         // validate if the provided URL is a valid one
         const urlValidation =
@@ -249,9 +243,6 @@ export class SetupComponent {
       name: 'jenkinsUserId',
       message: 'User ID (a technical user is preferred)',
       placeholder: 'Enter ID',
-      guiOptions: {
-        hint: 'The ID of the user on your Jenkins instance.',
-      },
       when: (formValue: any) => {
         return formValue.jenkinsCredentialType === CredentialTypes.NEW
       },
@@ -263,9 +254,6 @@ export class SetupComponent {
       name: 'jenkinsToken',
       message: 'Token with overall (administer) permissions.',
       placeholder: 'Enter Token',
-      guiOptions: {
-        hint: 'Only the overall (administer) permission allows us to configure Piper properly',
-      },
       when: (formValue: any) => {
         return formValue.jenkinsCredentialType === CredentialTypes.NEW
       },
@@ -276,9 +264,6 @@ export class SetupComponent {
       name: 'jenkinsSelectCredential',
       message: 'Credential',
       placeholder: 'Select Credential',
-      guiOptions: {
-        hint: 'Existing Jenkins credentials in Vault.',
-      },
       default: async () => {
         const secrets = await lastValueFrom(this.secretService.getPipelineSecrets())
         return secrets.filter((value) => value.includes('jenkins'))[0] ?? null
@@ -348,9 +333,6 @@ export class SetupComponent {
       message: 'Personal Access Token (PAT)',
       placeholder: 'Enter Token',
       validators: [Validators.required],
-      guiOptions: {
-        hint: 'Token of user with read and write access to your GitHub repository.',
-      },
       when: (formValue: any) => {
         return formValue.githubCredentialType === CredentialTypes.NEW
       },
@@ -381,9 +363,6 @@ export class SetupComponent {
       name: 'githubSelectCredential',
       message: 'Credential',
       placeholder: 'Select Credential',
-      guiOptions: {
-        hint: 'Existing GitHub credentials in Vault.',
-      },
       default: async () => {
         const secrets = await lastValueFrom(this.secretService.getPipelineSecrets())
         return secrets.filter((value) => value.includes('github'))[0] ?? null
