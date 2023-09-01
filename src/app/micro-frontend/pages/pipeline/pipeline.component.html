@@ -66,6 +66,10 @@
             buttonText="See It in Action"
             [buttonPending]="pendingOpenPipeline()"
             (onButtonClick)="openPipeline($event, pipeline)"></dismissible-message>
+          <fd-message-strip class="pull-requests-message" type="warning" *ngIf="this.openPRCount()">
+            Merge {{ this.openPRCount() }} open pull requests.
+            <a [href]="this.repoUrl() + '/pulls'" target="_blank" *ngIf="this.repoUrl()" class="link">Open Github</a>
+          </fd-message-strip>
           <fd-card cardType="linkList" class="stage-card">
             <fd-card-content class="card-content-padding">
               <div class="card-content build-stage-padding" (click)="openBuildStage(pipeline)">

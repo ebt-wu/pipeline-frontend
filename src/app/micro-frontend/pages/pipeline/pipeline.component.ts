@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common'
 import { Component, Input, OnDestroy, OnInit, signal } from '@angular/core'
 import { FlexibleColumnLayout, FundamentalNgxCoreModule, IconModule, MessageBoxService } from '@fundamental-ngx/core'
-import { Observable, Subscription, firstValueFrom } from 'rxjs'
+import { Observable, Subscription, firstValueFrom, map } from 'rxjs'
 import { DxpLuigiContextService, LuigiClient, LuigiDialogUtil } from '@dxp/ngx-core/luigi'
 import { KindCategory, KindDocumentation, KindName } from 'src/app/constants'
 import { RouterModule } from '@angular/router'
@@ -87,6 +87,9 @@ export class PipelineComponent implements OnInit, OnDestroy {
   kindCategory = KindCategory
   kindDocumentation = KindDocumentation
 
+  openPRCount = signal(0)
+  repoUrl = signal('')
+
   constructor(
     private readonly luigiClient: LuigiClient,
     private readonly githubService: GithubService,
@@ -102,11 +105,14 @@ export class PipelineComponent implements OnInit, OnDestroy {
   ) {}
 
   async ngOnInit(): Promise<void> {
-    this.catalogUrl.set(((await this.luigiService.getContextAsync()) as any).frameBaseUrl + '/catalog')
+    const context = (await this.luigiService.getContextAsync()) as any
+    this.catalogUrl.set(context.frameBaseUrl + '/catalog')
+    this.repoUrl.set(context.entityContext?.component?.annotations['github.dxp.sap.com/repo-url'] ?? '')
 
     this.pipelineSubscription = this.pipeline$.subscribe(async (pipeline) => {
       // error reporting
       this.errors.set([])
+      this.openPRCount.set(0)
       this.jenkinsPipelineError.set(false)
       this.isBuildPipelineSetup.set(false)
 
@@ -139,6 +145,7 @@ export class PipelineComponent implements OnInit, OnDestroy {
         if (pipeline.resourceRefs.every((ref) => ref.status === ServiceStatus.CREATED)) {
           this.isBuildPipelineSetup.set(true)
           await this.showFeedbackModal()
+          this.openPRCount.set(await this.getOpenPRCount())
         }
       } else {
         this.isBuildStageSetup.set(false)
@@ -149,6 +156,45 @@ export class PipelineComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.pipelineSubscription.unsubscribe()
+  }
+
+  async getOpenPRCount(): Promise<number> {
+    const context = (await this.luigiService.getContextAsync()) as any
+    const repoUrl = context.entityContext?.component?.annotations['github.dxp.sap.com/repo-url'] ?? null
+    const token = await firstValueFrom(
+      this.luigiService.contextObservable().pipe(
+        map((luigiContext) => {
+          return luigiContext.context?.githubToolsToken
+            ? {
+                value: luigiContext.context.githubToolsToken as string,
+                domain: 'github.tools.sap',
+              }
+            : this.luigiClient.sendCustomMessage({
+                id: `token.request.github.tools.sap`,
+              })
+        })
+      )
+    )
+
+    if (token && token.value && repoUrl) {
+      const url = new URL(repoUrl)
+      const pullsResp = await fetch(`${url.origin}/api/v3/repos${url.pathname}/pulls`, {
+        headers: {
+          Authorization: `Bearer ${token.value}`,
+        },
+      })
+
+      const pulls = await pullsResp.json()
+      let openPulls = 0
+      for (const pull of pulls) {
+        if (pull?.head?.ref === 'hyperspace-jenkinsfile' || pull?.head?.ref === 'piper-onboarding') {
+          openPulls++
+        }
+      }
+      return openPulls
+    }
+
+    return 0
   }
 
   async showFeedbackModal() {

@@ -417,7 +417,7 @@ export class SetupComponent {
         githubPath = this.getCredentialPath(value.githubSelectCredential, context.componentId)
       }
 
-      // create resources - because of dependencies the order needs to be: github - piper - jenkins
+      // create resources - because of dependencies the order needs to be: github - jenkins - piper
       const repoUrl = context.entityContext?.component?.annotations['github.dxp.sap.com/repo-url'] ?? ''
       const login = context.entityContext?.component?.annotations['github.dxp.sap.com/login'] ?? ''
       const repoName = context.entityContext?.component?.annotations['github.dxp.sap.com/repo-name'] ?? ''
@@ -431,6 +431,7 @@ export class SetupComponent {
       const repositoryResource = await firstValueFrom(
         this.githubService.createGithubRepository(url.origin, login, repoName, githubPath)
       )
+      await firstValueFrom(this.jenkinsService.createJenkinsPipeline(value.jenkinsUrl, jenkinsPath, repositoryResource))
       await firstValueFrom(
         this.piperService.createPiperConfig(
           githubPath,
@@ -440,7 +441,7 @@ export class SetupComponent {
           value.buildTool === BuildTools.DOCKER || BuildTools.GO || BuildTools.GRADLE ? context.componentId : ''
         )
       )
-      await firstValueFrom(this.jenkinsService.createJenkinsPipeline(value.jenkinsUrl, jenkinsPath, repositoryResource))
+
 
       this.loading = false
       this.luigiClient.uxManager().closeCurrentModal()
