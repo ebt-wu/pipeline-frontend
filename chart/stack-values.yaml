@@ -9,3 +9,8 @@ site:
 
 gcp:
   projectId: 'sap-gcp-dxp-test'
+
+pilot:
+  namespaces:
+    - account-abcdf
+    - account-12343

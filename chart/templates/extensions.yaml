@@ -21,4 +21,18 @@ spec:
   - url: {{ .Values.protocol }}://{{ .Values.site.domain }}{{ .Values.site.cdmPath }}
   installableScopes:
     - Project
+{{- range $idx, $namespace := .Values.pilot.namespaces }}
+---
+apiVersion: extensions.dxp.sap.com/v1alpha1
+kind: ExtensionInstance
+metadata:
+  name: pipeline-ui
+  namespace: {{ $namespace }}
+spec:
+  displayName: Pipelines
+  extensionRef:
+    name: pipeline-ui
+    namespace: root-universe
+  isMandatoryExtension: true
+{{- end }}
 {{- end }}

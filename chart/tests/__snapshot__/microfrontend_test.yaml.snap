@@ -18,3 +18,27 @@ Test Extension matches the snapshot:
         - Project
       multipleInstallations: false
       supportsDynamicCdmUrls: false
+  2: |
+    apiVersion: extensions.dxp.sap.com/v1alpha1
+    kind: ExtensionInstance
+    metadata:
+      name: pipeline-ui
+      namespace: account-abcdf
+    spec:
+      displayName: Pipelines
+      extensionRef:
+        name: pipeline-ui
+        namespace: root-universe
+      isMandatoryExtension: true
+  3: |
+    apiVersion: extensions.dxp.sap.com/v1alpha1
+    kind: ExtensionInstance
+    metadata:
+      name: pipeline-ui
+      namespace: account-12343
+    spec:
+      displayName: Pipelines
+      extensionRef:
+        name: pipeline-ui
+        namespace: root-universe
+      isMandatoryExtension: true
