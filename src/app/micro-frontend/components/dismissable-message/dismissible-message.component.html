@@ -1,16 +1,9 @@
 <fd-message-strip [type]="type" (onDismiss)="emitOnDismiss()" *ngIf="displayMessage()" class="message-margin">
   <div class="container">
     <div [innerHTML]="message"></div>
-    <fd-busy-indicator [loading]="buttonPending" size="s">
-      <button
-        *ngIf="displayButton"
-        [disabled]="buttonPending"
-        fd-button
-        class="button-height"
-        fdType="transparent"
-        (click)="emitOnButtonClick()">
-        {{ buttonText }}
-      </button>
-    </fd-busy-indicator>
+    <a fd-link class="button-height" *ngIf="displayLink" [disabled]="buttonPending" [href]="href"
+      [style.pointer-events]="(displayMessage() && href) ? '' : 'none'" target="_blank">
+      {{ linkText }}
+    </a>
   </div>
 </fd-message-strip>

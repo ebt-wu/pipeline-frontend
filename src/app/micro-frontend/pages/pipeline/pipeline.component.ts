@@ -145,6 +145,7 @@ export class PipelineComponent implements OnInit, OnDestroy {
         if (pipeline.resourceRefs.every((ref) => ref.status === ServiceStatus.CREATED)) {
           this.isBuildPipelineSetup.set(true)
           await this.showFeedbackModal()
+          await this.getPipelineURL(pipeline)
           this.openPRCount.set(await this.getOpenPRCount())
         }
       } else {
@@ -156,6 +157,10 @@ export class PipelineComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.pipelineSubscription.unsubscribe()
+  }
+
+  get showOpenPipelineURL(): boolean {
+    return this.isBuildStageSetup() && !this.pendingDeletion() && !this.jenkinsPipelineError()
   }
 
   async getOpenPRCount(): Promise<number> {
@@ -250,6 +255,21 @@ export class PipelineComponent implements OnInit, OnDestroy {
     if (this.isBuildStageSetup()) {
       this.isBuildStageOpen.set(!this.isBuildStageOpen())
     }
+  }
+
+  pipelineURL = signal('')
+
+  async getPipelineURL(pipeline: Pipeline) {
+    const jenkinsStatus = pipeline.resourceRefs.find((ref) => ref.kind == Kinds.JENKINS_PIPELINE)
+    if (jenkinsStatus.status !== ServiceStatus.CREATED) {
+      return
+    }
+    const jenkinsPipeline = await firstValueFrom(this.jenkinsService.getJenkinsPipeline(jenkinsStatus.name))
+    if (!jenkinsPipeline.jobUrl) {
+      throw new Error('Jenkins jobUrl not found')
+    }
+
+    this.pipelineURL.set(jenkinsPipeline.jobUrl)
   }
 
   async openPipeline(e: Event, pipeline: Pipeline) {

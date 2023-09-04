@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common'
 import { Component, EventEmitter, Input, Output, signal } from '@angular/core'
-import { FundamentalNgxCoreModule } from '@fundamental-ngx/core'
+import { FundamentalNgxCoreModule, LinkModule } from '@fundamental-ngx/core'
 import { MessageTypes } from 'src/app/enums'
 import { DxpLuigiContextService, LuigiClient } from '@dxp/ngx-core/luigi'
 
@@ -13,19 +13,18 @@ import { DxpLuigiContextService, LuigiClient } from '@dxp/ngx-core/luigi'
   selector: 'dismissible-message',
   templateUrl: './dismissible-message.component.html',
   styleUrls: ['./dismissble-message.component.css'],
-  imports: [CommonModule, FundamentalNgxCoreModule],
+  imports: [CommonModule, FundamentalNgxCoreModule, LinkModule],
 })
 export class DismissibleMessageComponent {
   constructor(private readonly luigiClient: LuigiClient, private readonly luigiService: DxpLuigiContextService) {}
 
   @Input() message: string
   @Input() type: MessageTypes
-  @Input() displayButton? = false
-  @Input() buttonText? = ''
-  @Input() buttonPending? = false
+  @Input() displayLink? = false
+  @Input() linkText? = ''
+  @Input() href? = ''
 
   @Output() onDismiss = new EventEmitter()
-  @Output() onButtonClick = new EventEmitter()
 
   displayMessage = signal(false)
 
@@ -52,7 +51,4 @@ export class DismissibleMessageComponent {
     this.onDismiss.emit()
   }
 
-  emitOnButtonClick() {
-    this.onButtonClick.emit()
-  }
 }

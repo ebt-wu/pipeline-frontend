@@ -30,6 +30,10 @@ export class DeleteBuildModal {
   }
 
   close(action: 'delete' | 'cancel') {
+    if (this.deleteBtnDisabled()) {
+      return
+    }
+
     if (action === 'delete') {
       if (this.softDeleteServices) {
         this.messageBoxRef.close('soft-delete')
