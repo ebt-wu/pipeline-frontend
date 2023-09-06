@@ -24,7 +24,8 @@ export class ErrorMessageComponent {
 
   async reportError() {
     const context = await this.luigiService.getContextAsync()
-    const ghIssueURL = new URL('https://github.tools.sap/hyper-pipe/portal/issues/new')
+    const githubUrl = 'https://github.tools.sap'
+    const ghIssueURL = new URL(`${githubUrl}/hyper-pipe/portal/issues/new`)
 
     ghIssueURL.searchParams.append(
       'title',
@@ -32,22 +33,20 @@ export class ErrorMessageComponent {
     )
     ghIssueURL.searchParams.append(
       'body',
-      `Thank you for taking the time to report this error.
+      `<!-- Thank you for taking the time to report this error.
 To help us debug, please describe what you tried to do and when the error occurred below.
-
-
-
-
-
+-->
 
 ### Debugging Information (automatically generated)
 **Error Message:** 
 \`\`\`
 ${this.message.trim()}
 \`\`\`
-**Project and component:** \`${context.projectId}/${context.componentId}\`
+**Project and component:** [\`${context.projectId}/${context.componentId}\`](https://${
+        document.location.hostname
+      }/projects/${context.projectId}/components/${context.componentId}/pipeline-ui)
 **Timestamp:** ${new Date()}
-**User ID:** \`${context.userid}\`
+**User ID:** [\`${context.userid}\`](${githubUrl}/profile/${context.userid})
 `
     )
     ghIssueURL.searchParams.append('labels', ':clipboard: bug,:alien: external')
