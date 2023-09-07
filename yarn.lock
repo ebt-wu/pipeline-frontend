@@ -3216,9 +3216,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@luigi-project/client-support-angular@npm:2.4.0":
-  version: 2.4.0
-  resolution: "@luigi-project/client-support-angular@npm:2.4.0"
+"@luigi-project/client-support-angular@npm:2.5.1":
+  version: 2.5.1
+  resolution: "@luigi-project/client-support-angular@npm:2.5.1"
   dependencies:
     tslib: ^2.0.0
   peerDependencies:
@@ -3226,21 +3226,21 @@ __metadata:
     "@angular/core": ^14.0.0 || ^15.0.0
     "@luigi-project/client": ^2.0.0
     "@luigi-project/testing-utilities": ^2.0.0
-  checksum: 0ddb6f4463ab5b76e5057d8edd5817845f50c38e31f3f11ada5c4a9517bf9a7c97317ce2b89ef86c1553fe1f7662855a5c7357791733d71d7d32e202c3acb564
+  checksum: 83bb9c37ed2d0726632864697e5645d55a3e9a97f722c44e39a33718f05942de3e42e9a8d23eddca4831ec57c687b26064f53b3f04984832d22bc8d7384df183
   languageName: node
   linkType: hard
 
-"@luigi-project/client@npm:2.4.0":
-  version: 2.4.0
-  resolution: "@luigi-project/client@npm:2.4.0"
-  checksum: 758ea320187680a96967e10cac167a5c7cb1ac6f72444ee8d529b05a648ee1010382e7df95abecdde8f1b15d7682a4d71a873e3e7bb1b364950492abed93b4e5
+"@luigi-project/client@npm:2.5.1":
+  version: 2.5.1
+  resolution: "@luigi-project/client@npm:2.5.1"
+  checksum: 660f849d8fe1cce5218806df4da7eb67a60148ed00be416b99deec787ca6257201869a003292010d8edcf8f889f56e39e2b660e7bac0e8da16483986cabdf5ff
   languageName: node
   linkType: hard
 
-"@luigi-project/testing-utilities@npm:2.5.0":
-  version: 2.5.0
-  resolution: "@luigi-project/testing-utilities@npm:2.5.0"
-  checksum: 22d64b964bc4801e72a024c621c0ce7608905bf14e2497493a3238437e61ccff930fbdc2f5c053ed1f12bf6ced3f12ede3dc051fc72160aa3f2d6d7589ef0cd2
+"@luigi-project/testing-utilities@npm:2.5.1":
+  version: 2.5.1
+  resolution: "@luigi-project/testing-utilities@npm:2.5.1"
+  checksum: 78dc3fc26b3584531392aea19c0dfc92f807b03f13b4e537e87ca05365cd4c95e485592eb74bff6e1d455cb01ab8ef43cb3453dcf07e1a209c827ccc4213a640
   languageName: node
   linkType: hard
 
@@ -10832,9 +10832,9 @@ __metadata:
     "@fundamental-ngx/core": 0.45.1
     "@fundamental-ngx/platform": 0.45.1
     "@fundamental-styles/common-css": 0.30.1
-    "@luigi-project/client": 2.4.0
-    "@luigi-project/client-support-angular": 2.4.0
-    "@luigi-project/testing-utilities": 2.5.0
+    "@luigi-project/client": 2.5.1
+    "@luigi-project/client-support-angular": 2.5.1
+    "@luigi-project/testing-utilities": 2.5.1
     "@ngrx/effects": ^16.2.0
     "@ngrx/store": ^16.2.0
     "@sap-theming/theming-base-content": 11.6.4
