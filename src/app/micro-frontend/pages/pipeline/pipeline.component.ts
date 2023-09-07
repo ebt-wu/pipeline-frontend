@@ -121,6 +121,11 @@ export class PipelineComponent implements OnInit, OnDestroy {
           if (ref.kind === Kinds.JENKINS_PIPELINE) {
             this.jenkinsPipelineError.set(true)
           }
+
+          if (ref.error.startsWith("PIPER-1")) {
+            continue
+          }
+
           this.errors.update((errors) => {
             errors.push({
               title: `Configuration of ${KindName[ref.kind]} failed`,
