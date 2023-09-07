@@ -3506,7 +3506,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@sap-theming/theming-base-content@npm:11.6.4, @sap-theming/theming-base-content@npm:^11.6.0":
+"@sap-theming/theming-base-content@npm:11.6.7":
+  version: 11.6.7
+  resolution: "@sap-theming/theming-base-content@npm:11.6.7"
+  checksum: 2775f68454e89abceb0f533669968b312fe4b39d9d268add298d874d5261dbd8d14609b553e2cba166c69b83a37afaf00a4200ce10bebd017f37874b76f27b1c
+  languageName: node
+  linkType: hard
+
+"@sap-theming/theming-base-content@npm:^11.6.0":
   version: 11.6.4
   resolution: "@sap-theming/theming-base-content@npm:11.6.4"
   checksum: 04a4e6e3da0142e1338d676a467b411bd39596594908ec925246964c7ab58e73dbe6bc62b03491cf41c477ea6f6b56a5cc0ddc20be79196032ce7aa297691fe1
@@ -10837,7 +10844,7 @@ __metadata:
     "@luigi-project/testing-utilities": 2.5.1
     "@ngrx/effects": ^16.2.0
     "@ngrx/store": ^16.2.0
-    "@sap-theming/theming-base-content": 11.6.4
+    "@sap-theming/theming-base-content": 11.6.7
     "@types/jest": 29.5.4
     "@types/node": 18.17.14
     "@typescript-eslint/eslint-plugin": ^6.4.1
