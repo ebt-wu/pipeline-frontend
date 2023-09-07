@@ -9,6 +9,6 @@
     {
       "matchPackagePatterns": ["^@luigi-project/*"],
       "groupName": "luigi"
-    },
+    }
   ]
 }
