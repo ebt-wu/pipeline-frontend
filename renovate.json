@@ -5,6 +5,10 @@
       "description": "Automatically merge non-major updates",
       "matchUpdateTypes": ["minor", "digest", "patch"],
       "automerge": true
-    }
+    },
+    {
+      "matchPackagePatterns": ["^@luigi-project/*"],
+      "groupName": "luigi"
+    },
   ]
 }
