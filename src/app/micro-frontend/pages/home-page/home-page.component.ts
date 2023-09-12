@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component, HostListener } from '@angular/core'
 import { HttpClientModule } from '@angular/common/http'
 import { AsyncPipe, CommonModule } from '@angular/common'
 import { PlatformDynamicPageModule } from '@fundamental-ngx/platform/dynamic-page'
-import { FundamentalNgxCoreModule } from '@fundamental-ngx/core'
+import { FundamentalNgxCoreModule, SvgConfig } from '@fundamental-ngx/core'
 import { ApolloModule } from 'apollo-angular'
 import { PipelineService } from '../../services/pipeline.service'
 import { StartComponent } from '../start/start.component'
@@ -12,6 +12,11 @@ import { SingleServicesComponent } from '../single-services/single-services.comp
 import { PipelineType } from 'src/app/enums'
 import { Pipeline } from 'src/app/types'
 import { DebugModeService } from '../../services/debug-mode.service'
+import { tntSpotSecret } from '../../../../assets/ts-svg/tnt-spot-secret'
+import { AuthorizationModule } from '@dxp/ngx-core/authorization';
+import { LuigiClient, DxpLuigiContextService } from '@dxp/ngx-core/luigi'
+
+
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -20,6 +25,7 @@ import { DebugModeService } from '../../services/debug-mode.service'
   styleUrls: ['./home-page.component.css'],
   standalone: true,
   imports: [
+    AuthorizationModule,
     PlatformDynamicPageModule,
     AsyncPipe,
     FundamentalNgxCoreModule,
@@ -35,13 +41,31 @@ export class HomePageComponent {
   pageTitle = 'CI/CD'
   pipelineType = PipelineType
 
-  constructor(private readonly pipelineService: PipelineService, private readonly debugModeService: DebugModeService) {}
+  constructor(
+    private readonly pipelineService: PipelineService,
+    private readonly debugModeService: DebugModeService,
+    private readonly luigiClient: LuigiClient,
+    private readonly context: DxpLuigiContextService
+  ) { }
 
   watch$: Observable<Pipeline>
 
   async ngOnInit(): Promise<void> {
     this.watch$ = this.pipelineService.watchPipeline().pipe(debounceTime(50))
   }
+
+  navigateToProjectMembers() {
+    this.luigiClient.linkManager().navigate(
+      `/projects/${this.context.getContext().projectId}/members`
+    );
+  }
+
+  readonly spotConfig: SvgConfig = {
+    spot: {
+      file: tntSpotSecret,
+      id: 'tnt-Spot-Secrets-alternate',
+    },
+  };
 
   @HostListener('document:keydown.control.d', ['$event'])
   handleCtrlDEvent(_: KeyboardEvent) {

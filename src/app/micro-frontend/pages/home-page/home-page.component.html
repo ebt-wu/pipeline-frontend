@@ -1,16 +1,40 @@
 <fdp-dynamic-page ariaLabel="CI/CD Dynamic Page">
   <fdp-dynamic-page-content id="basic">
     <div *ngIf="watch$ | async as watch; else loading" class="home-page-content">
-      <app-start
-        [pipeline$]="watch$"
-        *ngIf="
-          watch.pipelineType != pipelineType.FULL_PIPELINE && watch.pipelineType != pipelineType.SINGLE_SERVICE
-        "></app-start>
-      <app-pipeline [pipeline$]="watch$" *ngIf="watch.pipelineType == pipelineType.FULL_PIPELINE"></app-pipeline>
-      <app-single-services
-        [pipeline$]="watch$"
-        *ngIf="watch.pipelineType == pipelineType.SINGLE_SERVICE"></app-single-services>
+      <ng-container *dxpRequiredPolicies="['projectAdmin', 'projectMember']; operator: 'or'">
+        <app-start [pipeline$]="watch$" *ngIf="
+            watch.pipelineType != pipelineType.FULL_PIPELINE && watch.pipelineType != pipelineType.SINGLE_SERVICE
+          "></app-start>
+        <app-pipeline [pipeline$]="watch$" *ngIf="watch.pipelineType == pipelineType.FULL_PIPELINE"></app-pipeline>
+        <app-single-services [pipeline$]="watch$"
+          *ngIf="watch.pipelineType == pipelineType.SINGLE_SERVICE"></app-single-services>
+      </ng-container>
     </div>
+    <ng-container *dxpRequiredPolicies="['!projectAdmin', '!projectMember']">
+      <fd-card *ngIf="watch$ | async" style="width: max-content; margin: 0 auto;">
+        <fd-card-header [interactive]="false">
+          <h2 fd-card-title>CI/CD Setup</h2>
+        </fd-card-header>
+        <fd-card-content>
+          <figure fd-illustrated-message type="spot" [svgConfig]="spotConfig">
+            <figcaption fd-illustrated-message-figcaption id="spot-description">
+              <p fd-illustrated-message-title>
+                Access Restricted: CI/CD Setup only <br />for project members
+              </p>
+              <p fd-illustrated-message-text>
+                To gain access, please contact the project owner to be added as a
+                member.
+              </p>
+            </figcaption>
+          </figure>
+        </fd-card-content>
+        <fd-card-footer>
+          <p class="card-footer">
+            <button fd-button label="Contact project owner" (click)="navigateToProjectMembers()"></button>
+          </p>
+        </fd-card-footer>
+      </fd-card>
+    </ng-container>
     <ng-template #loading>
       <div class="busy-indicator">
         <fd-busy-indicator [loading]="true" ariaLabel="loading" title="Please Wait"></fd-busy-indicator>

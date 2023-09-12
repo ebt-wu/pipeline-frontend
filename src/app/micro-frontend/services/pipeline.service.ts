@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core'
 import { APIService } from './api.service'
-import { first, map, mergeMap } from 'rxjs/operators'
-import { Observable, combineLatest } from 'rxjs'
+import { catchError, first, map, mergeMap } from 'rxjs/operators'
+import { Observable, combineLatest, of } from 'rxjs'
 import { DxpLuigiContextService } from '@dxp/ngx-core/luigi'
 import { CREATE_PIPELINE, DELETE_PIPELINE, WATCH_PIPELINE } from './queries'
 import { PipelineType } from 'src/app/enums'
@@ -21,7 +21,8 @@ export interface WatchPipelineResponse {
 
 @Injectable({ providedIn: 'root' })
 export class PipelineService {
-  constructor(private readonly apiService: APIService, private readonly luigiService: DxpLuigiContextService) {}
+  constructor(private readonly apiService: APIService, private readonly luigiService: DxpLuigiContextService) { }
+
 
   createPipeline(pipelineType: PipelineType): Observable<string> {
     return combineLatest([this.apiService.apollo(), this.luigiService.contextObservable()]).pipe(
@@ -70,7 +71,10 @@ export class PipelineService {
               componentId: ctx.context.componentId,
             },
           })
-          .pipe(map((res) => res.data?.watchPipeline ?? {}))
+          .pipe(
+            map((res) => res.data?.watchPipeline ?? {}),
+            catchError(() => of({}))
+          )
       })
     )
   }
