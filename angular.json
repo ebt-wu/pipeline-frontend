@@ -143,7 +143,6 @@
     }
   },
   "cli": {
-    "cache": { "enabled": false },
     "analytics": false,
     "packageManager": "yarn",
     "schematicCollections": [
