@@ -437,7 +437,7 @@ export class SetupComponent {
           githubPath,
           repositoryResource,
           value.buildTool,
-          true,
+          false,
           value.buildTool === BuildTools.DOCKER || BuildTools.GO || BuildTools.GRADLE ? context.componentId : ''
         )
       )
