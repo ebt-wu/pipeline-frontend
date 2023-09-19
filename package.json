@@ -32,7 +32,7 @@
     "@angular/platform-browser-dynamic": "^16.2.2",
     "@angular/router": "^16.2.2",
     "@apollo/client": "^3.8.1",
-    "@dxp/ngx-core": "0.16.1",
+    "@dxp/ngx-core": "0.16.23",
     "@dynatrace/dtrum-api-types": "1.275.1",
     "@fundamental-ngx/core": "0.45.1",
     "@fundamental-ngx/platform": "0.45.1",
@@ -46,7 +46,7 @@
     "deepmerge": "^4.3.1",
     "fundamental-styles": "0.30.1",
     "graphql": "^16.8.0",
-    "graphql-ws": "^5.14.0",
+    "graphql-sse": "^2.3.0",
     "rxjs": "7.8.1",
     "tslib": "2.6.2",
     "zone.js": "0.13.1"
