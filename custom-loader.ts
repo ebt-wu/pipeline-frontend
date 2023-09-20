@@ -1,7 +1,6 @@
 const { buildClientSchema, getIntrospectionQuery } = require('graphql')
 const { Issuer, generators } = require('openid-client')
 const http = require('http')
-const opn = require('opn')
 
 const API_URL = "https://api.portal.d1.hyperspace.tools.sap/pipeline/query"
 
@@ -35,14 +34,16 @@ module.exports = async () => {
         if (req.url.startsWith('/?')) {
             // The parameters could be parsed manually, but the openid-client offers a function for it
             params = client.callbackParams(req);
-            res.end('You can close this browser now.')
+            res.setHeader('Content-Type', 'text/html')
+            res.end('You can close this browser now.<script>window.close()</script>')
         } else {
             res.end('Unsupported')
         }
     }).listen(8000) // static local port
 
     // Open authorization url in preferred browser, works cross-platform
-    opn(authorizationUrl)
+    const opn = await import('open')
+    opn.default(authorizationUrl)
 
     // Recheck every 500ms if we received any parameters
     // This is a simple example without a timeout
