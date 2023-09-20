@@ -106,13 +106,14 @@ export class PipelineComponent implements OnInit, OnDestroy {
 
 
     this.pipelineSubscription = this.pipeline$.subscribe(async (pipeline) => {
-
+      
+      // error reporting
+      this.errors.set([])
+      this.openPRCount.set(0)
+      this.isBuildPipelineSetup.set(false)
+      this.jenkinsPipelineError = false
+      
       for (const ref of pipeline.resourceRefs) {
-        // error reporting
-        this.errors.set([])
-        this.openPRCount.set(0)
-        this.isBuildPipelineSetup.set(false)
-        this.jenkinsPipelineError = false
 
         if (!ref.error) {
           continue
