@@ -6,10 +6,7 @@
         "vizType": "sap.luigi.node",
         "vizConfig": {
           "viewGroup": {
-            "preloadSuffix": "/#/preload",
-            "requiredIFramePermissions": {
-              "allow": ["clipboard-read", "clipboard-write"]
-            }
+            "preloadSuffix": "/#/preload"
           },
           "nodes": [
             {
@@ -20,6 +17,9 @@
               "icon": "process",
               "entityType": "project.component",
               "virtualTree": true,
+              "requiredIFramePermissions": {
+                "allow": ["clipboard-read", "clipboard-write"]
+              },
               "children": [
                 {
                   "pathSegment": "setup",
