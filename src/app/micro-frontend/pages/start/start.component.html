@@ -38,7 +38,7 @@
                   [disabled]="true"
                   fdType="transparent"
                   label="Coming Soon"
-                  (click)="createPipeline(pipelineType.SINGLE_SERVICE)"></button>
+                  (click)="createPipeline(pipelineType.SingleService)"></button>
               </fd-busy-indicator>
             </div>
           </fd-card-footer>
@@ -67,7 +67,7 @@
                   [disabled]="pipelineLoading || singleServiceLoading"
                   fdType="emphasized"
                   label="Set up Pipeline"
-                  (click)="createPipeline(pipelineType.FULL_PIPELINE)"></button>
+                  (click)="createPipeline(pipelineType.FullPipeline)"></button>
               </fd-busy-indicator>
             </div>
           </fd-card-footer>

@@ -1,39 +1,21 @@
 import { Injectable } from '@angular/core'
-import { APIService } from './api.service'
+import { BaseAPIService } from './base.service'
 import { DxpLuigiContextService } from '@dxp/ngx-core/luigi'
 import { Observable, combineLatest, first, map, mergeMap } from 'rxjs'
 import { CREATE_JENKINS_PIPELINE, DELETE_JENKINS_PIPELINE, GET_JENKINS_PIPELINE } from './queries'
 import { DeletionPolicy } from 'src/app/enums'
-
-export interface CreateJenkinsPipelineResponse {
-  createJenkinsPipeline: string
-}
-
-export interface GetJenkinsPipelineResponse {
-  getJenkinsPipeline: GetJenkinsPipeline
-}
-
-export interface GetJenkinsPipeline {
-  name?: string
-  jobUrl?: string
-  secretPath?: string
-  creationTimestamp?: string
-}
-
-export interface DeleteJenkinsPipelineResponse {
-  deleteJenkinsPipeline: string
-}
+import { CreateJenkinsPipelineMutation, CreateJenkinsPipelineMutationVariables, DeleteJenkinsPipelineMutation, GetJenkinsPipelineQuery, GetJenkinsPipelineQueryVariables } from 'src/generated/graphql'
 
 @Injectable({ providedIn: 'root' })
 export class JenkinsService {
-  constructor(private readonly apiService: APIService, private readonly luigiService: DxpLuigiContextService) {}
+  constructor(private readonly apiService: BaseAPIService, private readonly luigiService: DxpLuigiContextService) { }
 
   createJenkinsPipeline(jenkinsUrl: string, secretPath: string, githubRepositoryResource: string): Observable<string> {
     return combineLatest([this.apiService.apollo(), this.luigiService.contextObservable()]).pipe(
       first(),
       mergeMap(([client, ctx]) => {
         return client
-          .mutate<CreateJenkinsPipelineResponse>({
+          .mutate<CreateJenkinsPipelineMutation, CreateJenkinsPipelineMutationVariables>({
             mutation: CREATE_JENKINS_PIPELINE,
             variables: {
               projectId: ctx.context.projectId,
@@ -48,12 +30,12 @@ export class JenkinsService {
     )
   }
 
-  getJenkinsPipeline(resourceName: string): Observable<GetJenkinsPipeline> {
+  getJenkinsPipeline(resourceName: string) {
     return combineLatest([this.apiService.apollo(), this.luigiService.contextObservable()]).pipe(
       first(),
       mergeMap(([client, ctx]) => {
         return client
-          .query<GetJenkinsPipelineResponse>({
+          .query<GetJenkinsPipelineQuery, GetJenkinsPipelineQueryVariables>({
             query: GET_JENKINS_PIPELINE,
             fetchPolicy: "no-cache",
             variables: {
@@ -74,7 +56,7 @@ export class JenkinsService {
       first(),
       mergeMap(([client, ctx]) => {
         return client
-          .mutate<DeleteJenkinsPipelineResponse>({
+          .mutate<DeleteJenkinsPipelineMutation>({
             mutation: DELETE_JENKINS_PIPELINE,
             variables: {
               projectId: ctx.context.projectId,

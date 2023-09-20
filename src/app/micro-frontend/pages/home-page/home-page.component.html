@@ -1,17 +1,14 @@
 <fdp-dynamic-page ariaLabel="CI/CD Dynamic Page">
   <fdp-dynamic-page-content id="basic">
     <div *ngIf="watch$ | async as watch; else loading" class="home-page-content">
-      <ng-container *dxpRequiredPolicies="['projectAdmin', 'projectMember']; operator: 'or'">
-        <app-start [pipeline$]="watch$" *ngIf="
-            watch.pipelineType != pipelineType.FULL_PIPELINE && watch.pipelineType != pipelineType.SINGLE_SERVICE
-          "></app-start>
-        <app-pipeline [pipeline$]="watch$" *ngIf="watch.pipelineType == pipelineType.FULL_PIPELINE"></app-pipeline>
-        <app-single-services [pipeline$]="watch$"
-          *ngIf="watch.pipelineType == pipelineType.SINGLE_SERVICE"></app-single-services>
+      <ng-container [ngSwitch]="watch.pipelineType">
+        <app-pipeline [pipeline$]="watch$" *ngSwitchCase="pipelineType.FullPipeline"></app-pipeline>
+        <app-single-services [pipeline$]="watch$" *ngSwitchCase="pipelineType.SingleService"></app-single-services>
+        <app-start [pipeline$]="watch$" *ngSwitchCase="''"></app-start>
       </ng-container>
     </div>
     <ng-container *dxpRequiredPolicies="['!projectAdmin', '!projectMember']">
-      <fd-card *ngIf="watch$ | async" style="width: max-content; margin: 0 auto;">
+      <fd-card style="width: max-content; margin: 0 auto;">
         <fd-card-header [interactive]="false">
           <h2 fd-card-title>CI/CD Setup</h2>
         </fd-card-header>

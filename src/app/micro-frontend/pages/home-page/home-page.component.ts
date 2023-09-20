@@ -9,12 +9,12 @@ import { StartComponent } from '../start/start.component'
 import { Observable, debounceTime } from 'rxjs'
 import { PipelineComponent } from '../pipeline/pipeline.component'
 import { SingleServicesComponent } from '../single-services/single-services.component'
-import { PipelineType } from 'src/app/enums'
 import { Pipeline } from 'src/app/types'
 import { DebugModeService } from '../../services/debug-mode.service'
 import { tntSpotSecret } from '../../../../assets/ts-svg/tnt-spot-secret'
 import { AuthorizationModule } from '@dxp/ngx-core/authorization';
 import { LuigiClient, DxpLuigiContextService } from '@dxp/ngx-core/luigi'
+import { PipelineType } from 'src/generated/graphql'
 
 
 
@@ -50,7 +50,7 @@ export class HomePageComponent {
 
   watch$: Observable<Pipeline>
 
-  async ngOnInit(): Promise<void> {
+  ngOnInit(): void {
     this.watch$ = this.pipelineService.watchPipeline().pipe(debounceTime(50))
   }
 

@@ -18,5 +18,11 @@
     "lib": ["ES2022", "dom", "esnext.asynciterable"],
     "allowSyntheticDefaultImports": true,
     "useDefineForClassFields": false
+  },
+  "angularCompilerOptions": {
+    "strictTemplates": true
+  },
+  "ts-node": {
+    "esm": true
   }
 }

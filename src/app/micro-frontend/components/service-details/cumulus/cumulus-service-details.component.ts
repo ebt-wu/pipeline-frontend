@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common'
 import { Component, Input } from '@angular/core'
 import { FundamentalNgxCoreModule } from '@fundamental-ngx/core'
-import { GetCumulusPipeline } from 'src/app/micro-frontend/services/cumulus.service'
+import { GetCumulusPipelineQuery } from 'src/generated/graphql'
 
 @Component({
   standalone: true,
@@ -11,7 +11,7 @@ import { GetCumulusPipeline } from 'src/app/micro-frontend/services/cumulus.serv
   styleUrls: ['cumulus-service-details.component.css'],
 })
 export class CumlusServiceDetailsComponent {
-  @Input() serviceDetails: GetCumulusPipeline
+  @Input() serviceDetails: GetCumulusPipelineQuery["getCumulusPipeline"]
 
   openDocumentation() {
     window.open('https://hyperspace.tools.sap/docs/features_and_use_cases/connected_tools/cumulus.html', '_blank')

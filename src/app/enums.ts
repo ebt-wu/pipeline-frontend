@@ -14,24 +14,9 @@ export enum Categories {
   CODE_BUILD = 'Code Build',
 }
 
-export enum PipelineType {
-  FULL_PIPELINE = 'FULL_PIPELINE',
-  SINGLE_SERVICE = 'SINGLE_SERVICE',
-}
-
 export enum DeletionPolicy {
   DELETE = 'DELETE',
   ORPHAN = 'ORPHAN',
-}
-
-export enum BuildTools {
-  DOCKER = 'Docker',
-  GRADLE = 'Gradle',
-  NPM = 'npm',
-  MAVEN = 'Maven',
-  PYTHON = 'Python',
-  MTA = 'mta',
-  GO = 'Golang',
 }
 
 export enum ServiceStatus {
@@ -59,11 +44,4 @@ export enum Orchestrators {
 export enum CredentialTypes {
   EXISTING = 'Use Existing',
   NEW = 'Enter New',
-}
-
-export enum MessageTypes {
-  INFORMATION = 'information',
-  WARNING = 'warning',
-  SUCCESS = 'success',
-  ERROR = 'error',
 }

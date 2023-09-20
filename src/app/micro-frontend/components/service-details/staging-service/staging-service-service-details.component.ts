@@ -2,7 +2,7 @@ import { CommonModule } from '@angular/common'
 import { Component, Input, signal } from '@angular/core'
 import { FundamentalNgxCoreModule } from '@fundamental-ngx/core'
 import { SecretService } from 'src/app/micro-frontend/services/secret.service'
-import { GetStagingServiceCredential } from 'src/app/micro-frontend/services/staging-service.service'
+import { GetStagingServiceCredentialQuery } from 'src/generated/graphql'
 
 @Component({
   selector: 'staging-service-service-details',
@@ -14,7 +14,7 @@ import { GetStagingServiceCredential } from 'src/app/micro-frontend/services/sta
 export class StagingServiceServiceDetailsComponent {
   constructor(private readonly secretService: SecretService) {}
 
-  @Input() serviceDetails: GetStagingServiceCredential
+  @Input() serviceDetails: GetStagingServiceCredentialQuery["getStagingServiceCredential"]
 
   pendingShowInVault = signal(false)
 

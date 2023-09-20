@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common'
 import { Component, Input } from '@angular/core'
 import { FundamentalNgxCoreModule, MessageToastService } from '@fundamental-ngx/core'
-import { GetPiperConfig } from 'src/app/micro-frontend/services/piper.service'
+import { GetPiperConfigQuery } from 'src/generated/graphql'
 
 @Component({
   selector: 'piper-service-details',
@@ -11,9 +11,9 @@ import { GetPiperConfig } from 'src/app/micro-frontend/services/piper.service'
   imports: [CommonModule, FundamentalNgxCoreModule],
 })
 export class PiperServiceDetailsComponent {
-  @Input() serviceDetails: GetPiperConfig
+  @Input() serviceDetails: GetPiperConfigQuery["getPiperConfig"]
 
-  constructor(public messageToastService: MessageToastService) {}
+  constructor(public messageToastService: MessageToastService) { }
 
   copyConfigStringToClipboard(config: string) {
     const cb = navigator.clipboard

@@ -1,11 +1,5 @@
 import { gql } from 'apollo-angular'
 
-export const GET_VERSION = gql`
-  query {
-    version
-  }
-`
-
 /**
  * PIPELINE QUERIES
  */

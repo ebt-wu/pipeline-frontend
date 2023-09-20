@@ -11,7 +11,7 @@ import {
   FormGeneratorService,
 } from '@fundamental-ngx/platform/form'
 import { DxpLuigiContextService, LuigiClient } from '@dxp/ngx-core/luigi'
-import { BuildTools, CredentialTypes, Languages, Orchestrators } from 'src/app/enums'
+import { CredentialTypes, Languages, Orchestrators } from 'src/app/enums'
 import { SecretData, SecretService } from '../../services/secret.service'
 import { firstValueFrom, lastValueFrom, map } from 'rxjs'
 import { SetupBuildFormValue } from 'src/app/types'
@@ -21,6 +21,7 @@ import { ErrorMessageComponent } from '../../components/error-message/error-mess
 import { PlatformMessagePopoverModule } from '@fundamental-ngx/platform/message-popover'
 import { PiperService } from '../../services/piper.service'
 import { PlatformFormGeneratorCustomHeaderElementComponent } from '../../components/form-generator-header/form-generator-header.component'
+import { BuildTool } from 'src/generated/graphql'
 
 export interface HeaderDynamicFormControl extends BaseDynamicFormFieldItem {
   type: 'header'
@@ -94,12 +95,12 @@ export class SetupComponent {
             map((luigiContext) => {
               return luigiContext.context?.githubToolsToken
                 ? {
-                    value: luigiContext.context.githubToolsToken as string,
-                    domain: 'github.tools.sap',
-                  }
+                  value: luigiContext.context.githubToolsToken as string,
+                  domain: 'github.tools.sap',
+                }
                 : this.luigiClient.sendCustomMessage({
-                    id: `token.request.github.tools.sap`,
-                  })
+                  id: `token.request.github.tools.sap`,
+                })
             })
           )
         )
@@ -120,38 +121,41 @@ export class SetupComponent {
           const sortedLanguages = new Map([...languagesMap].sort((a, b) => b[1] - a[1]))
 
           if (sortedLanguages.has(Languages.DOCKERFILE)) {
-            return BuildTools.DOCKER
+            return BuildTool.Docker
           }
 
           for (const [key, _] of sortedLanguages) {
             switch (key) {
               case Languages.JAVA:
-                return BuildTools.MAVEN
+                return BuildTool.Maven
               case Languages.GO:
-                return BuildTools.GO
+                return BuildTool.Golang
               case Languages.TYPESCRIPT || Languages.JAVASCRIPT:
-                return BuildTools.NPM
+                return BuildTool.Npm
               case Languages.PYTHON:
-                return BuildTools.PYTHON
+                return BuildTool.Python
             }
           }
-          return BuildTools.DOCKER
+          return BuildTool.Docker
         }
 
-        return BuildTools.DOCKER
+        return BuildTool.Docker
       },
       guiOptions: {
         inline: true,
       },
       choices: [
-        BuildTools.DOCKER,
-        BuildTools.GO,
-        BuildTools.GRADLE,
-        BuildTools.MAVEN,
-        BuildTools.MTA,
-        BuildTools.NPM,
-        BuildTools.PYTHON,
-      ],
+        BuildTool.Docker,
+        BuildTool.Golang,
+        BuildTool.Gradle,
+        BuildTool.Maven,
+        BuildTool.Mta,
+        BuildTool.Npm,
+        BuildTool.Python,
+      ].map(tool => ({
+        label: tool.charAt(0).toUpperCase() + tool.slice(1).toLocaleLowerCase(),
+        value: tool
+      })),
       validators: [Validators.required],
     },
     {
@@ -438,7 +442,7 @@ export class SetupComponent {
           repositoryResource,
           value.buildTool,
           false,
-          value.buildTool === BuildTools.DOCKER || BuildTools.GO || BuildTools.GRADLE ? context.componentId : ''
+          value.buildTool === BuildTool.Docker || BuildTool.Golang || BuildTool.Gradle ? context.componentId : ''
         )
       )
 

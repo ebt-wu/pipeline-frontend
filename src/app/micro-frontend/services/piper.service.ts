@@ -1,36 +1,18 @@
 import { Injectable } from '@angular/core'
-import { APIService } from './api.service'
+import { BaseAPIService } from './base.service'
 import { DxpLuigiContextService } from '@dxp/ngx-core/luigi'
-import { BuildTools } from 'src/app/enums'
 import { Observable, combineLatest, first, map, mergeMap } from 'rxjs'
 import { CREATE_PIPER_CONFIG, DELETE_PIPER_CONFIG, GET_PIPER_CONFIG } from './queries'
-
-export interface CreatePiperConfigResponse {
-  createPiperConfig: string
-}
-
-export interface DeletePiperConfigResponse {
-  deletePiperConfig: string
-}
-
-export interface GetPiperConfigResponse {
-  getPiperConfig: GetPiperConfig
-}
-
-export interface GetPiperConfig {
-  pullRequestURL?: string
-  configString?: string
-  creationTimestamp?: string
-}
+import { BuildTool, CreatePiperConfigMutation, CreatePiperConfigMutationVariables, DeletePiperConfigMutation, DeletePiperConfigMutationVariables, GetPiperConfigQuery, GetPiperConfigQueryVariables } from 'src/generated/graphql'
 
 @Injectable({ providedIn: 'root' })
 export class PiperService {
-  constructor(private readonly apiService: APIService, private readonly luigiService: DxpLuigiContextService) {}
+  constructor(private readonly apiService: BaseAPIService, private readonly luigiService: DxpLuigiContextService) {}
 
   createPiperConfig(
     githubSecretRef: string,
     repositoryResource: string,
-    buildTool: BuildTools,
+    buildTool: BuildTool,
     pipelineOptimization: boolean,
     dockerImageName: string
   ): Observable<string> {
@@ -38,14 +20,14 @@ export class PiperService {
       first(),
       mergeMap(([client, ctx]) => {
         return client
-          .mutate<CreatePiperConfigResponse>({
+          .mutate<CreatePiperConfigMutation, CreatePiperConfigMutationVariables>({
             mutation: CREATE_PIPER_CONFIG,
             variables: {
               projectId: ctx.context.projectId,
               componentId: ctx.context.componentId,
               githubSecretRef: githubSecretRef,
               repositoryResource: repositoryResource,
-              buildTool: buildTool.toUpperCase(),
+              buildTool: buildTool,
               pipelineOptimization: pipelineOptimization,
               dockerImageName: dockerImageName,
             },
@@ -60,7 +42,7 @@ export class PiperService {
       first(),
       mergeMap(([client, ctx]) => {
         return client
-          .query<GetPiperConfigResponse>({
+          .query<GetPiperConfigQuery, GetPiperConfigQueryVariables>({
             query: GET_PIPER_CONFIG,
             fetchPolicy: "no-cache",
             variables: {
@@ -78,7 +60,7 @@ export class PiperService {
       first(),
       mergeMap(([client, ctx]) => {
         return client
-          .mutate<DeletePiperConfigResponse>({
+          .mutate<DeletePiperConfigMutation, DeletePiperConfigMutationVariables>({
             mutation: DELETE_PIPER_CONFIG,
             variables: {
               projectId: ctx.context.projectId,

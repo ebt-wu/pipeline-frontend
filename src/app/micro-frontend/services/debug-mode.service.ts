@@ -1,6 +1,6 @@
 import { Injectable, signal } from '@angular/core'
 import { MessageToastService } from '@fundamental-ngx/core'
-import { APIService } from './api.service'
+import { BaseAPIService } from './base.service'
 import { DxpLuigiContextService } from '@dxp/ngx-core/luigi'
 import { combineLatest, first, mergeMap } from 'rxjs'
 import { FORCE_DEBUG_RECONCILIATION } from './queries'
@@ -9,7 +9,7 @@ import { FORCE_DEBUG_RECONCILIATION } from './queries'
 export class DebugModeService {
   constructor(
     public messageToastService: MessageToastService,
-    private readonly apiService: APIService,
+    private readonly apiService: BaseAPIService,
     private readonly luigiService: DxpLuigiContextService
   ) {}
 

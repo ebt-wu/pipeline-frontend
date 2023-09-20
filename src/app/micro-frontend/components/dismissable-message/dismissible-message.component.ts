@@ -1,7 +1,6 @@
 import { CommonModule } from '@angular/common'
 import { Component, EventEmitter, Input, Output, signal } from '@angular/core'
-import { FundamentalNgxCoreModule, LinkModule } from '@fundamental-ngx/core'
-import { MessageTypes } from 'src/app/enums'
+import { FundamentalNgxCoreModule, LinkModule, MessageStripType } from '@fundamental-ngx/core'
 import { DxpLuigiContextService, LuigiClient } from '@dxp/ngx-core/luigi'
 
 /**
@@ -19,7 +18,7 @@ export class DismissibleMessageComponent {
   constructor(private readonly luigiClient: LuigiClient, private readonly luigiService: DxpLuigiContextService) {}
 
   @Input() message: string
-  @Input() type: MessageTypes
+  @Input() type: MessageStripType
   @Input() displayLink? = false
   @Input() linkText? = ''
   @Input() href? = ''

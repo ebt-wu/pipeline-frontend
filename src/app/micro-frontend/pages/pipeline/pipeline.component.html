@@ -42,7 +42,7 @@
             *ngIf="isBuildPipelineSetup()" 
             type="success"
             message="YAY! Your build pipeline is set up." 
-            displayLink="true" 
+            [displayLink]="true" 
             linkText="See It in Action"
             [href]="pipelineURL()"
             >
@@ -53,7 +53,7 @@
           </fd-message-strip>
           <fd-card cardType="linkList" class="stage-card">
             <fd-card-content class="card-content-padding">
-              <div class="card-content build-stage-padding" (click)="openBuildStage(pipeline)">
+              <div class="card-content build-stage-padding" (click)="openBuildStage()">
                 <div class="icons">
                   <fd-avatar *ngIf="!isBuildStageSetup()" [colorAccent]="1" size="m" glyph="wrench"></fd-avatar>
                   <fd-icon *ngIf="!isBuildStageOpen() && isBuildStageSetup()" glyph="slim-arrow-right"
@@ -135,7 +135,7 @@
                     <p>Get feedback on the compliance of your code</p>
                   </div>
                 </div>
-                <fd-info-label label="Coming Soon" [color]="10" title="Coming Soon"></fd-info-label>
+                <fd-info-label label="Coming Soon" color="10" title="Coming Soon"></fd-info-label>
               </div>
             </fd-card-content>
           </fd-card>
@@ -149,7 +149,7 @@
                     <p>Enable a deployment of your packaged code</p>
                   </div>
                 </div>
-                <fd-info-label fdCozy label="Coming Soon" [color]="10" title="Coming Soon"></fd-info-label>
+                <fd-info-label fdCozy label="Coming Soon" color="10" title="Coming Soon"></fd-info-label>
               </div>
             </fd-card-content>
           </fd-card>

@@ -1,8 +1,8 @@
 import { CommonModule } from '@angular/common'
 import { Component, Input, OnInit, signal } from '@angular/core'
 import { FundamentalNgxCoreModule } from '@fundamental-ngx/core'
-import { GetJenkinsPipeline } from 'src/app/micro-frontend/services/jenkins.service'
 import { SecretService } from 'src/app/micro-frontend/services/secret.service'
+import { GetJenkinsPipelineQuery } from 'src/generated/graphql'
 
 @Component({
   selector: 'jenkins-service-details',
@@ -14,7 +14,7 @@ import { SecretService } from 'src/app/micro-frontend/services/secret.service'
 export class JenkinServiceDetailsComponent implements OnInit {
   constructor(private readonly secretService: SecretService) {}
 
-  @Input() serviceDetails: GetJenkinsPipeline
+  @Input() serviceDetails: GetJenkinsPipelineQuery["getJenkinsPipeline"]
 
   pendingShowInVault = signal(false)
 

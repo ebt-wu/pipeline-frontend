@@ -1,7 +1,8 @@
-import { BuildTools, CredentialTypes, Kinds, Orchestrators, PipelineType, ServiceStatus } from './enums'
+import { BuildTool, PipelineType } from 'src/generated/graphql'
+import { CredentialTypes, Kinds, Orchestrators, ServiceStatus } from './enums'
 
 export type SetupBuildFormValue = {
-  buildTool?: BuildTools
+  buildTool?: BuildTool
   buildToolHeader?: string
   githubCredentialType?: CredentialTypes
   githubHeader?: string

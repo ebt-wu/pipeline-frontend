@@ -1,26 +1,10 @@
 import { Injectable } from '@angular/core'
-import { APIService } from './api.service'
+import { BaseAPIService } from './base.service'
 import { first, map, mergeMap } from 'rxjs/operators'
 import { Observable, combineLatest, lastValueFrom } from 'rxjs'
 import { DxpLuigiContextService } from '@dxp/ngx-core/luigi'
 import { ENSURE_VAULT_ONBOARDING, GET_PIPELINE_SECRETS, WRITE_SECRET } from './queries'
-
-export interface GetPipelineSecretsResponse {
-  getPipelineSecrets: string[]
-}
-
-export interface WriteSecretResponse {
-  writeSecret: string
-}
-
-export interface EnsureVaultOnboardingResponse {
-  ensureVaultOnboarding: VaultInfo
-}
-
-export interface VaultInfo {
-  token: string
-  vaultUrl: string
-}
+import { EnsureVaultOnboardingMutation, EnsureVaultOnboardingMutationVariables, GetPipelineSecretsQuery, GetPipelineSecretsQueryVariables, WriteSecretMutation, WriteSecretMutationVariables } from 'src/generated/graphql'
 
 export interface SecretData {
   key: string
@@ -29,14 +13,14 @@ export interface SecretData {
 
 @Injectable({ providedIn: 'root' })
 export class SecretService {
-  constructor(private readonly apiService: APIService, private readonly luigiService: DxpLuigiContextService) {}
+  constructor(private readonly apiService: BaseAPIService, private readonly luigiService: DxpLuigiContextService) { }
 
-  writeSecret(vaultPath: string, secretData: SecretData[]): Observable<string> {
+  writeSecret(vaultPath: string, secretData: WriteSecretMutationVariables["data"]): Observable<string> {
     return combineLatest([this.apiService.apollo(), this.luigiService.contextObservable()]).pipe(
       first(),
       mergeMap(([client, ctx]) => {
         return client
-          .mutate<WriteSecretResponse>({
+          .mutate<WriteSecretMutation, WriteSecretMutationVariables>({
             mutation: WRITE_SECRET,
             variables: {
               projectId: ctx.context.projectId,
@@ -54,7 +38,7 @@ export class SecretService {
       first(),
       mergeMap(([client, ctx]) => {
         return client
-          .query<GetPipelineSecretsResponse>({
+          .query<GetPipelineSecretsQuery, GetPipelineSecretsQueryVariables>({
             query: GET_PIPELINE_SECRETS,
             variables: {
               projectId: ctx.context.projectId,
@@ -66,12 +50,12 @@ export class SecretService {
     )
   }
 
-  ensureVaultOnboarding(): Observable<VaultInfo> {
+  ensureVaultOnboarding() {
     return combineLatest([this.apiService.apollo(), this.luigiService.contextObservable()]).pipe(
       first(),
       mergeMap(([client, ctx]) => {
         return client
-          .mutate<EnsureVaultOnboardingResponse>({
+          .mutate<EnsureVaultOnboardingMutation, EnsureVaultOnboardingMutationVariables>({
             mutation: ENSURE_VAULT_ONBOARDING,
             variables: {
               tenantId: ctx.context.tenantid,
