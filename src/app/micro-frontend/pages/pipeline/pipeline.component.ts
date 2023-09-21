@@ -176,7 +176,7 @@ export class PipelineComponent implements OnInit, OnDestroy {
       this.luigiService.contextObservable().pipe(
         map((luigiContext) => {
 
-          if (luigiContext.context?.githubToolsToken) {
+          if (!luigiContext.context?.githubToolsToken) {
             this.luigiClient.sendCustomMessage({
               id: `token.request.github.tools.sap`,
             })
