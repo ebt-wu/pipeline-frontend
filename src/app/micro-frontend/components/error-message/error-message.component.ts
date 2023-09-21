@@ -11,7 +11,7 @@ import { FundamentalNgxCoreModule } from '@fundamental-ngx/core'
   imports: [CommonModule, FundamentalNgxCoreModule],
 })
 export class ErrorMessageComponent {
-  constructor(private readonly luigiService: DxpLuigiContextService) {}
+  constructor(private readonly luigiService: DxpLuigiContextService) { }
 
   @Input() title: string
   @Input() message: string
@@ -42,11 +42,9 @@ To help us debug, please describe what you tried to do and when the error occurr
 \`\`\`
 ${this.message.trim()}
 \`\`\`
-**Project and component:** [\`${context.projectId}/${context.componentId}\`](https://${
-        document.location.hostname
-      }/projects/${context.projectId}/components/${context.componentId}/pipeline-ui)
+**Project and component:** [\`${context.projectId}/${context.componentId}\`](${context.frameBaseUrl}/projects/${context.projectId}/components/${context.componentId}/pipeline-ui)
 **Timestamp:** ${new Date()}
-**User ID:** [\`${context.userid}\`](${githubUrl}/profile/${context.userid})
+**User ID:** [\`${context.userid}\`](${githubUrl}/${context.userid})
 `
     )
     ghIssueURL.searchParams.append('labels', ':clipboard: bug,:alien: external')
