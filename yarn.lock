@@ -2571,9 +2571,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@dxp/ngx-core@npm:0.16.23":
-  version: 0.16.23
-  resolution: "@dxp/ngx-core@npm:0.16.23::__archiveUrl=https%3A%2F%2Feurope-npm.pkg.dev%2Fsap-gcp-dxp-prod%2Fdxp%2F%40dxp%2Fngx-core%2F-%2F%40dxp%2Fngx-core-0.16.23.tgz"
+"@dxp/ngx-core@npm:0.16.25":
+  version: 0.16.25
+  resolution: "@dxp/ngx-core@npm:0.16.25::__archiveUrl=https%3A%2F%2Feurope-npm.pkg.dev%2Fsap-gcp-dxp-prod%2Fdxp%2F%40dxp%2Fngx-core%2F-%2F%40dxp%2Fngx-core-0.16.25.tgz"
   dependencies:
     tslib: ^2.5.0
   peerDependencies:
@@ -2594,7 +2594,7 @@ __metadata:
     apollo-angular: ^4.0.0
     deepmerge: ^4.2.2
     moment: ^2.29.2
-  checksum: 4822eb52bcb9fb474a6e48ab09b9e5406762ed15d79d19bc27acb7113f2c98f9e55aa3ce050694b0c74e02fb6397dbd9843911bc21651c1a272f48e05d1bab8f
+  checksum: 810af961829f9b2a3a53cea5bbb18c05263c7ee9a45c2c1656ecd15e9438243fabf06751f9e8b366ec1b99f25769822665cda42663f965466746a576703235af
   languageName: node
   linkType: hard
 
@@ -12438,7 +12438,7 @@ __metadata:
     "@angular/platform-browser-dynamic": ^16.2.2
     "@angular/router": ^16.2.2
     "@apollo/client": ^3.8.1
-    "@dxp/ngx-core": 0.16.23
+    "@dxp/ngx-core": 0.16.25
     "@dynatrace/dtrum-api-types": 1.275.1
     "@fundamental-ngx/core": 0.45.1
     "@fundamental-ngx/platform": 0.45.1

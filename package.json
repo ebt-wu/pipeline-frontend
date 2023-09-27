@@ -8,7 +8,7 @@
   "scripts": {
     "preinstall": "npx only-allow yarn",
     "start": "ng serve",
-    "build": "ng build --configuration production --localize --output-path=dist",
+    "build": "ng build --configuration production --localize --output-path=dist --stats-json ",
     "login-gcloud": "gcloud auth login && echo 'You need to run:\n\n\texport GCP_REGISTRY_REFERENCE_TOKEN=$(gcloud auth print-access-token)\n\nin your current shell session'",
     "test": "yarn test:unit",
     "lint": "ng lint",
@@ -32,7 +32,7 @@
     "@angular/platform-browser-dynamic": "^16.2.2",
     "@angular/router": "^16.2.2",
     "@apollo/client": "^3.8.1",
-    "@dxp/ngx-core": "0.16.23",
+    "@dxp/ngx-core": "0.16.25",
     "@dynatrace/dtrum-api-types": "1.275.1",
     "@fundamental-ngx/core": "0.45.1",
     "@fundamental-ngx/platform": "0.45.1",
