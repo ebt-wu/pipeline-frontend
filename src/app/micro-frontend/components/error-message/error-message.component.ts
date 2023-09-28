@@ -2,6 +2,7 @@ import { CommonModule } from '@angular/common'
 import { Component, EventEmitter, Input, Output } from '@angular/core'
 import { DxpLuigiContextService } from '@dxp/ngx-core/luigi'
 import { FundamentalNgxCoreModule } from '@fundamental-ngx/core'
+import { GitHubIssueLabels, GitHubIssueLinkService } from '../../services/github-issue-link.service'
 
 @Component({
   standalone: true,
@@ -11,7 +12,10 @@ import { FundamentalNgxCoreModule } from '@fundamental-ngx/core'
   imports: [CommonModule, FundamentalNgxCoreModule],
 })
 export class ErrorMessageComponent {
-  constructor(private readonly luigiService: DxpLuigiContextService) { }
+  constructor(
+    private readonly luigiService: DxpLuigiContextService,
+    private readonly githubIssueLinkService: GitHubIssueLinkService,
+  ) {}
 
   @Input() title: string
   @Input() message: string
@@ -25,30 +29,28 @@ export class ErrorMessageComponent {
   async reportError() {
     const context = await this.luigiService.getContextAsync()
     const githubUrl = 'https://github.tools.sap'
-    const ghIssueURL = new URL(`${githubUrl}/hyper-pipe/portal/issues/new`)
 
-    ghIssueURL.searchParams.append(
-      'title',
-      `[Portal CI/CD] ${this.title} for ${context.projectId}/${context.componentId}`
-    )
-    ghIssueURL.searchParams.append(
-      'body',
-      `<!-- Thank you for taking the time to report this error.
+    const issueURL = this.githubIssueLinkService.getIssueLink(
+      `${this.title} for ${context.projectId}/${context.componentId}`,
+      `
+<!-- Thank you for taking the time to report this error.
 To help us debug, please describe what you tried to do and when the error occurred below.
 -->
-
+    
 ### Debugging Information (automatically generated)
 **Error Message:** 
 \`\`\`
 ${this.message.trim()}
 \`\`\`
-**Project and component:** [\`${context.projectId}/${context.componentId}\`](${context.frameBaseUrl}/projects/${context.projectId}/components/${context.componentId}/pipeline-ui)
+**Project and component:** [\`${context.projectId}/${context.componentId}\`](${context.frameBaseUrl}/projects/${
+        context.projectId
+      }/components/${context.componentId}/pipeline-ui)
 **Timestamp:** ${new Date()}
 **User ID:** [\`${context.userid}\`](${githubUrl}/${context.userid})
-`
+    `,
+      [GitHubIssueLabels.BUG, GitHubIssueLabels.EXTERNAL, GitHubIssueLabels.PORTAL],
     )
-    ghIssueURL.searchParams.append('labels', ':clipboard: bug,:alien: external')
 
-    window.open(ghIssueURL.href, '_blank')
+    window.open(issueURL, '_blank')
   }
 }

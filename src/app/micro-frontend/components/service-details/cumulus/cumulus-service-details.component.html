@@ -38,6 +38,34 @@
       [closeOnOutsideClick]="true"></button>
   </div>
   {{ serviceDetails.key }}
+  <div class="flex-box top-margin">
+    <h3>Cumulus Credentials</h3>
+    <button
+      class="left-margin"
+      role="button"
+      fdType="transparent"
+      glyph="hint"
+      fd-button
+      placement="top"
+      [fd-inline-help]="credentialsHelp"
+      [triggers]="['click']"
+      [closeOnOutsideClick]="true"></button>
+    <br />
+  </div>
+  <div>
+    <b>Vault Path</b>
+  </div>
+  {{ cumulusSecretPath }}
+  <div class="top-margin">
+    <fd-busy-indicator [loading]="pendingShowInVault()" size="s">
+      <button
+        fd-button
+        fdType="transparent"
+        [disabled]="pendingShowInVault()"
+        label="Show in Vault"
+        (click)="showInVault(cumulusSecretPath)"></button>
+    </fd-busy-indicator>
+  </div>
 </div>
 
 <ng-template #idHelp>
@@ -55,5 +83,17 @@
 </ng-template>
 
 <ng-template #keyHelp>
-  <div>Search for this key to find this pipeline in the pipeline view of your <a href="https://sirius.tools.sap.corp/sirius/#/search" target="_blank">Sirius</a> program.</div>
+  <div>
+    Search for this key to find this pipeline in the pipeline view of your
+    <a href="https://sirius.tools.sap.corp/sirius/#/search" target="_blank">Sirius</a>
+    program.
+  </div>
+</ng-template>
+
+<ng-template #credentialsHelp>
+  <div>
+    Your pipeline uses these credentials to access and
+    <br />
+    upload compliance relevant data to Cumulus.
+  </div>
 </ng-template>

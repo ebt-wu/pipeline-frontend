@@ -300,6 +300,18 @@ fd-info-label {
         margin: 0;
       }
 
+      .extension-info {
+        margin: 2rem 1rem;
+
+        .extension-support-option {
+          margin: 0.2rem 0rem;
+
+          .option-name {
+            color: var(--sapNeutralColor);
+          }
+        }
+      }
+
       .service-info {
         display: flex;
         justify-content: center;
@@ -315,11 +327,6 @@ fd-info-label {
 
           .service-info-image {
             max-width: 10rem;
-          }
-
-          .catalog-link {
-            color: var(--sapLinkColor);
-            text-decoration: none;
           }
         }
       }

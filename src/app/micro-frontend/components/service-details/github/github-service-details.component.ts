@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common'
-import { Component, Input, signal } from '@angular/core'
+import { Component, Input, OnInit, signal } from '@angular/core'
 import { FundamentalNgxCoreModule } from '@fundamental-ngx/core'
 import { SecretService } from 'src/app/micro-frontend/services/secret.service'
 import { GetGithubRepositoryQuery } from 'src/generated/graphql'
@@ -11,10 +11,17 @@ import { GetGithubRepositoryQuery } from 'src/generated/graphql'
   imports: [CommonModule, FundamentalNgxCoreModule],
   styleUrls: ['github-service-details.component.css'],
 })
-export class GithubServiceDetailsComponent {
+export class GithubServiceDetailsComponent implements OnInit {
   constructor(private readonly secretService: SecretService) {}
 
   @Input() serviceDetails: GetGithubRepositoryQuery["getGithubRepository"]
+
+  githubInstance = ""
+  
+  ngOnInit(): void {
+    const repoUrl = new URL(this.serviceDetails.repositoryUrl)
+    this.githubInstance = repoUrl.origin
+  }
 
   pendingShowInVault = signal(false)
 

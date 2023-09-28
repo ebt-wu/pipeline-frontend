@@ -3,15 +3,12 @@ import { Component, Input, OnDestroy, OnInit, signal } from '@angular/core'
 import { FlexibleColumnLayout, FundamentalNgxCoreModule, IconModule, MessageBoxService } from '@fundamental-ngx/core'
 import { Observable, Subscription, firstValueFrom, map } from 'rxjs'
 import { DxpLuigiContextService, LuigiClient, LuigiDialogUtil } from '@dxp/ngx-core/luigi'
-import { KindCategory, KindDocumentation, KindName } from 'src/app/constants'
+import { KindCategory, KindExtensionName, KindName } from 'src/app/constants'
 import { RouterModule } from '@angular/router'
 import { Pipeline, ResourceRef } from 'src/app/types'
 import { DeletionPolicy, Kinds, ServiceStatus } from 'src/app/enums'
-
 import { ErrorMessageComponent } from '../../components/error-message/error-message.component'
-
 import { DismissibleMessageComponent } from '../../components/dismissable-message/dismissible-message.component'
-
 import { CumlusServiceDetailsComponent } from '../../components/service-details/cumulus/cumulus-service-details.component'
 import { GithubServiceDetailsComponent } from '../../components/service-details/github/github-service-details.component'
 import { JenkinServiceDetailsComponent } from '../../components/service-details/jenkins/jenkins-service-details.component'
@@ -20,6 +17,10 @@ import { DebugModeService } from '../../services/debug-mode.service'
 import { StagingServiceServiceDetailsComponent } from '../../components/service-details/staging-service/staging-service-service-details.component'
 import { DeleteBuildModal } from '../../components/delete-build-modal/delete-build-modal.component'
 import { APIService } from '../../services/api.service'
+import { ExtensionService } from '../../services/extension.service'
+import { ExtensionClass, ServiceLevel } from '../../services/extension.types'
+import { DxpContext } from '@dxp/ngx-core/common'
+import { GitHubIssueLabels, GitHubIssueLinkService } from '../../services/github-issue-link.service'
 
 type Error = {
   title: string
@@ -53,6 +54,8 @@ const dateFormatter = new Intl.DateTimeFormat('en', { year: 'numeric', month: 's
 export class PipelineComponent implements OnInit, OnDestroy {
   @Input() pipeline$!: Observable<Pipeline>
 
+  dxpContext: Observable<DxpContext>
+
   pipelineSubscription: Subscription
 
   isBuildStageOpen = signal(false)
@@ -79,13 +82,14 @@ export class PipelineComponent implements OnInit, OnDestroy {
   serviceUrl = signal('')
   serviceCreationTimestamp = signal<Date>(null)
 
+  extensionClasses = signal<ExtensionClass[]>([])
+
   //enums
   serviceStatus = ServiceStatus
 
   // maps
   kindName = KindName
   kindCategory = KindCategory
-  kindDocumentation = KindDocumentation
 
   openPRCount = signal(0)
   repoUrl = signal('')
@@ -94,32 +98,35 @@ export class PipelineComponent implements OnInit, OnDestroy {
     private readonly luigiClient: LuigiClient,
     private readonly api: APIService,
     private readonly luigiService: DxpLuigiContextService,
-    private messageBoxService: MessageBoxService,
-    private luigiDialogUtil: LuigiDialogUtil,
+    private readonly extensionService: ExtensionService,
+    private readonly messageBoxService: MessageBoxService,
+    private readonly luigiDialogUtil: LuigiDialogUtil,
     readonly debugModeService: DebugModeService,
-  ) { }
+    private readonly githubIssueLinkService: GitHubIssueLinkService,
+  ) {}
 
   async ngOnInit(): Promise<void> {
+    this.dxpContext = this.luigiService.contextObservable().pipe(map((value) => value.context))
+
     const context = (await this.luigiService.getContextAsync()) as any
     this.catalogUrl.set(context.frameBaseUrl + '/catalog')
     this.repoUrl.set(context.entityContext?.component?.annotations['github.dxp.sap.com/repo-url'] ?? '')
 
+    this.extensionClasses.set(await firstValueFrom(this.extensionService.getExtensionClassesForScopesQuery()))
 
     this.pipelineSubscription = this.pipeline$.subscribe(async (pipeline) => {
-      
       // error reporting
       this.errors.set([])
       this.openPRCount.set(0)
       this.isBuildPipelineSetup.set(false)
       this.jenkinsPipelineError = false
-      
-      for (const ref of pipeline.resourceRefs) {
 
+      for (const ref of pipeline.resourceRefs) {
         if (!ref.error) {
           continue
         }
 
-        if (ref.error.startsWith("PIPER-1")) {
+        if (ref.error.startsWith('PIPER-1')) {
           continue
         }
 
@@ -138,7 +145,11 @@ export class PipelineComponent implements OnInit, OnDestroy {
       }
 
       // enable/disable expansion of build stage
-      if ([Kinds.JENKINS_PIPELINE, Kinds.GITHUB_REPOSITORY, Kinds.PIPER_CONFIG].some(k => pipeline.resourceRefs.findIndex(ref => ref.kind === k) === -1)) {
+      if (
+        [Kinds.JENKINS_PIPELINE, Kinds.GITHUB_REPOSITORY, Kinds.PIPER_CONFIG].some(
+          (k) => pipeline.resourceRefs.findIndex((ref) => ref.kind === k) === -1,
+        )
+      ) {
         this.isBuildStageSetup.set(false)
         this.isBuildStageOpen.set(false)
         return
@@ -148,16 +159,20 @@ export class PipelineComponent implements OnInit, OnDestroy {
       this.isBuildStageOpen.set(true)
 
       // is pipeline completely created?
-      if (pipeline.resourceRefs.some(ref => ref.status !== ServiceStatus.CREATED)) {
+      if (pipeline.resourceRefs.some((ref) => ref.status !== ServiceStatus.CREATED)) {
         return
       }
 
       this.isBuildPipelineSetup.set(true)
-      await this.showFeedbackModal()
+
+      /**
+       * Feedback modal was designed for the pilot.
+       * As the pilots are over now we can deactivate the modal for now and remove it later.
+       */
+      //await this.showFeedbackModal()
+
       await this.getPipelineURL(pipeline)
       this.openPRCount.set(await this.getOpenPRCount())
-
-
     })
   }
 
@@ -169,13 +184,74 @@ export class PipelineComponent implements OnInit, OnDestroy {
     return this.isBuildStageSetup() && !this.pendingDeletion() && !this.jenkinsPipelineError
   }
 
+  public getIcon(extension: ExtensionClass): string {
+    if (extension) {
+      return this.extensionService.getIcon(extension)
+    }
+    return ''
+  }
+
+  public getExtensionClass(activeTile: string): ExtensionClass {
+    const extensionName = KindExtensionName[activeTile]
+    return this.extensionClasses().find((extensionClass) => extensionClass.name == extensionName)
+  }
+
+  getComma(element: any, array: any[]): string {
+    if (array.length - 1 === array.indexOf(element)) {
+      return ''
+    }
+    return ', '
+  }
+
+  getMailLink(email: string): string {
+    return `mailto:${email}`
+  }
+
+  getServiceLevel(level: ServiceLevel): string {
+    switch (level) {
+      case ServiceLevel.VeryHigh:
+        return '24x7'
+      case ServiceLevel.High:
+        return '24x5'
+      case ServiceLevel.MediumOne:
+        return '16x5'
+      case ServiceLevel.MediumTwo:
+        return '12x5'
+      case ServiceLevel.Low:
+        return '8x5'
+      default:
+        return 'No service level maintained'
+    }
+  }
+
+  missingServiceDetailsTicketUrl(kind: string, project: string, baseUrl: string, user: string): string {
+    return this.githubIssueLinkService.getIssueLink(
+      `Service info for service ${this.kindName[kind]} missing`,
+      `
+<!-- Thank you for taking the time to report this issue.
+To help us debug, please describe where you encountered it below.
+-->
+
+
+### Debugging Information (automatically generated)
+Service details from LeanIX are missing for the service \`${this.kindName[kind]}\`. 
+
+The information might be missing in the Hyperspace portal extension backend, LeanIX or there is a misconfiguration in the CI/CD setup UI.
+
+**Project this issue was created from:** [${project}](${baseUrl}/projects/${project})
+**Timestamp:** ${new Date()}
+**User:** ${user}
+    `,
+      [GitHubIssueLabels.EXTERNAL, GitHubIssueLabels.PORTAL],
+    )
+  }
+
   async getOpenPRCount(): Promise<number> {
     const context = (await this.luigiService.getContextAsync()) as any
     const repoUrl = context.entityContext?.component?.annotations['github.dxp.sap.com/repo-url'] ?? null
     const token = await firstValueFrom(
       this.luigiService.contextObservable().pipe(
         map((luigiContext) => {
-
           if (!luigiContext.context?.githubToolsToken) {
             this.luigiClient.sendCustomMessage({
               id: `token.request.github.tools.sap`,
@@ -187,14 +263,13 @@ export class PipelineComponent implements OnInit, OnDestroy {
             value: luigiContext.context.githubToolsToken as string,
             domain: 'github.tools.sap',
           }
-        })
-      )
+        }),
+      ),
     )
 
     if (!token?.value || !repoUrl) {
       return 0
     }
-
 
     const url = new URL(repoUrl)
     const pullsResp = await fetch(`${url.origin}/api/v3/repos${url.pathname}/pulls`, {
@@ -203,7 +278,7 @@ export class PipelineComponent implements OnInit, OnDestroy {
       },
     })
 
-    const pulls = await pullsResp.json() as any[]
+    const pulls = (await pullsResp.json()) as any[]
     return pulls.reduce((prev, curr) => {
       if (curr.head?.ref === 'hyperspace-jenkinsfile' || curr.head?.ref === 'piper-onboarding') {
         return prev + 1
@@ -218,6 +293,7 @@ export class PipelineComponent implements OnInit, OnDestroy {
    * It would be better to show it only to the user who set up the pipeline initially.
    * I'd say for the pilot the current behaivour is fine but for productive use we need to find a better solution
    * which might require to storing things permanently using the backend.
+   * UPDATE: As the pilot is over now we are not showing the feedback modal anymore.
    */
   /**
    * FIXME: Sometimes it is not possible to close the feedback modal.
@@ -240,11 +316,13 @@ export class PipelineComponent implements OnInit, OnDestroy {
     })
 
     await this.luigiClient.storageManager().setItem(localStorageKey, `shown at: ${new Date()}`)
-
   }
 
-  openFeedbackSurvey() {
-    window.open('https://s.userzoom.com/m/MyBDODgzUzgyODYg', '_blank')
+  openFeedback() {
+    window.open(
+      'https://sapit-home-prod-004.launchpad.cfapps.eu10.hana.ondemand.com/site#feedbackservice-Display&/topic/cc5045ed-6c4e-4e7b-a18d-a0b377faf593/createFeedback',
+      '_blank',
+    )
   }
 
   openDocumentation() {
@@ -468,7 +546,6 @@ export class PipelineComponent implements OnInit, OnDestroy {
     } finally {
       this.serviceDetailsLoading.set(false)
     }
-
   }
 
   openService() {

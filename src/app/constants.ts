@@ -1,26 +1,26 @@
 import { Categories, Kinds } from './enums'
+import { Extensions } from './micro-frontend/services/extension.types'
 
-const kindName = {}
-kindName[Kinds.CUMULUS_PIPELINE] = 'Cumulus'
-kindName[Kinds.GITHUB_REPOSITORY] = 'GitHub Repository'
-kindName[Kinds.PIPER_CONFIG] = 'Piper Native Build'
-kindName[Kinds.STAGING_SERVICE_CREDENTIAL] = 'Staging Service'
-kindName[Kinds.JENKINS_PIPELINE] = 'Jenkins Pipeline'
-export const KindName = kindName
+export const KindName = {
+  [Kinds.CUMULUS_PIPELINE]: 'Cumulus',
+  [Kinds.GITHUB_REPOSITORY]: 'GitHub Repository',
+  [Kinds.PIPER_CONFIG]: 'Piper Native Build',
+  [Kinds.STAGING_SERVICE_CREDENTIAL]: 'Staging Service',
+  [Kinds.JENKINS_PIPELINE]: 'Jenkins Pipeline',
+}
 
-const kindCategory = {}
-kindCategory[Kinds.CUMULUS_PIPELINE] = Categories.COMPLIANCE
-kindCategory[Kinds.GITHUB_REPOSITORY] = Categories.SOURCE_CODE_MANAGEMENT
-kindCategory[Kinds.STAGING_SERVICE_CREDENTIAL] = Categories.CODE_TRANSPORTATION
-kindCategory[Kinds.JENKINS_PIPELINE] = Categories.ORCHESTRATION
-kindCategory[Kinds.PIPER_CONFIG] = Categories.CODE_BUILD
-export const KindCategory = kindCategory
+export const KindCategory = {
+  [Kinds.CUMULUS_PIPELINE]: Categories.COMPLIANCE,
+  [Kinds.GITHUB_REPOSITORY]: Categories.SOURCE_CODE_MANAGEMENT,
+  [Kinds.STAGING_SERVICE_CREDENTIAL]: Categories.CODE_TRANSPORTATION,
+  [Kinds.JENKINS_PIPELINE]: Categories.ORCHESTRATION,
+  [Kinds.PIPER_CONFIG]: Categories.CODE_BUILD,
+}
 
-const kindDocumentation = {}
-kindDocumentation[Kinds.CUMULUS_PIPELINE] =
-  'https://hyperspace.tools.sap/docs/features_and_use_cases/connected_tools/cumulus.html#cumulus'
-kindDocumentation[Kinds.GITHUB_REPOSITORY] =
-  'https://hyperspace.tools.sap/docs/features_and_use_cases/connected_tools/staging-service.html#staging-service'
-kindDocumentation[Kinds.GITHUB_REPOSITORY] =
-  'https://hyperspace.tools.sap/docs/features_and_use_cases/connected_tools/github.html#github'
-export const KindDocumentation = kindDocumentation
+export const KindExtensionName = {
+  [Kinds.CUMULUS_PIPELINE]: Extensions.CUMULUS,
+  [Kinds.GITHUB_REPOSITORY]: Extensions.GITHUB_TOOLS,
+  [Kinds.PIPER_CONFIG]: Extensions.PIPER,
+  [Kinds.STAGING_SERVICE_CREDENTIAL]: Extensions.STAGING_SERVICE_EXTERNAL,
+  [Kinds.JENKINS_PIPELINE]: Extensions.JAAS,
+}

@@ -51,15 +51,9 @@ export class SetupComponent {
     private readonly secretService: SecretService,
     private readonly githubService: GithubService,
     private readonly jenkinsService: JenkinsService,
-    private readonly piperService: PiperService
+    private readonly piperService: PiperService,
   ) {
     this._formGeneratorService.addComponent(PlatformFormGeneratorCustomHeaderElementComponent, ['header'])
-  }
-
-  ngOnInit() {
-    setTimeout(() => {
-      console.log(this.formGenerator)
-    }, 3000)
   }
 
   @ViewChild(FormGeneratorComponent) formGenerator: FormGeneratorComponent
@@ -95,14 +89,14 @@ export class SetupComponent {
             map((luigiContext) => {
               return luigiContext.context?.githubToolsToken
                 ? {
-                  value: luigiContext.context.githubToolsToken as string,
-                  domain: 'github.tools.sap',
-                }
+                    value: luigiContext.context.githubToolsToken as string,
+                    domain: 'github.tools.sap',
+                  }
                 : this.luigiClient.sendCustomMessage({
-                  id: `token.request.github.tools.sap`,
-                })
-            })
-          )
+                    id: `token.request.github.tools.sap`,
+                  })
+            }),
+          ),
         )
 
         if (repoUrl && ghToken) {
@@ -152,9 +146,9 @@ export class SetupComponent {
         BuildTool.Mta,
         BuildTool.Npm,
         BuildTool.Python,
-      ].map(tool => ({
+      ].map((tool) => ({
         label: tool.charAt(0).toUpperCase() + tool.slice(1).toLocaleLowerCase(),
-        value: tool
+        value: tool,
       })),
       validators: [Validators.required],
     },
@@ -433,7 +427,7 @@ export class SetupComponent {
       const url = new URL(repoUrl)
 
       const repositoryResource = await firstValueFrom(
-        this.githubService.createGithubRepository(url.origin, login, repoName, githubPath)
+        this.githubService.createGithubRepository(url.origin, login, repoName, githubPath),
       )
       await firstValueFrom(this.jenkinsService.createJenkinsPipeline(value.jenkinsUrl, jenkinsPath, repositoryResource))
       await firstValueFrom(
@@ -442,10 +436,9 @@ export class SetupComponent {
           repositoryResource,
           value.buildTool,
           false,
-          value.buildTool === BuildTool.Docker || BuildTool.Golang || BuildTool.Gradle ? context.componentId : ''
-        )
+          value.buildTool === BuildTool.Docker || BuildTool.Golang || BuildTool.Gradle ? context.componentId : '',
+        ),
       )
-
 
       this.loading = false
       this.luigiClient.uxManager().closeCurrentModal()
