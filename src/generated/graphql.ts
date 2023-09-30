@@ -58,6 +58,12 @@ export type GithubRepository = {
   secretPath?: Maybe<Scalars['String']['output']>;
 };
 
+export type Group = {
+  __typename?: 'Group';
+  id: Scalars['ID']['output'];
+  name: Scalars['String']['output'];
+};
+
 export type JenkinsCreationRequest = {
   githubRepositoryResource: Scalars['String']['input'];
   jenkinsSecretPath: Scalars['String']['input'];
@@ -242,6 +248,7 @@ export type Query = {
   getPipelineSecrets?: Maybe<Array<Scalars['String']['output']>>;
   getPiperConfig: PiperConfig;
   getStagingServiceCredential?: Maybe<StagingServiceCredential>;
+  onboardingGroups: Array<Maybe<Group>>;
 };
 
 
