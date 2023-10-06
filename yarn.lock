@@ -4274,31 +4274,31 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@luigi-project/client-support-angular@npm:2.6.2":
-  version: 2.6.2
-  resolution: "@luigi-project/client-support-angular@npm:2.6.2"
+"@luigi-project/client-support-angular@npm:2.6.3":
+  version: 2.6.3
+  resolution: "@luigi-project/client-support-angular@npm:2.6.3"
   dependencies:
     tslib: ^2.0.0
   peerDependencies:
-    "@angular/common": ^14.0.0 || ^15.0.0
-    "@angular/core": ^14.0.0 || ^15.0.0
+    "@angular/common": ^14.0.0 || ^15.0.0 || ^16.0.0
+    "@angular/core": ^14.0.0 || ^15.0.0 || ^16.0.0
     "@luigi-project/client": ^2.0.0
     "@luigi-project/testing-utilities": ^2.0.0
-  checksum: 59ca627079356fee54d98a9c6311a78a7d54cf4017eae81f98541a35f112c6ad5f2b098a683fe2ea3883642d6c2c5763646cbefa837325b6eb0ab6d93f21c820
+  checksum: ea56dfd966f1b0eae41980bccb2de2156e3b3723386563104bc54b26d055eb39617e29d047f8a1d94768a655723ba93f881caafc47d968d4519180279cca5bd9
   languageName: node
   linkType: hard
 
-"@luigi-project/client@npm:2.6.2":
-  version: 2.6.2
-  resolution: "@luigi-project/client@npm:2.6.2"
-  checksum: d9e0dba7d02bbd3e40949844f0f6b76bd0c1147fb3dee80774de1fcc7118c12ef316fb7d5246c018b5e33fb009b17a591493235ab70e4667f0978146cdef5c43
+"@luigi-project/client@npm:2.6.3":
+  version: 2.6.3
+  resolution: "@luigi-project/client@npm:2.6.3"
+  checksum: 38c5cfe8d84e173012e63dd2a5c3aa7363df474eb1c07259804f536620e6912522d07ff5eeeb0adb8112f9385c5e13786ecf125a990771604c3e9088e34e99c0
   languageName: node
   linkType: hard
 
-"@luigi-project/testing-utilities@npm:2.6.2":
-  version: 2.6.2
-  resolution: "@luigi-project/testing-utilities@npm:2.6.2"
-  checksum: 0467a83ec66f0aac053b04ad376e81d0e3d376528677206dc8a8b7bdb0b3b3909593bb18c8a0e66d3d69fc386ce73e2a06f465db27cf9628091de80b545317bb
+"@luigi-project/testing-utilities@npm:2.6.3":
+  version: 2.6.3
+  resolution: "@luigi-project/testing-utilities@npm:2.6.3"
+  checksum: e7a37a4bc2ecfd46af8ac591223b8e2e51f0e499bc7229efc17abd379884df329ffa4e50acf7a08ea21c103932fb5aa37732d4ea7c0f3f769b28f5f59857463c
   languageName: node
   linkType: hard
 
@@ -12463,9 +12463,9 @@ __metadata:
     "@graphql-codegen/typescript": ^4.0.1
     "@graphql-codegen/typescript-apollo-angular": 4.0.0
     "@graphql-codegen/typescript-operations": ^4.0.1
-    "@luigi-project/client": 2.6.2
-    "@luigi-project/client-support-angular": 2.6.2
-    "@luigi-project/testing-utilities": 2.6.2
+    "@luigi-project/client": 2.6.3
+    "@luigi-project/client-support-angular": 2.6.3
+    "@luigi-project/testing-utilities": 2.6.3
     "@sap-theming/theming-base-content": 11.6.8
     "@types/jest": 29.5.5
     "@types/node": 18.18.3
