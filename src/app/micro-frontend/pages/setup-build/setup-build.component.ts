@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common'
-import { Component, ViewChild, signal } from '@angular/core'
+import { Component, signal, ViewChild } from '@angular/core'
 import { Validators } from '@angular/forms'
-import { FormModule, FormattedTextModule, FundamentalNgxCoreModule, RadioModule } from '@fundamental-ngx/core'
+import { FormattedTextModule, FormModule, FundamentalNgxCoreModule, RadioModule } from '@fundamental-ngx/core'
 import { FundamentalNgxPlatformModule } from '@fundamental-ngx/platform'
 import {
   BaseDynamicFormFieldItem,
@@ -383,6 +383,12 @@ export class SetupComponent {
   async onFormSubmitted(value: SetupBuildFormValue): Promise<void> {
     const context = (await this.luigiService.getContextAsync()) as any
 
+    // create resources - because of dependencies the order needs to be: github - jenkins - piper
+    const repoUrl = context.entityContext?.component?.annotations?.['github.dxp.sap.com/repo-url'] ?? ''
+    const login = context.entityContext?.component?.annotations?.['github.dxp.sap.com/login'] ?? ''
+    const repoName = context.entityContext?.component?.annotations?.['github.dxp.sap.com/repo-name'] ?? ''
+    const githubRepoUrl = new URL(repoUrl)
+
     this.formValue = value
     this.loading = true
 
@@ -398,7 +404,13 @@ export class SetupComponent {
           { key: 'url', value: value.jenkinsUrl },
           { key: 'userId', value: value.jenkinsUserId },
         ]
-        jenkinsPath = await this.storeCredential('jenkins', secretData, value.jenkinsUserId)
+        const jenkinsUrl = new URL(value.jenkinsUrl)
+        // replace the dots in the hostname with dashes to avoid issues with vault path
+        jenkinsPath = await this.storeCredential(
+          `jenkins-${jenkinsUrl.hostname.replace(/\./g, '-')}`,
+          secretData,
+          value.jenkinsUserId,
+        )
       } else if (value.jenkinsCredentialType == CredentialTypes.EXISTING) {
         jenkinsPath = this.getCredentialPath(value.jenkinsSelectCredential, context.componentId)
       }
@@ -409,16 +421,16 @@ export class SetupComponent {
           { key: 'username', value: value.githubUserID },
           { key: 'access_token', value: value.githubToken },
         ]
-        githubPath = await this.storeCredential('github', secretData, value.githubUserID)
+        githubPath = await this.storeCredential(
+          // replace the dots in the hostname with dashes to avoid issues with vault path
+          `${githubRepoUrl.hostname.replace(/\./g, '-')}`,
+          secretData,
+          value.githubUserID,
+        )
         await firstValueFrom(this.secretService.writeSecret(githubPath, secretData))
       } else if (value.githubCredentialType == CredentialTypes.EXISTING) {
         githubPath = this.getCredentialPath(value.githubSelectCredential, context.componentId)
       }
-
-      // create resources - because of dependencies the order needs to be: github - jenkins - piper
-      const repoUrl = context.entityContext?.component?.annotations['github.dxp.sap.com/repo-url'] ?? ''
-      const login = context.entityContext?.component?.annotations['github.dxp.sap.com/login'] ?? ''
-      const repoName = context.entityContext?.component?.annotations['github.dxp.sap.com/repo-name'] ?? ''
 
       if (!repoUrl || !login || !repoName) {
         throw new Error('Could not get GitHub repository details from frame context')
