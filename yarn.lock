@@ -3192,12 +3192,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@fundamental-styles/common-css@npm:0.30.1":
-  version: 0.30.1
-  resolution: "@fundamental-styles/common-css@npm:0.30.1"
+"@fundamental-styles/common-css@npm:0.30.2":
+  version: 0.30.2
+  resolution: "@fundamental-styles/common-css@npm:0.30.2"
   dependencies:
-    "@sap-theming/theming-base-content": ^11.6.0
-  checksum: 0f45ba4219b4368bd439c0898e5be15082491954dbb370ea82b460b89e44b6717e555b942bdd171cb7d459ba44faf26ad88276aa93d82bda5887bb16fdfab4c9
+    "@sap-theming/theming-base-content": ^11.7.0
+  checksum: 59130039684cf4a5064806f82f070e39fb65ed114ae51828159afa6c9627624beda4069c316183c63f6b91afff2ed5aa48dd742f5e34f2965f991871910d1e43
   languageName: node
   linkType: hard
 
@@ -4590,6 +4590,13 @@ __metadata:
   version: 11.6.4
   resolution: "@sap-theming/theming-base-content@npm:11.6.4"
   checksum: 04a4e6e3da0142e1338d676a467b411bd39596594908ec925246964c7ab58e73dbe6bc62b03491cf41c477ea6f6b56a5cc0ddc20be79196032ce7aa297691fe1
+  languageName: node
+  linkType: hard
+
+"@sap-theming/theming-base-content@npm:^11.7.0":
+  version: 11.7.0
+  resolution: "@sap-theming/theming-base-content@npm:11.7.0"
+  checksum: 63261b5759a517b1bc74a08282fff2f139ed80c101c481c2a2080e1961ecaa0a6dfb1532aa84858fad09b691fdd0c5c29607b05e3579c27e08a605633c17b80b
   languageName: node
   linkType: hard
 
@@ -12458,7 +12465,7 @@ __metadata:
     "@dynatrace/dtrum-api-types": 1.275.1
     "@fundamental-ngx/core": 0.45.1
     "@fundamental-ngx/platform": 0.45.1
-    "@fundamental-styles/common-css": 0.30.1
+    "@fundamental-styles/common-css": 0.30.2
     "@graphql-codegen/cli": 5.0.0
     "@graphql-codegen/typescript": ^4.0.1
     "@graphql-codegen/typescript-apollo-angular": 4.0.0
