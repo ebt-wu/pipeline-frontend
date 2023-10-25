@@ -21,3 +21,15 @@
 
 This is intended behaviour as the Microfrontend can only work, if a Luigi-Core frame is available. So please make sure to open your local development environment from within the Portal directly as described in step 5 of the setup guide
 
+> Hyperspace Portal dev (portal.d1.hyperspace.tools.sap) is facing issues. Can I also develop against another landscape like portal.i1.hyperspace.tools.sap?
+
+Yes, you can enable dev mode on any other landscape by running a command like:
+```javascript
+localStorage.setItem("dxp-dev-mode-settings", JSON.stringify({
+    isActive: true,
+    cdm: [
+        {url:"http://localhost:4201/assets/cdm.json"}
+     ]
+}));
+```
+in the browser console.
