@@ -1,10 +1,9 @@
 import { gql } from 'apollo-angular'
-import { Observable, combineLatest, first, map, mergeMap } from 'rxjs'
+import { combineLatest, first, map, mergeMap, Observable } from 'rxjs'
 import { ExtensionClass, Extensions, ScopeType } from './extension.types'
 import { ExtensionApolloClientService } from '@dxp/ngx-core/apollo'
-import { DxpIContextMessage, DxpLuigiContextService } from '@dxp/ngx-core/luigi'
+import { DxpIContextMessage, DxpLuigiContextService, LuigiClient } from '@dxp/ngx-core/luigi'
 import { Injectable } from '@angular/core'
-import { LuigiClient } from '@dxp/ngx-core/luigi'
 
 @Injectable({ providedIn: 'root' })
 export class ExtensionService {
@@ -15,6 +14,7 @@ export class ExtensionService {
   ) {}
 
   extensionsToQuery = [
+    Extensions.GITHUB_ACTIONS,
     Extensions.CUMULUS,
     Extensions.GITHUB_TOOLS,
     Extensions.JAAS,
@@ -38,11 +38,11 @@ export class ExtensionService {
             fetchPolicy: 'no-cache',
           })
           .pipe(
-            map((apolloResponse) =>
-              apolloResponse.data.getExtensionClassesForScopes.filter((extension) =>
+            map((apolloResponse) => {
+              return apolloResponse.data.getExtensionClassesForScopes.filter((extension) =>
                 this.extensionsToQuery.find((value) => value == extension.name),
-              ),
-            ),
+              )
+            }),
           )
       }),
     )

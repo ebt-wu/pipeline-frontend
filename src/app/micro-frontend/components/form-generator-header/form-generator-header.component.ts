@@ -5,13 +5,14 @@ import {
   dynamicFormFieldProvider,
   dynamicFormGroupChildProvider,
 } from '@fundamental-ngx/platform'
+import { ReactiveFormsModule } from '@angular/forms'
 
 @Component({
   selector: 'fdp-form-generator-header',
   templateUrl: './form-generator-header.component.html',
   viewProviders: [dynamicFormFieldProvider, dynamicFormGroupChildProvider],
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, ReactiveFormsModule],
   schemas: [NO_ERRORS_SCHEMA],
   styleUrls: ['./form-generator-header.component.css'],
 })

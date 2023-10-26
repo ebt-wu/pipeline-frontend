@@ -1,0 +1,62 @@
+<ul fd-list [byline]="true" [noBorder]="true">
+  <li
+    fd-list-item
+    (click)="openDetails(resourceRef.kind, resourceRef.name, resourceRef.status)"
+    [ngClass]="
+      activeTile === resourceRef.kind && localLayout != 'OneColumnStartFullScreen' ? 'list-item-selected ' : ''
+    "
+    class="list-item-border">
+    <a fd-list-link>
+      <span fd-list-thumbnail>
+        <ng-container *ngIf="resourceRef.status === ServiceStatus.CREATED">
+          <span fd-object-status class="status-icon" size="m" status="positive" glyph="message-success"></span>
+        </ng-container>
+        <fd-busy-indicator
+          [loading]="true"
+          *ngIf="resourceRef.status === ServiceStatus.PENDING_CREATION || resourceRef.status === ServiceStatus.UN_KNOWN"
+          ariaLabel="loading"
+          size="s"
+          title="Please Wait"></fd-busy-indicator>
+        <span
+          fd-object-status
+          class="status-icon"
+          *ngIf="resourceRef.status === ServiceStatus.FAILING_CREATION"
+          status="negative"
+          glyph="message-error"></span>
+        <span
+          fd-object-status
+          class="status-icon"
+          *ngIf="resourceRef.status === ServiceStatus.NOT_FOUND"
+          glyph="circle-task"></span>
+      </span>
+      <div class="service">
+        <div class="name">
+          <b class="category">{{ kindCategory[resourceRef.kind] }}</b>
+          <span class="name-details">
+            {{ kindName[resourceRef.kind] }}
+            <code *ngIf="debugModeService.debugModeEnabled()">- {{ resourceRef.kind }}</code>
+          </span>
+          <code class="debug-details" *ngIf="debugModeService.debugModeEnabled()">
+            {{ resourceRef.name }} | {{ resourceRef.status }}
+          </code>
+        </div>
+        <div class="spacer"></div>
+        <button
+          *ngIf="
+            localLayout === 'OneColumnStartFullScreen' &&
+            (debugModeService.debugModeEnabled() || resourceRef.status === ServiceStatus.FAILING_CREATION)
+          "
+          fd-button
+          label="Retry"
+          glyph="refresh"
+          fdType="transparent"
+          ariaLabel="Retry"
+          class="retry-button"
+          (click)="retryService($event, resourceRef)"></button>
+        <div class="details-icon">
+          <fd-icon *ngIf="resourceRef.status === ServiceStatus.CREATED" glyph="slim-arrow-right" class="icon"></fd-icon>
+        </div>
+      </div>
+    </a>
+  </li>
+</ul>

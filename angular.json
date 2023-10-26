@@ -86,7 +86,28 @@
                 }
               ]
             },
+            "local": {
+              "fileReplacements": [
+                {
+                  "replace": "src/environments/environment.ts",
+                  "with": "src/environments/environment.local.ts"
+                }
+              ],
+              "buildOptimizer": false,
+              "optimization": false,
+              "vendorChunk": true,
+              "extractLicenses": false,
+              "sourceMap": true,
+              "namedChunks": true,
+              "localize": false
+            },
             "development": {
+              "fileReplacements": [
+                {
+                  "replace": "src/environments/environment.ts",
+                  "with": "src/environments/environment.development.ts"
+                }
+              ],
               "buildOptimizer": false,
               "optimization": false,
               "vendorChunk": true,
@@ -115,6 +136,9 @@
             },
             "development": {
               "browserTarget": "pipeline-ui:build:development"
+            },
+            "local": {
+              "browserTarget": "pipeline-ui:build:local"
             },
             "e2e-test": {
               "browserTarget": "pipeline-ui:build:e2e-test"

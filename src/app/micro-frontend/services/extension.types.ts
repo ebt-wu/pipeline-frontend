@@ -15,6 +15,8 @@ export enum Extensions {
   CHECKMARX_ONE = 'checkmarx-one',
   AZURE_PIPELINES = 'azure-pipelines',
   GITHUB_TOOLS = 'git-hub-github-tools-sap',
+  //TODO: this name should be the same as the one in the leanIX
+  GITHUB_ACTIONS = 'git-hub-actions',
   PIPER = 'piper',
   JAAS = 'jaas',
 }

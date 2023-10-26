@@ -10,7 +10,7 @@ export class DebugModeService {
   constructor(
     public messageToastService: MessageToastService,
     private readonly apiService: BaseAPIService,
-    private readonly luigiService: DxpLuigiContextService
+    private readonly luigiService: DxpLuigiContextService,
   ) {}
 
   debugModeEnabled = signal(false)
@@ -40,7 +40,7 @@ export class DebugModeService {
             resourceName: resourceName,
           },
         })
-      })
+      }),
     )
   }
 }

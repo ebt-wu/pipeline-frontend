@@ -6,6 +6,7 @@ import { AppRouterOutlet } from './components/router-outlet/router-outlet.compon
 import { PipelineDebugModal } from './components/pipeline-debug/pipeline-debug.component'
 import { ProvideFeedbackComponent } from './components/provide-feedback-modal/provide-feedback.component'
 import { ImportExistingPipelineModal } from './components/import-existing-pipeline-modal/import-existing-pipeline.component'
+import { GithubActionsComponent } from './pages/github-actions/github-actions.component'
 
 const routes: Routes = [
   {
@@ -19,6 +20,10 @@ const routes: Routes = [
       {
         path: 'setup',
         component: SetupComponent,
+      },
+      {
+        path: 'github-actions',
+        component: GithubActionsComponent,
       },
       {
         path: 'pipeline-debug',

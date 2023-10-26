@@ -1,0 +1,82 @@
+<div>
+  <error-message
+    title="Opening Vault Failed"
+    [message]="errorMessage()"
+    (onDismiss)="dismissErrorMessage()"
+    *ngIf="errorMessage()"></error-message>
+  <div class="flex-box">
+    <h3>Enabled for Github Organization</h3>
+    <button
+      class="auto-left-margin"
+      role="button"
+      glyph="question-mark"
+      label="Learn More"
+      [toggled]="true"
+      (click)="openDocumentation()"
+      fd-button></button>
+  </div>
+  <a [href]="githubOrganizationUrl" target="_blank">
+    {{ githubOrganizationUrl }}
+  </a>
+  <div class="flex-box top-margin">
+    <h3>SUGAR Customer ID</h3>
+    <button
+      class="left-margin"
+      role="button"
+      fdType="transparent"
+      glyph="hint"
+      fd-button
+      placement="top"
+      [fd-inline-help]="sugarServiceHelp"
+      [triggers]="['click']"
+      [closeOnOutsideClick]="true"></button>
+  </div>
+  <a [href]="githubActionsRunnerGroupUrl" target="_blank">
+    {{ serviceDetails.solinasCustomerID }}
+  </a>
+  <div class="flex-box top-margin">
+    <h3>GitHub Actions Credentials</h3>
+    <button
+      class="left-margin"
+      role="button"
+      fdType="transparent"
+      glyph="hint"
+      fd-button
+      placement="top"
+      [fd-inline-help]="credentialsHelp"
+      [triggers]="['click']"
+      [closeOnOutsideClick]="true"></button>
+    <br />
+  </div>
+  <div>
+    <b>Vault Path</b>
+  </div>
+  {{ serviceDetails.secretPath }}
+  <div class="top-margin">
+    <fd-busy-indicator [loading]="pendingShowInVault()" size="s">
+      <button
+        fd-button
+        fdType="transparent"
+        [disabled]="pendingShowInVault()"
+        label="Show in Vault"
+        (click)="showInVault(serviceDetails.secretPath)"></button>
+    </fd-busy-indicator>
+  </div>
+</div>
+
+<ng-template #credentialsHelp>
+  <div>
+    The
+    <a href="https://wiki.one.int.sap/wiki/display/DevFw/SUGAR" target="_blank">SUGAR</a>
+    service requires a Github PAT to be able to create runners in your Github Organization.
+    <a href="https://wiki.one.int.sap/wiki/display/DevFw/SUGAR#SUGAR-GitHubToken" target="_blank">Learn more</a>
+  </div>
+</ng-template>
+
+<ng-template #sugarServiceHelp>
+  <div>
+    The
+    <a href="https://wiki.one.int.sap/wiki/display/DevFw/SUGAR" target="_blank">SUGAR</a>
+    service creates a GitHub Actions Runner Group in your GitHub Organization.
+  </div>
+</ng-template>

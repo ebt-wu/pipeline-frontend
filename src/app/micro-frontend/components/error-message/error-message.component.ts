@@ -29,6 +29,10 @@ export class ErrorMessageComponent {
   async reportError() {
     const context = await this.luigiService.getContextAsync()
     const githubUrl = 'https://github.tools.sap'
+    let issueDescription = this.message
+
+    // Create a regular expression to match <br> tags
+    issueDescription = this.convertHtmlElementsToMarkdownElements(issueDescription)
 
     const issueURL = this.githubIssueLinkService.getIssueLink(
       `${this.title} for ${context.projectId}/${context.componentId}`,
@@ -40,7 +44,7 @@ To help us debug, please describe what you tried to do and when the error occurr
 ### Debugging Information (automatically generated)
 **Error Message:** 
 \`\`\`
-${this.message.trim()}
+${issueDescription.trim()}
 \`\`\`
 **Project and component:** [\`${context.projectId}/${context.componentId}\`](${context.frameBaseUrl}/projects/${
         context.projectId
@@ -50,7 +54,12 @@ ${this.message.trim()}
     `,
       [GitHubIssueLabels.BUG, GitHubIssueLabels.EXTERNAL, GitHubIssueLabels.PORTAL],
     )
-
     window.open(issueURL, '_blank')
+  }
+
+  private convertHtmlElementsToMarkdownElements(issueDescription: string): string {
+    issueDescription = issueDescription.replace(/<\/?strong>/g, '')
+    issueDescription = issueDescription.replace(/<br>/g, '\n')
+    return issueDescription
   }
 }

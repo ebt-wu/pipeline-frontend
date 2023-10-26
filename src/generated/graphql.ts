@@ -42,6 +42,21 @@ export enum DeletionPolicy {
   Orphan = 'ORPHAN'
 }
 
+export type GithubActionsCreatePayload = {
+  githubInstance: Scalars['String']['input'];
+  githubOrganization: Scalars['String']['input'];
+  secretPath: Scalars['String']['input'];
+};
+
+export type GithubActionsGetPayload = {
+  __typename?: 'GithubActionsGetPayload';
+  creationTimestamp?: Maybe<Scalars['String']['output']>;
+  githubInstance?: Maybe<Scalars['String']['output']>;
+  githubOrganization?: Maybe<Scalars['String']['output']>;
+  secretPath?: Maybe<Scalars['String']['output']>;
+  solinasCustomerID?: Maybe<Scalars['String']['output']>;
+};
+
 export type GithubCreationRequest = {
   baseUrl?: InputMaybe<Scalars['String']['input']>;
   org: Scalars['String']['input'];
@@ -81,11 +96,13 @@ export type JenkinsPipeline = {
 export type Mutation = {
   __typename?: 'Mutation';
   createCumulusPipeline?: Maybe<Scalars['String']['output']>;
+  createGithubActions?: Maybe<Scalars['String']['output']>;
   createGithubRepository?: Maybe<Scalars['String']['output']>;
   createJenkinsPipeline?: Maybe<Scalars['String']['output']>;
   createPipeline: Scalars['String']['output'];
   createPiperConfig?: Maybe<Scalars['String']['output']>;
   deleteCumulusPipeline?: Maybe<Scalars['String']['output']>;
+  deleteGithubActions?: Maybe<Scalars['String']['output']>;
   deleteGithubRepository?: Maybe<Scalars['String']['output']>;
   deleteJenkinsPipeline?: Maybe<Scalars['String']['output']>;
   deletePipeline?: Maybe<Scalars['String']['output']>;
@@ -100,6 +117,13 @@ export type Mutation = {
 
 export type MutationCreateCumulusPipelineArgs = {
   componentId: Scalars['String']['input'];
+  projectId: Scalars['String']['input'];
+};
+
+
+export type MutationCreateGithubActionsArgs = {
+  componentId: Scalars['String']['input'];
+  params: GithubActionsCreatePayload;
   projectId: Scalars['String']['input'];
 };
 
@@ -133,6 +157,14 @@ export type MutationCreatePiperConfigArgs = {
 
 
 export type MutationDeleteCumulusPipelineArgs = {
+  componentId: Scalars['String']['input'];
+  deletionPolicy?: InputMaybe<DeletionPolicy>;
+  projectId: Scalars['String']['input'];
+  resourceName: Scalars['String']['input'];
+};
+
+
+export type MutationDeleteGithubActionsArgs = {
   componentId: Scalars['String']['input'];
   deletionPolicy?: InputMaybe<DeletionPolicy>;
   projectId: Scalars['String']['input'];
@@ -242,7 +274,9 @@ export type PiperTemplateArgsStagingService = {
 
 export type Query = {
   __typename?: 'Query';
+  checkGithubActionsEnablement?: Maybe<CheckGithubActionsEnablementPayload>;
   getCumulusPipeline?: Maybe<CumulusPipeline>;
+  getGithubActions?: Maybe<GithubActionsGetPayload>;
   getGithubRepository?: Maybe<GithubRepository>;
   getJenkinsPipeline?: Maybe<JenkinsPipeline>;
   getPipelineSecrets?: Maybe<Array<Scalars['String']['output']>>;
@@ -252,7 +286,20 @@ export type Query = {
 };
 
 
+export type QueryCheckGithubActionsEnablementArgs = {
+  githubInstance: Scalars['String']['input'];
+  githubOrg: Scalars['String']['input'];
+  projectId: Scalars['String']['input'];
+};
+
+
 export type QueryGetCumulusPipelineArgs = {
+  projectId: Scalars['String']['input'];
+  resourceName: Scalars['String']['input'];
+};
+
+
+export type QueryGetGithubActionsArgs = {
   projectId: Scalars['String']['input'];
   resourceName: Scalars['String']['input'];
 };
@@ -322,6 +369,12 @@ export type VaultOnboardingInfo = {
   __typename?: 'VaultOnboardingInfo';
   token: Scalars['String']['output'];
   vaultUrl: Scalars['String']['output'];
+};
+
+export type CheckGithubActionsEnablementPayload = {
+  __typename?: 'checkGithubActionsEnablementPayload';
+  isAlreadyManaged: Scalars['Boolean']['output'];
+  responsibleProject: Scalars['String']['output'];
 };
 
 export type CreatePipelineMutationVariables = Exact<{
@@ -502,3 +555,40 @@ export type ForceDebugReconciliationMutationVariables = Exact<{
 
 
 export type ForceDebugReconciliationMutation = { __typename?: 'Mutation', forceDebugReconciliation?: string | null };
+
+export type CreateGithubActionsMutationVariables = Exact<{
+  projectId: Scalars['String']['input'];
+  componentId: Scalars['String']['input'];
+  githubInstance: Scalars['String']['input'];
+  githubOrganization: Scalars['String']['input'];
+  secretPath: Scalars['String']['input'];
+}>;
+
+
+export type CreateGithubActionsMutation = { __typename?: 'Mutation', createGithubActions?: string | null };
+
+export type DeleteGithubActionsMutationVariables = Exact<{
+  projectId: Scalars['String']['input'];
+  componentId: Scalars['String']['input'];
+  resourceName: Scalars['String']['input'];
+}>;
+
+
+export type DeleteGithubActionsMutation = { __typename?: 'Mutation', deleteGithubActions?: string | null };
+
+export type GetGithubActionsQueryVariables = Exact<{
+  projectId: Scalars['String']['input'];
+  resourceName: Scalars['String']['input'];
+}>;
+
+
+export type GetGithubActionsQuery = { __typename?: 'Query', getGithubActions?: { __typename?: 'GithubActionsGetPayload', solinasCustomerID?: string | null, githubOrganization?: string | null, githubInstance?: string | null, secretPath?: string | null, creationTimestamp?: string | null } | null };
+
+export type CheckGithubActionsEnablementQueryVariables = Exact<{
+  projectId: Scalars['String']['input'];
+  githubInstance: Scalars['String']['input'];
+  githubOrg: Scalars['String']['input'];
+}>;
+
+
+export type CheckGithubActionsEnablementQuery = { __typename?: 'Query', checkGithubActionsEnablement?: { __typename?: 'checkGithubActionsEnablementPayload', responsibleProject: string, isAlreadyManaged: boolean } | null };

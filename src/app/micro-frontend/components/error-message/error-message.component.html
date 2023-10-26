@@ -3,8 +3,5 @@
     {{ title }}
     <button fd-button fdType="transparent" class="ticket-button" (click)="reportError()">Create Ticket</button>
   </div>
-  <div class="message-font">
-    <b>Message:</b>
-    {{ ' ' + message }}
-  </div>
+  <div class="message-font" [innerHTML]="message"></div>
 </fd-message-strip>

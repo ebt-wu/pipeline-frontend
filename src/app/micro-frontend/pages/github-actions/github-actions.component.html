@@ -1,0 +1,42 @@
+<error-message
+  title="Setup Actions could not be completed"
+  [message]="errorMessage()"
+  (onDismiss)="dismissErrorMessage()"
+  *ngIf="errorMessage()"></error-message>
+<div class="busy-indicator" *ngIf="loading">
+  <fd-busy-indicator [loading]="true" ariaLabel="loading" title="Please Wait"></fd-busy-indicator>
+</div>
+
+<fdp-message-popover-form-wrapper
+  #formGeneratorWrapper
+  [forms]="formGenerator?.formGroup"
+  [formFields]="formGenerator?.formFields">
+  <fdp-form-generator
+    [formItems]="githubActionFormItems"
+    (formCreated)="onFormCreated()"
+    (formSubmitted)="onFormSubmitted($event)"
+    *ngIf="!loading"></fdp-form-generator>
+</fdp-message-popover-form-wrapper>
+
+<div fd-bar barDesign="floating-footer" class="actions-footer">
+  <div fd-bar-left>
+    <fdp-message-popover id="message-popover" [wrapper]="formGeneratorWrapper"></fdp-message-popover>
+  </div>
+
+  <div fd-bar-right class="footer-buttons-gap">
+    <fdp-button
+      *ngIf="formCreated"
+      (click)="submitForm()"
+      [disabled]="loading"
+      type="submit"
+      buttonType="emphasized"
+      label="Enable"></fdp-button>
+
+    <fdp-button
+      *ngIf="formCreated"
+      buttonType="transparent"
+      label="Cancel"
+      [disabled]="loading"
+      (click)="cancel()"></fdp-button>
+  </div>
+</div>

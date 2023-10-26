@@ -242,6 +242,52 @@ export const ENSURE_VAULT_ONBOARDING = gql`
 
 export const FORCE_DEBUG_RECONCILIATION = gql`
   mutation ForceDebugReconciliation($projectId: String!, $kind: String!, $resourceName: String!) {
-    forceDebugReconciliation(projectId: $projectId, kind: $kind, resourceName: $resourceName) 
+    forceDebugReconciliation(projectId: $projectId, kind: $kind, resourceName: $resourceName)
+  }
+`
+
+/**
+ * GITHUB ACTIONS QUERIES
+ */
+
+export const CREATE_GITHUB_ACTIONS = gql`
+  mutation CreateGithubActions(
+    $projectId: String!
+    $componentId: String!
+    $githubInstance: String!
+    $githubOrganization: String!
+    $secretPath: String!
+  ) {
+    createGithubActions(
+      projectId: $projectId
+      componentId: $componentId
+      params: { githubInstance: $githubInstance, githubOrganization: $githubOrganization, secretPath: $secretPath }
+    )
+  }
+`
+
+export const DELETE_GITHUB_ACTIONS = gql`
+  mutation DeleteGithubActions($projectId: String!, $componentId: String!, $resourceName: String!) {
+    deleteGithubActions(projectId: $projectId, componentId: $componentId, resourceName: $resourceName)
+  }
+`
+export const GET_GITHUB_ACTIONS = gql`
+  query GetGithubActions($projectId: String!, $resourceName: String!) {
+    getGithubActions(projectId: $projectId, resourceName: $resourceName) {
+      solinasCustomerID
+      githubOrganization
+      githubInstance
+      secretPath
+      creationTimestamp
+    }
+  }
+`
+
+export const CHECK_GITHUB_ACTIONS_ENABLEMENT = gql`
+  query checkGithubActionsEnablement($projectId: String!, $githubInstance: String!, $githubOrg: String!) {
+    checkGithubActionsEnablement(projectId: $projectId, githubInstance: $githubInstance, githubOrg: $githubOrg) {
+      responsibleProject
+      isAlreadyManaged
+    }
   }
 `

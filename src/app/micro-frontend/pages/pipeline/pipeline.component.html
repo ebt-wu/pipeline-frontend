@@ -68,7 +68,13 @@
             [href]="pipelineURL()"></dismissible-message>
           <fd-message-strip class="pull-requests-message" type="warning" *ngIf="this.openPRCount()">
             Merge {{ this.openPRCount() }} open pull requests.
-            <a fd-link [href]="this.repoUrl() + '/pulls'" target="_blank" *ngIf="this.repoUrl()">Open Github</a>
+            <a
+              fd-link
+              [href]="this.githubMetadata.githubRepoUrl + '/pulls'"
+              target="_blank"
+              *ngIf="this.githubMetadata.githubRepoUrl">
+              Open Github
+            </a>
           </fd-message-strip>
           <fd-card cardType="linkList" class="stage-card">
             <fd-card-content class="card-content-padding">
@@ -115,78 +121,18 @@
                   ariaLabel="loading"
                   label="Pending Deletion"></fd-busy-indicator>
               </div>
-              <ul *ngIf="isBuildStageOpen()" fd-list [byline]="true" [noBorder]="true">
-                <li
-                  fd-list-item
-                  *ngFor="let resourceRef of pipeline.resourceRefs"
-                  (click)="openDetails(resourceRef.kind, resourceRef.name, resourceRef.status)"
-                  [ngClass]="
-                    activeTile === resourceRef.kind && localLayout != 'OneColumnStartFullScreen'
-                      ? 'list-item-selected '
-                      : ''
-                  "
-                  class="list-item-border">
-                  <a fd-list-link>
-                    <span fd-list-thumbnail>
-                      <span
-                        fd-object-status
-                        class="status-icon"
-                        size="m"
-                        *ngIf="resourceRef.status === serviceStatus.CREATED"
-                        status="positive"
-                        glyph="message-success"></span>
-                      <fd-busy-indicator
-                        [loading]="true"
-                        *ngIf="resourceRef.status === serviceStatus.PENDING_CREATION"
-                        ariaLabel="loading"
-                        size="s"
-                        title="Please Wait"></fd-busy-indicator>
-                      <span
-                        fd-object-status
-                        class="status-icon"
-                        *ngIf="resourceRef.status === serviceStatus.FAILING_CREATION"
-                        status="negative"
-                        glyph="message-error"></span>
-                      <span
-                        fd-object-status
-                        class="status-icon"
-                        *ngIf="resourceRef.status === serviceStatus.NOT_FOUND"
-                        glyph="circle-task"></span>
-                    </span>
-                    <div class="service">
-                      <div class="name">
-                        <b class="category">{{ kindCategory[resourceRef.kind] }}</b>
-                        <span class="name-details">
-                          {{ kindName[resourceRef.kind] }}
-                          <code *ngIf="debugModeService.debugModeEnabled()">- {{ resourceRef.kind }}</code>
-                        </span>
-                        <code class="debug-details" *ngIf="debugModeService.debugModeEnabled()">
-                          {{ resourceRef.name }} | {{ resourceRef.status }}
-                        </code>
-                      </div>
-                      <div class="spacer"></div>
-                      <button
-                        *ngIf="
-                          localLayout === 'OneColumnStartFullScreen' &&
-                          (debugModeService.debugModeEnabled() || resourceRef.status === serviceStatus.FAILING_CREATION)
-                        "
-                        fd-button
-                        label="Retry"
-                        glyph="refresh"
-                        fdType="transparent"
-                        ariaLabel="Retry"
-                        class="retry-button"
-                        (click)="retryService($event, resourceRef)"></button>
-                      <div class="details-icon">
-                        <fd-icon
-                          *ngIf="resourceRef.status === serviceStatus.CREATED"
-                          glyph="slim-arrow-right"
-                          class="icon"></fd-icon>
-                      </div>
-                    </div>
-                  </a>
-                </li>
-              </ul>
+              <ng-container *ngIf="isBuildStageOpen()">
+                <div *ngFor="let resourceRef of pipeline.resourceRefs">
+                  <!--The GithubAction resource is not part of the build stage yet.-->
+                  <div class="card" *ngIf="resourceRef.kind !== 'GithubAction'">
+                    <app-service-list-item
+                      [resourceRef]="resourceRef"
+                      [activeTile]="activeTile"
+                      [localLayout]="localLayout"
+                      (openDetailsEvent)="openDetails($event)"></app-service-list-item>
+                  </div>
+                </div>
+              </ng-container>
             </fd-card-content>
           </fd-card>
           <fd-card cardType="linkList" class="stage-card disabled">
@@ -217,6 +163,87 @@
               </div>
             </fd-card-content>
           </fd-card>
+          <h3 class="single-services">Single Services</h3>
+          <ng-container
+            *ngIf="!pendingExtensionClass() && isGithubActionsEnabledAlready$ | async as gha; else loadingContent">
+            <!--the below card will be shown if the Github Actions is already enabled from an another component.-->
+            <fd-card cardType="list" *ngIf="gha.isAlreadyManaged; else notEnabled">
+              <fd-card-content *ngIf="!isGithubActionsEnabledInSameComponent()">
+                <div class="github-actions-single-service">
+                  <div class="card-content">
+                    <span
+                      fd-object-status
+                      class="status-icon"
+                      size="l"
+                      status="positive"
+                      glyph="message-success"></span>
+                    <fd-avatar
+                      size="s"
+                      image="{{ getIcon(kinds.GITHUB_ACTION) }}"
+                      [label]="kindName[kinds.GITHUB_ACTION]"
+                      [colorAccent]="10"></fd-avatar>
+                    <div class="card-description">
+                      <h1 class="card-header"><strong>Github Actions</strong></h1>
+                      <fd-info-label fdCozy label="Orchestration" color="10" title="Orchestrator"></fd-info-label>
+                    </div>
+                    <p *ngIf="!isGithubActionsEnabledInSameProject(gha.responsibleProject)">
+                      The Github Actions for the
+                      <strong>{{ this.githubMetadata.githubOrgName }}</strong>
+                      organization is already enabled in one of the components of the
+                      <strong>{{ gha.responsibleProject }}</strong>
+                      project.
+                    </p>
+                    <p *ngIf="isGithubActionsEnabledInSameProject(gha.responsibleProject)">
+                      The Github Actions for the
+                      <strong>{{ this.githubMetadata.githubOrgName }}</strong>
+                      organization is already enabled in one of the other components of the same project
+                      <strong>{{ gha.responsibleProject }}</strong>
+                      .
+                    </p>
+                  </div>
+                </div>
+              </fd-card-content>
+            </fd-card>
+            <ng-template #notEnabled>
+              <fd-card badge="new" *ngIf="!isGithubActionsEnabledInSameComponent()" cardType="list">
+                <fd-card-content>
+                  <div class="github-actions-single-service">
+                    <div class="card-content">
+                      <fd-avatar
+                        size="s"
+                        image="{{ getIcon(kinds.GITHUB_ACTION) }}"
+                        [label]="kindName[kinds.GITHUB_ACTION]"
+                        [colorAccent]="10"></fd-avatar>
+                      <div class="card-description">
+                        <h1 class="card-header"><strong>Github Actions</strong></h1>
+                        <fd-info-label fdCozy label="Orchestration" color="10" title="Orchestrator"></fd-info-label>
+                      </div>
+                    </div>
+                    <button
+                      class="card-content"
+                      fd-button
+                      label="Set Up"
+                      fdType="emphasized"
+                      (click)="openGithubActionWizard($event)"></button>
+                  </div>
+                </fd-card-content>
+              </fd-card>
+            </ng-template>
+            <!--The GithubAction is enabled in the same component and the status of the Github Actions resource will be shown-->
+            <fd-card cardType="list" *ngIf="isGithubActionsEnabledInSameComponent()">
+              <fd-card-content class="github-actions-result">
+                <div *ngFor="let resourceRef of pipeline.resourceRefs">
+                  <div *ngIf="resourceRef.kind === 'GithubAction'">
+                    <app-service-list-item
+                      [resourceRef]="resourceRef"
+                      [activeTile]="activeTile"
+                      [localLayout]="localLayout"
+                      (openDetailsEvent)="openDetails($event)"></app-service-list-item>
+                  </div>
+                </div>
+              </fd-card-content>
+            </fd-card>
+          </ng-container>
         </div>
       </div>
       <ng-template #skeleton>
@@ -230,209 +257,14 @@
       </ng-template>
     </ng-template>
     <ng-template #midColumn>
-      <div class="service-category-header">
-        <fd-card cardType="linkList">
-          <fd-card-content class="header">
-            <div class="header-items">
-              <h1 class="header-text">
-                <strong>{{ kindCategory[activeTile] }}</strong>
-              </h1>
-              <div class="buttons-seperator">
-                <button
-                  class="button-margin"
-                  fd-button
-                  fdType="transparent"
-                  glyph="resize"
-                  ariaLabel="Expand Details"
-                  *ngIf="localLayout != 'OneColumnMidFullScreen'"
-                  (click)="expandDetails()"></button>
-                <button
-                  class="button-margin hide-on-small-screen"
-                  fd-button
-                  fdType="transparent"
-                  glyph="exitfullscreen"
-                  *ngIf="localLayout === 'OneColumnMidFullScreen'"
-                  ariaLabel="Shrink Details"
-                  (click)="shrinkDetails()"></button>
-                <button
-                  fd-button
-                  fdType="transparent"
-                  glyph="decline"
-                  ariaLabel="Close Details"
-                  (click)="closeDetails()"></button>
-              </div>
-            </div>
-          </fd-card-content>
-        </fd-card>
-      </div>
-      <div class="service-card">
-        <fd-card cardType="linkList" class="card">
-          <fd-card-content>
-            <div class="header">
-              <div class="text">
-                <h1 class="headline">
-                  <strong>{{ kindName[activeTile] }}</strong>
-                </h1>
-                <span class="subheader">{{ kindCategory[activeTile] }}</span>
-              </div>
-              <button
-                *ngIf="serviceUrl()"
-                class="open-service-button"
-                fd-button
-                fdType="emphasized"
-                label="Open Service"
-                (click)="openService()"
-                ariaLabel="Close Details"></button>
-            </div>
-            <div class="service-meta">
-              <fd-avatar
-                size="s"
-                image="{{ getIcon(getExtensionClass(activeTile)) }}"
-                [label]="kindName[activeTile]"
-                [colorAccent]="10"></fd-avatar>
-              <div *ngIf="getExtensionClass(activeTile)?.provider" class="meta-info">
-                <b>Provider</b>
-                <span>{{ getExtensionClass(activeTile).provider }}</span>
-              </div>
-              <div class="meta-info">
-                <b>Installed On</b>
-                <span
-                  *ngIf="
-                    !serviceDetailsLoading() && serviceCreationTimestamp() && !debugModeService.debugModeEnabled()
-                  ">
-                  {{ formatDate(serviceCreationTimestamp()) }}
-                </span>
-                <span *ngIf="!serviceDetailsLoading() && debugModeService.debugModeEnabled()">
-                  {{ serviceCreationTimestamp()?.toISOString() ?? 'undefined' }}
-                </span>
-                <fd-skeleton *ngIf="serviceDetailsLoading()" width="85px" height="21px">
-                  <svg:rect x="0" y="8" width="85" height="8" rx="4"></svg:rect>
-                </fd-skeleton>
-              </div>
-            </div>
-            <fd-tab-list class="tab-list">
-              <fd-tab title="CI/CD">
-                <!-- title="" is required to prevent the title attribute from being transferred from fd-tab to downstream elements -->
-                <div title="">
-                  <div class="tab-margin" *ngIf="!serviceDetailsLoading()" [ngSwitch]="activeTile">
-                    <cumulus-service-details
-                      *ngSwitchCase="'CumulusPipeline'"
-                      [serviceDetails]="serviceDetails()"></cumulus-service-details>
-                    <github-service-details
-                      *ngSwitchCase="'GithubRepository'"
-                      [serviceDetails]="serviceDetails()"></github-service-details>
-                    <jenkins-service-details
-                      *ngSwitchCase="'JenkinsPipeline'"
-                      [serviceDetails]="serviceDetails()"></jenkins-service-details>
-                    <piper-service-details
-                      *ngSwitchCase="'PiperConfig'"
-                      [serviceDetails]="serviceDetails()"></piper-service-details>
-                    <staging-service-service-details
-                      *ngSwitchCase="'StagingServiceCredential'"
-                      [serviceDetails]="serviceDetails()"></staging-service-service-details>
-                  </div>
-                  <div class="tab-margin">
-                    <fd-skeleton width="350px" height="10rem" *ngIf="serviceDetailsLoading()">
-                      <svg:rect x="0" y="10" width="250" height="16" rx="4"></svg:rect>
-                      <svg:rect x="0" y="45" width="160" height="8" rx="4"></svg:rect>
-                      <svg:rect x="0" y="65" width="160" height="8" rx="4"></svg:rect>
-                      <svg:rect x="0" y="85" width="100" height="8" rx="4"></svg:rect>
-                    </fd-skeleton>
-                  </div>
-                  <div class="tab-margin" *ngIf="debugModeService.debugModeEnabled()">
-                    <h4 class="debug-service-details-heading">Service Details:</h4>
-                    <pre class="hide-scrollbar service-details-json">{{ serviceDetails() | json }}</pre>
-                  </div>
-                </div>
-              </fd-tab>
-              <fd-tab title="Service Info">
-                <!-- title="" is required to prevent the title attribute from being transferred from fd-tab to downstream elements -->
-                <div title="">
-                  <div *ngIf="getExtensionClass(activeTile) as extension" class="extension-info">
-                    <div *ngIf="extension.displayName && extension.description">
-                      <h3>What is {{ extension.displayName }}?</h3>
-                      <p>{{ extension.description }}</p>
-                    </div>
-                    <div *ngIf="extension.documentation?.url">
-                      <h3>Want to know more?</h3>
-                      <a
-                        *ngIf="extension.documentation?.url"
-                        fd-link
-                        href="{{ extension.documentation?.url }}"
-                        target="_blank">
-                        Documentation
-                      </a>
-                    </div>
-                    <div *ngIf="extension.preferredSupportChannels || extension.contacts">
-                      <h3>How to get help?</h3>
-                      <div>
-                        <div *ngIf="extension.preferredSupportChannels" class="extension-support-option">
-                          <span class="option-name">Channels:</span>
-                          {{ ' ' }}
-                          <span *ngFor="let channel of extension.preferredSupportChannels">
-                            <a
-                              *ngIf="channel.URL && channel.displayName"
-                              fd-link
-                              href="{{ channel.URL }}"
-                              target="_blank">
-                              {{ channel.displayName + getComma(channel, extension.preferredSupportChannels) }}
-                            </a>
-                          </span>
-                        </div>
-                        <div *ngIf="extension.contacts" class="extension-support-option">
-                          <span class="option-name">Contacts:</span>
-                          {{ ' ' }}
-                          <span *ngFor="let contact of extension.contacts">
-                            <a *ngIf="contact.displayName" fd-link href="{{ getMailLink(contact.email) }}">
-                              {{ contact.displayName }}
-                              <!-- prettier-ignore -->
-                              <span *ngIf="contact.role">{{ '(' }}<span *ngFor="let role of contact.role">{{ role + getComma(role, contact.role) }}</span>{{ ')' + getComma(contact, extension.contacts) }}</span>
-                            </a>
-                          </span>
-                        </div>
-                        <div *ngIf="extension.serviceLevel" class="extension-support-option">
-                          <span class="option-name">Service Level:</span>
-                          {{ ' ' }}
-                          {{ getServiceLevel(extension.serviceLevel) }}
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                  <div *ngIf="!getExtensionClass(activeTile)" class="service-info">
-                    <div class="service-info-flexbox">
-                      <img src="./assets/notFoundPage.svg" class="service-info-image" />
-                      <h2>Uh oh. Couldn't find service details.</h2>
-                      <span *ngIf="dxpContext | async as context">
-                        We weren't able to load more details about this service. Please let us know by
-                        <a
-                          [href]="
-                            missingServiceDetailsTicketUrl(
-                              activeTile,
-                              context.projectId,
-                              context.frameBaseUrl,
-                              context.userid
-                            )
-                          "
-                          target="_blank"
-                          fd-link>
-                          creating a ticket.
-                        </a>
-                        For now, you can try searching the
-                        <a [href]="catalogUrl()" target="_blank" fd-link>Hyperspace Catalog.</a>
-                        You may find more information on the {{ kindName[activeTile] }} service there.
-                      </span>
-                    </div>
-                  </div>
-                  <div class="tab-margin" *ngIf="debugModeService.debugModeEnabled()">
-                    <h4 class="debug-service-details-heading">Raw Extension Info:</h4>
-                    <pre class="hide-scrollbar service-details-json">{{ getExtensionClass(activeTile) | json }}</pre>
-                  </div>
-                </div>
-              </fd-tab>
-            </fd-tab-list>
-          </fd-card-content>
-        </fd-card>
-      </div>
+      <app-service-details-skeleton
+        [activeTile]="activeTile"
+        [localLayout]="localLayout"
+        (localLayoutEvent)="updateLocalLayout($event)"></app-service-details-skeleton>
     </ng-template>
   </fd-flexible-column-layout>
 </div>
+
+<ng-template #loadingContent>
+  <fd-busy-indicator [loading]="true" ariaLabel="loading" title="Please Wait"></fd-busy-indicator>
+</ng-template>

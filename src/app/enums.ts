@@ -1,4 +1,5 @@
 export enum Kinds {
+  GITHUB_ACTION = 'GithubAction',
   GITHUB_REPOSITORY = 'GithubRepository',
   STAGING_SERVICE_CREDENTIAL = 'StagingServiceCredential',
   CUMULUS_PIPELINE = 'CumulusPipeline',
@@ -24,6 +25,7 @@ export enum ServiceStatus {
   PENDING_CREATION = 'PendingCreation',
   FAILING_CREATION = 'FailingCreation',
   NOT_FOUND = 'NotFound',
+  UN_KNOWN = 'Unknown',
 }
 
 export enum Languages {

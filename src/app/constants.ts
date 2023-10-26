@@ -7,6 +7,7 @@ export const KindName = {
   [Kinds.PIPER_CONFIG]: 'Piper Native Build',
   [Kinds.STAGING_SERVICE_CREDENTIAL]: 'Staging Service',
   [Kinds.JENKINS_PIPELINE]: 'Jenkins Pipeline',
+  [Kinds.GITHUB_ACTION]: 'Github Actions',
 }
 
 export const KindCategory = {
@@ -14,12 +15,14 @@ export const KindCategory = {
   [Kinds.GITHUB_REPOSITORY]: Categories.SOURCE_CODE_MANAGEMENT,
   [Kinds.STAGING_SERVICE_CREDENTIAL]: Categories.CODE_TRANSPORTATION,
   [Kinds.JENKINS_PIPELINE]: Categories.ORCHESTRATION,
+  [Kinds.GITHUB_ACTION]: Categories.ORCHESTRATION,
   [Kinds.PIPER_CONFIG]: Categories.CODE_BUILD,
 }
 
 export const KindExtensionName = {
   [Kinds.CUMULUS_PIPELINE]: Extensions.CUMULUS,
   [Kinds.GITHUB_REPOSITORY]: Extensions.GITHUB_TOOLS,
+  [Kinds.GITHUB_ACTION]: Extensions.GITHUB_ACTIONS,
   [Kinds.PIPER_CONFIG]: Extensions.PIPER,
   [Kinds.STAGING_SERVICE_CREDENTIAL]: Extensions.STAGING_SERVICE_EXTERNAL,
   [Kinds.JENKINS_PIPELINE]: Extensions.JAAS,

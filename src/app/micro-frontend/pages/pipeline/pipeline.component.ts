@@ -1,9 +1,9 @@
 import { CommonModule } from '@angular/common'
 import { Component, Input, OnDestroy, OnInit, signal } from '@angular/core'
 import { FlexibleColumnLayout, FundamentalNgxCoreModule, IconModule, MessageBoxService } from '@fundamental-ngx/core'
-import { Observable, Subscription, firstValueFrom, map } from 'rxjs'
+import { firstValueFrom, map, Observable, Subscription } from 'rxjs'
 import { DxpLuigiContextService, LuigiClient, LuigiDialogUtil } from '@dxp/ngx-core/luigi'
-import { KindCategory, KindExtensionName, KindName } from 'src/app/constants'
+import { KindExtensionName, KindName } from 'src/app/constants'
 import { RouterModule } from '@angular/router'
 import { Pipeline, ResourceRef } from 'src/app/types'
 import { DeletionPolicy, Kinds, ServiceStatus } from 'src/app/enums'
@@ -18,18 +18,19 @@ import { StagingServiceServiceDetailsComponent } from '../../components/service-
 import { DeleteBuildModal } from '../../components/delete-build-modal/delete-build-modal.component'
 import { APIService } from '../../services/api.service'
 import { ExtensionService } from '../../services/extension.service'
-import { ExtensionClass, ServiceLevel } from '../../services/extension.types'
+import { ExtensionClass } from '../../services/extension.types'
 import { DxpContext } from '@dxp/ngx-core/common'
-import { GitHubIssueLabels, GitHubIssueLinkService } from '../../services/github-issue-link.service'
+import { GithubActionsServiceDetailsComponent } from '../../components/service-details/github-actions/github-actions-service-details.component'
+import { ServiceDetailsSkeletonComponent } from '../../components/service-details-skeleton/service-details-skeleton.component'
+import { SharedDataService } from '../../services/shared-data.service'
+import { ServiceData, ServiceListItemComponent } from '../../components/service-list-item/service-list-item.component'
+import { GithubMetadata } from '../../services/github.service'
+import { CheckGithubActionsEnablementPayload } from '../../../../generated/graphql'
 
 type Error = {
   title: string
   message: string
 }
-
-type ServiceDetails = any
-
-const dateFormatter = new Intl.DateTimeFormat('en', { year: 'numeric', month: 'short', day: 'numeric' })
 
 @Component({
   selector: 'app-pipeline',
@@ -49,50 +50,40 @@ const dateFormatter = new Intl.DateTimeFormat('en', { year: 'numeric', month: 's
     PiperServiceDetailsComponent,
     StagingServiceServiceDetailsComponent,
     DeleteBuildModal,
+    GithubActionsServiceDetailsComponent,
+    ServiceDetailsSkeletonComponent,
+    ServiceListItemComponent,
   ],
 })
 export class PipelineComponent implements OnInit, OnDestroy {
   @Input() pipeline$!: Observable<Pipeline>
-
-  dxpContext: Observable<DxpContext>
-
-  pipelineSubscription: Subscription
-
+  isGithubActionsEnabledAlready$!: Observable<CheckGithubActionsEnablementPayload>
+  dxpContext$: Observable<DxpContext>
   isBuildStageOpen = signal(false)
   isBuildStageSetup = signal(false)
   isBuildPipelineSetup = signal(false)
-
-  jenkinsPipelineError = false
-
+  isGithubActionsEnabledInSameComponent = signal(false)
   // hacky workaround solution
   pendingDeletion = signal(false)
-
   pendingOpenPipeline = signal(false)
   pendingShowCredentials = signal(false)
-
+  pendingExtensionClass = signal(false)
   catalogUrl = signal('')
-
   errors = signal<Error[]>([])
+  extensionClasses = signal<ExtensionClass[]>([])
+  openPRCount = signal(0)
 
   localLayout: FlexibleColumnLayout = 'OneColumnStartFullScreen'
   activeTile: string = ''
-
-  serviceDetailsLoading = signal(false)
-  serviceDetails = signal<ServiceDetails>({})
-  serviceUrl = signal('')
-  serviceCreationTimestamp = signal<Date>(null)
-
-  extensionClasses = signal<ExtensionClass[]>([])
-
-  //enums
-  serviceStatus = ServiceStatus
-
+  githubMetadata: GithubMetadata
+  projectId: string
   // maps
   kindName = KindName
-  kindCategory = KindCategory
+  kinds = Kinds
 
-  openPRCount = signal(0)
-  repoUrl = signal('')
+  private pipelineSubscription: Subscription
+  private githubActionsSubscription: Subscription
+  private jenkinsPipelineError = false
 
   constructor(
     private readonly luigiClient: LuigiClient,
@@ -102,17 +93,22 @@ export class PipelineComponent implements OnInit, OnDestroy {
     private readonly messageBoxService: MessageBoxService,
     private readonly luigiDialogUtil: LuigiDialogUtil,
     readonly debugModeService: DebugModeService,
-    private readonly githubIssueLinkService: GitHubIssueLinkService,
+    private readonly sharedResourceDataService: SharedDataService,
   ) {}
 
   async ngOnInit(): Promise<void> {
-    this.dxpContext = this.luigiService.contextObservable().pipe(map((value) => value.context))
+    this.dxpContext$ = this.luigiService.contextObservable().pipe(map((value) => value.context))
+    this.githubMetadata = await this.api.githubService.getGithubMetadata()
 
     const context = (await this.luigiService.getContextAsync()) as any
     this.catalogUrl.set(context.frameBaseUrl + '/catalog')
-    this.repoUrl.set(context.entityContext?.component?.annotations['github.dxp.sap.com/repo-url'] ?? '')
+    this.projectId = context.projectId
+    await this.getExtensionClasses()
 
-    this.extensionClasses.set(await firstValueFrom(this.extensionService.getExtensionClassesForScopesQuery()))
+    this.isGithubActionsEnabledAlready$ = this.api.githubActionsService.checkGithubActionsEnablement(
+      this.githubMetadata.githubInstance,
+      this.githubMetadata.githubOrgName,
+    )
 
     this.pipelineSubscription = this.pipeline$.subscribe(async (pipeline) => {
       // error reporting
@@ -120,6 +116,10 @@ export class PipelineComponent implements OnInit, OnDestroy {
       this.openPRCount.set(0)
       this.isBuildPipelineSetup.set(false)
       this.jenkinsPipelineError = false
+      // if true then it means that the Github Actions is enabled from the same component
+      this.isGithubActionsEnabledInSameComponent.set(
+        pipeline.resourceRefs.some((ref) => ref.kind === Kinds.GITHUB_ACTION),
+      )
 
       for (const ref of pipeline.resourceRefs) {
         if (!ref.error) {
@@ -133,11 +133,21 @@ export class PipelineComponent implements OnInit, OnDestroy {
         if (ref.kind === Kinds.JENKINS_PIPELINE) {
           this.jenkinsPipelineError = true
         }
-
+        // Needed customized error message for GitHub Actions
+        if (ref.kind === Kinds.GITHUB_ACTION) {
+          this.errors.update((errors) => {
+            errors.push({
+              title: `Configuration of ${KindName[ref.kind]} failed`,
+              message: `The GitHub Actions configuration may have failed due to an expired token.<br>Please ensure that the GitHub Actions credential stored in the vault is valid.<br><strong>Resource:</strong> ${ref.name}<br><strong>Status:</strong> ${ref.status}<br><strong>Error: </strong> ${ref.error}.`,
+            })
+            return errors
+          })
+          continue
+        }
         this.errors.update((errors) => {
           errors.push({
             title: `Configuration of ${KindName[ref.kind]} failed`,
-            message: `Resource: ${ref.name}\nStatus: ${ref.status}\nError: ${ref.error}`,
+            message: `<strong>Resource: </strong>${ref.name}<br><strong>Status:</strong> ${ref.status}<br><strong>Error: </strong> ${ref.error}`,
           })
           return errors
         })
@@ -145,11 +155,12 @@ export class PipelineComponent implements OnInit, OnDestroy {
       }
 
       // enable/disable expansion of build stage
-      if (
-        [Kinds.JENKINS_PIPELINE, Kinds.GITHUB_REPOSITORY, Kinds.PIPER_CONFIG].some(
-          (k) => pipeline.resourceRefs.findIndex((ref) => ref.kind === k) === -1,
-        )
-      ) {
+      const requiredKindsInBuildStage = [Kinds.JENKINS_PIPELINE, Kinds.GITHUB_REPOSITORY, Kinds.PIPER_CONFIG]
+      const isRequiredKindMissingInBuildStage = requiredKindsInBuildStage.some((kind) => {
+        return pipeline.resourceRefs.every((ref) => ref.kind !== kind)
+      })
+
+      if (isRequiredKindMissingInBuildStage) {
         this.isBuildStageSetup.set(false)
         this.isBuildStageOpen.set(false)
         return
@@ -165,90 +176,28 @@ export class PipelineComponent implements OnInit, OnDestroy {
 
       this.isBuildPipelineSetup.set(true)
 
-      /**
-       * Feedback modal was designed for the pilot.
-       * As the pilots are over now we can deactivate the modal for now and remove it later.
-       */
-      //await this.showFeedbackModal()
-
       await this.getPipelineURL(pipeline)
       this.openPRCount.set(await this.getOpenPRCount())
     })
   }
 
+  private async getExtensionClasses() {
+    this.pendingExtensionClass.set(true)
+    const extensionClasses = await firstValueFrom(this.extensionService.getExtensionClassesForScopesQuery())
+    this.extensionClasses.set(extensionClasses)
+    this.pendingExtensionClass.set(false)
+  }
+
   ngOnDestroy(): void {
     this.pipelineSubscription.unsubscribe()
+    this.githubActionsSubscription.unsubscribe()
   }
 
   get showOpenPipelineURL(): boolean {
     return this.isBuildStageSetup() && !this.pendingDeletion() && !this.jenkinsPipelineError
   }
 
-  public getIcon(extension: ExtensionClass): string {
-    if (extension) {
-      return this.extensionService.getIcon(extension)
-    }
-    return ''
-  }
-
-  public getExtensionClass(activeTile: string): ExtensionClass {
-    const extensionName = KindExtensionName[activeTile]
-    return this.extensionClasses().find((extensionClass) => extensionClass.name == extensionName)
-  }
-
-  getComma(element: any, array: any[]): string {
-    if (array.length - 1 === array.indexOf(element)) {
-      return ''
-    }
-    return ', '
-  }
-
-  getMailLink(email: string): string {
-    return `mailto:${email}`
-  }
-
-  getServiceLevel(level: ServiceLevel): string {
-    switch (level) {
-      case ServiceLevel.VeryHigh:
-        return '24x7'
-      case ServiceLevel.High:
-        return '24x5'
-      case ServiceLevel.MediumOne:
-        return '16x5'
-      case ServiceLevel.MediumTwo:
-        return '12x5'
-      case ServiceLevel.Low:
-        return '8x5'
-      default:
-        return 'No service level maintained'
-    }
-  }
-
-  missingServiceDetailsTicketUrl(kind: string, project: string, baseUrl: string, user: string): string {
-    return this.githubIssueLinkService.getIssueLink(
-      `Service info for service ${this.kindName[kind]} missing`,
-      `
-<!-- Thank you for taking the time to report this issue.
-To help us debug, please describe where you encountered it below.
--->
-
-
-### Debugging Information (automatically generated)
-Service details from LeanIX are missing for the service \`${this.kindName[kind]}\`. 
-
-The information might be missing in the Hyperspace portal extension backend, LeanIX or there is a misconfiguration in the CI/CD setup UI.
-
-**Project this issue was created from:** [${project}](${baseUrl}/projects/${project})
-**Timestamp:** ${new Date()}
-**User:** ${user}
-    `,
-      [GitHubIssueLabels.EXTERNAL, GitHubIssueLabels.PORTAL],
-    )
-  }
-
   async getOpenPRCount(): Promise<number> {
-    const context = (await this.luigiService.getContextAsync()) as any
-    const repoUrl = context.entityContext?.component?.annotations['github.dxp.sap.com/repo-url'] ?? null
     const token = await firstValueFrom(
       this.luigiService.contextObservable().pipe(
         map((luigiContext) => {
@@ -267,12 +216,12 @@ The information might be missing in the Hyperspace portal extension backend, Lea
       ),
     )
 
-    if (!token?.value || !repoUrl) {
+    if (!token?.value || !this.githubMetadata.githubRepoUrl) {
       return 0
     }
 
-    const url = new URL(repoUrl)
-    const pullsResp = await fetch(`${url.origin}/api/v3/repos${url.pathname}/pulls`, {
+    const url = new URL(this.githubMetadata.githubRepoUrl)
+    const pullsResp = await fetch(`${this.githubMetadata.githubInstance}/api/v3/repos${url.pathname}/pulls`, {
       headers: {
         Authorization: `Bearer ${token.value}`,
       },
@@ -288,41 +237,24 @@ The information might be missing in the Hyperspace portal extension backend, Lea
     }, 0)
   }
 
-  /**
-   * TODO: This logic shows the feedback modal once to EVERY user viewing a fully setup pipeline.
-   * It would be better to show it only to the user who set up the pipeline initially.
-   * I'd say for the pilot the current behaivour is fine but for productive use we need to find a better solution
-   * which might require to storing things permanently using the backend.
-   * UPDATE: As the pilot is over now we are not showing the feedback modal anymore.
-   */
-  /**
-   * FIXME: Sometimes it is not possible to close the feedback modal.
-   * Luigi says: There is no target origin set. You can specify the target origin by calling LuigiClient.setTargetOrigin("targetorigin") in your micro frontend.
-   * And I don't know why yet :,(
-   */
-  async showFeedbackModal() {
-    const context = this.luigiService.getContext()
-    const localStorageKey = `feedback modal - ${context.projectId}/${context.componentId}`
-
-    if (await this.luigiClient.storageManager().has(localStorageKey)) {
-      return
-    }
-
-    this.luigiClient.linkManager().fromVirtualTreeRoot().openAsModal('feedback', {
-      size: 's',
-      title: 'Provide your Feedback',
-      width: '25rem',
-      height: '28rem',
-    })
-
-    await this.luigiClient.storageManager().setItem(localStorageKey, `shown at: ${new Date()}`)
-  }
-
   openFeedback() {
     window.open(
       'https://sapit-home-prod-004.launchpad.cfapps.eu10.hana.ondemand.com/site#feedbackservice-Display&/topic/cc5045ed-6c4e-4e7b-a18d-a0b377faf593/createFeedback',
       '_blank',
     )
+  }
+
+  getIcon(serviceName: Kinds): string {
+    const extensionName = this.getExtensionClass(serviceName)
+    if (extensionName) {
+      return this.extensionService.getIcon(extensionName)
+    }
+    return ''
+  }
+
+  getExtensionClass(serviceName: string): ExtensionClass {
+    const extensionName = KindExtensionName[serviceName]
+    return this.extensionClasses().find((extensionClass) => extensionClass.name == extensionName)
   }
 
   openDocumentation() {
@@ -332,6 +264,14 @@ The information might be missing in the Hyperspace portal extension backend, Lea
   openSetupWizard(e: Event) {
     e.stopPropagation()
     this.luigiClient.linkManager().fromVirtualTreeRoot().openAsModal('setup', { size: 's', title: 'Set up Build' })
+  }
+
+  openGithubActionWizard(e: Event) {
+    e.stopPropagation()
+    this.luigiClient
+      .linkManager()
+      .fromVirtualTreeRoot()
+      .openAsModal('github-actions', { title: 'Enable Github Actions', width: '38rem', height: '28rem' })
   }
 
   openPipelineDebugModal(e: Event) {
@@ -446,24 +386,6 @@ The information might be missing in the Hyperspace portal extension backend, Lea
     }
   }
 
-  expandDetails() {
-    this.localLayout = 'OneColumnMidFullScreen'
-  }
-
-  shrinkDetails() {
-    this.localLayout = 'TwoColumnsMidExpanded'
-  }
-
-  async retryService(e: Event, resourceRef: ResourceRef) {
-    e?.stopPropagation()
-    await firstValueFrom(this.debugModeService.forceDebugReconciliation(resourceRef.kind, resourceRef.name))
-  }
-
-  closeDetails() {
-    this.localLayout = 'OneColumnStartFullScreen'
-    this.activeTile = ''
-  }
-
   async showCredentials() {
     try {
       this.pendingShowCredentials.set(true)
@@ -482,77 +404,35 @@ The information might be missing in the Hyperspace portal extension backend, Lea
     }
   }
 
-  async openDetails(kind: Kinds, name: string, status: ServiceStatus) {
-    if (status != ServiceStatus.CREATED) {
+  async openDetails(event: ServiceData) {
+    if (event.status != ServiceStatus.CREATED) {
       return
     }
 
-    this.loadDetails(kind, name)
+    this.sharedResourceDataService.publishResourceData(event.kind, event.name)
 
     if (!this.activeTile) {
       this.localLayout = 'TwoColumnsMidExpanded'
     }
 
-    if (this.activeTile == kind) {
+    if (this.activeTile == event.kind) {
       this.localLayout =
         this.localLayout == 'OneColumnStartFullScreen' ? 'TwoColumnsMidExpanded' : 'OneColumnStartFullScreen'
     }
 
-    if (this.activeTile != kind) {
+    if (this.activeTile != event.kind) {
       this.localLayout = 'TwoColumnsMidExpanded'
     }
 
-    this.activeTile = kind
+    this.activeTile = event.kind
   }
 
-  async loadDetails(kind: Kinds, name: string) {
-    this.serviceDetailsLoading.set(true)
-
-    this.serviceDetails.set({})
-    this.serviceUrl.set('')
-    this.serviceCreationTimestamp.set(null)
-
-    try {
-      switch (kind) {
-        case Kinds.JENKINS_PIPELINE:
-          this.serviceDetails.set(await firstValueFrom(this.api.jenkinsService.getJenkinsPipeline(name)))
-          this.serviceUrl.set(this.serviceDetails().jobUrl)
-          break
-        case Kinds.GITHUB_REPOSITORY:
-          this.serviceDetails.set(await firstValueFrom(this.api.githubService.getGithubRepository(name)))
-          this.serviceUrl.set(this.serviceDetails().repositoryUrl)
-          break
-        case Kinds.CUMULUS_PIPELINE:
-          this.serviceDetails.set(await firstValueFrom(this.api.cumulusService.getCumulusPipeline(name)))
-          break
-        case Kinds.PIPER_CONFIG:
-          this.serviceDetails.set(await firstValueFrom(this.api.piperService.getPiperConfig(name)))
-          this.serviceUrl.set(this.serviceDetails().pullRequestURL)
-          break
-        case Kinds.STAGING_SERVICE_CREDENTIAL:
-          this.serviceDetails.set(await firstValueFrom(this.api.stagingServiceService.getStagingServiceCredential()))
-          break
-      }
-
-      this.serviceCreationTimestamp.set(new Date(this.serviceDetails().creationTimestamp))
-    } catch (err) {
-      this.errors.update((errors) => {
-        errors.push({
-          title: `Load service details failed for kind ${kind}`,
-          message: `${err.message}`,
-        })
-        return errors
-      })
-    } finally {
-      this.serviceDetailsLoading.set(false)
-    }
+  updateLocalLayout(layoutEvent: FlexibleColumnLayout) {
+    this.localLayout = layoutEvent
   }
 
-  openService() {
-    window.open(this.serviceUrl(), '_blank')
-  }
-
-  formatDate(date: Date) {
-    return dateFormatter.format(date)
+  // This is true when the Github Actions is enabled from one of the other components of the same project
+  isGithubActionsEnabledInSameProject(responsibleProjectName: string): boolean {
+    return this.projectId === responsibleProjectName
   }
 }
