@@ -26,10 +26,7 @@ export class GithubServiceDetailsComponent implements OnInit {
   pendingShowInVault = signal(false)
 
   openDocumentation() {
-    window.open(
-      'https://pages.github.tools.sap/hyperspace/cicd-setup-documentation/use-cases/get-access-to-github-actions.html',
-      '_blank',
-    )
+    window.open('https://hyperspace.tools.sap/docs/features_and_use_cases/connected_tools/github.html', '_blank')
   }
 
   async showInVault(vaultPath: string) {
