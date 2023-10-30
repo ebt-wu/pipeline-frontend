@@ -111,9 +111,17 @@ fd-card-content {
             display: flex;
             flex-direction: column;
 
+            .card-description-build{
+                display: flex;
+                flex-direction: row;
+                gap: 0.5rem;
+                align-items: center;
+            }
+
             .disabled-headline {
                 color: var(--sapAccentColor10);
             }
+
 
             .stage-setup-header {
                 font-size: 1.1rem !important;
@@ -215,6 +223,14 @@ fd-info-label {
         margin: 0;
         color: var(--sapNeutralColor);
         font-size: 0.8rem;
+    }
+    .card-content-github-actions {
+        display: flex;
+        flex-direction: row;
+        gap: 0.5rem;
+        .card-content-label {
+            margin-top: 6px;
+        }
     }
 }
 
