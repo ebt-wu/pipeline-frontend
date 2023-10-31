@@ -14,14 +14,14 @@ import { GetStagingServiceCredentialQuery } from 'src/generated/graphql'
 export class StagingServiceServiceDetailsComponent {
   constructor(private readonly secretService: SecretService) {}
 
-  @Input() serviceDetails: GetStagingServiceCredentialQuery["getStagingServiceCredential"]
+  @Input() serviceDetails: GetStagingServiceCredentialQuery['getStagingServiceCredential']
 
   pendingShowInVault = signal(false)
 
   openDocumentation() {
     window.open(
-      'https://hyperspace.tools.sap/docs/features_and_use_cases/connected_tools/staging-service.html',
-      '_blank'
+      'https://pages.github.tools.sap/hyperspace/cicd-setup-documentation/connected-tools/build/staging-service.html',
+      '_blank',
     )
   }
 

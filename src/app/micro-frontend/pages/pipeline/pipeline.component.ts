@@ -258,7 +258,7 @@ export class PipelineComponent implements OnInit, OnDestroy {
   }
 
   openDocumentation() {
-    window.open('https://pages.github.tools.sap/hyper-pipe/portal-jenkins-pilot-docs/', '_blank')
+    window.open('https://pages.github.tools.sap/hyperspace/cicd-setup-documentation/', '_blank')
   }
 
   openSetupWizard(e: Event) {

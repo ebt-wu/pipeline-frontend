@@ -33,7 +33,7 @@ export class StartComponent {
   constructor(
     private readonly luigiClient: LuigiClient,
     private readonly pipelineService: PipelineService,
-    readonly debugModeService: DebugModeService
+    readonly debugModeService: DebugModeService,
   ) {}
 
   pipelineLoading = false
@@ -61,6 +61,6 @@ export class StartComponent {
   }
 
   openDocumentation() {
-    window.open('https://pages.github.tools.sap/hyper-pipe/portal-jenkins-pilot-docs/', '_blank')
+    window.open('https://pages.github.tools.sap/hyperspace/cicd-setup-documentation/', '_blank')
   }
 }

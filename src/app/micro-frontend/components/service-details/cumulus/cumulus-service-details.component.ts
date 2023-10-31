@@ -14,14 +14,17 @@ import { GetCumulusPipelineQuery } from 'src/generated/graphql'
 export class CumlusServiceDetailsComponent {
   constructor(private readonly secretService: SecretService) {}
 
-  @Input() serviceDetails: GetCumulusPipelineQuery["getCumulusPipeline"]
+  @Input() serviceDetails: GetCumulusPipelineQuery['getCumulusPipeline']
 
   // cumulus secret path is hardcoded here: https://github.tools.sap/hyperspace/pipeline-backend/blob/937fc53e719077cc63b97c7b6277fde838c304dd/service/cumulus/service.go#L79
-  cumulusSecretPath = "GROUP-SECRETS/cumulus"
+  cumulusSecretPath = 'GROUP-SECRETS/cumulus'
   pendingShowInVault = signal(false)
-  
+
   openDocumentation() {
-    window.open('https://hyperspace.tools.sap/docs/features_and_use_cases/connected_tools/cumulus.html', '_blank')
+    window.open(
+      'https://pages.github.tools.sap/hyperspace/cicd-setup-documentation/connected-tools/build/cumulus.html',
+      '_blank',
+    )
   }
 
   async showInVault(vaultPath: string) {

@@ -11,9 +11,9 @@ import { GetPiperConfigQuery } from 'src/generated/graphql'
   imports: [CommonModule, FundamentalNgxCoreModule],
 })
 export class PiperServiceDetailsComponent {
-  @Input() serviceDetails: GetPiperConfigQuery["getPiperConfig"]
+  @Input() serviceDetails: GetPiperConfigQuery['getPiperConfig']
 
-  constructor(public messageToastService: MessageToastService) { }
+  constructor(public messageToastService: MessageToastService) {}
 
   copyConfigStringToClipboard(config: string) {
     const cb = navigator.clipboard
@@ -24,6 +24,9 @@ export class PiperServiceDetailsComponent {
   }
 
   openDocumentation() {
-    window.open('https://hyperspace.tools.sap/docs/features_and_use_cases/connected_tools/piper.html', '_blank')
+    window.open(
+      'https://pages.github.tools.sap/hyperspace/cicd-setup-documentation/connected-tools/build/piper.html',
+      '_blank',
+    )
   }
 }

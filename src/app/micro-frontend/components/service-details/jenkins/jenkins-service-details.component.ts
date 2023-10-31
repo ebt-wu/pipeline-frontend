@@ -14,7 +14,7 @@ import { GetJenkinsPipelineQuery } from 'src/generated/graphql'
 export class JenkinServiceDetailsComponent implements OnInit {
   constructor(private readonly secretService: SecretService) {}
 
-  @Input() serviceDetails: GetJenkinsPipelineQuery["getJenkinsPipeline"]
+  @Input() serviceDetails: GetJenkinsPipelineQuery['getJenkinsPipeline']
 
   pendingShowInVault = signal(false)
 
@@ -26,7 +26,10 @@ export class JenkinServiceDetailsComponent implements OnInit {
   }
 
   openDocumentation() {
-    window.open('https://hyperspace.tools.sap/docs/features_and_use_cases/connected_tools/jenkins.html', '_blank')
+    window.open(
+      'https://pages.github.tools.sap/hyperspace/cicd-setup-documentation/connected-tools/build/jenkins.html',
+      '_blank',
+    )
   }
 
   async showInVault(vaultPath: string) {
