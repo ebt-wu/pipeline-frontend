@@ -63,7 +63,7 @@
     "@graphql-codegen/typescript-apollo-angular": "4.0.0",
     "@graphql-codegen/typescript-operations": "^4.0.1",
     "@luigi-project/testing-utilities": "2.6.3",
-    "@types/jest": "29.5.6",
+    "@types/jest": "29.5.7",
     "@types/node": "18.18.7",
     "@typescript-eslint/eslint-plugin": "^6.4.1",
     "@typescript-eslint/parser": "^6.4.1",
