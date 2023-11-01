@@ -14,7 +14,7 @@ export class ExtensionService {
   ) {}
 
   extensionsToQuery = [
-    Extensions.GITHUB_ACTIONS,
+    Extensions.GITHUB_ACTIONS_TOOLS_SAP,
     Extensions.CUMULUS,
     Extensions.GITHUB_TOOLS,
     Extensions.JAAS,

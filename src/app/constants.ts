@@ -22,7 +22,7 @@ export const KindCategory = {
 export const KindExtensionName = {
   [Kinds.CUMULUS_PIPELINE]: Extensions.CUMULUS,
   [Kinds.GITHUB_REPOSITORY]: Extensions.GITHUB_TOOLS,
-  [Kinds.GITHUB_ACTION]: Extensions.GITHUB_ACTIONS,
+  [Kinds.GITHUB_ACTION]: Extensions.GITHUB_ACTIONS_TOOLS_SAP,
   [Kinds.PIPER_CONFIG]: Extensions.PIPER,
   [Kinds.STAGING_SERVICE_CREDENTIAL]: Extensions.STAGING_SERVICE_EXTERNAL,
   [Kinds.JENKINS_PIPELINE]: Extensions.JAAS,
