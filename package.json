@@ -39,7 +39,7 @@
     "@fundamental-styles/common-css": "0.30.2",
     "@luigi-project/client": "2.7.1",
     "@luigi-project/client-support-angular": "2.7.1",
-    "@sap-theming/theming-base-content": "11.7.0",
+    "@sap-theming/theming-base-content": "11.8.0",
     "apollo-angular": "^5.0.0",
     "fundamental-styles": "0.28.3",
     "graphql": "^16.8.0",
