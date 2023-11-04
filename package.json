@@ -41,7 +41,7 @@
     "@luigi-project/client-support-angular": "2.7.1",
     "@sap-theming/theming-base-content": "11.8.0",
     "apollo-angular": "^5.0.0",
-    "fundamental-styles": "0.28.3",
+    "fundamental-styles": "0.31.0",
     "graphql": "^16.8.0",
     "graphql-sse": "^2.3.0",
     "open": "^9.1.0",
