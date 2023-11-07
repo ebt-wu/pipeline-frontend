@@ -8824,16 +8824,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"fundamental-styles@npm:0.31.0":
-  version: 0.31.0
-  resolution: "fundamental-styles@npm:0.31.0"
-  peerDependencies:
-    "@sap-theming/theming-base-content": ^11.7.0
-    "@sap-ui/common-css": 0.31.0
-  checksum: 1d37db0c5433be85590b27fd024a8063c782bada04426908b438c12eca5780f08e1b6b2d404df7d0c60d8adb89abaec574be1c796d4d4d98b1cd8510c38794da
-  languageName: node
-  linkType: hard
-
 "gauge@npm:^4.0.3":
   version: 4.0.4
   resolution: "gauge@npm:4.0.4"
@@ -12493,7 +12483,7 @@ __metadata:
     apollo-angular: ^5.0.0
     eslint: ^8.48.0
     eslint-plugin-jest: 27.6.0
-    fundamental-styles: 0.31.0
+    fundamental-styles: 0.28.3
     graphql: ^16.8.0
     graphql-sse: ^2.3.0
     jest: 29.7.0

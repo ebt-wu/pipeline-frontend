@@ -130,13 +130,16 @@
               </div>
               <ng-container *ngIf="isBuildStageOpen()">
                 <div *ngFor="let resourceRef of pipeline.resourceRefs">
-                  <!--The GithubAction resource is not part of the build stage yet.-->
-                  <div class="card" *ngIf="resourceRef.kind !== 'GithubAction'">
-                    <app-service-list-item
-                      [resourceRef]="resourceRef"
-                      [activeTile]="activeTile"
-                      [localLayout]="localLayout"
-                      (openDetailsEvent)="openDetails($event)"></app-service-list-item>
+                  <!-- CumulusGroup should be ignored for the UI, since CumulusPipeline is the valid reference for a single pipeline -->
+                  <div *ngIf="resourceRef.kind !== 'CumulusGroup'">
+                    <!--The GithubAction resource is not part of the build stage yet. -->
+                    <div class="card" *ngIf="resourceRef.kind !== 'GithubAction'">
+                      <app-service-list-item
+                        [resourceRef]="resourceRef"
+                        [activeTile]="activeTile"
+                        [localLayout]="localLayout"
+                        (openDetailsEvent)="openDetails($event)"></app-service-list-item>
+                    </div>
                   </div>
                 </div>
               </ng-container>

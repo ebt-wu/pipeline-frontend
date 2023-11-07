@@ -5,6 +5,7 @@ export enum Kinds {
   CUMULUS_PIPELINE = 'CumulusPipeline',
   PIPER_CONFIG = 'PiperConfig',
   JENKINS_PIPELINE = 'JenkinsPipeline',
+  CUMULUS_GROUP = 'CumulusGroup',
 }
 
 export enum Categories {
