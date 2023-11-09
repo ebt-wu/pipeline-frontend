@@ -1,41 +1,39 @@
 <fdp-dynamic-page ariaLabel="CI/CD Dynamic Page">
-  <fdp-dynamic-page-content id="basic">
-    <div *ngIf="watch$ | async as watch; else loading" class="home-page-content">
-      <ng-container [ngSwitch]="watch.pipelineType">
-        <app-pipeline [pipeline$]="watch$" *ngSwitchCase="pipelineType.FullPipeline"></app-pipeline>
-        <app-single-services [pipeline$]="watch$" *ngSwitchCase="pipelineType.SingleService"></app-single-services>
-        <app-start [pipeline$]="watch$" *ngSwitchCase="''"></app-start>
-      </ng-container>
-    </div>
-    <ng-container *dxpRequiredPolicies="['!projectAdmin', '!projectMember']">
-      <fd-card style="width: max-content; margin: 0 auto;">
-        <fd-card-header [interactive]="false">
-          <h2 fd-card-title>CI/CD Setup</h2>
-        </fd-card-header>
-        <fd-card-content>
-          <figure fd-illustrated-message type="spot" [svgConfig]="spotConfig">
-            <figcaption fd-illustrated-message-figcaption id="spot-description">
-              <p fd-illustrated-message-title>
-                Access Restricted: CI/CD Setup only <br />for project members
-              </p>
-              <p fd-illustrated-message-text>
-                To gain access, please contact the project owner to be added as a
-                member.
-              </p>
-            </figcaption>
-          </figure>
-        </fd-card-content>
-        <fd-card-footer>
-          <p class="card-footer">
-            <button fd-button label="Contact project owner" (click)="navigateToProjectMembers()"></button>
-          </p>
-        </fd-card-footer>
-      </fd-card>
-    </ng-container>
-    <ng-template #loading>
-      <div class="busy-indicator">
-        <fd-busy-indicator [loading]="true" ariaLabel="loading" title="Please Wait"></fd-busy-indicator>
-      </div>
-    </ng-template>
-  </fdp-dynamic-page-content>
+    <fdp-dynamic-page-content id="basic">
+        <div *ngIf="pipelineAvail | async; else loading" class="home-page-content">
+            <ng-container>
+                <app-pipeline [pipeline$]="watch$"></app-pipeline>
+            </ng-container>
+        </div>
+        <ng-container *dxpRequiredPolicies="['!projectAdmin', '!projectMember']">
+            <fd-card style="width: max-content; margin: 0 auto;">
+                <fd-card-header [interactive]="false">
+                    <h2 fd-card-title>CI/CD Setup</h2>
+                </fd-card-header>
+                <fd-card-content>
+                    <figure fd-illustrated-message type="spot" [svgConfig]="spotConfig">
+                        <figcaption fd-illustrated-message-figcaption id="spot-description">
+                            <p fd-illustrated-message-title>
+                                Access Restricted: CI/CD Setup only <br/>for project members
+                            </p>
+                            <p fd-illustrated-message-text>
+                                To gain access, please contact the project owner to be added as a
+                                member.
+                            </p>
+                        </figcaption>
+                    </figure>
+                </fd-card-content>
+                <fd-card-footer>
+                    <p class="card-footer">
+                        <button fd-button label="Contact project owner" (click)="navigateToProjectMembers()"></button>
+                    </p>
+                </fd-card-footer>
+            </fd-card>
+        </ng-container>
+        <ng-template #loading>
+            <div class="busy-indicator">
+                <fd-busy-indicator [loading]="true" ariaLabel="loading" title="Please Wait"></fd-busy-indicator>
+            </div>
+        </ng-template>
+    </fdp-dynamic-page-content>
 </fdp-dynamic-page>
