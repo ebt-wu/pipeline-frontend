@@ -34,7 +34,7 @@
     "@apollo/client": "^3.8.1",
     "@dxp/ngx-core": "0.16.25",
     "@dynatrace/dtrum-api-types": "1.275.1",
-    "@fundamental-ngx/core": "0.45.1",
+    "@fundamental-ngx/core": "0.46.1",
     "@fundamental-ngx/platform": "0.46.1",
     "@fundamental-styles/common-css": "0.30.2",
     "@luigi-project/client": "2.7.1",

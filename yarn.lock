@@ -3109,70 +3109,29 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@fundamental-ngx/cdk@npm:0.45.1":
-  version: 0.45.1
-  resolution: "@fundamental-ngx/cdk@npm:0.45.1"
+"@fundamental-ngx/core@npm:0.46.1":
+  version: 0.46.1
+  resolution: "@fundamental-ngx/core@npm:0.46.1"
   dependencies:
-    "@fundamental-ngx/i18n": 0.45.1
-    "@fundamental-styles/cx": 0.28.3
-    "@sap-theming/theming-base-content": ^11.6.0
-    compare-versions: ^6.0.0
-    fast-deep-equal: 3.1.3
-    focus-trap: ^7.1.0
-    fundamental-styles: 0.28.3
-    lodash-es: ^4.17.0
-    tslib: ^2.0.0
-  peerDependencies:
-    "@angular/animations": ^16.1.0
-    "@angular/cdk": ^16.1.0
-    "@angular/common": ^16.1.0
-    "@angular/core": ^16.1.0
-    "@angular/forms": ^16.1.0
-    "@angular/platform-browser": ^16.1.0
-    "@angular/router": ^16.1.0
-    rxjs: ^7.8.0
-  checksum: 2019702c3f52814fd0f9ed78ec9d5f6edbf60a8158b1d320548c68ae4e79906054cb7ea4d0de69a95bd811c9d7d98641f844cfc3554e61183b421d2de77ad296
-  languageName: node
-  linkType: hard
-
-"@fundamental-ngx/core@npm:0.45.1":
-  version: 0.45.1
-  resolution: "@fundamental-ngx/core@npm:0.45.1"
-  dependencies:
-    "@fundamental-ngx/cdk": 0.45.1
-    "@fundamental-ngx/i18n": 0.45.1
     compare-versions: ^6.0.0
     fast-deep-equal: 3.1.3
     focus-trap: ^7.1.0
     lodash-es: ^4.17.0
     tslib: ^2.0.0
   peerDependencies:
-    "@angular/animations": ^16.1.0
-    "@angular/cdk": ^16.1.0
-    "@angular/common": ^16.1.0
-    "@angular/core": ^16.1.0
-    "@angular/forms": ^16.1.0
-    "@angular/platform-browser": ^16.1.0
-    "@angular/router": ^16.1.0
-    "@sap-theming/theming-base-content": ^11.6.0
-    fundamental-styles: 0.28.3
+    "@angular/animations": ^16.2.0
+    "@angular/cdk": ^16.2.0
+    "@angular/common": ^16.2.0
+    "@angular/core": ^16.2.0
+    "@angular/forms": ^16.2.0
+    "@angular/platform-browser": ^16.2.0
+    "@angular/router": ^16.2.0
+    "@fundamental-ngx/cdk": 0.46.1
+    "@fundamental-ngx/i18n": 0.46.1
+    "@sap-theming/theming-base-content": ^11.7.0
+    fundamental-styles: 0.30.2
     rxjs: ^7.8.0
-  checksum: 467a530a522cb816bc9496d859d7d519f921a9cd6eff389e62ee368ca51b8967848699a73716a87cbe744bad4aa4d90b1e7ea4dd9400e37d30b715d6aa9f73b4
-  languageName: node
-  linkType: hard
-
-"@fundamental-ngx/i18n@npm:0.45.1":
-  version: 0.45.1
-  resolution: "@fundamental-ngx/i18n@npm:0.45.1"
-  dependencies:
-    fast-deep-equal: 3.1.3
-    lodash-es: ^4.17.0
-    tslib: ^2.3.0
-  peerDependencies:
-    "@angular/common": ^16.1.0
-    "@angular/core": ^16.1.0
-    rxjs: ^7.8.0
-  checksum: 3380de2f15d55eda55759577b0763154509b1ec0fa6167484a0739bea74d3a8f45f674f7e0d0b6a05f099048b8172598d7aaabf55e9c8b9fd444d3238ae8a052
+  checksum: 7809e4a2e4d3141845c34a45bb31fa06d355a4167277277adbd7aecdbca4799e8e7de2be6705939a16b60cf8bb6fd121b70ad6439ff86b38b4cf1edba55d935b
   languageName: node
   linkType: hard
 
@@ -3198,13 +3157,6 @@ __metadata:
   dependencies:
     "@sap-theming/theming-base-content": ^11.7.0
   checksum: 59130039684cf4a5064806f82f070e39fb65ed114ae51828159afa6c9627624beda4069c316183c63f6b91afff2ed5aa48dd742f5e34f2965f991871910d1e43
-  languageName: node
-  linkType: hard
-
-"@fundamental-styles/cx@npm:0.28.3":
-  version: 0.28.3
-  resolution: "@fundamental-styles/cx@npm:0.28.3"
-  checksum: e65f2f69ad9e6f06941ad53c5b68da5bb4b40e6db43b17acf37445a9d05057150c15665ccc0c06165ba099abef80b9eee8c7c780dcd9c8c7a0e001e0bbaf5bcd
   languageName: node
   linkType: hard
 
@@ -4583,13 +4535,6 @@ __metadata:
   version: 11.8.0
   resolution: "@sap-theming/theming-base-content@npm:11.8.0"
   checksum: 50545db4aeed9614e8a279c4005812895495694814a8ba779bc05c8650651868f2a0c16414b58e4d20910f9e84261e39c187b82974216924a980ebc81e1ba449
-  languageName: node
-  linkType: hard
-
-"@sap-theming/theming-base-content@npm:^11.6.0":
-  version: 11.6.4
-  resolution: "@sap-theming/theming-base-content@npm:11.6.4"
-  checksum: 04a4e6e3da0142e1338d676a467b411bd39596594908ec925246964c7ab58e73dbe6bc62b03491cf41c477ea6f6b56a5cc0ddc20be79196032ce7aa297691fe1
   languageName: node
   linkType: hard
 
@@ -12465,7 +12410,7 @@ __metadata:
     "@apollo/client": ^3.8.1
     "@dxp/ngx-core": 0.16.25
     "@dynatrace/dtrum-api-types": 1.275.1
-    "@fundamental-ngx/core": 0.45.1
+    "@fundamental-ngx/core": 0.46.1
     "@fundamental-ngx/platform": 0.46.1
     "@fundamental-styles/common-css": 0.30.2
     "@graphql-codegen/cli": 5.0.0
