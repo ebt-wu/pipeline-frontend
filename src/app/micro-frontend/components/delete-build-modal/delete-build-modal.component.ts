@@ -18,7 +18,7 @@ export class DeleteBuildModal {
   constructor(
     public messageBoxRef: MessageBoxRef<{
       componentId: string
-    }>
+    }>,
   ) {}
 
   deleteBtnDisabled(): boolean {

@@ -2,9 +2,9 @@ name: Release Chart Workflow
 
 on:
   workflow_run:
-    workflows: ["Build Chart Workflow"]
-    branches: ["main"]
-    types: ["completed"]
+    workflows: ['Build Chart Workflow']
+    branches: ['main']
+    types: ['completed']
 
 jobs:
   createVersion:

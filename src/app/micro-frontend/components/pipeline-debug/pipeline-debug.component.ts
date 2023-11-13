@@ -14,7 +14,10 @@ import { LuigiClient } from '@dxp/ngx-core/luigi'
   imports: [CommonModule, FundamentalNgxCoreModule, FormattedTextModule],
 })
 export class PipelineDebugModal {
-  constructor(private readonly pipelineService: PipelineService, private luigiClient: LuigiClient) {}
+  constructor(
+    private readonly pipelineService: PipelineService,
+    private luigiClient: LuigiClient,
+  ) {}
 
   shiftMessage = signal(false)
 

@@ -7,7 +7,10 @@ import { GetCumulusPipelineQuery, GetCumulusPipelineQueryVariables } from 'src/g
 
 @Injectable({ providedIn: 'root' })
 export class CumulusService {
-  constructor(private readonly apiService: BaseAPIService, private readonly luigiService: DxpLuigiContextService) {}
+  constructor(
+    private readonly apiService: BaseAPIService,
+    private readonly luigiService: DxpLuigiContextService,
+  ) {}
 
   getCumulusPipeline(resourceName: string) {
     return combineLatest([this.apiService.apollo(), this.luigiService.contextObservable()]).pipe(
@@ -22,7 +25,7 @@ export class CumulusService {
             },
           })
           .pipe(map((res) => res.data?.getCumulusPipeline ?? null))
-      })
+      }),
     )
   }
 }

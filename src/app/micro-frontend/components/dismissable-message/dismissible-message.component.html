@@ -1,8 +1,13 @@
 <fd-message-strip [type]="type" (onDismiss)="emitOnDismiss()" *ngIf="displayMessage()" class="message-margin">
   <div class="container">
     <div [innerHTML]="message"></div>
-    <a fd-link class="button-height" *ngIf="displayLink" [href]="href"
-      [style.pointer-events]="(displayMessage() && href) ? '' : 'none'" target="_blank">
+    <a
+      fd-link
+      class="button-height"
+      *ngIf="displayLink"
+      [href]="href"
+      [style.pointer-events]="displayMessage() && href ? '' : 'none'"
+      target="_blank">
       {{ linkText }}
     </a>
   </div>

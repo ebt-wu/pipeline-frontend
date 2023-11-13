@@ -36,7 +36,7 @@ const routes: Routes = [
       {
         path: 'import-pipeline',
         component: ImportExistingPipelineModal,
-      }
+      },
     ],
   },
 ]

@@ -3,18 +3,29 @@ import { BaseAPIService } from './base.service'
 import { DxpLuigiContextService } from '@dxp/ngx-core/luigi'
 import { Observable, combineLatest, first, map, mergeMap } from 'rxjs'
 import { CREATE_PIPER_CONFIG, DELETE_PIPER_CONFIG, GET_PIPER_CONFIG } from './queries'
-import { BuildTool, CreatePiperConfigMutation, CreatePiperConfigMutationVariables, DeletePiperConfigMutation, DeletePiperConfigMutationVariables, GetPiperConfigQuery, GetPiperConfigQueryVariables } from 'src/generated/graphql'
+import {
+  BuildTool,
+  CreatePiperConfigMutation,
+  CreatePiperConfigMutationVariables,
+  DeletePiperConfigMutation,
+  DeletePiperConfigMutationVariables,
+  GetPiperConfigQuery,
+  GetPiperConfigQueryVariables,
+} from 'src/generated/graphql'
 
 @Injectable({ providedIn: 'root' })
 export class PiperService {
-  constructor(private readonly apiService: BaseAPIService, private readonly luigiService: DxpLuigiContextService) {}
+  constructor(
+    private readonly apiService: BaseAPIService,
+    private readonly luigiService: DxpLuigiContextService,
+  ) {}
 
   createPiperConfig(
     githubSecretRef: string,
     repositoryResource: string,
     buildTool: BuildTool,
     pipelineOptimization: boolean,
-    dockerImageName: string
+    dockerImageName: string,
   ): Observable<string> {
     return combineLatest([this.apiService.apollo(), this.luigiService.contextObservable()]).pipe(
       first(),
@@ -33,7 +44,7 @@ export class PiperService {
             },
           })
           .pipe(map((res) => res.data?.createPiperConfig ?? ''))
-      })
+      }),
     )
   }
 
@@ -44,14 +55,14 @@ export class PiperService {
         return client
           .query<GetPiperConfigQuery, GetPiperConfigQueryVariables>({
             query: GET_PIPER_CONFIG,
-            fetchPolicy: "no-cache",
+            fetchPolicy: 'no-cache',
             variables: {
               projectId: ctx.context.projectId,
               resourceName: resourceName,
             },
           })
           .pipe(map((res) => res.data?.getPiperConfig ?? null))
-      })
+      }),
     )
   }
 
@@ -69,7 +80,7 @@ export class PiperService {
             },
           })
           .pipe(map((res) => res.data?.deletePiperConfig ?? ''))
-      })
+      }),
     )
   }
 }

@@ -7,7 +7,10 @@ import { GetStagingServiceCredentialQuery, GetStagingServiceCredentialQueryVaria
 
 @Injectable({ providedIn: 'root' })
 export class StagingServiceService {
-  constructor(private readonly apiService: BaseAPIService, private readonly luigiService: DxpLuigiContextService) {}
+  constructor(
+    private readonly apiService: BaseAPIService,
+    private readonly luigiService: DxpLuigiContextService,
+  ) {}
 
   getStagingServiceCredential() {
     return combineLatest([this.apiService.apollo(), this.luigiService.contextObservable()]).pipe(
@@ -21,7 +24,7 @@ export class StagingServiceService {
             },
           })
           .pipe(map((res) => res.data?.getStagingServiceCredential ?? null))
-      })
+      }),
     )
   }
 }

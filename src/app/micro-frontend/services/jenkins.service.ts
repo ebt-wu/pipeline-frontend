@@ -4,11 +4,20 @@ import { DxpLuigiContextService } from '@dxp/ngx-core/luigi'
 import { Observable, combineLatest, first, map, mergeMap } from 'rxjs'
 import { CREATE_JENKINS_PIPELINE, DELETE_JENKINS_PIPELINE, GET_JENKINS_PIPELINE } from './queries'
 import { DeletionPolicy } from 'src/app/enums'
-import { CreateJenkinsPipelineMutation, CreateJenkinsPipelineMutationVariables, DeleteJenkinsPipelineMutation, GetJenkinsPipelineQuery, GetJenkinsPipelineQueryVariables } from 'src/generated/graphql'
+import {
+  CreateJenkinsPipelineMutation,
+  CreateJenkinsPipelineMutationVariables,
+  DeleteJenkinsPipelineMutation,
+  GetJenkinsPipelineQuery,
+  GetJenkinsPipelineQueryVariables,
+} from 'src/generated/graphql'
 
 @Injectable({ providedIn: 'root' })
 export class JenkinsService {
-  constructor(private readonly apiService: BaseAPIService, private readonly luigiService: DxpLuigiContextService) { }
+  constructor(
+    private readonly apiService: BaseAPIService,
+    private readonly luigiService: DxpLuigiContextService,
+  ) {}
 
   createJenkinsPipeline(jenkinsUrl: string, secretPath: string, githubRepositoryResource: string): Observable<string> {
     return combineLatest([this.apiService.apollo(), this.luigiService.contextObservable()]).pipe(
@@ -26,7 +35,7 @@ export class JenkinsService {
             },
           })
           .pipe(map((res) => res.data?.createJenkinsPipeline ?? ''))
-      })
+      }),
     )
   }
 
@@ -37,20 +46,20 @@ export class JenkinsService {
         return client
           .query<GetJenkinsPipelineQuery, GetJenkinsPipelineQueryVariables>({
             query: GET_JENKINS_PIPELINE,
-            fetchPolicy: "no-cache",
+            fetchPolicy: 'no-cache',
             variables: {
               projectId: ctx.context.projectId,
               resourceName: resourceName,
             },
           })
           .pipe(map((res) => res.data?.getJenkinsPipeline ?? null))
-      })
+      }),
     )
   }
 
   deleteJenkinsPipeline(
     resourceName: string,
-    deletionPolicy: DeletionPolicy = DeletionPolicy.ORPHAN
+    deletionPolicy: DeletionPolicy = DeletionPolicy.ORPHAN,
   ): Observable<string> {
     return combineLatest([this.apiService.apollo(), this.luigiService.contextObservable()]).pipe(
       first(),
@@ -66,7 +75,7 @@ export class JenkinsService {
             },
           })
           .pipe(map((res) => res.data?.deleteJenkinsPipeline ?? ''))
-      })
+      }),
     )
   }
 }

@@ -5,12 +5,22 @@ import { Observable, combineLatest, of } from 'rxjs'
 import { DxpLuigiContextService } from '@dxp/ngx-core/luigi'
 import { CREATE_PIPELINE, DELETE_PIPELINE, WATCH_PIPELINE } from './queries'
 import { Pipeline } from 'src/app/types'
-import { CreatePipelineMutation, CreatePipelineMutationVariables, DeletePipelineMutation, DeletePipelineMutationVariables, PipelineType, WatchPipelineSubscription, WatchPipelineSubscriptionVariables } from 'src/generated/graphql'
+import {
+  CreatePipelineMutation,
+  CreatePipelineMutationVariables,
+  DeletePipelineMutation,
+  DeletePipelineMutationVariables,
+  PipelineType,
+  WatchPipelineSubscription,
+  WatchPipelineSubscriptionVariables,
+} from 'src/generated/graphql'
 
 @Injectable({ providedIn: 'root' })
 export class PipelineService {
-  constructor(private readonly apiService: BaseAPIService, private readonly luigiService: DxpLuigiContextService) { }
-
+  constructor(
+    private readonly apiService: BaseAPIService,
+    private readonly luigiService: DxpLuigiContextService,
+  ) {}
 
   createPipeline(pipelineType: PipelineType): Observable<string> {
     return combineLatest([this.apiService.apollo(), this.luigiService.contextObservable()]).pipe(
@@ -26,7 +36,7 @@ export class PipelineService {
             },
           })
           .pipe(map((res) => res.data?.createPipeline ?? ''))
-      })
+      }),
     )
   }
 
@@ -43,7 +53,7 @@ export class PipelineService {
             },
           })
           .pipe(map((res) => res.data?.deletePipeline ?? ''))
-      })
+      }),
     )
   }
 
@@ -61,9 +71,9 @@ export class PipelineService {
           })
           .pipe(
             map((res) => res.data?.watchPipeline ?? {}),
-            catchError(() => of({}))
+            catchError(() => of({})),
           )
-      })
+      }),
     )
   }
 }

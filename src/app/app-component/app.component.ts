@@ -18,7 +18,10 @@ export class AppComponent {
   contentDensity: ContentDensity = 'compact'
   readonly themeQueryParamName = 'sap-theme'
 
-  constructor(private themingService: ThemingService, private contentDensityService: ContentDensityService) {
+  constructor(
+    private themingService: ThemingService,
+    private contentDensityService: ContentDensityService,
+  ) {
     this.themingService.init()
     this.contentDensityService.contentDensity.next(this.contentDensity)
   }

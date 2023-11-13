@@ -1,69 +1,68 @@
-
 .list-item-selected {
-    background-color: var(--sapList_SelectionBackgroundColor);
+  background-color: var(--sapList_SelectionBackgroundColor);
 }
 
 .list-item-border {
-    border-top: 1px !important;
-    border-color: var(--sapList_BorderColor) !important;
-    border-style: solid !important;
+  border-top: 1px !important;
+  border-color: var(--sapList_BorderColor) !important;
+  border-style: solid !important;
 }
 
 .list-item-border:hover {
-    background: var(--sapList_Hover_Background);
+  background: var(--sapList_Hover_Background);
 }
 
 .status-icon {
-    font-size: 16px;
+  font-size: 16px;
 }
 
 .service {
+  display: flex;
+  width: 100%;
+  align-items: center;
+
+  .name {
     display: flex;
-    width: 100%;
-    align-items: center;
+    flex-direction: column;
 
-    .name {
-        display: flex;
-        flex-direction: column;
-
-        .category {
-            font-size: 16px;
-        }
-
-        .name-details {
-            font-size: 14px;
-            color: var(--sapNeutralColor);
-        }
-
-        .debug-details {
-            font-size: 13px;
-            color: var(--sapNeutralColor);
-        }
+    .category {
+      font-size: 16px;
     }
 
-    .spacer {
-        flex-grow: 1;
+    .name-details {
+      font-size: 14px;
+      color: var(--sapNeutralColor);
     }
 
-    .retry-button {
-        margin-right: 0.5rem;
+    .debug-details {
+      font-size: 13px;
+      color: var(--sapNeutralColor);
     }
+  }
 
-    .details-icon {
-        .icon {
-            margin-right: 1rem;
-            font-size: 20px;
-            color: var(--sapNeutralColor);
-        }
+  .spacer {
+    flex-grow: 1;
+  }
+
+  .retry-button {
+    margin-right: 0.5rem;
+  }
+
+  .details-icon {
+    .icon {
+      margin-right: 1rem;
+      font-size: 20px;
+      color: var(--sapNeutralColor);
     }
+  }
 }
 
 .spacer {
-    flex-grow: 1;
+  flex-grow: 1;
 }
 
 @media only screen and (max-width: 960px) {
-    .hide-on-small-screen {
-        display: none;
-    }
+  .hide-on-small-screen {
+    display: none;
+  }
 }
