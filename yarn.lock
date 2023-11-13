@@ -3176,19 +3176,19 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@fundamental-ngx/platform@npm:0.45.1":
-  version: 0.45.1
-  resolution: "@fundamental-ngx/platform@npm:0.45.1"
+"@fundamental-ngx/platform@npm:0.46.1":
+  version: 0.46.1
+  resolution: "@fundamental-ngx/platform@npm:0.46.1"
   dependencies:
-    "@fundamental-ngx/cdk": 0.45.1
-    "@fundamental-ngx/i18n": 0.45.1
     fast-deep-equal: 3.1.3
     focus-trap: ^7.1.0
     lodash-es: ^4.17.0
     tslib: ^2.0.0
   peerDependencies:
-    "@fundamental-ngx/core": 0.45.1
-  checksum: 97cb797a7245b1d1790313e16ab456fe7db711ff11f921521aab4f302ee8f9fcf8516bd4d07f2e4b2df3556deab2854ce2bb71178c305aefb4bc6f133b501cda
+    "@fundamental-ngx/cdk": 0.46.1
+    "@fundamental-ngx/core": 0.46.1
+    "@fundamental-ngx/i18n": 0.46.1
+  checksum: e75039f89585233a878dbbdee3c1bfe05bba193fe9402a5610ebf55116c4308838dcd6eabdcc52357757c34743d25204038348fe7f997fb79c918093984eacaf
   languageName: node
   linkType: hard
 
@@ -12466,7 +12466,7 @@ __metadata:
     "@dxp/ngx-core": 0.16.25
     "@dynatrace/dtrum-api-types": 1.275.1
     "@fundamental-ngx/core": 0.45.1
-    "@fundamental-ngx/platform": 0.45.1
+    "@fundamental-ngx/platform": 0.46.1
     "@fundamental-styles/common-css": 0.30.2
     "@graphql-codegen/cli": 5.0.0
     "@graphql-codegen/typescript": ^4.0.1
