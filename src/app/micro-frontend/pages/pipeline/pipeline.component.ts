@@ -36,7 +36,7 @@ type Error = {
   selector: 'app-pipeline',
   templateUrl: './pipeline.component.html',
   standalone: true,
-  styleUrls: ['./pipeline.component.css'],
+  styleUrls: ['./pipeline.component.scss'],
   imports: [
     CommonModule,
     FundamentalNgxCoreModule,
@@ -93,7 +93,7 @@ export class PipelineComponent implements OnInit, OnDestroy {
     private readonly messageBoxService: MessageBoxService,
     private readonly luigiDialogUtil: LuigiDialogUtil,
     readonly debugModeService: DebugModeService,
-    private readonly sharedResourceDataService: SharedDataService,
+    private readonly sharedResourceDataService: SharedDataService
   ) {}
 
   get showOpenPipelineURL(): boolean {
@@ -111,7 +111,7 @@ export class PipelineComponent implements OnInit, OnDestroy {
 
     this.isGithubActionsEnabledAlready$ = this.api.githubActionsService.checkGithubActionsEnablement(
       this.githubMetadata.githubInstance,
-      this.githubMetadata.githubOrgName,
+      this.githubMetadata.githubOrgName
     )
 
     this.pipelineSubscription = this.pipeline$.subscribe(async (pipeline) => {
@@ -123,7 +123,7 @@ export class PipelineComponent implements OnInit, OnDestroy {
       if (pipeline?.resourceRefs) {
         // if true then it means that the Github Actions is enabled from the same component
         this.isGithubActionsEnabledInSameComponent.set(
-          pipeline.resourceRefs.some((ref) => ref.kind === Kinds.GITHUB_ACTION),
+          pipeline.resourceRefs.some((ref) => ref.kind === Kinds.GITHUB_ACTION)
         )
 
         for (const ref of pipeline.resourceRefs) {
@@ -207,8 +207,8 @@ export class PipelineComponent implements OnInit, OnDestroy {
             value: luigiContext.context.githubToolsToken as string,
             domain: 'github.tools.sap',
           }
-        }),
-      ),
+        })
+      )
     )
 
     if (!token?.value || !this.githubMetadata.githubRepoUrl) {
@@ -235,7 +235,7 @@ export class PipelineComponent implements OnInit, OnDestroy {
   openFeedback() {
     window.open(
       'https://sapit-home-prod-004.launchpad.cfapps.eu10.hana.ondemand.com/site#feedbackservice-Display&/topic/cc5045ed-6c4e-4e7b-a18d-a0b377faf593/createFeedback',
-      '_blank',
+      '_blank'
     )
   }
 

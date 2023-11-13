@@ -24,7 +24,7 @@
             "outputPath": "dist/pipeline-ui",
             "index": "src/index.html",
             "main": "src/main.ts",
-            "polyfills": "src/polyfills.ts",
+            "polyfills": ["zone.js", "@angular/localize/init"],
             "tsConfig": "tsconfig.app.json",
             "aot": true,
             "assets": [

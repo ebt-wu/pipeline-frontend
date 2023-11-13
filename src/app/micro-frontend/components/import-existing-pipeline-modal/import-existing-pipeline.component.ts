@@ -7,7 +7,7 @@ import { FundamentalNgxCoreModule } from '@fundamental-ngx/core'
   standalone: true,
   selector: 'import-existing-pipeline-modal',
   templateUrl: 'import-existing-pipeline.component.html',
-  styleUrls: ['import-existing-pipeline.component.css'],
+  styleUrls: ['import-existing-pipeline.component.scss'],
   imports: [CommonModule, FundamentalNgxCoreModule],
 })
 export class ImportExistingPipelineModal {
