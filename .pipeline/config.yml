@@ -22,7 +22,7 @@ steps:
   shellExecute:
     dockerImage: gcr.io/google.com/cloudsdktool/google-cloud-cli
     sources:
-      - ".pipeline/scripts/gcr-auth.sh"
+      - '.pipeline/scripts/gcr-auth.sh'
     vaultCredentialPath: 'gcr'
     vaultCredentialKeys: ['json_key']
     vaultCredentialEnvPrefix: 'GCP_'

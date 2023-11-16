@@ -17,7 +17,13 @@
     "resolveJsonModule": true,
     "lib": ["ES2022", "dom", "esnext.asynciterable"],
     "allowSyntheticDefaultImports": true,
-    "useDefineForClassFields": false
+    "useDefineForClassFields": false,
+    "paths": {
+      "@generated/*": ["projects/ui/src/generated/*"],
+      "@types": ["projects/ui/src/app/types"],
+      "@enums": ["projects/ui/src/app/enums"],
+      "@constants": ["projects/ui/src/app/constants"]
+    }
   },
   "angularCompilerOptions": {
     "strictTemplates": true

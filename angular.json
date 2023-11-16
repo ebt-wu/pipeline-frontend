@@ -3,17 +3,24 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "pipeline-ui": {
+    "ui": {
       "projectType": "application",
-      "schematics": {},
-      "root": "",
-      "sourceRoot": "src",
+      "schematics": {
+        "@schematics/angular:component": {
+          "style": "sass"
+        },
+        "@schematics/angular:application": {
+          "strict": true
+        }
+      },
+      "root": "projects/ui",
+      "sourceRoot": "projects/ui/src",
       "prefix": "app",
       "i18n": {
         "sourceLocale": "en-US",
         "locales": {
-          "en": "src/locale/messages.xlf",
-          "de": "src/locale/messages.de.xlf"
+          "en": "projects/ui/src/locale/messages.xlf",
+          "de": "projects/ui/src/locale/messages.de.xlf"
         }
       },
       "architect": {
@@ -21,15 +28,15 @@
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
             "localize": ["en-US", "de"],
-            "outputPath": "dist/pipeline-ui",
-            "index": "src/index.html",
-            "main": "src/main.ts",
-            "polyfills": ["zone.js", "@angular/localize/init"],
-            "tsConfig": "tsconfig.app.json",
+            "outputPath": "dist/ui",
+            "index": "projects/ui/src/index.html",
+            "main": "projects/ui/src/main.ts",
+            "polyfills": "projects/ui/src/polyfills.ts",
+            "tsConfig": "projects/ui/tsconfig.app.json",
             "aot": true,
             "assets": [
-              "src/favicon.ico",
-              "src/assets",
+              "projects/ui/src/favicon.ico",
+              "projects/ui/src/assets",
               {
                 "glob": "**/css_variables.css",
                 "input": "./node_modules/@sap-theming/theming-base-content/content/Base/baseLib/",
@@ -42,15 +49,15 @@
               }
             ],
             "styles": [
-              "src/styles.css",
+              "projects/ui/src/styles.css",
               "node_modules/fundamental-styles/dist/icon.css",
               {
-                "input": "src/theming/sap_fiori_3_fonts.css",
+                "input": "projects/ui/src/theming/sap_fiori_3_fonts.css",
                 "inject": false,
                 "bundleName": "sap_fiori_3_fonts"
               },
               {
-                "input": "src/theming/sap_horizon_fonts.css",
+                "input": "projects/ui/src/theming/sap_horizon_fonts.css",
                 "inject": false,
                 "bundleName": "sap_horizon_fonts"
               }
@@ -62,8 +69,8 @@
             "production": {
               "fileReplacements": [
                 {
-                  "replace": "src/environments/environment.ts",
-                  "with": "src/environments/environment.prod.ts"
+                  "replace": "projects/ui/src/environments/environment.ts",
+                  "with": "projects/ui/src/environments/environment.prod.ts"
                 }
               ],
               "optimization": true,
@@ -89,8 +96,8 @@
             "local": {
               "fileReplacements": [
                 {
-                  "replace": "src/environments/environment.ts",
-                  "with": "src/environments/environment.local.ts"
+                  "replace": "projects/ui/src/environments/environment.ts",
+                  "with": "projects/ui/src/environments/environment.local.ts"
                 }
               ],
               "buildOptimizer": false,
@@ -104,8 +111,8 @@
             "development": {
               "fileReplacements": [
                 {
-                  "replace": "src/environments/environment.ts",
-                  "with": "src/environments/environment.development.ts"
+                  "replace": "projects/ui/src/environments/environment.ts",
+                  "with": "projects/ui/src/environments/environment.development.ts"
                 }
               ],
               "buildOptimizer": false,
@@ -127,27 +134,27 @@
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
           "options": {
-            "browserTarget": "pipeline-ui:build"
+            "browserTarget": "ui:build"
           },
           "defaultConfiguration": "development",
           "configurations": {
             "production": {
-              "browserTarget": "pipeline-ui:production"
+              "browserTarget": "ui:production"
             },
             "development": {
-              "browserTarget": "pipeline-ui:build:development"
+              "browserTarget": "ui:build:development"
             },
             "local": {
-              "browserTarget": "pipeline-ui:build:local"
+              "browserTarget": "ui:build:local"
             },
             "e2e-test": {
-              "browserTarget": "pipeline-ui:build:e2e-test"
+              "browserTarget": "ui:build:e2e-test"
             },
             "de": {
-              "browserTarget": "pipeline-ui:build:de"
+              "browserTarget": "ui:build:de"
             },
             "en": {
-              "browserTarget": "pipeline-ui:build:en"
+              "browserTarget": "ui:build:en"
             }
           }
         },
@@ -160,7 +167,7 @@
         "lint": {
           "builder": "@angular-eslint/builder:lint",
           "options": {
-            "lintFilePatterns": ["src/**/*.ts", "src/**/*.html"]
+            "lintFilePatterns": ["projects/ui/src/**/*.ts", "projects/ui/src/**/*.html"]
           }
         }
       }

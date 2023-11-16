@@ -1,0 +1,244 @@
+/* 
+* We need to overwrite the column layout border and background here to keep our UI look.
+* Related PR: https://github.com/SAP/fundamental-styles/pull/4485/files
+*/
+.variable-overwrites {
+  --fdFlexibleColumnLayout_Border: none;
+  --fdFlexibleColumnLayout_Background_Solid: transparent;
+}
+
+.ci-cd-header {
+  margin: 0.1rem 0.5rem 0.1rem 0.1rem;
+
+  .header-content {
+    display: flex;
+    align-items: center;
+  }
+
+  .header {
+    padding: 0.75rem 1.5rem;
+
+    .header-text {
+      font-size: 1.5rem;
+      margin: 1rem;
+    }
+  }
+
+  .header-debug-mode {
+    display: flex;
+    flex-direction: column;
+    color: var(--sapNeutralColor);
+  }
+
+  .header-debug-text {
+    font-size: var(--sapFontSmallSize);
+  }
+
+  .header-buttons {
+    margin-left: auto !important;
+  }
+
+  .header-button {
+    margin-left: 0.5rem;
+    margin-right: 1rem !important;
+  }
+}
+
+.pipeline-container {
+  display: flex;
+  flex-direction: column;
+  max-width: 50rem;
+  padding: 0.5rem;
+
+  .pipeline-header {
+    display: flex;
+    align-items: end;
+    gap: 0.5rem;
+  }
+
+  .heading {
+    margin-bottom: 1rem;
+    margin-top: 2rem;
+    margin-left: 0.5rem;
+    font-size: 18px;
+  }
+
+  .pull-requests-message {
+    margin-top: 0.5rem;
+  }
+}
+
+fd-card-content {
+  padding: 1rem;
+}
+
+.stage-card {
+  margin-top: 1rem;
+
+  .card-content-padding {
+    padding: 0;
+  }
+
+  .build-stage-padding {
+    padding: 1rem;
+  }
+
+  .card-content {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+
+    .icons {
+      height: 4rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+
+      .icon {
+        margin-left: 1rem;
+        margin-right: 0.2rem;
+        font-size: 20px;
+        color: var(--sapNeutralColor);
+      }
+    }
+
+    .card-content-padding {
+      padding: 0;
+    }
+
+    .card-description {
+      display: flex;
+      flex-direction: column;
+
+      .card-description-build {
+        display: flex;
+        flex-direction: row;
+        gap: 0.5rem;
+        align-items: center;
+      }
+
+      .disabled-headline {
+        color: var(--sapAccentColor10);
+      }
+
+      .stage-setup-header {
+        font-size: 1.1rem !important;
+      }
+    }
+
+    .card-description h1 {
+      margin: 0;
+      font-size: 1rem;
+    }
+
+    .card-description p {
+      margin: 0;
+      color: var(--sapNeutralColor);
+    }
+  }
+
+  .list-item-selected {
+    background-color: var(--sapList_SelectionBackgroundColor);
+  }
+
+  .list-item-border {
+    border-top: 1px !important;
+    border-color: var(--sapList_BorderColor) !important;
+    border-style: solid !important;
+  }
+
+  .list-item-border:hover {
+    background: var(--sapList_Hover_Background);
+  }
+
+  .status-icon {
+    font-size: 16px;
+  }
+
+  .coming-soon-stage {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .single-services-stage {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+}
+
+fd-info-label {
+  text-transform: uppercase;
+}
+
+.skeleton-text {
+  padding: 20px;
+}
+
+.skeleton-top-margin {
+  margin-top: 1rem;
+}
+
+.spacer {
+  flex-grow: 1;
+}
+
+.disabled {
+  background-color: transparent;
+  box-shadow: none !important;
+  border: 1px solid var(--sapObjectHeader_BorderColor);
+}
+
+.single-services {
+  margin-top: 2rem;
+}
+
+.github-actions-single-service {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  .card-content {
+    gap: 1rem;
+    margin: 0.5rem;
+    display: flex;
+    align-items: center;
+
+    .card-description {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .card-header {
+      margin: 0;
+      font-size: 1rem;
+    }
+  }
+
+  .card-content p {
+    font-size: 1rem;
+    margin: 0;
+    color: var(--sapNeutralColor);
+    font-size: 0.8rem;
+  }
+  .card-content-github-actions {
+    display: flex;
+    flex-direction: row;
+    gap: 0.5rem;
+    .card-content-label {
+      margin-top: 6px;
+    }
+  }
+}
+
+.github-actions-result {
+  padding: 0;
+}
+
+@media only screen and (max-width: 960px) {
+  .hide-on-small-screen {
+    display: none;
+  }
+}
