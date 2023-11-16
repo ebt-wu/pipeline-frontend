@@ -36,7 +36,7 @@ type Error = {
   selector: 'app-pipeline',
   templateUrl: './pipeline.component.html',
   standalone: true,
-  styleUrls: ['./pipeline.component.css'],
+  styleUrls: ['./pipeline.component.scss'],
   imports: [
     CommonModule,
     FundamentalNgxCoreModule,

@@ -9,7 +9,7 @@
     "preinstall": "npx only-allow yarn",
     "start:ui": "ng serve ui",
     "start:ui-local": "ng serve ui --configuration=local",
-    "build": "ng build ui --configuration production --output-path=dist --stats-json ",
+    "build": "ng build ui --configuration production --localize --output-path=dist --stats-json ",
     "test": "yarn test:unit",
     "lint": "ng lint",
     "lint:ui": "ng lint ui",
