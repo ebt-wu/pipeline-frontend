@@ -34,7 +34,7 @@ jobs:
     needs: [createVersion, publishVersion]
     uses: dxp/.github/.github/workflows/update-stack.yaml@main
     with:
-      stackRepo: hyperspace/automaticd-stack
+      stackRepo: hyperspace/ci-cd-setup-stack
       stackRepoBranch: dev
       componentVersionKey: pipelineFrontendChart
       version: ${{ needs.createVersion.outputs.version }}
