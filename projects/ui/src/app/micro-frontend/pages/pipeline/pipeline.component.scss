@@ -161,12 +161,6 @@ fd-card-content {
     justify-content: space-between;
     align-items: center;
   }
-
-  .single-services-stage {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-  }
 }
 
 fd-info-label {
@@ -191,11 +185,17 @@ fd-info-label {
   border: 1px solid var(--sapObjectHeader_BorderColor);
 }
 
-.single-services {
-  margin-top: 2rem;
+.automate-workflows-header {
+
+  h3 {
+    margin: 2rem 0 0 0;
+  }
+  p {
+    margin: 0 0 1.5rem 0;
+  }
 }
 
-.github-actions-single-service {
+.github-actions-automation-workflows {
   display: flex;
   justify-content: space-between;
   align-items: center;

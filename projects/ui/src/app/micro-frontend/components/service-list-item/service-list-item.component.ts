@@ -26,6 +26,7 @@ export class ServiceListItemComponent {
   @Input() resourceRef: ResourceRef // Change the type to match your data structure
   @Input() activeTile: string
   @Input() localLayout: string
+  @Input() inProgressMsg: string
 
   kindName = KindName
   kindCategory = KindCategory

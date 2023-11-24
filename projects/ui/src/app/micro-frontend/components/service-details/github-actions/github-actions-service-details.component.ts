@@ -30,7 +30,7 @@ export class GithubActionsServiceDetailsComponent implements OnInit {
 
   openDocumentation() {
     window.open(
-      'https://pages.github.tools.sap/hyperspace/cicd-setup-documentation/use-cases/get-access-to-github-actions.html',
+      'https://pages.github.tools.sap/hyperspace/cicd-setup-documentation/use-cases/enable-github-actions.html',
       '_blank',
     )
   }

@@ -173,13 +173,16 @@
               </div>
             </fd-card-content>
           </fd-card>
-          <h3 class="single-services">Single Services</h3>
+          <div class="automate-workflows-header">
+            <h3>Automate Workflows</h3>
+            <p>Execute different tasks beyond your Build, Validate, Deploy pipeline.</p>
+          </div>
           <ng-container
             *ngIf="!pendingExtensionClass() && isGithubActionsEnabledAlready$ | async as gha; else loadingContent">
             <!--the below card will be shown if the Github Actions is already enabled from an another component.-->
             <fd-card cardType="list" *ngIf="gha.isAlreadyManaged; else notEnabled">
               <fd-card-content *ngIf="!isGithubActionsEnabledInSameComponent()">
-                <div class="github-actions-single-service">
+                <div class="github-actions-automation-workflows">
                   <div class="card-content">
                     <span
                       fd-object-status
@@ -216,8 +219,9 @@
             </fd-card>
             <ng-template #notEnabled>
               <fd-card *ngIf="!isGithubActionsEnabledInSameComponent()" cardType="list">
+                <!--The GitHub Actions is not yet enabled for the corresponding GitHub organization.-->
                 <fd-card-content>
-                  <div class="github-actions-single-service">
+                  <div class="github-actions-automation-workflows">
                     <div class="card-content">
                       <fd-avatar
                         size="s"
@@ -242,8 +246,8 @@
                     <button
                       class="card-content"
                       fd-button
-                      label="Set Up"
-                      fdType="emphasized"
+                      label="Enable"
+                      fdType="standard"
                       (click)="openGithubActionWizard($event)"></button>
                   </div>
                 </fd-card-content>
@@ -256,6 +260,9 @@
                   <div *ngIf="resourceRef.kind === 'GithubAction'">
                     <app-service-list-item
                       [resourceRef]="resourceRef"
+                      [inProgressMsg]="
+                        'We are setting up GitHub Actions and runners for you. This might take 3-5 minutes.'
+                      "
                       [activeTile]="activeTile"
                       [localLayout]="localLayout"
                       (openDetailsEvent)="openDetails($event)"></app-service-list-item>

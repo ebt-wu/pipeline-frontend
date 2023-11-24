@@ -56,6 +56,14 @@
         <div class="details-icon">
           <fd-icon *ngIf="resourceRef.status === ServiceStatus.CREATED" glyph="slim-arrow-right" class="icon"></fd-icon>
         </div>
+        <ng-container
+          *ngIf="
+            resourceRef.status === ServiceStatus.PENDING_CREATION || resourceRef.status === ServiceStatus.UN_KNOWN
+          ">
+          <p>
+            <i>{{ inProgressMsg }}</i>
+          </p>
+        </ng-container>
       </div>
     </a>
   </li>
