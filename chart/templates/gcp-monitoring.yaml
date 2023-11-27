@@ -1,1 +1,0 @@
-{{- include "helm-dxp.monitoring.probes.site-uptime" . }}
