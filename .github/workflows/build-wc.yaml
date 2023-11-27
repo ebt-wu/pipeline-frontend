@@ -1,11 +1,9 @@
-name: Build Packages Workflow
+name: Build WebComponent Workflow
 on:
-  workflow_dispatch:
-
   push:
     paths:
-      - '.github/workflows/build-packages.yaml'
-      - 'projects/ui/**'
+      - '.github/workflows/build-wc.yaml'
+      - 'projects/webcomponent/**'
       - 'yarn.lock'
       - 'package.json'
 
@@ -14,7 +12,10 @@ jobs:
     uses: dxp/.github/.github/workflows/job--ng-build.yaml@main
     secrets: inherit
     with:
-      artifact: pipeline-frontend
+      artifact: pipeline-frontend-wc
+      build_command: 'yarn build:wc'
+      test_command: 'yarn test:wc:cov'
+      release_prefix: wc-
       lint: false
 
   updateStack:
@@ -22,9 +23,9 @@ jobs:
     if: ${{ github.ref == 'refs/heads/main' }}
     uses: dxp/.github/.github/workflows/update-stack.yaml@main
     with:
-      stackRepo: hyperspace/ci-cd-setup-stack
+      stackRepo: hyperspace/automaticd-stack
       stackRepoBranch: dev
-      componentVersionKey: pipelineFrontend
-      version: ${{ needs.buildPackages.outputs.version }}
+      componentVersionKey: pipelineFrontendWebcomponent
+      version: wc-${{ needs.buildPackages.outputs.version }}
     secrets:
       GH_ACCESS_TOKEN: ${{ secrets.GH_HYPERSPACE_USER_TOKEN }}

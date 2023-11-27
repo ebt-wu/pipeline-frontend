@@ -1,0 +1,41 @@
+{
+  "_version": "3.0",
+  "payload": {
+    "visualizations": {
+      "LuigiNavConfig": {
+        "vizType": "sap.luigi.node",
+        "vizConfig": {
+          "nodes": [
+            {
+              "entityType": "project.overview::compound",
+              "urlSuffix": "/main.js#cicd-project-promotion-card",
+              "dxpOrder": 2,
+              "layoutConfig": {
+                "slot": "content"
+              },
+              "webcomponent": {
+                "selfRegistered": true
+              }
+            }
+          ]
+        }
+      }
+    },
+    "targetAppConfig": {
+      "_version": "1.13.0",
+      "sap.integration": {
+        "navMode": "inplace",
+        "urlTemplateId": "urltemplate.url",
+        "urlTemplateParams": {
+          "query": {}
+        }
+      }
+    }
+  },
+  "texts": [
+    {
+      "locale": "",
+      "textDictionary": {}
+    }
+  ]
+}

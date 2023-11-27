@@ -13,9 +13,12 @@
 1. Clone the repository
 2. Run `./setup.sh`
 3. Run `yarn` in the project folder to install the dependencies
-4. Run `yarn start` in the project folder to start the application
-5. Run `yarn start-local` in the project folder to start the application with the local pipeline-backend
-6. Visit https://portal.d1.hyperspace.tools.sap navigate to a component and the CI/CD tab to view the MFE within DXP
+4. Run one of the following commands in the project folder
+   - `yarn start:ui` to start the application
+   - `yarn start:ui-local` to start the application with the local pipeline-backend
+   - `yarn start:wc` to start the webcomponents (cards, dialogs on component and pipeline landing pages)
+   - `yarn start:wc-local` to start the webcomponents (cards, dialogs on component and pipeline landing pages) with the local pipeline backend
+5. Visit https://portal.d1.hyperspace.tools.sap navigate to a component and the CI/CD tab to view the MFE within DXP
 
 ### FAQ
 

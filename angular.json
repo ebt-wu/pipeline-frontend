@@ -171,6 +171,80 @@
           }
         }
       }
+    },
+    "wc": {
+      "projectType": "application",
+      "schematics": {
+        "@schematics/angular:component": {
+          "style": "sass"
+        },
+        "@schematics/angular:application": {
+          "strict": true
+        }
+      },
+      "root": "projects/webcomponent",
+      "sourceRoot": "projects/webcomponent/src",
+      "prefix": "app",
+      "architect": {
+        "build": {
+          "builder": "ngx-build-plus:browser",
+          "options": {
+            "outputPath": "dist/wc",
+            "index": "",
+            "main": "projects/webcomponent/src/main.ts",
+            "polyfills": "projects/webcomponent/src/polyfills.ts",
+            "tsConfig": "projects/webcomponent/tsconfig.app.json",
+            "inlineStyleLanguage": "sass",
+            "assets": ["projects/webcomponent/src/assets"],
+            "scripts": []
+          },
+          "configurations": {
+            "production": {
+              "budgets": [
+                {
+                  "type": "initial",
+                  "maximumWarning": "1mb",
+                  "maximumError": "2mb"
+                }
+              ],
+              "fileReplacements": [
+                {
+                  "replace": "projects/webcomponent/src/environments/environment.ts",
+                  "with": "projects/webcomponent/src/environments/environment.prod.ts"
+                }
+              ],
+              "outputHashing": "all"
+            },
+            "development": {
+              "buildOptimizer": false,
+              "optimization": false,
+              "vendorChunk": true,
+              "extractLicenses": false,
+              "sourceMap": true,
+              "namedChunks": true
+            }
+          },
+          "defaultConfiguration": "production"
+        },
+        "serve": {
+          "builder": "ngx-build-plus:dev-server",
+          "configurations": {
+            "production": {
+              "browserTarget": "wc:build:production"
+            },
+            "development": {
+              "browserTarget": "wc:build:development"
+            }
+          },
+          "defaultConfiguration": "development"
+        },
+        "lint": {
+          "builder": "@angular-eslint/builder:lint",
+          "options": {
+            "lintFilePatterns": ["projects/webcomponent/**/*.ts", "projects/webcomponent/**/*.html"]
+          }
+        }
+      }
     }
   },
   "cli": {

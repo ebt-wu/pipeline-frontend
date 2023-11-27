@@ -1,0 +1,18 @@
+<fd-card>
+  <fd-card-header [interactive]="false">
+    <h2 fd-card-title>{{ headerText }}</h2>
+  </fd-card-header>
+  <fd-card-content class="card-content">
+    <figure fd-illustrated-message type="spot" [svgConfig]="rocketConfig">
+      <figcaption fd-illustrated-message-figcaption id="spot-description">
+        <p fd-illustrated-message-title>Effortless CI/CD</p>
+        <p fd-illustrated-message-text>Set up a pipeline or get access to single CI/CD services</p>
+      </figcaption>
+    </figure>
+  </fd-card-content>
+  <fd-card-footer>
+    <div class="footerContent" style="display: flex; justify-content: center; width: 100%">
+      <button fd-button fdType="emphasized" (click)="openGetStartedModal($event)">Set up CI/CD</button>
+    </div>
+  </fd-card-footer>
+</fd-card>
