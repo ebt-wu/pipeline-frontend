@@ -16,6 +16,8 @@ jobs:
     with:
       artifact: pipeline-frontend
       lint: false
+      build_command: 'yarn build:ui'
+      test_command: 'yarn test:ui:cov'
 
   updateStack:
     needs: [buildPackages]
