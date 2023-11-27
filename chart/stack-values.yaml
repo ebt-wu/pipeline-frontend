@@ -6,6 +6,7 @@ domain:
 
 site:
   domain: test-domain
+  wcDomain: test-domain-wc
 
 gcp:
   projectId: 'sap-gcp-dxp-test'

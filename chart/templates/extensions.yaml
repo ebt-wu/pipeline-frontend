@@ -7,7 +7,6 @@ metadata:
   labels:
     dxp.sap.com/hiddenExtension: "true"
 spec:
-  cdmUrl: {{ .Values.protocol }}://{{ .Values.site.domain }}{{ .Values.site.cdmPath }}
   description: Enables hyperspace pipeline management.
   displayName: Pipelines
   supportsDynamicCdmUrls: false
@@ -19,6 +18,7 @@ spec:
   image: "{{ .Files.Get "assets/image.base64.txt" }}"
   cdm:
   - url: {{ .Values.protocol }}://{{ .Values.site.domain }}{{ .Values.site.cdmPath }}
+  - url: {{ .Values.protocol }}://{{ .Values.site.wcDomain }}{{ .Values.site.wcCdmPath }}
   installableScopes:
     - Project
 {{- if .Values.pilot }}
