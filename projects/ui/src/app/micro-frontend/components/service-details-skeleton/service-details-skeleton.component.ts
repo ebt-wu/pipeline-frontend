@@ -216,7 +216,7 @@ The information might be missing in the Hyperspace portal extension backend, Lea
 **Timestamp:** ${new Date()}
 **User:** ${user}
     `,
-      [GitHubIssueLabels.EXTERNAL, GitHubIssueLabels.PORTAL],
+      [GitHubIssueLabels.EXTERNAL],
     )
   }
 

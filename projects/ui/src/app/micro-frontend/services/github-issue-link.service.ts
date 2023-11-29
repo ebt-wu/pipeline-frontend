@@ -6,7 +6,7 @@ export class GitHubIssueLinkService {
 
   getIssueLink(title: string, body: string, labels?: GitHubIssueLabels[]): string {
     const githubUrl = 'https://github.tools.sap'
-    const ghIssueURL = new URL(`${githubUrl}/hyper-pipe/portal/issues/new`)
+    const ghIssueURL = new URL(`${githubUrl}/hyperspace/yggdrasil/issues/new`)
 
     ghIssueURL.searchParams.append('title', `[Portal CI/CD] ${title}`)
     ghIssueURL.searchParams.append('body', body)
@@ -20,7 +20,6 @@ export class GitHubIssueLinkService {
 }
 
 export enum GitHubIssueLabels {
-  BUG = ':clipboard: bug',
-  EXTERNAL = ':alien: external',
-  PORTAL = ':cookie: portal',
+  BUG = 'bug',
+  EXTERNAL = 'external',
 }

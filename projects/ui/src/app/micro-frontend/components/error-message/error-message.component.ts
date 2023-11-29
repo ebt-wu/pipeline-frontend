@@ -52,7 +52,7 @@ ${issueDescription.trim()}
 **Timestamp:** ${new Date()}
 **User ID:** [\`${context.userid}\`](${githubUrl}/${context.userid})
     `,
-      [GitHubIssueLabels.BUG, GitHubIssueLabels.EXTERNAL, GitHubIssueLabels.PORTAL],
+      [GitHubIssueLabels.BUG, GitHubIssueLabels.EXTERNAL],
     )
     window.open(issueURL, '_blank')
   }
