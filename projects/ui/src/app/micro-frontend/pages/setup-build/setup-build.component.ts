@@ -4,7 +4,6 @@ import { Validators } from '@angular/forms'
 import { FormattedTextModule, FormModule, FundamentalNgxCoreModule, RadioModule } from '@fundamental-ngx/core'
 import { FundamentalNgxPlatformModule } from '@fundamental-ngx/platform'
 import {
-  BaseDynamicFormFieldItem,
   DynamicFormItem,
   DynamicFormValue,
   FormGeneratorComponent,
@@ -22,10 +21,7 @@ import { PlatformMessagePopoverModule } from '@fundamental-ngx/platform/message-
 import { PiperService } from '../../services/piper.service'
 import { PlatformFormGeneratorCustomHeaderElementComponent } from '../../components/form-generator-header/form-generator-header.component'
 import { BuildTool } from '@generated/graphql'
-
-export interface HeaderDynamicFormControl extends BaseDynamicFormFieldItem {
-  type: 'header'
-}
+import { PlatformFormGeneratorCustomInfoBoxComponent } from '../../components/form-generator-info-box/form-generator-info-box.component'
 
 @Component({
   standalone: true,
@@ -54,6 +50,7 @@ export class SetupComponent {
     private readonly piperService: PiperService,
   ) {
     this._formGeneratorService.addComponent(PlatformFormGeneratorCustomHeaderElementComponent, ['header'])
+    this._formGeneratorService.addComponent(PlatformFormGeneratorCustomInfoBoxComponent, ['info'])
   }
 
   @ViewChild(FormGeneratorComponent) formGenerator: FormGeneratorComponent
@@ -64,7 +61,7 @@ export class SetupComponent {
   formCreated = false
   formValue: DynamicFormValue
 
-  questions: DynamicFormItem<{}, HeaderDynamicFormControl>[] = [
+  questions: DynamicFormItem[] = [
     {
       type: 'header',
       name: 'buildToolHeader',
@@ -166,7 +163,7 @@ export class SetupComponent {
       type: 'radio',
       name: 'orchestrator',
       message: '',
-      choices: [Orchestrators.JENKINS],
+      choices: [Orchestrators.JENKINS, Orchestrators.GITHUB_ACTIONS],
       default: Orchestrators.JENKINS,
       guiOptions: {
         inline: true,
@@ -186,6 +183,9 @@ export class SetupComponent {
           },
         },
       },
+      when: (formValue: any) => {
+        return formValue.orchestrator === Orchestrators.JENKINS
+      },
     },
     {
       type: 'input',
@@ -200,6 +200,9 @@ export class SetupComponent {
         return regex.test(value) ? null : 'Please provide a valid URL'
       },
       validators: [Validators.required],
+      when: (formValue: any) => {
+        return formValue.orchestrator === Orchestrators.JENKINS
+      },
     },
     {
       type: 'header',
@@ -214,6 +217,9 @@ export class SetupComponent {
           },
         },
       },
+      when: (formValue: any) => {
+        return formValue.orchestrator === Orchestrators.JENKINS
+      },
     },
     {
       type: 'radio',
@@ -227,7 +233,10 @@ export class SetupComponent {
         return CredentialTypes.NEW
       },
       choices: [CredentialTypes.EXISTING, CredentialTypes.NEW],
-      when: async () => {
+      when: async (formValue) => {
+        if (formValue.orchestrator != Orchestrators.JENKINS) {
+          return false
+        }
         const secrets = await lastValueFrom(this.secretService.getPipelineSecrets())
         return secrets.some((value) => value.includes('jenkins'))
       },
@@ -242,6 +251,9 @@ export class SetupComponent {
       message: 'User ID (a technical user is preferred)',
       placeholder: 'Enter ID',
       when: (formValue: any) => {
+        if (formValue.orchestrator != Orchestrators.JENKINS) {
+          return false
+        }
         return formValue.jenkinsCredentialType === CredentialTypes.NEW
       },
       validators: [Validators.required],
@@ -253,6 +265,9 @@ export class SetupComponent {
       message: 'Token with overall (administer) permissions.',
       placeholder: 'Enter Token',
       when: (formValue: any) => {
+        if (formValue.orchestrator != Orchestrators.JENKINS) {
+          return false
+        }
         return formValue.jenkinsCredentialType === CredentialTypes.NEW
       },
       validators: [Validators.required],
@@ -272,108 +287,43 @@ export class SetupComponent {
       },
       validators: [Validators.required],
       when: (formValue: any) => {
+        if (formValue.orchestrator != Orchestrators.JENKINS) {
+          return false
+        }
         return formValue.jenkinsCredentialType === CredentialTypes.EXISTING
       },
     },
     {
       type: 'header',
-      name: 'githubHeader',
+      name: 'githubHeaderJenkins',
       message: '',
       guiOptions: {
         additionalData: {
           header: 'GitHub credentials',
           subheader: async () => {
-            const context = (await this.luigiService.getContextAsync()) as any
-            const repoName = context.entityContext?.component?.annotations['github.dxp.sap.com/repo-name'] ?? ''
-            const orgName = context.entityContext?.component?.annotations['github.dxp.sap.com/login'] ?? ''
-            const repoUrl = context.entityContext?.component?.annotations['github.dxp.sap.com/repo-url'] ?? ''
-            return `Needed to configure your repository <a href="${repoUrl}" target="_blank">${orgName}/${repoName}</a>
-            for your pipeline. Please use a <a href="https://github.tools.sap/settings/tokens/new" target="_blank">personal access token</a> with read and write access to your repository.`
+            const { githubRepoUrl, githubOrgName, githubRepoName } = await this.githubService.getGithubMetadata()
+            return `Needed to configure your pipeline in the <a href="${githubRepoUrl}" target="_blank">${githubOrgName}/${githubRepoName}</a> repository.`
           },
         },
       },
+      when: (formValue) => formValue.orchestrator === Orchestrators.JENKINS,
     },
     {
-      type: 'radio',
-      name: 'githubCredentialType',
+      type: 'header',
+      name: 'githubHeaderGithubActions',
       message: '',
-      default: async () => {
-        const secrets = await lastValueFrom(this.secretService.getPipelineSecrets())
-        if (secrets.some((value) => value.includes('github'))) {
-          return CredentialTypes.EXISTING
-        }
-        return CredentialTypes.NEW
-      },
-      choices: [CredentialTypes.EXISTING, CredentialTypes.NEW],
-      when: async () => {
-        const secrets = await lastValueFrom(this.secretService.getPipelineSecrets())
-        return secrets.some((value) => value.includes('github'))
-      },
       guiOptions: {
-        inline: true,
+        additionalData: {
+          header: 'GitHub credentials',
+          subheader: async () => {
+            const { githubRepoUrl, githubOrgName, githubRepoName } = await this.githubService.getGithubMetadata()
+            return `Needed to enable GitHub Actions for the ${githubOrgName} organization, get the organization level runners to use them and configure your pipeline in the <a href="${githubRepoUrl}" target="_blank">${githubOrgName}/${githubRepoName}</a> GitHub repository`
+          },
+        },
       },
-      validators: [Validators.required],
+      when: (formValue) => formValue.orchestrator === Orchestrators.GITHUB_ACTIONS,
     },
-    {
-      type: 'input',
-      name: 'githubUserID',
-      message: 'User ID (a technical user is preferred)',
-      placeholder: 'Enter ID',
-      when: (formValue: any) => {
-        return formValue.githubCredentialType === CredentialTypes.NEW
-      },
-      validators: [Validators.required],
-    },
-    {
-      type: 'password',
-      controlType: 'password',
-      name: 'githubToken',
-      message: 'Personal Access Token (PAT)',
-      placeholder: 'Enter Token',
-      validators: [Validators.required],
-      when: (formValue: any) => {
-        return formValue.githubCredentialType === CredentialTypes.NEW
-      },
-      validate: async (value: string) => {
-        const context = (await this.luigiService.getContextAsync()) as any
-        const repoUrl = context.entityContext?.component?.annotations['github.dxp.sap.com/repo-url'] ?? null
-
-        try {
-          const url = new URL(repoUrl)
-          const repoResp = await fetch(`${url.origin}/api/v3`, {
-            headers: {
-              Authorization: `Bearer ${value}`,
-            },
-          })
-
-          if (repoResp.status != 200) {
-            return 'Please provide a valid token.'
-          }
-        } catch (e) {
-          return `Could not validate token: ${e.message}`
-        }
-
-        return null
-      },
-    },
-    {
-      type: 'list',
-      name: 'githubSelectCredential',
-      message: 'Credential',
-      placeholder: 'Select Credential',
-      default: async () => {
-        const secrets = await lastValueFrom(this.secretService.getPipelineSecrets())
-        return secrets.filter((value) => value.includes('github'))[0] ?? null
-      },
-      choices: async () => {
-        const secrets = await lastValueFrom(this.secretService.getPipelineSecrets())
-        return secrets.filter((value) => value.includes('github'))
-      },
-      validators: [Validators.required],
-      when: (formValue: any) => {
-        return formValue.githubCredentialType === CredentialTypes.EXISTING
-      },
-    },
+    ...this.githubService.GITHUB_CREDENTIAL_FORM,
   ]
 
   onFormCreated(): void {
@@ -397,6 +347,10 @@ export class SetupComponent {
       let jenkinsPath: string
       let githubPath: string
 
+      if (value.orchestrator === Orchestrators.GITHUB_ACTIONS) {
+        throw new Error('Github Actions is not available yet')
+      }
+
       // jenkins
       if (value.jenkinsCredentialType == CredentialTypes.NEW) {
         const secretData: SecretData[] = [
@@ -417,15 +371,22 @@ export class SetupComponent {
 
       // github
       if (value.githubCredentialType == CredentialTypes.NEW) {
+        const { githubInstance } = await this.githubService.getGithubMetadata()
+        const userQueryResp = await fetch(`${githubInstance}/api/v3/user`, {
+          headers: {
+            Authorization: `Bearer ${value.githubToken}`,
+          },
+        })
+        const user = (await userQueryResp.json())?.login
         const secretData: SecretData[] = [
-          { key: 'username', value: value.githubUserID },
+          { key: 'username', value: user },
           { key: 'access_token', value: value.githubToken },
         ]
         githubPath = await this.storeCredential(
           // replace the dots in the hostname with dashes to avoid issues with vault path
           `${githubRepoUrl.hostname.replace(/\./g, '-')}`,
           secretData,
-          value.githubUserID,
+          user,
         )
         await firstValueFrom(this.secretService.writeSecret(githubPath, secretData))
       } else if (value.githubCredentialType == CredentialTypes.EXISTING) {

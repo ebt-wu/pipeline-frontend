@@ -15,6 +15,7 @@ import { GithubServiceDetailsComponent } from './components/service-details/gith
 import { JenkinServiceDetailsComponent } from './components/service-details/jenkins/jenkins-service-details.component'
 import { PiperServiceDetailsComponent } from './components/service-details/piper/piper-service-details.component'
 import { StagingServiceServiceDetailsComponent } from './components/service-details/staging-service/staging-service-service-details.component'
+import { PlatformFormGeneratorCustomInfoBoxComponent } from './components/form-generator-info-box/form-generator-info-box.component'
 
 @NgModule({
   providers: [ContentDensityService, ThemingService],
@@ -35,6 +36,7 @@ import { StagingServiceServiceDetailsComponent } from './components/service-deta
     PiperServiceDetailsComponent,
     StagingServiceServiceDetailsComponent,
     PlatformFormGeneratorCustomHeaderElementComponent,
+    PlatformFormGeneratorCustomInfoBoxComponent,
   ],
 })
 export class MicroFrontendModule {}

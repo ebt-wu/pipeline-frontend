@@ -266,7 +266,7 @@ export class PipelineComponent implements OnInit, OnDestroy {
     this.luigiClient
       .linkManager()
       .fromVirtualTreeRoot()
-      .openAsModal('github-actions', { title: 'Enable Github Actions', width: '38rem', height: '28rem' })
+      .openAsModal('github-actions', { title: 'Enable Github Actions', width: '38rem', height: '30rem' })
   }
 
   openPipelineDebugModal(e: Event) {

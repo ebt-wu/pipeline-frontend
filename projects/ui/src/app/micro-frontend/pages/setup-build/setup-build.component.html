@@ -1,25 +1,27 @@
-<div class="setup-build-margin">
-  <error-message
-    title="Setup build could not be completed"
-    [message]="errorMessage()"
-    (onDismiss)="dismissErrorMessage()"
-    *ngIf="errorMessage()"></error-message>
-  <div class="busy-indicator" *ngIf="loading">
-    <fd-busy-indicator [loading]="true" ariaLabel="loading" title="Please Wait"></fd-busy-indicator>
+<div>
+  <div class="setup-build-margin">
+    <error-message
+      title="Setup build could not be completed"
+      [message]="errorMessage()"
+      (onDismiss)="dismissErrorMessage()"
+      *ngIf="errorMessage()"></error-message>
+    <div class="busy-indicator" *ngIf="loading">
+      <fd-busy-indicator [loading]="true" ariaLabel="loading" title="Please Wait"></fd-busy-indicator>
+    </div>
+    <div class="form-margins">
+      <fdp-message-popover-form-wrapper
+        #formGeneratorWrapper
+        [forms]="formGenerator?.formGroup"
+        [formFields]="formGenerator?.formFields">
+        <fdp-form-generator
+          *ngIf="!loading"
+          [formItems]="questions"
+          (formSubmitted)="onFormSubmitted($event)"
+          (formCreated)="onFormCreated()"></fdp-form-generator>
+      </fdp-message-popover-form-wrapper>
+    </div>
   </div>
-  <div class="form-margins">
-    <fdp-message-popover-form-wrapper
-      #formGeneratorWrapper
-      [forms]="formGenerator?.formGroup"
-      [formFields]="formGenerator?.formFields">
-      <fdp-form-generator
-        *ngIf="!loading"
-        [formItems]="questions"
-        (formSubmitted)="onFormSubmitted($event)"
-        (formCreated)="onFormCreated()"></fdp-form-generator>
-    </fdp-message-popover-form-wrapper>
-  </div>
-  <div fd-bar barDesign="floating-footer" class="actions-footer">
+  <div fd-bar barDesign="footer" class="actions-footer">
     <div fd-bar-left>
       <fdp-message-popover id="message-popover" [wrapper]="formGeneratorWrapper"></fdp-message-popover>
     </div>

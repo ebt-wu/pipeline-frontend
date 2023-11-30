@@ -1,0 +1,8 @@
+<ng-container [formGroup]="form">
+  <ng-container [formGroupName]="formGroupName">
+    <div class="info-box">
+      <h3 class="headline">💡 {{ formItem.guiOptions?.additionalData?.header }}</h3>
+      <p class="instructions" *ngIf="instructions" class="instructions" [innerHTML]="instructions | async"></p>
+    </div>
+  </ng-container>
+</ng-container>

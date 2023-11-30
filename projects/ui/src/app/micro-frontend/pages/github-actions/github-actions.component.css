@@ -1,6 +1,7 @@
 .actions-footer {
   position: fixed;
-  margin: 1rem;
+  bottom: 0;
+  width: 100%;
 }
 
 .busy-indicator {
@@ -10,6 +11,13 @@
 
 .footer-buttons-gap {
   gap: 0.5rem;
+}
+
+.description {
+  font-family: var(--sapFontFamily);
+  padding: 1rem;
+  padding-bottom: 0;
+  font-size: var(--sapFontSize);
 }
 
 #message-popover {

@@ -14,7 +14,8 @@
 
 .actions-footer {
   position: fixed;
-  margin: 1rem;
+  bottom: 0;
+  width: 100%;
 }
 
 .footer-buttons-gap {

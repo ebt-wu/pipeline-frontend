@@ -1,0 +1,29 @@
+/* needed for links in subheaders that are injected via [innerHTML] */
+::ng-deep a {
+  color: var(--sapLinkColor);
+  text-decoration: none;
+}
+
+/* needed to enable wrap for the subheaders injected via [innerHTML] */
+::ng-deep p {
+  word-break: normal;
+  white-space: normal;
+}
+
+.info-box {
+  background-color: var(--sapNeutralBackground);
+  border-radius: 1rem;
+  padding: 0.8rem;
+  padding-left: 0;
+  margin-top: 1rem;
+}
+
+.headline {
+  margin: 0;
+  margin-left: 1rem;
+  font-size: 18px;
+}
+
+.instructions {
+  margin: 0;
+}

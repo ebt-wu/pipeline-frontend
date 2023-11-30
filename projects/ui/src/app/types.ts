@@ -5,19 +5,20 @@ export type SetupBuildFormValue = {
   buildTool?: BuildTool
   buildToolHeader?: string
   githubCredentialType?: CredentialTypes
-  githubHeader?: string
+  githubHeaderGithubActions?: void
+  githubHeaderJenkins?: void
   githubSelectCredential?: string
   githubToken?: string
-  githubUserID?: string
   jenkinsCredentialType?: CredentialTypes
-  jenkinsInstanceHeader?: string
-  jenkinsCredentialHeader?: string
+  jenkinsInstanceHeader?: void
+  jenkinsCredentialHeader?: void
   jenkinsSelectCredential?: string
   jenkinsToken?: string
   jenkinsUrl?: string
   jenkinsUserId?: string
   orchestrator?: Orchestrators
-  orchestratorHeaders?: string
+  orchestratorHeader?: void
+  patInfoBox?: void
 }
 
 export type ResourceRef = {
