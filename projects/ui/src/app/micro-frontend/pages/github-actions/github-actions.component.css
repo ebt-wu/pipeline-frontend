@@ -18,6 +18,7 @@
   padding: 1rem;
   padding-bottom: 0;
   font-size: var(--sapFontSize);
+  color: var(--sapField_TextColor);
 }
 
 #message-popover {
