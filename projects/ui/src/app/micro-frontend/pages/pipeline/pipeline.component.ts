@@ -26,6 +26,7 @@ import { SharedDataService } from '../../services/shared-data.service'
 import { ServiceData, ServiceListItemComponent } from '../../components/service-list-item/service-list-item.component'
 import { GithubMetadata } from '../../services/github.service'
 import { CheckGithubActionsEnablementPayload } from '../../../../generated/graphql'
+import { UpgradeBannerComponent } from '../../components/upgrade-banner/upgrade-banner.component'
 
 type Error = {
   title: string
@@ -36,7 +37,7 @@ type Error = {
   selector: 'app-pipeline',
   templateUrl: './pipeline.component.html',
   standalone: true,
-  styleUrls: ['./pipeline.component.scss'],
+  styleUrls: ['./pipeline.component.css'],
   imports: [
     CommonModule,
     FundamentalNgxCoreModule,
@@ -53,6 +54,7 @@ type Error = {
     GithubActionsServiceDetailsComponent,
     ServiceDetailsSkeletonComponent,
     ServiceListItemComponent,
+    UpgradeBannerComponent,
   ],
 })
 export class PipelineComponent implements OnInit, OnDestroy {

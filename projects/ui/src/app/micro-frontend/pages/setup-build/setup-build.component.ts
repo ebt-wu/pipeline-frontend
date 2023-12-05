@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common'
-import { Component, signal, ViewChild } from '@angular/core'
+import { Component, OnDestroy, OnInit, signal, ViewChild } from '@angular/core'
 import { Validators } from '@angular/forms'
 import { FormattedTextModule, FormModule, FundamentalNgxCoreModule, RadioModule } from '@fundamental-ngx/core'
 import { FundamentalNgxPlatformModule } from '@fundamental-ngx/platform'
@@ -12,7 +12,7 @@ import {
 import { DxpLuigiContextService, LuigiClient } from '@dxp/ngx-core/luigi'
 import { CredentialTypes, Languages, Orchestrators } from '@enums'
 import { SecretData, SecretService } from '../../services/secret.service'
-import { firstValueFrom, lastValueFrom, map } from 'rxjs'
+import { firstValueFrom, lastValueFrom, map, Subscription } from 'rxjs'
 import { SetupBuildFormValue } from '@types'
 import { GithubService } from '../../services/github.service'
 import { JenkinsService } from '../../services/jenkins.service'
@@ -22,6 +22,7 @@ import { PiperService } from '../../services/piper.service'
 import { PlatformFormGeneratorCustomHeaderElementComponent } from '../../components/form-generator-header/form-generator-header.component'
 import { BuildTool } from '@generated/graphql'
 import { PlatformFormGeneratorCustomInfoBoxComponent } from '../../components/form-generator-info-box/form-generator-info-box.component'
+import { getNodeParams } from '@luigi-project/client'
 
 @Component({
   standalone: true,
@@ -39,7 +40,7 @@ import { PlatformFormGeneratorCustomInfoBoxComponent } from '../../components/fo
     PlatformMessagePopoverModule,
   ],
 })
-export class SetupComponent {
+export class SetupComponent implements OnInit, OnDestroy {
   constructor(
     private readonly luigiService: DxpLuigiContextService,
     private luigiClient: LuigiClient,
@@ -51,6 +52,23 @@ export class SetupComponent {
   ) {
     this._formGeneratorService.addComponent(PlatformFormGeneratorCustomHeaderElementComponent, ['header'])
     this._formGeneratorService.addComponent(PlatformFormGeneratorCustomInfoBoxComponent, ['info'])
+  }
+
+  private contextSubscription: Subscription
+
+  defaultOrchestrator = Orchestrators.JENKINS
+
+  ngOnInit(): void {
+    this.contextSubscription = this.luigiService.contextObservable().subscribe(() => {
+      const params: { orchestrator?: Orchestrators } = getNodeParams(true)
+      if (params.orchestrator) {
+        this.defaultOrchestrator = params.orchestrator
+      }
+    })
+  }
+
+  ngOnDestroy(): void {
+    this.contextSubscription.unsubscribe()
   }
 
   @ViewChild(FormGeneratorComponent) formGenerator: FormGeneratorComponent
@@ -164,7 +182,9 @@ export class SetupComponent {
       name: 'orchestrator',
       message: '',
       choices: [Orchestrators.JENKINS, Orchestrators.GITHUB_ACTIONS],
-      default: Orchestrators.JENKINS,
+      default: () => {
+        return this.defaultOrchestrator
+      },
       guiOptions: {
         inline: true,
       },

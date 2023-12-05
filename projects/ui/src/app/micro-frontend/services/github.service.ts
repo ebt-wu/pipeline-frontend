@@ -63,7 +63,7 @@ export class GithubService {
       controlType: 'password',
       name: 'githubToken',
       message: 'Personal Access Token (PAT)',
-      placeholder: 'Enter Token',
+      placeholder: 'Enter service user or personal user access token',
       validators: [Validators.required],
       when: (formValue: any) => {
         return formValue.githubCredentialType === CredentialTypes.NEW

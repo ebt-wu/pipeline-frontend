@@ -186,13 +186,16 @@ fd-info-label {
 }
 
 .automate-workflows-header {
-
   h3 {
     margin: 2rem 0 0 0;
   }
   p {
     margin: 0 0 1.5rem 0;
   }
+}
+
+.upgrade-github-actions-banner {
+  margin-bottom: 1rem;
 }
 
 .github-actions-automation-workflows {

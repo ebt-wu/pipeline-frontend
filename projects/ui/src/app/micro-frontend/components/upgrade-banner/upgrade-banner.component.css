@@ -1,0 +1,38 @@
+.banner {
+  padding: 1rem 2rem;
+  display: flex;
+  align-items: center;
+  background-color: var(--sapList_SelectionBackgroundColor);
+
+  .banner-content {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .pipelines-info-label {
+    margin-bottom: 0.3rem;
+    z-index: 1;
+  }
+
+  .banner-heading {
+    margin-bottom: -2px;
+    z-index: 1;
+  }
+
+  .banner-subheading {
+    color: var(--sapNeutralColor);
+    z-index: 1;
+  }
+
+  .banner-balloons {
+    position: absolute;
+    bottom: 0;
+    z-index: 0;
+    opacity: 80%;
+    right: 11rem;
+  }
+
+  .spacer {
+    flex-grow: 1;
+  }
+}

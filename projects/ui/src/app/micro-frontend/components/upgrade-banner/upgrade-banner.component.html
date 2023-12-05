@@ -1,0 +1,24 @@
+<fd-card cardType="list">
+  <fd-card-content>
+    <div class="banner">
+      <div class="banner-content">
+        <div class="pipelines-info-label">
+          <fd-info-label fdCozy color="6" label="Pipelines"></fd-info-label>
+        </div>
+        <div class="banner-heading"><b>Get more out of GitHub Actions</b></div>
+        <div class="banner-subheading">
+          Utilize Actions for a compliant build pipeline.
+          <a
+            fd-link
+            href="https://pages.github.tools.sap/hyperspace/cicd-setup-documentation/use-cases/enable-github-actions.html"
+            target="_blank">
+            Read more.
+          </a>
+        </div>
+      </div>
+      <img src="./assets/balloons.svg" *ngIf="showBalloons" class="banner-balloons" />
+      <div class="spacer"></div>
+      <button fd-button label="Use in Pipeline" (click)="openSetupWizard($event)"></button>
+    </div>
+  </fd-card-content>
+</fd-card>
