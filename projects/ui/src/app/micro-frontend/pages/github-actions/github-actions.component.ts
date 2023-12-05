@@ -9,7 +9,7 @@ import {
 import { NgIf } from '@angular/common'
 import { FundamentalNgxPlatformModule, PlatformMessagePopoverModule } from '@fundamental-ngx/platform'
 import { firstValueFrom } from 'rxjs'
-import { CredentialTypes } from '../../../enums'
+import { CredentialTypes } from '@enums'
 import { LuigiClient } from '@dxp/ngx-core/luigi'
 import { SecretData, SecretService } from '../../services/secret.service'
 import { PlatformFormGeneratorCustomHeaderElementComponent } from '../../components/form-generator-header/form-generator-header.component'
@@ -76,7 +76,7 @@ export class GithubActionsComponent implements OnInit {
             Authorization: `Bearer ${value.githubToken}`,
           },
         })
-        const user = (await userQueryResp.json())?.login
+        const user: string = (await userQueryResp.json())?.login
         const secretData: SecretData[] = [{ key: 'access_token', value: value.githubToken }]
         githubActionsCredVaultPath = await this.getVaultPath(user)
         await firstValueFrom(this.secretService.writeSecret(githubActionsCredVaultPath, secretData))

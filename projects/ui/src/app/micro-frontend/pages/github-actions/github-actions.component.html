@@ -9,7 +9,12 @@
 <div *ngIf="!loading" class="description">
   <b>Enable GitHub Actions and runners</b>
   for the GitHub organization
-  <b>{{ githubMetadata.githubOrgName }}.</b>
+  <a
+    href="{{ githubMetadata.githubInstance }}/{{ githubMetadata.githubOrgName }}"
+    target="_blank"
+    rel="noopener noreferrer">
+    <b>{{ githubMetadata.githubOrgName }}.</b>
+  </a>
 </div>
 <fdp-message-popover-form-wrapper
   #formGeneratorWrapper
