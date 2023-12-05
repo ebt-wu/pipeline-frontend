@@ -4259,9 +4259,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@luigi-project/client-support-angular@npm:2.7.2":
-  version: 2.7.2
-  resolution: "@luigi-project/client-support-angular@npm:2.7.2"
+"@luigi-project/client-support-angular@npm:2.7.4":
+  version: 2.7.4
+  resolution: "@luigi-project/client-support-angular@npm:2.7.4"
   dependencies:
     tslib: ^2.0.0
   peerDependencies:
@@ -4269,21 +4269,21 @@ __metadata:
     "@angular/core": ^14.0.0 || ^15.0.0 || ^16.0.0
     "@luigi-project/client": ^2.0.0
     "@luigi-project/testing-utilities": ^2.0.0
-  checksum: 4f5c92c71c6d85083e37b309568391217e86365e160c68a7c53e5e07b57d226776462fb243663068ca50a08dd441fc2eaba2a5a7bf5019df6321221aad0faee5
+  checksum: 46f852311a274ba7fcc56a9eab44a1a6e1f14803665cf5bdb034f2e1a01e1b829fd08c629812cfa148597ea3b8db74bc4610428b6f306186ea5f8954ec90f614
   languageName: node
   linkType: hard
 
-"@luigi-project/client@npm:2.7.2":
-  version: 2.7.2
-  resolution: "@luigi-project/client@npm:2.7.2"
-  checksum: c61ca1b342d650095fcbe4688348d4a47fc705ded9ebaf91aa11151aef7217d6893e485781ee0bccec319abc89aaa965c28eec4ab78b46a748d85e06b6eaa0de
+"@luigi-project/client@npm:2.7.4":
+  version: 2.7.4
+  resolution: "@luigi-project/client@npm:2.7.4"
+  checksum: 5406e5a2c95fa3e5156278f60e438627b54918076f082714a9248e257a6447290f80c32cec94daf1326cf76ff2140a2cef3f4a3f2b3cde89e60bc42348d19071
   languageName: node
   linkType: hard
 
-"@luigi-project/testing-utilities@npm:2.7.2":
-  version: 2.7.2
-  resolution: "@luigi-project/testing-utilities@npm:2.7.2"
-  checksum: 800a566dd690dd4cce5b97794b2cda6e64453843ebaf8134a97c1a621c58eac7524de5a4fc9470241e7443eacda974b3ae269e9e5fa3d5ac87eef687fa878cc3
+"@luigi-project/testing-utilities@npm:2.7.4":
+  version: 2.7.4
+  resolution: "@luigi-project/testing-utilities@npm:2.7.4"
+  checksum: 46f27166d9f179cef2b50e5466002b0eb00a5f42dafbced35fcf56c6dc0ab8a8cb72b42967cb798ad2722343d0ae9cbb75991c6fcae4448771bace94e78388e4
   languageName: node
   linkType: hard
 
@@ -13714,9 +13714,9 @@ __metadata:
     "@graphql-codegen/typescript": ^4.0.1
     "@graphql-codegen/typescript-apollo-angular": 4.0.0
     "@graphql-codegen/typescript-operations": ^4.0.1
-    "@luigi-project/client": 2.7.2
-    "@luigi-project/client-support-angular": 2.7.2
-    "@luigi-project/testing-utilities": 2.7.2
+    "@luigi-project/client": 2.7.4
+    "@luigi-project/client-support-angular": 2.7.4
+    "@luigi-project/testing-utilities": 2.7.4
     "@sap-theming/theming-base-content": 11.8.0
     "@types/jest": 29.5.10
     "@types/node": 18.18.13
