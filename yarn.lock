@@ -2459,9 +2459,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@dxp/ngx-core@npm:0.16.25":
-  version: 0.16.25
-  resolution: "@dxp/ngx-core@npm:0.16.25::__archiveUrl=https%3A%2F%2Feurope-npm.pkg.dev%2Fsap-gcp-dxp-prod%2Fdxp%2F%40dxp%2Fngx-core%2F-%2F%40dxp%2Fngx-core-0.16.25.tgz"
+"@dxp/ngx-core@npm:0.17.8":
+  version: 0.17.8
+  resolution: "@dxp/ngx-core@npm:0.17.8::__archiveUrl=https%3A%2F%2Feurope-npm.pkg.dev%2Fsap-gcp-dxp-prod%2Fdxp%2F%40dxp%2Fngx-core%2F-%2F%40dxp%2Fngx-core-0.17.8.tgz"
   dependencies:
     tslib: "npm:^2.5.0"
   peerDependencies:
@@ -2482,7 +2482,7 @@ __metadata:
     apollo-angular: ^4.0.0
     deepmerge: ^4.2.2
     moment: ^2.29.2
-  checksum: 4489720823d2435e960c6a65220ad0c0df534ba6b5ddeb364a24e81a31319c064cd05f894517d27ce2c57adf0a9292969354a21dd0218f6d888f1bfebf2d73a4
+  checksum: b5bfa010e2b9103defb245913b993cfb5b5c500bb89909773d7ca885ed1fa1cb02928cee8e0d047ca1d2f6a778e01b4c36be60f94aabd7268c63c5b841e80f9a
   languageName: node
   linkType: hard
 
@@ -13716,7 +13716,7 @@ __metadata:
     "@angular/router": "npm:^16.2.2"
     "@apollo/client": "npm:^3.8.1"
     "@dxp/eslint-config-angular": "npm:^2.0.2"
-    "@dxp/ngx-core": "npm:0.16.25"
+    "@dxp/ngx-core": "npm:0.17.8"
     "@dynatrace/dtrum-api-types": "npm:1.279.1"
     "@fundamental-ngx/core": "npm:0.45.1"
     "@fundamental-ngx/platform": "npm:0.45.1"
