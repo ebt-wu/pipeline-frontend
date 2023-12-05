@@ -1,3 +1,14 @@
-.card-content {
-  padding: 0 1rem;
+a {
+  text-decoration: none;
+  font-weight: bold;
+  color: var(--sapHighlightColor);
+}
+
+a:hover {
+  cursor: pointer;
+}
+
+.message-strip-container {
+  width: 90%;
+  margin-left: 5%;
 }

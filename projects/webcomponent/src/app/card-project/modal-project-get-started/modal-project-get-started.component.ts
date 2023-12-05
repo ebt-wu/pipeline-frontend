@@ -1,11 +1,13 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core'
-import { DialogRef } from '@fundamental-ngx/core'
+import { CdkScrollable } from '@angular/cdk/scrolling'
+import { Component } from '@angular/core'
+import { CardModule, DialogModule, DialogRef, ScrollbarDirective } from '@fundamental-ngx/core'
 
 @Component({
   selector: 'app-cicd-modal-project-get-started',
   templateUrl: './modal-project-get-started.component.html',
   styleUrls: ['./modal-project-get-started.component.css'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: true,
+  imports: [CardModule, DialogModule, CdkScrollable, ScrollbarDirective],
 })
 export class ModalProjectGetStartedComponent {
   constructor(public dialogRef: DialogRef) {}

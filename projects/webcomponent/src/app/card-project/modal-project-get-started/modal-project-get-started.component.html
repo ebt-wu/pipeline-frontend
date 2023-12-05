@@ -1,14 +1,15 @@
 <fd-dialog>
   <fd-dialog-header>
     <h1 id="fd-dialog-header-1" fd-title>
-      <strong>{{ dialogRef.data.title }}</strong>
+      {{ dialogRef.data.title }}
     </h1>
+    <button fd-dialog-close-button (click)="dialogRef.dismiss()" title="close"></button>
   </fd-dialog-header>
 
   <fd-dialog-body>
     <div id="fd-dialog-body-1" role="dialog" class="dialogbody">
       <div class="singlestep mb1">
-        <div class="steppercircle active">1</div>
+        <div class="steppercircle inactive">1</div>
         <div class="steppercontent">
           <div class="stepheader">Create component (prerequisite)</div>
           <div>
@@ -33,12 +34,7 @@
       fdCompact
       fdType="emphasized"
       (click)="navigateToComponents()"
-      ariaLabel="Interesting Emphasized"></fd-button-bar>
-    <fd-button-bar
-      label="Cancel"
-      fdType="transparent"
-      fdCompact
-      (click)="dialogRef.dismiss()"
-      ariaLabel="Cancel"></fd-button-bar>
+      ariaLabel="Emphasized"></fd-button-bar>
+    <fd-button-bar label="Cancel" fdCompact (click)="dialogRef.dismiss()" ariaLabel="Cancel"></fd-button-bar>
   </fd-dialog-footer>
 </fd-dialog>

@@ -4,10 +4,19 @@ import { FundamentalNgxCoreModule } from '@fundamental-ngx/core'
 import { NoopAnimationsModule } from '@angular/platform-browser/animations'
 import { CardProjectPromotionComponent } from './card-project/card-project-promotion/card-project-promotion.component'
 import { ModalProjectGetStartedComponent } from './card-project/modal-project-get-started/modal-project-get-started.component'
+import { ApolloModule } from 'apollo-angular'
+import { HttpClientModule } from '@angular/common/http'
 
 @NgModule({
-  declarations: [CardProjectPromotionComponent, ModalProjectGetStartedComponent],
-  imports: [FundamentalNgxCoreModule, NoopAnimationsModule],
+  declarations: [],
+  imports: [
+    ApolloModule,
+    CardProjectPromotionComponent,
+    FundamentalNgxCoreModule,
+    HttpClientModule,
+    ModalProjectGetStartedComponent,
+    NoopAnimationsModule,
+  ],
 })
 export class AppModule implements DoBootstrap {
   constructor(private injector: Injector) {}
