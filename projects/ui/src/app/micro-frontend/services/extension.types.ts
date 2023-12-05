@@ -23,7 +23,7 @@ export enum Extensions {
 export interface ExtensionClass {
   name: string
   displayName: string
-  description?: String
+  description?: string
   icon?: Icon
   provider?: string
   image?: string // data:image/x;base64,

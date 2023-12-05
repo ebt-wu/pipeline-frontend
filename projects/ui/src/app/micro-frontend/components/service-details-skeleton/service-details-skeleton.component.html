@@ -12,7 +12,7 @@
             fdType="transparent"
             glyph="resize"
             ariaLabel="Expand Details"
-            *ngIf="localLayout != 'OneColumnMidFullScreen'"
+            *ngIf="localLayout !== 'OneColumnMidFullScreen'"
             (click)="expandDetails()"></button>
           <button
             class="button-margin hide-on-small-screen"

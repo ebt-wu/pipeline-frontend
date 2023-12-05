@@ -5,7 +5,7 @@ const config: CodegenConfig = {
   schema: {
     'pipeline-backend': {
       loader: './custom-loader.ts',
-    }
+    },
   },
   documents: 'src/**/queries.ts',
   generates: {
@@ -13,7 +13,6 @@ const config: CodegenConfig = {
       plugins: ['typescript', 'typescript-operations'],
     },
   },
-}
 }
 
 export default config

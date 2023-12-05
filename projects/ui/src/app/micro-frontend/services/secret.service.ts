@@ -90,7 +90,7 @@ export class SecretService {
     let redirectDecoded = decodeURIComponent(redirect)
     redirectDecoded = redirectDecoded.replace('list', 'show')
 
-    let redirectArr = redirectDecoded.split('?')
+    const redirectArr = redirectDecoded.split('?')
     redirectArr[0] += `/${secretPath}`
 
     redirectDecoded = redirectArr.join('?')

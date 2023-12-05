@@ -15,11 +15,11 @@ import { NgIf } from '@angular/common'
 import { Subscription } from 'rxjs'
 
 @Component({
-  styleUrls: ['./card-project-promotion.component.css'],
+  standalone: true,
   selector: 'app-cicd-card-project-promotion',
   templateUrl: './card-project-promotion.component.html',
+  styleUrls: ['./card-project-promotion.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  standalone: true,
   imports: [CardModule, IllustratedMessageModule, NgIf, MessageStripModule],
   encapsulation: ViewEncapsulation.ShadowDom,
 })
