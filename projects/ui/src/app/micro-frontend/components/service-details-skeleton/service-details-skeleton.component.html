@@ -153,7 +153,8 @@
                       <a *ngIf="contact.displayName" fd-link href="{{ getMailLink(contact.email) }}">
                         {{ contact.displayName }}
                         <!-- prettier-ignore -->
-                        <span *ngIf="contact.role">{{ '(' }}<span *ngFor="let role of contact.role">{{ role + getComma(role, contact.role) }}</span>{{ ')' + getComma(contact, extension.contacts) }}</span>
+                        <span *ngIf='contact.role'>{{ '(' }}<span
+                            *ngFor='let role of contact.role'>{{ role + getComma(role, contact.role) }}</span>{{ ')' + getComma(contact, extension.contacts) }}</span>
                       </a>
                     </span>
                   </div>
@@ -167,7 +168,7 @@
             </div>
             <div *ngIf="!getExtensionClass(activeTile)" class="service-info">
               <div class="service-info-flexbox">
-                <img src="../../../../assets/notFoundPage.svg" class="service-info-image" />
+                <img src="../../../../assets/notFoundPage.svg" class="service-info-image" alt="not found" />
                 <h2>Uh oh. Couldn't find service details.</h2>
                 <span *ngIf="dxpContext$ | async as context">
                   We weren't able to load more details about this service. Please let us know by

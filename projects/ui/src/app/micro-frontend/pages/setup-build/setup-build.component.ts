@@ -139,7 +139,8 @@ export class SetupComponent implements OnInit, OnDestroy {
                 return BuildTool.Maven
               case Languages.GO:
                 return BuildTool.Golang
-              case Languages.TYPESCRIPT || Languages.JAVASCRIPT:
+              case Languages.TYPESCRIPT:
+              case Languages.JAVASCRIPT:
                 return BuildTool.Npm
               case Languages.PYTHON:
                 return BuildTool.Python
