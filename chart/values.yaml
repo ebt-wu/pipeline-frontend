@@ -1,7 +1,13 @@
 # default values - might be overwritten by the stack
 protocol: https
 
+## List of projects that see everything in the LIVE landscape
+enabledProjects:
+  - automaticd
+  - hyperspace
+  - my-playground # d067570
+  - yggdrasil
+
 site:
   enable: true
-  cdmPath: /en/assets/cdm.json
   wcCdmPath: /assets/cdm.json

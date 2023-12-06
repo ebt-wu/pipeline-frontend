@@ -7,5 +7,16 @@ values:
 tests:
   - it: Test Extension matches the snapshot
     template: extensions.yaml
+    set:
+        environment: dev
     asserts:
       - matchSnapshot: {}
+  - it: Has CDM for live
+    template: extensions.yaml
+    set:
+      environment: live
+      enabledProjects:
+      - p1
+      - p2
+    asserts:
+    - matchSnapshot: {}

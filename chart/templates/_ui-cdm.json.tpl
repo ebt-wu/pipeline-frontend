@@ -1,6 +1,5 @@
+{{- define "ui.cdm" }}
 {
-  "_WARNING!": "THIS FILE IS ONLY USED IN LOCAL DEVELOPMENT!",
-  "_CHANGES": "Changes to prod config should be done in 'chart/templates/_ui-cdm.json.tpl'",
   "_version": "3.0",
   "payload": {
     "visualizations": {
@@ -22,6 +21,9 @@
               "requiredIFramePermissions": {
                 "allow": ["clipboard-read", "clipboard-write"]
               },
+              {{- if eq .Values.environment "live" }}
+              "visibleForContext": "contains({{ .Values.enabledProjects | toJson | replace "\"" "'" }}, entityContext.project.id)",
+              {{- end }}
               "children": [
                 {
                   "pathSegment": "setup",
@@ -91,3 +93,4 @@
     }
   ]
 }
+{{- end }}
