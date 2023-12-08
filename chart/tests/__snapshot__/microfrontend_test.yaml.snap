@@ -9,7 +9,7 @@ Has CDM for live:
       namespace: root-universe
     spec:
       cdm:
-        - data: |
+        - data: |-
             {
               "_version": "3.0",
               "payload": {
@@ -145,7 +145,7 @@ Test Extension matches the snapshot:
       namespace: root-universe
     spec:
       cdm:
-        - data: |
+        - data: |-
             {
               "_version": "3.0",
               "payload": {
