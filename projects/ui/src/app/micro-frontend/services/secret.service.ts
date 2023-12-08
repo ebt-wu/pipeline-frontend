@@ -18,6 +18,13 @@ export interface SecretData {
   value: string
 }
 
+export interface Secret {
+  path: string
+  metadata?: {
+    scopes?: string
+  }
+}
+
 @Injectable({ providedIn: 'root' })
 export class SecretService {
   constructor(
@@ -43,7 +50,7 @@ export class SecretService {
     )
   }
 
-  getPipelineSecrets(): Observable<string[]> {
+  getPipelineSecrets(): Observable<Secret[]> {
     return combineLatest([this.apiService.apollo(), this.luigiService.contextObservable()]).pipe(
       first(),
       mergeMap(([client, ctx]) => {

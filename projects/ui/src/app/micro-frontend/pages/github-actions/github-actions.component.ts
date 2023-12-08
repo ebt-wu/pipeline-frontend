@@ -17,7 +17,7 @@ import { BarModule, FundamentalNgxCoreModule } from '@fundamental-ngx/core'
 import { ErrorMessageComponent } from '../../components/error-message/error-message.component'
 import { GithubActionsService } from '../../services/github-actions.service'
 import { APIService } from '../../services/api.service'
-import { GithubMetadata } from '../../services/github.service'
+import { GithubMetadata, REQUIRED_SCOPES } from '../../services/github.service'
 import { PlatformFormGeneratorCustomInfoBoxComponent } from '../../components/form-generator-info-box/form-generator-info-box.component'
 
 @Component({
@@ -77,7 +77,10 @@ export class GithubActionsComponent implements OnInit {
           },
         })
         const user: string = (await userQueryResp.json())?.login
-        const secretData: SecretData[] = [{ key: 'access_token', value: value.githubToken }]
+        const secretData: SecretData[] = [
+          { key: 'access_token', value: value.githubToken },
+          { key: 'scopes', value: REQUIRED_SCOPES.join(',') },
+        ]
         githubActionsCredVaultPath = await this.getVaultPath(user)
         await firstValueFrom(this.secretService.writeSecret(githubActionsCredVaultPath, secretData))
       } else if (value.githubCredentialType === CredentialTypes.EXISTING) {

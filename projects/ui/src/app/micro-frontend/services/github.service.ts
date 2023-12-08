@@ -15,7 +15,7 @@ import {
 import { CredentialTypes } from '@enums'
 import { Validators } from '@angular/forms'
 import { DynamicFormItem } from '@fundamental-ngx/platform'
-import { SecretService } from './secret.service'
+import { Secret, SecretService } from './secret.service'
 
 export interface GithubMetadata {
   githubInstance: string
@@ -43,7 +43,7 @@ export class GithubService {
       message: '',
       default: async () => {
         const secrets = await lastValueFrom(this.secretService.getPipelineSecrets())
-        if (secrets.some((value) => value.includes('github'))) {
+        if (secrets.some((value) => this.isValidGithubSecret(value))) {
           return CredentialTypes.EXISTING
         }
         return CredentialTypes.NEW
@@ -51,7 +51,7 @@ export class GithubService {
       choices: [CredentialTypes.EXISTING, CredentialTypes.NEW],
       when: async () => {
         const secrets = await lastValueFrom(this.secretService.getPipelineSecrets())
-        return secrets.some((value) => value.includes('github'))
+        return secrets.some((value) => this.isValidGithubSecret(value))
       },
       guiOptions: {
         inline: true,
@@ -156,11 +156,11 @@ export class GithubService {
       placeholder: 'Select Credential',
       default: async () => {
         const secrets = await lastValueFrom(this.secretService.getPipelineSecrets())
-        return secrets.filter((value) => value.includes('github'))[0] ?? null
+        return secrets.filter((value) => this.isValidGithubSecret(value))[0] ?? null
       },
       choices: async () => {
         const secrets = await lastValueFrom(this.secretService.getPipelineSecrets())
-        return secrets.filter((value) => value.includes('github'))
+        return secrets.filter((value) => this.isValidGithubSecret(value)).map((value) => value.path)
       },
       validators: [Validators.required],
       when: (formValue: any) => {
@@ -168,6 +168,19 @@ export class GithubService {
       },
     },
   ]
+
+  isValidGithubSecret(secret: Secret): boolean {
+    if (!secret.path.includes('github')) {
+      return false
+    }
+
+    if (secret.metadata?.scopes) {
+      const scopes = secret.metadata.scopes.split(',')
+      return REQUIRED_SCOPES.every((val) => scopes.includes(val))
+    } else {
+      return true
+    }
+  }
 
   async getGithubMetadata(): Promise<GithubMetadata> {
     const context = await this.luigiService.getContextAsync()

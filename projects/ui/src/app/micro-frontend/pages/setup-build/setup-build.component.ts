@@ -14,7 +14,7 @@ import { CredentialTypes, Languages, Orchestrators } from '@enums'
 import { SecretData, SecretService } from '../../services/secret.service'
 import { firstValueFrom, lastValueFrom, map, Subscription } from 'rxjs'
 import { SetupBuildFormValue } from '@types'
-import { GithubService } from '../../services/github.service'
+import { GithubService, REQUIRED_SCOPES } from '../../services/github.service'
 import { JenkinsService } from '../../services/jenkins.service'
 import { ErrorMessageComponent } from '../../components/error-message/error-message.component'
 import { PlatformMessagePopoverModule } from '@fundamental-ngx/platform/message-popover'
@@ -248,7 +248,7 @@ export class SetupComponent implements OnInit, OnDestroy {
       message: '',
       default: async () => {
         const secrets = await lastValueFrom(this.secretService.getPipelineSecrets())
-        if (secrets.some((value) => value.includes('jenkins'))) {
+        if (secrets.some((value) => value.path.includes('jenkins'))) {
           return CredentialTypes.EXISTING
         }
         return CredentialTypes.NEW
@@ -259,7 +259,7 @@ export class SetupComponent implements OnInit, OnDestroy {
           return false
         }
         const secrets = await lastValueFrom(this.secretService.getPipelineSecrets())
-        return secrets.some((value) => value.includes('jenkins'))
+        return secrets.some((value) => value.path.includes('jenkins'))
       },
       guiOptions: {
         inline: true,
@@ -300,11 +300,11 @@ export class SetupComponent implements OnInit, OnDestroy {
       placeholder: 'Select Credential',
       default: async () => {
         const secrets = await lastValueFrom(this.secretService.getPipelineSecrets())
-        return secrets.filter((value) => value.includes('jenkins'))[0] ?? null
+        return secrets.filter((value) => value.path.includes('jenkins'))[0] ?? null
       },
       choices: async () => {
         const secrets = await lastValueFrom(this.secretService.getPipelineSecrets())
-        return secrets.filter((value) => value.includes('jenkins'))
+        return secrets.filter((value) => value.path.includes('jenkins')).map((value) => value.path)
       },
       validators: [Validators.required],
       when: (formValue: any) => {
@@ -401,6 +401,7 @@ export class SetupComponent implements OnInit, OnDestroy {
         const user = (await userQueryResp.json())?.login
         const secretData: SecretData[] = [
           { key: 'username', value: user },
+          { key: 'scopes', value: REQUIRED_SCOPES.join(',') },
           { key: 'access_token', value: value.githubToken },
         ]
         githubPath = await this.storeCredential(

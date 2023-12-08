@@ -59,6 +59,7 @@ export type GithubActionsGetPayload = {
 
 export type GithubCreationRequest = {
   baseUrl?: InputMaybe<Scalars['String']['input']>
+  isGithubActionsGPP?: InputMaybe<Scalars['Boolean']['input']>
   org: Scalars['String']['input']
   repo: Scalars['String']['input']
   secretPath: Scalars['String']['input']
@@ -262,7 +263,7 @@ export type Query = {
   getGithubActions?: Maybe<GithubActionsGetPayload>
   getGithubRepository?: Maybe<GithubRepository>
   getJenkinsPipeline?: Maybe<JenkinsPipeline>
-  getPipelineSecrets?: Maybe<Array<Scalars['String']['output']>>
+  getPipelineSecrets?: Maybe<Array<Secret>>
   getPiperConfig: PiperConfig
   getStagingServiceCredential?: Maybe<StagingServiceCredential>
   onboardingGroups: Array<Maybe<Group>>
@@ -316,9 +317,20 @@ export type ResourceRef = {
   status: Scalars['String']['output']
 }
 
+export type Secret = {
+  __typename?: 'Secret'
+  metadata?: Maybe<SecretMetadata>
+  path: Scalars['String']['output']
+}
+
 export type SecretData = {
   key: Scalars['String']['input']
   value: Scalars['String']['input']
+}
+
+export type SecretMetadata = {
+  __typename?: 'SecretMetadata'
+  scopes?: Maybe<Scalars['String']['output']>
 }
 
 export type StagingServiceCredential = {
@@ -400,7 +412,14 @@ export type GetPipelineSecretsQueryVariables = Exact<{
   componentId: Scalars['String']['input']
 }>
 
-export type GetPipelineSecretsQuery = { __typename?: 'Query'; getPipelineSecrets?: Array<string> | null }
+export type GetPipelineSecretsQuery = {
+  __typename?: 'Query'
+  getPipelineSecrets?: Array<{
+    __typename?: 'Secret'
+    path: string
+    metadata?: { __typename?: 'SecretMetadata'; scopes?: string | null } | null
+  }> | null
+}
 
 export type CreateGithubRepositoryMutationVariables = Exact<{
   projectId: Scalars['String']['input']

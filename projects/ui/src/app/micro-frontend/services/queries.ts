@@ -43,7 +43,12 @@ export const WRITE_SECRET = gql`
 
 export const GET_PIPELINE_SECRETS = gql`
   query GetPipelineSecrets($projectId: String!, $componentId: String!) {
-    getPipelineSecrets(projectId: $projectId, componentId: $componentId)
+    getPipelineSecrets(projectId: $projectId, componentId: $componentId) {
+      path
+      metadata {
+        scopes
+      }
+    }
   }
 `
 
