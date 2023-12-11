@@ -156,7 +156,7 @@ export class GithubService {
       placeholder: 'Select Credential',
       default: async () => {
         const secrets = await lastValueFrom(this.secretService.getPipelineSecrets())
-        return secrets.filter((value) => this.isValidGithubSecret(value))[0] ?? null
+        return secrets.filter((value) => this.isValidGithubSecret(value))[0].path ?? null
       },
       choices: async () => {
         const secrets = await lastValueFrom(this.secretService.getPipelineSecrets())
