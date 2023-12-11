@@ -3,15 +3,13 @@ import { BaseAPIService } from './base.service'
 import { first, map, mergeMap } from 'rxjs/operators'
 import { combineLatest, Observable } from 'rxjs'
 import { DxpLuigiContextService } from '@dxp/ngx-core/luigi'
-import { CHECK_GITHUB_ACTIONS_ENABLEMENT, CREATE_GITHUB_ACTIONS, GET_GITHUB_ACTIONS } from './queries'
+import { CREATE_GITHUB_ACTIONS, GET_GITHUB_ACTIONS_CROSS_NAMESPACE } from './queries'
 import {
-  CheckGithubActionsEnablementPayload,
-  CheckGithubActionsEnablementQuery,
-  CheckGithubActionsEnablementQueryVariables,
   CreateGithubActionsMutation,
   CreateGithubActionsMutationVariables,
-  GetGithubActionsQuery,
-  GetGithubActionsQueryVariables,
+  GetGithubActionsCrossNamespaceQuery,
+  GetGithubActionsCrossNamespaceQueryVariables,
+  GithubActionsGetPayload,
 } from '@generated/graphql'
 
 @Injectable({ providedIn: 'root' })
@@ -41,34 +39,13 @@ export class GithubActionsService {
     )
   }
 
-  getGithubActions(resourceName: string) {
+  getGithubActionsCrossNamespace(githubInstance: string, githubOrg: string): Observable<GithubActionsGetPayload> {
     return combineLatest([this.apiService.apollo(), this.luigiService.contextObservable()]).pipe(
       first(),
       mergeMap(([client, ctx]) => {
         return client
-          .query<GetGithubActionsQuery, GetGithubActionsQueryVariables>({
-            query: GET_GITHUB_ACTIONS,
-            fetchPolicy: 'no-cache',
-            variables: {
-              projectId: ctx.context.projectId,
-              resourceName: resourceName,
-            },
-          })
-          .pipe(map((res) => res.data?.getGithubActions ?? null))
-      }),
-    )
-  }
-
-  checkGithubActionsEnablement(
-    githubInstance: string,
-    githubOrg: string,
-  ): Observable<CheckGithubActionsEnablementPayload> {
-    return combineLatest([this.apiService.apollo(), this.luigiService.contextObservable()]).pipe(
-      first(),
-      mergeMap(([client, ctx]) => {
-        return client
-          .query<CheckGithubActionsEnablementQuery, CheckGithubActionsEnablementQueryVariables>({
-            query: CHECK_GITHUB_ACTIONS_ENABLEMENT,
+          .query<GetGithubActionsCrossNamespaceQuery, GetGithubActionsCrossNamespaceQueryVariables>({
+            query: GET_GITHUB_ACTIONS_CROSS_NAMESPACE,
             fetchPolicy: 'no-cache',
             variables: {
               projectId: ctx.context.projectId,
@@ -76,7 +53,7 @@ export class GithubActionsService {
               githubOrg: githubOrg,
             },
           })
-          .pipe(map((res) => res.data?.checkGithubActionsEnablement ?? null))
+          .pipe(map((res) => res.data?.getGithubActionsCrossNamespace ?? null))
       }),
     )
   }

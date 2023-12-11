@@ -2,8 +2,9 @@ import { CommonModule } from '@angular/common'
 import { Component, Input, OnInit, signal } from '@angular/core'
 import { FundamentalNgxCoreModule } from '@fundamental-ngx/core'
 import { SecretService } from '../../../../micro-frontend/services/secret.service'
-import { GetGithubActionsQuery } from '@generated/graphql'
+import { GetGithubActionsCrossNamespaceQuery } from '@generated/graphql'
 import { ErrorMessageComponent } from '../../error-message/error-message.component'
+import { DxpLuigiContextService } from '@dxp/ngx-core/luigi'
 
 @Component({
   selector: 'github-actions-service-details',
@@ -13,24 +14,30 @@ import { ErrorMessageComponent } from '../../error-message/error-message.compone
   styleUrls: ['github-actions-service-details.component.css'],
 })
 export class GithubActionsServiceDetailsComponent implements OnInit {
-  constructor(private readonly secretService: SecretService) {}
+  constructor(
+    private readonly secretService: SecretService,
+    private readonly luigiService: DxpLuigiContextService,
+  ) {}
 
-  @Input() serviceDetails: GetGithubActionsQuery['getGithubActions']
+  @Input() serviceDetails: GetGithubActionsCrossNamespaceQuery['getGithubActionsCrossNamespace']
 
   githubOrganizationUrl: string
   githubActionsRunnerGroupUrl: string
   errorMessage = signal('')
+  catalogUrl = signal('')
 
-  ngOnInit(): void {
+  async ngOnInit(): Promise<void> {
     this.githubOrganizationUrl = `${this.serviceDetails.githubInstance}/${this.serviceDetails.githubOrganization}`
     this.githubActionsRunnerGroupUrl = `${this.serviceDetails.githubInstance}/organizations/${this.serviceDetails.githubOrganization}/settings/actions/runner-groups`
+    const context = (await this.luigiService.getContextAsync()) as any
+    this.catalogUrl.set(context.frameBaseUrl + '/catalog')
   }
 
   pendingShowInVault = signal(false)
 
   openDocumentation() {
     window.open(
-      'https://pages.github.tools.sap/hyperspace/cicd-setup-documentation/use-cases/enable-github-actions.html',
+      'https://pages.github.tools.sap/hyperspace/cicd-setup-documentation/connected-tools/build/github-actions.html',
       '_blank',
     )
   }

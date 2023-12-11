@@ -19,3 +19,22 @@ a {
 .auto-left-margin {
   margin-left: auto;
 }
+
+.vault-button-padding {
+  padding: 0;
+}
+
+.divider {
+  border-top: 1px solid var(--sapNeutralBorderColor);
+  width: 100%;
+  margin: 1.2rem 0;
+}
+
+.get-started-heading {
+  margin-top: 0;
+  margin-bottom: 0.2rem;
+}
+
+.get-started-list {
+  margin: 0;
+}

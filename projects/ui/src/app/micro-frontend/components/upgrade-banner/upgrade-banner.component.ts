@@ -21,7 +21,7 @@ export class UpgradeBannerComponent {
     e.stopPropagation()
     this.luigiClient
       .linkManager()
-      .withParams({ orchestrator: Orchestrators.GITHUB_ACTIONS })
+      .withParams({ orchestrator: Orchestrators.GITHUB_ACTIONS_WORKFLOW })
       .openAsModal('setup', { size: 's', title: 'Set up Build' })
   }
 }

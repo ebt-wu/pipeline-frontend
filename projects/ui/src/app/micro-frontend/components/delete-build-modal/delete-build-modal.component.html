@@ -3,26 +3,30 @@
     <h1 fd-title>Delete Build Pipeline</h1>
   </fd-message-box-header>
   <fd-message-box-body>
-    <div>You are about to delete the below services. The credentials are not affected by this action.</div>
-    <ul>
-      <li>Jenkins Pipeline</li>
-    </ul>
-    <div>
-      <button
-        fd-button
-        fdType="transparent"
-        label="Advanced"
-        [glyph]="advancedSettingsOpen() ? 'slim-arrow-up' : 'slim-arrow-down'"
-        (click)="toggleAdvancedSettings()"></button>
-      <div *ngIf="advancedSettingsOpen()" class="advanced-settings">
-        <fd-checkbox label="soft-delete services" [(ngModel)]="softDeleteServices"></fd-checkbox>
-        <div class="advanced-hint">
-          Your services will be removed from this component and not managed by us anymore. (But they still exist and can
-          be used for a new set up).
+    <div *ngIf="messageBoxRef.data.orchestratorKind === Kinds.JENKINS_PIPELINE">
+      <div>You are about to delete the below services. The credentials are not affected by this action.</div>
+      <ul>
+        <li>Jenkins Pipeline</li>
+      </ul>
+      <div>
+        <button
+          fd-button
+          fdType="transparent"
+          label="Advanced"
+          [glyph]="advancedSettingsOpen() ? 'slim-arrow-up' : 'slim-arrow-down'"
+          (click)="toggleAdvancedSettings()"></button>
+        <div *ngIf="advancedSettingsOpen()" class="advanced-settings">
+          <fd-checkbox label="soft-delete services" [(ngModel)]="softDeleteServices"></fd-checkbox>
+          <div class="advanced-hint">
+            Your services will be removed from this component and not managed by us anymore. (But they still exist and
+            can be used for a new set up).
+          </div>
         </div>
       </div>
     </div>
-    <p class="not-undone-message">
+    <p
+      class="not-undone-message"
+      [ngClass]="messageBoxRef.data.orchestratorKind === Kinds.JENKINS_PIPELINE ? '' : 'remove-top-margin'">
       Please type the name of your component
       <b>{{ messageBoxRef.data.componentId }}</b>
       to confirm. This action

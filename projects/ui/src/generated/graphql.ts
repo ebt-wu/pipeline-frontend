@@ -53,6 +53,8 @@ export type GithubActionsGetPayload = {
   creationTimestamp?: Maybe<Scalars['String']['output']>
   githubInstance?: Maybe<Scalars['String']['output']>
   githubOrganization?: Maybe<Scalars['String']['output']>
+  isAlreadyManaged: Scalars['Boolean']['output']
+  responsibleProject?: Maybe<Scalars['String']['output']>
   secretPath?: Maybe<Scalars['String']['output']>
   solinasCustomerID?: Maybe<Scalars['String']['output']>
 }
@@ -258,9 +260,8 @@ export type PiperTemplateArgsStagingService = {
 
 export type Query = {
   __typename?: 'Query'
-  checkGithubActionsEnablement?: Maybe<CheckGithubActionsEnablementPayload>
   getCumulusPipeline?: Maybe<CumulusPipeline>
-  getGithubActions?: Maybe<GithubActionsGetPayload>
+  getGithubActionsCrossNamespace?: Maybe<GithubActionsGetPayload>
   getGithubRepository?: Maybe<GithubRepository>
   getJenkinsPipeline?: Maybe<JenkinsPipeline>
   getPipelineSecrets?: Maybe<Array<Secret>>
@@ -269,20 +270,15 @@ export type Query = {
   onboardingGroups: Array<Maybe<Group>>
 }
 
-export type QueryCheckGithubActionsEnablementArgs = {
-  githubInstance: Scalars['String']['input']
-  githubOrg: Scalars['String']['input']
-  projectId: Scalars['String']['input']
-}
-
 export type QueryGetCumulusPipelineArgs = {
   projectId: Scalars['String']['input']
   resourceName: Scalars['String']['input']
 }
 
-export type QueryGetGithubActionsArgs = {
+export type QueryGetGithubActionsCrossNamespaceArgs = {
+  githubInstance: Scalars['String']['input']
+  githubOrg: Scalars['String']['input']
   projectId: Scalars['String']['input']
-  resourceName: Scalars['String']['input']
 }
 
 export type QueryGetGithubRepositoryArgs = {
@@ -357,12 +353,6 @@ export type VaultOnboardingInfo = {
   vaultUrl: Scalars['String']['output']
 }
 
-export type CheckGithubActionsEnablementPayload = {
-  __typename?: 'checkGithubActionsEnablementPayload'
-  isAlreadyManaged: Scalars['Boolean']['output']
-  responsibleProject: Scalars['String']['output']
-}
-
 export type CreatePipelineMutationVariables = Exact<{
   projectId: Scalars['String']['input']
   componentId: Scalars['String']['input']
@@ -428,6 +418,7 @@ export type CreateGithubRepositoryMutationVariables = Exact<{
   org: Scalars['String']['input']
   repo: Scalars['String']['input']
   secretPath: Scalars['String']['input']
+  isGithubActionsGPP: Scalars['Boolean']['input']
 }>
 
 export type CreateGithubRepositoryMutation = { __typename?: 'Mutation'; createGithubRepository?: string | null }
@@ -611,34 +602,22 @@ export type DeleteGithubActionsMutationVariables = Exact<{
 
 export type DeleteGithubActionsMutation = { __typename?: 'Mutation'; deleteGithubActions?: string | null }
 
-export type GetGithubActionsQueryVariables = Exact<{
+export type GetGithubActionsCrossNamespaceQueryVariables = Exact<{
   projectId: Scalars['String']['input']
-  resourceName: Scalars['String']['input']
+  githubOrg: Scalars['String']['input']
+  githubInstance: Scalars['String']['input']
 }>
 
-export type GetGithubActionsQuery = {
+export type GetGithubActionsCrossNamespaceQuery = {
   __typename?: 'Query'
-  getGithubActions?: {
+  getGithubActionsCrossNamespace?: {
     __typename?: 'GithubActionsGetPayload'
     solinasCustomerID?: string | null
     githubOrganization?: string | null
     githubInstance?: string | null
     secretPath?: string | null
     creationTimestamp?: string | null
-  } | null
-}
-
-export type CheckGithubActionsEnablementQueryVariables = Exact<{
-  projectId: Scalars['String']['input']
-  githubInstance: Scalars['String']['input']
-  githubOrg: Scalars['String']['input']
-}>
-
-export type CheckGithubActionsEnablementQuery = {
-  __typename?: 'Query'
-  checkGithubActionsEnablement?: {
-    __typename?: 'checkGithubActionsEnablementPayload'
-    responsibleProject: string
     isAlreadyManaged: boolean
+    responsibleProject?: string | null
   } | null
 }

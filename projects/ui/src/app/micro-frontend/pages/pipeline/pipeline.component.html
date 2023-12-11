@@ -114,7 +114,7 @@
                 <fd-busy-indicator [loading]="pendingOpenPipeline()" size="s">
                   <a
                     [href]="pipelineURL()"
-                    *ngIf="showOpenPipelineURL"
+                    *ngIf="showOpenPipelineURL && pipelineURL()"
                     fd-link
                     (click)="$event.stopPropagation()"
                     target="_blank"

@@ -31,48 +31,50 @@
       [triggers]="['click']"
       [closeOnOutsideClick]="true"></button>
   </div>
-  <a [href]="githubActionsRunnerGroupUrl" target="_blank">
-    {{ serviceDetails.solinasCustomerID }}
-  </a>
+  <div>{{ serviceDetails.solinasCustomerID }}</div>
+  <a [href]="githubActionsRunnerGroupUrl" target="_blank">Open Runners Group</a>
   <div class="flex-box top-margin">
     <h3>GitHub Actions Credentials</h3>
-    <button
-      class="left-margin"
-      role="button"
-      fdType="transparent"
-      glyph="hint"
-      fd-button
-      placement="top"
-      [fd-inline-help]="credentialsHelp"
-      [triggers]="['click']"
-      [closeOnOutsideClick]="true"></button>
-    <br />
   </div>
   <div>
     <b>Vault Path</b>
   </div>
-  {{ serviceDetails.secretPath }}
-  <div class="top-margin">
-    <fd-busy-indicator [loading]="pendingShowInVault()" size="s">
-      <button
-        fd-button
-        fdType="transparent"
-        [disabled]="pendingShowInVault()"
-        label="Show in Vault"
-        (click)="showInVault(serviceDetails.secretPath)"></button>
-    </fd-busy-indicator>
-  </div>
+  <fd-busy-indicator [loading]="pendingShowInVault()" size="s">
+    <button
+      class="vault-button-padding"
+      fd-button
+      fdType="transparent"
+      [disabled]="pendingShowInVault()"
+      [label]="serviceDetails.secretPath"
+      (click)="showInVault(serviceDetails.secretPath)"></button>
+  </fd-busy-indicator>
+  <div class="divider"></div>
+  <h3 class="get-started-heading">Get started with GitHub Actions</h3>
+  <ul class="get-started-list">
+    <li>
+      <a href="https://pages.github.tools.sap/github/features-and-usecases/features/actions/usage" target="_blank">
+        Read our get started guide
+      </a>
+      to get the best out of GitHub Actions
+    </li>
+    <li>
+      <a
+        href="https://docs.github.com/en/actions/security-guides/security-hardening-for-github-actions"
+        target="_blank">
+        Check security hardening guidelines
+      </a>
+      to ensure compliant use of GitHub Actions
+    </li>
+    <li>
+      <a [href]="this.catalogUrl()" target="_blank">Open catalog</a>
+      to find all allowed Actions at SAP
+    </li>
+    <li>
+      <a href="https://wiki.one.int.sap/wiki/display/DevFw/SUGAR" target="_blank">Learn about SUGAR</a>
+      to understand our GitHub Actions runners provider
+    </li>
+  </ul>
 </div>
-
-<ng-template #credentialsHelp>
-  <div>
-    The
-    <a href="https://wiki.one.int.sap/wiki/display/DevFw/SUGAR" target="_blank">SUGAR</a>
-    service requires a Github PAT to be able to create runners in your Github Organization.
-    <a href="https://wiki.one.int.sap/wiki/display/DevFw/SUGAR#SUGAR-GitHubToken" target="_blank">Learn more</a>
-  </div>
-</ng-template>
-
 <ng-template #sugarServiceHelp>
   <div>
     The

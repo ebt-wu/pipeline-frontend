@@ -7,7 +7,6 @@ import { ResourceRef } from '../../../types'
 import { firstValueFrom } from 'rxjs'
 import { Kinds, ServiceStatus } from '../../../enums'
 import { RouterModule } from '@angular/router'
-import { DeleteBuildModal } from '../delete-build-modal/delete-build-modal.component'
 
 export interface ServiceData {
   name: string
@@ -20,7 +19,7 @@ export interface ServiceData {
   templateUrl: './service-list-item.component.html',
   styleUrls: ['./service-list-item.component.css'],
   standalone: true,
-  imports: [CommonModule, FundamentalNgxCoreModule, RouterModule, IconModule, DeleteBuildModal],
+  imports: [CommonModule, FundamentalNgxCoreModule, RouterModule, IconModule],
 })
 export class ServiceListItemComponent {
   @Input() resourceRef: ResourceRef // Change the type to match your data structure

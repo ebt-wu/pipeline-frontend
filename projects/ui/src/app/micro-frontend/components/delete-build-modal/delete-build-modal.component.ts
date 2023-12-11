@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common'
 import { Component, signal } from '@angular/core'
 import { FormsModule } from '@angular/forms'
+import { Kinds } from '@enums'
 import { FormModule, FundamentalNgxCoreModule, MessageBoxRef } from '@fundamental-ngx/core'
 
 @Component({
@@ -14,10 +15,12 @@ export class DeleteBuildModal {
   typedComponentId = ''
   advancedSettingsOpen = signal(false)
   softDeleteServices = false
+  Kinds = Kinds
 
   constructor(
     public messageBoxRef: MessageBoxRef<{
       componentId: string
+      orchestratorKind: Kinds
     }>,
   ) {}
 
@@ -30,6 +33,10 @@ export class DeleteBuildModal {
   }
 
   close(action: 'delete' | 'cancel') {
+    if (action === 'cancel') {
+      this.messageBoxRef.close(action)
+    }
+
     if (this.deleteBtnDisabled()) {
       return
     }
@@ -42,6 +49,5 @@ export class DeleteBuildModal {
       }
       return
     }
-    this.messageBoxRef.close(action)
   }
 }

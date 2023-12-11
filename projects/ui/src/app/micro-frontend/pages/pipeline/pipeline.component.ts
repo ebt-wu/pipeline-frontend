@@ -25,8 +25,8 @@ import { ServiceDetailsSkeletonComponent } from '../../components/service-detail
 import { SharedDataService } from '../../services/shared-data.service'
 import { ServiceData, ServiceListItemComponent } from '../../components/service-list-item/service-list-item.component'
 import { GithubMetadata } from '../../services/github.service'
-import { CheckGithubActionsEnablementPayload } from '../../../../generated/graphql'
 import { UpgradeBannerComponent } from '../../components/upgrade-banner/upgrade-banner.component'
+import { GithubActionsGetPayload } from '@generated/graphql'
 
 type Error = {
   title: string
@@ -59,7 +59,7 @@ type Error = {
 })
 export class PipelineComponent implements OnInit, OnDestroy {
   @Input() pipeline$!: Observable<Pipeline>
-  isGithubActionsEnabledAlready$!: Observable<CheckGithubActionsEnablementPayload>
+  isGithubActionsEnabledAlready$!: Observable<GithubActionsGetPayload>
   dxpContext$: Observable<DxpContext>
   isBuildStageOpen = signal(false)
   isBuildStageSetup = signal(false)
@@ -111,7 +111,7 @@ export class PipelineComponent implements OnInit, OnDestroy {
     this.projectId = context.projectId
     await this.getExtensionClasses()
 
-    this.isGithubActionsEnabledAlready$ = this.api.githubActionsService.checkGithubActionsEnablement(
+    this.isGithubActionsEnabledAlready$ = this.api.githubActionsService.getGithubActionsCrossNamespace(
       this.githubMetadata.githubInstance,
       this.githubMetadata.githubOrgName,
     )
@@ -162,12 +162,17 @@ export class PipelineComponent implements OnInit, OnDestroy {
         }
 
         // enable/disable expansion of build stage
-        const requiredKindsInBuildStage = [Kinds.JENKINS_PIPELINE, Kinds.GITHUB_REPOSITORY, Kinds.PIPER_CONFIG]
+        const requiredKindsInBuildStage = [Kinds.GITHUB_REPOSITORY, Kinds.PIPER_CONFIG]
         const isRequiredKindMissingInBuildStage = requiredKindsInBuildStage.some((kind) => {
           return pipeline.resourceRefs.every((ref) => ref.kind !== kind)
         })
 
-        if (isRequiredKindMissingInBuildStage) {
+        const orchestrators = [Kinds.JENKINS_PIPELINE, Kinds.GITHUB_ACTIONS_WORKFLOW]
+        const isOrchestratorMissingInBuildStage = !pipeline.resourceRefs.find((ref) =>
+          orchestrators.find((value) => ref.kind === value),
+        )
+
+        if (isRequiredKindMissingInBuildStage || isOrchestratorMissingInBuildStage) {
           this.isBuildStageSetup.set(false)
           this.isBuildStageOpen.set(false)
           return
@@ -226,7 +231,11 @@ export class PipelineComponent implements OnInit, OnDestroy {
 
     const pulls = (await pullsResp.json()) as any[]
     return pulls.reduce((prev, curr) => {
-      if (curr.head?.ref === 'hyperspace-jenkinsfile' || curr.head?.ref === 'piper-onboarding') {
+      if (
+        curr.head?.ref === 'hyperspace-jenkinsfile' ||
+        curr.head?.ref === 'piper-onboarding' ||
+        curr.head?.ref === 'hyperspace-github-actions'
+      ) {
         return prev + 1
       }
 
@@ -330,12 +339,17 @@ export class PipelineComponent implements OnInit, OnDestroy {
 
     const componentId = (await this.luigiService.getContextAsync()).componentId
 
+    const orchestratorKind = pipeline.resourceRefs.find((ref) =>
+      [Kinds.GITHUB_ACTIONS_WORKFLOW, Kinds.JENKINS_PIPELINE].includes(ref.kind),
+    )?.kind
+
     const mb = this.messageBoxService.open(DeleteBuildModal, {
       type: 'warning',
       width: '30rem',
       showSemanticIcon: true,
       data: {
         componentId,
+        orchestratorKind,
       },
     })
 
@@ -347,17 +361,8 @@ export class PipelineComponent implements OnInit, OnDestroy {
       return
     }
 
-    let jenkinsDeletionPolicy = DeletionPolicy.ORPHAN
-    if (action === 'hard-delete') {
-      jenkinsDeletionPolicy = DeletionPolicy.DELETE
-    }
-
     this.localLayout = 'OneColumnStartFullScreen'
     this.activeTile = ''
-
-    const githubRef = pipeline.resourceRefs.find((ref) => ref.kind == Kinds.GITHUB_REPOSITORY)
-    const jenkinsRef = pipeline.resourceRefs.find((ref) => ref.kind == Kinds.JENKINS_PIPELINE)
-    const piperRef = pipeline.resourceRefs.find((ref) => ref.kind == Kinds.PIPER_CONFIG)
 
     this.pendingDeletion.set(true)
     setTimeout(() => {
@@ -365,11 +370,20 @@ export class PipelineComponent implements OnInit, OnDestroy {
     }, 3000)
 
     try {
-      await Promise.all([
-        firstValueFrom(this.api.githubService.deleteGithubRepository(githubRef.name)),
-        firstValueFrom(this.api.jenkinsService.deleteJenkinsPipeline(jenkinsRef.name, jenkinsDeletionPolicy)),
-        firstValueFrom(this.api.piperService.deletePiperConfig(piperRef.name)),
-      ])
+      const githubRef = pipeline.resourceRefs.find((ref) => ref.kind == Kinds.GITHUB_REPOSITORY)
+      const piperRef = pipeline.resourceRefs.find((ref) => ref.kind == Kinds.PIPER_CONFIG)
+
+      await firstValueFrom(this.api.piperService.deletePiperConfig(piperRef.name))
+      await firstValueFrom(this.api.githubService.deleteGithubRepository(githubRef.name))
+
+      if (orchestratorKind === Kinds.JENKINS_PIPELINE) {
+        let jenkinsDeletionPolicy = DeletionPolicy.ORPHAN
+        if (action === 'hard-delete') {
+          jenkinsDeletionPolicy = DeletionPolicy.DELETE
+        }
+        const jenkinsRef = pipeline.resourceRefs.find((ref) => ref.kind == Kinds.JENKINS_PIPELINE)
+        await firstValueFrom(this.api.jenkinsService.deleteJenkinsPipeline(jenkinsRef.name, jenkinsDeletionPolicy))
+      }
     } catch (e) {
       this.errors.update((errors) => {
         errors.push({

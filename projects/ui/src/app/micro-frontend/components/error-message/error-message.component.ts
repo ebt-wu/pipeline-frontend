@@ -17,6 +17,7 @@ export class ErrorMessageComponent {
     private readonly githubIssueLinkService: GitHubIssueLinkService,
   ) {}
 
+  @Input() type: 'warning' | 'error' = 'error'
   @Input() title: string
   @Input() message: string
 

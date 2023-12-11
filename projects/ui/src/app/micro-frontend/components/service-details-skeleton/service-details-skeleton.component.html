@@ -101,6 +101,9 @@
               <github-actions-service-details
                 *ngSwitchCase="'GithubAction'"
                 [serviceDetails]="serviceDetails()"></github-actions-service-details>
+              <github-actions-service-details
+                *ngSwitchCase="'GithubActionsWorkflow'"
+                [serviceDetails]="serviceDetails()"></github-actions-service-details>
             </div>
             <div class="tab-margin">
               <fd-skeleton width="350px" height="10rem" *ngIf="serviceDetailsLoading()">

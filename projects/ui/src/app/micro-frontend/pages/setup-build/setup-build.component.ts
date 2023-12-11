@@ -182,7 +182,7 @@ export class SetupComponent implements OnInit, OnDestroy {
       type: 'radio',
       name: 'orchestrator',
       message: '',
-      choices: [Orchestrators.JENKINS, Orchestrators.GITHUB_ACTIONS],
+      choices: [Orchestrators.JENKINS, Orchestrators.GITHUB_ACTIONS_WORKFLOW],
       default: () => {
         return this.defaultOrchestrator
       },
@@ -342,7 +342,7 @@ export class SetupComponent implements OnInit, OnDestroy {
           },
         },
       },
-      when: (formValue) => formValue.orchestrator === Orchestrators.GITHUB_ACTIONS,
+      when: (formValue) => formValue.orchestrator === Orchestrators.GITHUB_ACTIONS_WORKFLOW,
     },
     ...this.githubService.GITHUB_CREDENTIAL_FORM,
   ]
@@ -367,10 +367,6 @@ export class SetupComponent implements OnInit, OnDestroy {
       // credentials
       let jenkinsPath: string
       let githubPath: string
-
-      if (value.orchestrator === Orchestrators.GITHUB_ACTIONS) {
-        throw new Error('Github Actions is not available yet')
-      }
 
       // jenkins
       if (value.jenkinsCredentialType == CredentialTypes.NEW) {
@@ -421,10 +417,21 @@ export class SetupComponent implements OnInit, OnDestroy {
 
       const url = new URL(repoUrl)
 
+      let isGithubActions = false
+      if (value.orchestrator === Orchestrators.GITHUB_ACTIONS_WORKFLOW) {
+        isGithubActions = true
+      }
+
       const repositoryResource = await firstValueFrom(
-        this.githubService.createGithubRepository(url.origin, login, repoName, githubPath),
+        this.githubService.createGithubRepository(url.origin, login, repoName, githubPath, isGithubActions),
       )
-      await firstValueFrom(this.jenkinsService.createJenkinsPipeline(value.jenkinsUrl, jenkinsPath, repositoryResource))
+
+      if (value.orchestrator === Orchestrators.JENKINS) {
+        await firstValueFrom(
+          this.jenkinsService.createJenkinsPipeline(value.jenkinsUrl, jenkinsPath, repositoryResource),
+        )
+      }
+
       await firstValueFrom(
         this.piperService.createPiperConfig(
           githubPath,

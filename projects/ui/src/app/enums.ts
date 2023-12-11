@@ -6,6 +6,7 @@ export enum Kinds {
   PIPER_CONFIG = 'PiperConfig',
   JENKINS_PIPELINE = 'JenkinsPipeline',
   CUMULUS_GROUP = 'CumulusGroup',
+  GITHUB_ACTIONS_WORKFLOW = 'GithubActionsWorkflow',
 }
 
 export enum Categories {
@@ -41,7 +42,7 @@ export enum Languages {
 export enum Orchestrators {
   JENKINS = 'Jenkins',
   AZURE_PIPELINES = 'Azure Pipelines',
-  GITHUB_ACTIONS = 'Github Actions',
+  GITHUB_ACTIONS_WORKFLOW = 'Github Actions',
 }
 
 export enum CredentialTypes {

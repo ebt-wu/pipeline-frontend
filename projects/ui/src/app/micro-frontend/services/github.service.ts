@@ -140,7 +140,7 @@ export class GithubService {
               )}&description=Hyperspace%20CICD%20Setup%20Token" target="_blank"
                 >Personal Access Tokens</a
               >
-              and create one. The token should be <b>short lived</b> (recommendation 90
+              and create one. The token should have an <b>expiration date</b> (recommendation 90
               days) and have <b>full access</b> with the following scopes:
               <b>repo, admin:org, admin:org_hook, admin:repo_hook, workflow</b>
             </li>
@@ -207,7 +207,13 @@ export class GithubService {
     }
   }
 
-  createGithubRepository(baseUrl: string, org: string, repo: string, secretPath: string): Observable<string> {
+  createGithubRepository(
+    baseUrl: string,
+    org: string,
+    repo: string,
+    secretPath: string,
+    isGithubActionsGPP: boolean,
+  ): Observable<string> {
     return combineLatest([this.apiService.apollo(), this.luigiService.contextObservable()]).pipe(
       first(),
       mergeMap(([client, ctx]) => {
@@ -221,6 +227,7 @@ export class GithubService {
               org: org,
               repo: repo,
               secretPath: secretPath,
+              isGithubActionsGPP: isGithubActionsGPP,
             },
           })
           .pipe(map((res) => res.data?.createGithubRepository ?? ''))

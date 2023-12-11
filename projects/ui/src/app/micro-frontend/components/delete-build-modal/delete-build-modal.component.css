@@ -12,6 +12,10 @@
   margin-bottom: 0;
 }
 
+.remove-top-margin {
+  margin-top: 0;
+}
+
 .component-name-input {
   margin-top: 0.5rem !important;
 }

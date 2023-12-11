@@ -19,3 +19,7 @@ a {
 .auto-left-margin {
   margin-left: auto;
 }
+
+.vault-button-padding {
+  padding: 0;
+}

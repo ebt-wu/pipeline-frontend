@@ -55,17 +55,15 @@
   <div>
     <b>Vault Path</b>
   </div>
-  {{ cumulusSecretPath }}
-  <div class="top-margin">
-    <fd-busy-indicator [loading]="pendingShowInVault()" size="s">
-      <button
-        fd-button
-        fdType="transparent"
-        [disabled]="pendingShowInVault()"
-        label="Show in Vault"
-        (click)="showInVault(cumulusSecretPath)"></button>
-    </fd-busy-indicator>
-  </div>
+  <fd-busy-indicator [loading]="pendingShowInVault()" size="s">
+    <button
+      class="vault-button-padding"
+      fd-button
+      fdType="transparent"
+      [disabled]="pendingShowInVault()"
+      [label]="cumulusSecretPath"
+      (click)="showInVault(cumulusSecretPath)"></button>
+  </fd-busy-indicator>
 </div>
 
 <ng-template #idHelp>

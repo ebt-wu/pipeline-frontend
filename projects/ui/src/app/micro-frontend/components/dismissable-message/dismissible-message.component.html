@@ -2,9 +2,9 @@
   <div class="container">
     <div [innerHTML]="message"></div>
     <a
+      *ngIf="href && displayLink"
       fd-link
       class="button-height"
-      *ngIf="displayLink"
       [href]="href"
       [style.pointer-events]="displayMessage() && href ? '' : 'none'"
       target="_blank">

@@ -106,6 +106,8 @@ export class ServiceDetailsSkeletonComponent implements OnInit {
   }
 
   async loadDetails(kind: Kinds, name: string) {
+    const { githubRepoUrl, githubInstance, githubOrgName } = await this.api.githubService.getGithubMetadata()
+
     this.serviceDetailsLoading.set(true)
 
     this.serviceDetails.set({})
@@ -133,10 +135,15 @@ export class ServiceDetailsSkeletonComponent implements OnInit {
           this.serviceDetails.set(await firstValueFrom(this.api.stagingServiceService.getStagingServiceCredential()))
           break
         case Kinds.GITHUB_ACTION:
-          this.serviceDetails.set(await firstValueFrom(this.api.githubActionsService.getGithubActions(name)))
-          this.serviceUrl.set(
-            `https://github.tools.sap/organizations/${this.serviceDetails().githubOrganization}/settings/actions`,
+        case Kinds.GITHUB_ACTIONS_WORKFLOW:
+          this.serviceDetails.set(
+            await firstValueFrom(
+              this.api.githubActionsService.getGithubActionsCrossNamespace(githubInstance, githubOrgName),
+            ),
           )
+          if (githubRepoUrl) {
+            this.serviceUrl.set(githubRepoUrl + '/actions')
+          }
           break
       }
 

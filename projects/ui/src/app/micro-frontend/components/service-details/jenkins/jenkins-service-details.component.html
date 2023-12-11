@@ -35,17 +35,15 @@
   <div>
     <b>Vault Path</b>
   </div>
-  {{ serviceDetails.secretPath }}
-  <div class="top-margin">
-    <fd-busy-indicator [loading]="pendingShowInVault()" size="s">
-      <button
-        fd-button
-        fdType="transparent"
-        [disabled]="pendingShowInVault()"
-        label="Show in Vault"
-        (click)="showInVault(serviceDetails.secretPath)"></button>
-    </fd-busy-indicator>
-  </div>
+  <fd-busy-indicator [loading]="pendingShowInVault()" size="s">
+    <button
+      class="vault-button-padding"
+      fd-button
+      fdType="transparent"
+      [disabled]="pendingShowInVault()"
+      [label]="serviceDetails.secretPath"
+      (click)="showInVault(serviceDetails.secretPath)"></button>
+  </fd-busy-indicator>
 </div>
 
 <ng-template #credentialsHelp>

@@ -64,11 +64,18 @@ export const CREATE_GITHUB_REPOSITORY = gql`
     $org: String!
     $repo: String!
     $secretPath: String!
+    $isGithubActionsGPP: Boolean!
   ) {
     createGithubRepository(
       projectId: $projectId
       componentId: $componentId
-      params: { baseUrl: $baseUrl, org: $org, repo: $repo, secretPath: $secretPath }
+      params: {
+        baseUrl: $baseUrl
+        org: $org
+        repo: $repo
+        secretPath: $secretPath
+        isGithubActionsGPP: $isGithubActionsGPP
+      }
     )
   }
 `
@@ -276,23 +283,17 @@ export const DELETE_GITHUB_ACTIONS = gql`
     deleteGithubActions(projectId: $projectId, componentId: $componentId, resourceName: $resourceName)
   }
 `
-export const GET_GITHUB_ACTIONS = gql`
-  query GetGithubActions($projectId: String!, $resourceName: String!) {
-    getGithubActions(projectId: $projectId, resourceName: $resourceName) {
+
+export const GET_GITHUB_ACTIONS_CROSS_NAMESPACE = gql`
+  query GetGithubActionsCrossNamespace($projectId: String!, $githubOrg: String!, $githubInstance: String!) {
+    getGithubActionsCrossNamespace(projectId: $projectId, githubOrg: $githubOrg, githubInstance: $githubInstance) {
       solinasCustomerID
       githubOrganization
       githubInstance
       secretPath
       creationTimestamp
-    }
-  }
-`
-
-export const CHECK_GITHUB_ACTIONS_ENABLEMENT = gql`
-  query checkGithubActionsEnablement($projectId: String!, $githubInstance: String!, $githubOrg: String!) {
-    checkGithubActionsEnablement(projectId: $projectId, githubInstance: $githubInstance, githubOrg: $githubOrg) {
-      responsibleProject
       isAlreadyManaged
+      responsibleProject
     }
   }
 `

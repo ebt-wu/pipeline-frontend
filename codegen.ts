@@ -7,7 +7,7 @@ const config: CodegenConfig = {
       loader: './custom-loader.ts',
     },
   },
-  documents: 'src/**/queries.ts',
+  documents: 'projects/ui/src/**/queries.ts',
   generates: {
     'projects/ui/src/generated/graphql.ts': {
       plugins: ['typescript', 'typescript-operations'],

@@ -8,6 +8,7 @@ export const KindName = {
   [Kinds.STAGING_SERVICE_CREDENTIAL]: 'Staging Service',
   [Kinds.JENKINS_PIPELINE]: 'Jenkins Pipeline',
   [Kinds.GITHUB_ACTION]: 'Github Actions',
+  [Kinds.GITHUB_ACTIONS_WORKFLOW]: 'Github Actions',
 }
 
 export const KindCategory = {
@@ -17,6 +18,7 @@ export const KindCategory = {
   [Kinds.JENKINS_PIPELINE]: Categories.ORCHESTRATION,
   [Kinds.GITHUB_ACTION]: Categories.ORCHESTRATION,
   [Kinds.PIPER_CONFIG]: Categories.CODE_BUILD,
+  [Kinds.GITHUB_ACTIONS_WORKFLOW]: Categories.ORCHESTRATION,
 }
 
 export const KindExtensionName = {
@@ -26,4 +28,5 @@ export const KindExtensionName = {
   [Kinds.PIPER_CONFIG]: Extensions.PIPER,
   [Kinds.STAGING_SERVICE_CREDENTIAL]: Extensions.STAGING_SERVICE_EXTERNAL,
   [Kinds.JENKINS_PIPELINE]: Extensions.JAAS,
+  [Kinds.GITHUB_ACTIONS_WORKFLOW]: Extensions.GITHUB_ACTIONS_TOOLS_SAP,
 }
