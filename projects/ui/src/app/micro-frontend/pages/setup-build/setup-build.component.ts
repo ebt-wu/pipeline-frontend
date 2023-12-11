@@ -369,7 +369,7 @@ export class SetupComponent implements OnInit, OnDestroy {
       let githubPath: string
 
       // jenkins
-      if (value.jenkinsCredentialType == CredentialTypes.NEW) {
+      if (value.jenkinsCredentialType == CredentialTypes.NEW && value.orchestrator === Orchestrators.JENKINS) {
         const secretData: SecretData[] = [
           { key: 'token', value: value.jenkinsToken },
           { key: 'url', value: value.jenkinsUrl },
