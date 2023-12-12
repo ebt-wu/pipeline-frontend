@@ -14,7 +14,7 @@
             {
               "pathSegment": "pipeline-ui",
               "label": "CI/CD Setup",
-              "urlSuffix": "{{$url}}/{i18n.currentLocale}/#/pipeline-ui",
+              "url": "{{$url}}/{i18n.currentLocale}/#/pipeline-ui",
               "hideSideNav": false,
               "icon": "process",
               "entityType": "project.component",
@@ -29,25 +29,25 @@
                 {
                   "pathSegment": "setup",
                   "entityType": "project.component",
-                  "urlSuffix": "{{$url}}/{i18n.currentLocale}/#/pipeline-ui/setup",
+                  "url": "{{$url}}/{i18n.currentLocale}/#/pipeline-ui/setup",
                   "hideSideNav": false
                 },
                 {
                   "pathSegment": "pipeline-debug",
                   "entityType": "project.component",
-                  "urlSuffix": "{{$url}}/{i18n.currentLocale}/#/pipeline-ui/pipeline-debug",
+                  "url": "{{$url}}/{i18n.currentLocale}/#/pipeline-ui/pipeline-debug",
                   "hideSideNav": false
                 },
                 {
                   "pathSegment": "feedback",
                   "entityType": "project.component",
-                  "urlSuffix": "{{$url}}/{i18n.currentLocale}/#/pipeline-ui/feedback",
+                  "url": "{{$url}}/{i18n.currentLocale}/#/pipeline-ui/feedback",
                   "hideSideNav": false
                 },
                 {
                   "pathSegment": "import-pipeline",
                   "entityType": "project.component",
-                  "urlSuffix": "{{$url}}/{i18n.currentLocale}/#/pipeline-ui/import-pipeline",
+                  "url": "{{$url}}/{i18n.currentLocale}/#/pipeline-ui/import-pipeline",
                   "hideSideNav": false
                 }
               ]
@@ -55,7 +55,7 @@
             {
               "pathSegment": "modal",
               "entityType": "project.component",
-              "urlSuffix": "{{$url}}/{i18n.currentLocale}/#/modal",
+              "url": "{{$url}}/{i18n.currentLocale}/#/modal",
               "hideSideNav": false
             }
           ]
