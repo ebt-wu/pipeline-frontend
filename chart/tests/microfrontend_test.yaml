@@ -15,8 +15,9 @@ tests:
     template: extensions.yaml
     set:
       environment: live
-      enabledProjects:
-      - p1
-      - p2
+      features:
+        enabledProjects:
+        - p1
+        - p2
     asserts:
     - matchSnapshot: {}
