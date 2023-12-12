@@ -24,7 +24,7 @@ Has CDM for live:
                         {
                           "pathSegment": "pipeline-ui",
                           "label": "CI/CD Setup",
-                          "urlSuffix": "/{i18n.currentLocale}/#/pipeline-ui",
+                          "urlSuffix": "https://test-domain/{i18n.currentLocale}/#/pipeline-ui",
                           "hideSideNav": false,
                           "icon": "process",
                           "entityType": "project.component",
@@ -37,25 +37,25 @@ Has CDM for live:
                             {
                               "pathSegment": "setup",
                               "entityType": "project.component",
-                              "urlSuffix": "/{i18n.currentLocale}/#/pipeline-ui/setup",
+                              "urlSuffix": "https://test-domain/{i18n.currentLocale}/#/pipeline-ui/setup",
                               "hideSideNav": false
                             },
                             {
                               "pathSegment": "pipeline-debug",
                               "entityType": "project.component",
-                              "urlSuffix": "/{i18n.currentLocale}/#/pipeline-ui/pipeline-debug",
+                              "urlSuffix": "https://test-domain/{i18n.currentLocale}/#/pipeline-ui/pipeline-debug",
                               "hideSideNav": false
                             },
                             {
                               "pathSegment": "feedback",
                               "entityType": "project.component",
-                              "urlSuffix": "/{i18n.currentLocale}/#/pipeline-ui/feedback",
+                              "urlSuffix": "https://test-domain/{i18n.currentLocale}/#/pipeline-ui/feedback",
                               "hideSideNav": false
                             },
                             {
                               "pathSegment": "import-pipeline",
                               "entityType": "project.component",
-                              "urlSuffix": "/{i18n.currentLocale}/#/pipeline-ui/import-pipeline",
+                              "urlSuffix": "https://test-domain/{i18n.currentLocale}/#/pipeline-ui/import-pipeline",
                               "hideSideNav": false
                             }
                           ]
@@ -63,7 +63,7 @@ Has CDM for live:
                         {
                           "pathSegment": "modal",
                           "entityType": "project.component",
-                          "urlSuffix": "/{i18n.currentLocale}/#/modal",
+                          "urlSuffix": "https://test-domain/{i18n.currentLocale}/#/modal",
                           "hideSideNav": false
                         }
                       ]
@@ -160,7 +160,7 @@ Test Extension matches the snapshot:
                         {
                           "pathSegment": "pipeline-ui",
                           "label": "CI/CD Setup",
-                          "urlSuffix": "/{i18n.currentLocale}/#/pipeline-ui",
+                          "urlSuffix": "https://test-domain/{i18n.currentLocale}/#/pipeline-ui",
                           "hideSideNav": false,
                           "icon": "process",
                           "entityType": "project.component",
@@ -172,25 +172,25 @@ Test Extension matches the snapshot:
                             {
                               "pathSegment": "setup",
                               "entityType": "project.component",
-                              "urlSuffix": "/{i18n.currentLocale}/#/pipeline-ui/setup",
+                              "urlSuffix": "https://test-domain/{i18n.currentLocale}/#/pipeline-ui/setup",
                               "hideSideNav": false
                             },
                             {
                               "pathSegment": "pipeline-debug",
                               "entityType": "project.component",
-                              "urlSuffix": "/{i18n.currentLocale}/#/pipeline-ui/pipeline-debug",
+                              "urlSuffix": "https://test-domain/{i18n.currentLocale}/#/pipeline-ui/pipeline-debug",
                               "hideSideNav": false
                             },
                             {
                               "pathSegment": "feedback",
                               "entityType": "project.component",
-                              "urlSuffix": "/{i18n.currentLocale}/#/pipeline-ui/feedback",
+                              "urlSuffix": "https://test-domain/{i18n.currentLocale}/#/pipeline-ui/feedback",
                               "hideSideNav": false
                             },
                             {
                               "pathSegment": "import-pipeline",
                               "entityType": "project.component",
-                              "urlSuffix": "/{i18n.currentLocale}/#/pipeline-ui/import-pipeline",
+                              "urlSuffix": "https://test-domain/{i18n.currentLocale}/#/pipeline-ui/import-pipeline",
                               "hideSideNav": false
                             }
                           ]
@@ -198,7 +198,7 @@ Test Extension matches the snapshot:
                         {
                           "pathSegment": "modal",
                           "entityType": "project.component",
-                          "urlSuffix": "/{i18n.currentLocale}/#/modal",
+                          "urlSuffix": "https://test-domain/{i18n.currentLocale}/#/modal",
                           "hideSideNav": false
                         }
                       ]

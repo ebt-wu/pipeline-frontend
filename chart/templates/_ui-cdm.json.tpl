@@ -1,4 +1,5 @@
 {{- define "ui.cdm" }}
+{{ $url := printf "%s://%s" .Values.protocol .Values.site.domain -}}
 {
   "_version": "3.0",
   "payload": {
@@ -13,7 +14,7 @@
             {
               "pathSegment": "pipeline-ui",
               "label": "CI/CD Setup",
-              "urlSuffix": "/{i18n.currentLocale}/#/pipeline-ui",
+              "urlSuffix": "{{$url}}/{i18n.currentLocale}/#/pipeline-ui",
               "hideSideNav": false,
               "icon": "process",
               "entityType": "project.component",
@@ -28,25 +29,25 @@
                 {
                   "pathSegment": "setup",
                   "entityType": "project.component",
-                  "urlSuffix": "/{i18n.currentLocale}/#/pipeline-ui/setup",
+                  "urlSuffix": "{{$url}}/{i18n.currentLocale}/#/pipeline-ui/setup",
                   "hideSideNav": false
                 },
                 {
                   "pathSegment": "pipeline-debug",
                   "entityType": "project.component",
-                  "urlSuffix": "/{i18n.currentLocale}/#/pipeline-ui/pipeline-debug",
+                  "urlSuffix": "{{$url}}/{i18n.currentLocale}/#/pipeline-ui/pipeline-debug",
                   "hideSideNav": false
                 },
                 {
                   "pathSegment": "feedback",
                   "entityType": "project.component",
-                  "urlSuffix": "/{i18n.currentLocale}/#/pipeline-ui/feedback",
+                  "urlSuffix": "{{$url}}/{i18n.currentLocale}/#/pipeline-ui/feedback",
                   "hideSideNav": false
                 },
                 {
                   "pathSegment": "import-pipeline",
                   "entityType": "project.component",
-                  "urlSuffix": "/{i18n.currentLocale}/#/pipeline-ui/import-pipeline",
+                  "urlSuffix": "{{$url}}/{i18n.currentLocale}/#/pipeline-ui/import-pipeline",
                   "hideSideNav": false
                 }
               ]
@@ -54,7 +55,7 @@
             {
               "pathSegment": "modal",
               "entityType": "project.component",
-              "urlSuffix": "/{i18n.currentLocale}/#/modal",
+              "urlSuffix": "{{$url}}/{i18n.currentLocale}/#/modal",
               "hideSideNav": false
             }
           ]
