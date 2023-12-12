@@ -300,7 +300,7 @@ export class SetupComponent implements OnInit, OnDestroy {
       placeholder: 'Select Credential',
       default: async () => {
         const secrets = await lastValueFrom(this.secretService.getPipelineSecrets())
-        return secrets.filter((value) => value.path.includes('jenkins'))[0] ?? null
+        return secrets.filter((value) => value.path.includes('jenkins'))[0].path ?? null
       },
       choices: async () => {
         const secrets = await lastValueFrom(this.secretService.getPipelineSecrets())
@@ -352,6 +352,7 @@ export class SetupComponent implements OnInit, OnDestroy {
   }
 
   async onFormSubmitted(value: SetupBuildFormValue): Promise<void> {
+    console.log(value)
     const context = (await this.luigiService.getContextAsync()) as any
 
     // create resources - because of dependencies the order needs to be: github - jenkins - piper
@@ -461,6 +462,7 @@ export class SetupComponent implements OnInit, OnDestroy {
   }
 
   private getCredentialPath(selectCredentialValue: string, componentId: string): string {
+    console.log(selectCredentialValue)
     if (selectCredentialValue.includes('GROUP-SECRETS')) {
       return selectCredentialValue
     }
