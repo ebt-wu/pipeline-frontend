@@ -9829,11 +9829,11 @@ __metadata:
   linkType: hard
 
 "graphql-sse@npm:^2.3.0":
-  version: 2.4.0
-  resolution: "graphql-sse@npm:2.4.0"
+  version: 2.4.1
+  resolution: "graphql-sse@npm:2.4.1"
   peerDependencies:
     graphql: ">=0.11 <=16"
-  checksum: 72208c916991308c204c70f8ac6f61b4a7a1e76ca97b863ecb9ee4d09d94a171c8d8337d3c11760693463f1d66459bcf07a149278e4215f1312291d4515cad62
+  checksum: 32f74c97d03c483f9345b017f001bb8fdd10727a99eaebfd8ac5f63ca87e57fa9528082fc11871dfe1219080bfb110e5e57479154dfbb608dec8ede60aa6689a
   languageName: node
   linkType: hard
 
