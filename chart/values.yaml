@@ -3,4 +3,3 @@ protocol: https
 
 site:
   enable: true
-  wcCdmPath: /assets/cdm.json

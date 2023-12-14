@@ -102,7 +102,49 @@ Has CDM for live:
                 }
               ]
             }
-        - url: https://test-domain-wc/assets/cdm.json
+        - data: |-
+            {
+              "_version": "3.0",
+              "payload": {
+                "visualizations": {
+                  "LuigiNavConfig": {
+                    "vizType": "sap.luigi.node",
+                    "vizConfig": {
+                      "nodes": [
+                        {
+                          "entityType": "project.overview::compound",
+                          "url": "https://test-domain-wc/{i18n.currentLocale}/main.js#cicd-project-promotion-card",
+                          "dxpOrder": 2,
+                          "layoutConfig": {
+                            "slot": "content"
+                          },
+                          "webcomponent": {
+                            "selfRegistered": true
+                          }
+                          "visibleForContext": "contains(['p1','p2'], entityContext.project.id)",
+                        }
+                      ]
+                    }
+                  }
+                },
+                "targetAppConfig": {
+                  "_version": "1.13.0",
+                  "sap.integration": {
+                    "navMode": "inplace",
+                    "urlTemplateId": "urltemplate.url",
+                    "urlTemplateParams": {
+                      "query": {}
+                    }
+                  }
+                }
+              },
+              "texts": [
+                {
+                  "locale": "",
+                  "textDictionary": {}
+                }
+              ]
+            }
       description: Enables hyperspace pipeline management.
       displayName: Pipelines
       image: data:image/png;base64,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
@@ -237,7 +279,48 @@ Test Extension matches the snapshot:
                 }
               ]
             }
-        - url: https://test-domain-wc/assets/cdm.json
+        - data: |-
+            {
+              "_version": "3.0",
+              "payload": {
+                "visualizations": {
+                  "LuigiNavConfig": {
+                    "vizType": "sap.luigi.node",
+                    "vizConfig": {
+                      "nodes": [
+                        {
+                          "entityType": "project.overview::compound",
+                          "url": "https://test-domain-wc/{i18n.currentLocale}/main.js#cicd-project-promotion-card",
+                          "dxpOrder": 2,
+                          "layoutConfig": {
+                            "slot": "content"
+                          },
+                          "webcomponent": {
+                            "selfRegistered": true
+                          }
+                        }
+                      ]
+                    }
+                  }
+                },
+                "targetAppConfig": {
+                  "_version": "1.13.0",
+                  "sap.integration": {
+                    "navMode": "inplace",
+                    "urlTemplateId": "urltemplate.url",
+                    "urlTemplateParams": {
+                      "query": {}
+                    }
+                  }
+                }
+              },
+              "texts": [
+                {
+                  "locale": "",
+                  "textDictionary": {}
+                }
+              ]
+            }
       description: Enables hyperspace pipeline management.
       displayName: Pipelines
       image: data:image/png;base64,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

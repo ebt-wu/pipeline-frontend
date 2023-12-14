@@ -18,8 +18,9 @@ spec:
   image: "{{ .Files.Get "assets/image.base64.txt" }}"
   cdm:
   - data: |-
-{{- include "ui.cdm" . | indent 8 }}
-  - url: {{ .Values.protocol }}://{{ .Values.site.wcDomain }}{{ .Values.site.wcCdmPath }}
+    {{- include "ui.cdm" . | indent 8 }}
+  - data: |-
+    {{- include "wc.cdm" . | indent 8 }}
   installableScopes:
     - Project
 {{- if .Values.pilot }}
