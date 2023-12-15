@@ -352,13 +352,17 @@ export class SetupComponent implements OnInit, OnDestroy {
   }
 
   async onFormSubmitted(value: SetupBuildFormValue): Promise<void> {
-    console.log(value)
     const context = (await this.luigiService.getContextAsync()) as any
 
     // create resources - because of dependencies the order needs to be: github - jenkins - piper
     const repoUrl = context.entityContext?.component?.annotations?.['github.dxp.sap.com/repo-url'] ?? ''
     const login = context.entityContext?.component?.annotations?.['github.dxp.sap.com/login'] ?? ''
     const repoName = context.entityContext?.component?.annotations?.['github.dxp.sap.com/repo-name'] ?? ''
+    if (!repoUrl || !login || !repoName) {
+      this.errorMessage.set('Could not get GitHub metadata from Luigi context 🙄. Please reload the page and try again.')
+      this.loading = false
+      return
+    }
     const githubRepoUrl = new URL(repoUrl)
 
     this.formValue = value
@@ -462,7 +466,6 @@ export class SetupComponent implements OnInit, OnDestroy {
   }
 
   private getCredentialPath(selectCredentialValue: string, componentId: string): string {
-    console.log(selectCredentialValue)
     if (selectCredentialValue.includes('GROUP-SECRETS')) {
       return selectCredentialValue
     }
