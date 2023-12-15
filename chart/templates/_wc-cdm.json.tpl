@@ -10,17 +10,17 @@
           "nodes": [
             {
               "entityType": "project.overview::compound",
-              "url": "{{$url}}/{i18n.currentLocale}/main.js#cicd-project-promotion-card",
+              "url": "{{$url}}/main.js#cicd-project-promotion-card",
               "dxpOrder": 2,
+              {{- if eq .Values.environment "live" }}
+              "visibleForContext": "contains({{ .Values.features.enabledProjects | toJson | replace "\"" "'" }}, entityContext.project.id)",
+              {{- end }}
               "layoutConfig": {
                 "slot": "content"
               },
               "webcomponent": {
                 "selfRegistered": true
               }
-              {{- if eq .Values.environment "live" }}
-              "visibleForContext": "contains({{ .Values.features.enabledProjects | toJson | replace "\"" "'" }}, entityContext.project.id)",
-              {{- end }}
             }
           ]
         }

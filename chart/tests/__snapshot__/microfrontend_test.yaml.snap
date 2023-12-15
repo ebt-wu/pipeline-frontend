@@ -113,15 +113,15 @@ Has CDM for live:
                       "nodes": [
                         {
                           "entityType": "project.overview::compound",
-                          "url": "https://test-domain-wc/{i18n.currentLocale}/main.js#cicd-project-promotion-card",
+                          "url": "https://test-domain-wc/main.js#cicd-project-promotion-card",
                           "dxpOrder": 2,
+                          "visibleForContext": "contains(['p1','p2'], entityContext.project.id)",
                           "layoutConfig": {
                             "slot": "content"
                           },
                           "webcomponent": {
                             "selfRegistered": true
                           }
-                          "visibleForContext": "contains(['p1','p2'], entityContext.project.id)",
                         }
                       ]
                     }
@@ -290,7 +290,7 @@ Test Extension matches the snapshot:
                       "nodes": [
                         {
                           "entityType": "project.overview::compound",
-                          "url": "https://test-domain-wc/{i18n.currentLocale}/main.js#cicd-project-promotion-card",
+                          "url": "https://test-domain-wc/main.js#cicd-project-promotion-card",
                           "dxpOrder": 2,
                           "layoutConfig": {
                             "slot": "content"
