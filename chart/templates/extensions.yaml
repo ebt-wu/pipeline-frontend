@@ -15,6 +15,13 @@ spec:
   documentation:
     url: {{ .Values.documentation.url }}
   {{- end }}
+  helpCenterData:
+    issueTracker:
+      url: https://itsm.services.sap/sp?id=sc_cat_item&sys_id=703f22d51b3b441020c8fddacd4bcbe2&service_offering=33e50476db98f110034ca8ebd39619bf&public=yes
+    feedbackTracker:
+      url: https://sapit-home-prod-004.launchpad.cfapps.eu10.hana.ondemand.com/site#feedbackservice-Display&/topic/cc5045ed-6c4e-4e7b-a18d-a0b377faf593/createFeedback
+    documentation:
+      url: https://pages.github.tools.sap/hyperspace/cicd-setup-documentation/
   image: "{{ .Files.Get "assets/image.base64.txt" }}"
   cdm:
   - data: |-
