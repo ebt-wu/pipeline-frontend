@@ -16,6 +16,10 @@
   font-size: 16px;
 }
 
+li::before {
+  border-radius: var(--fdCard_Border_Radius) !important;
+}
+
 .service {
   display: flex;
   width: 100%;

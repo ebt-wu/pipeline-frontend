@@ -142,16 +142,6 @@ fd-card-content {
     background-color: var(--sapList_SelectionBackgroundColor);
   }
 
-  .list-item-border {
-    border-top: 1px !important;
-    border-color: var(--sapList_BorderColor) !important;
-    border-style: solid !important;
-  }
-
-  .list-item-border:hover {
-    background: var(--sapList_Hover_Background);
-  }
-
   .status-icon {
     font-size: 16px;
   }
@@ -233,6 +223,57 @@ fd-info-label {
     .card-content-label {
       margin-top: 6px;
     }
+  }
+}
+
+li::before {
+  border-radius: var(--fdCard_Border_Radius) !important;
+}
+
+.scrollable-container {
+  overflow: scroll;
+  height: 94.5vh;
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.scrollable-container::-webkit-scrollbar {
+  display: none;
+}
+
+.github-actions-enabled-card {
+  margin-top: 0;
+
+  .thumbnail-margin {
+    margin: 0 !important;
+  }
+}
+.actions-enabled-card-content {
+  display: flex;
+  width: 100%;
+  align-items: center;
+
+  .avatar-margin {
+    margin-right: 0.75rem;
+  }
+
+  .name-kind {
+    display: flex;
+    flex-direction: column;
+
+    .name {
+      font-size: 16px;
+    }
+  }
+
+  .pending-creation {
+    margin-left: 1rem;
+  }
+
+  .arrow-right {
+    font-size: 20px;
+    color: var(--sapNeutralColor);
+    margin-right: 1rem;
   }
 }
 

@@ -8,6 +8,8 @@
 
 .home-page-content {
   padding: 1rem;
+  padding-bottom: 0;
+  overflow: hidden;
 }
 
 .card-footer {

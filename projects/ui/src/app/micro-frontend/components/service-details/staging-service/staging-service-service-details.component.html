@@ -58,13 +58,9 @@
     <b>Vault Path</b>
   </div>
   <fd-busy-indicator [loading]="pendingShowInVault()" size="s">
-    <button
-      fd-button
-      class="vault-button-padding"
-      fdType="transparent"
-      [disabled]="pendingShowInVault()"
-      [label]="serviceDetails.secretPath"
-      (click)="showInVault(serviceDetails.secretPath)"></button>
+    <a fd-link [disabled]="pendingShowInVault()" (click)="showInVault(serviceDetails.secretPath)">
+      {{ serviceDetails.secretPath }}
+    </a>
   </fd-busy-indicator>
 </div>
 

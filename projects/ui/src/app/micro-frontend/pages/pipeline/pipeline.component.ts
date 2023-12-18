@@ -82,6 +82,7 @@ export class PipelineComponent implements OnInit, OnDestroy {
   // maps
   kindName = KindName
   kinds = Kinds
+  serviceStatus = ServiceStatus
   pipelineURL = signal('')
   private pipelineSubscription: Subscription
   private githubActionsSubscription: Subscription
@@ -416,6 +417,16 @@ export class PipelineComponent implements OnInit, OnDestroy {
   async openDetails(event: ServiceData) {
     if (event.status != ServiceStatus.CREATED) {
       return
+    }
+
+    // Need to check GitHub Action status separately since no event status is given (pipeline.component.html:186)
+    if (event.kind === Kinds.GITHUB_ACTION && event.pipeline) {
+      for (let i = 0; i < event.pipeline?.resourceRefs?.length; i++) {
+        const ref = event.pipeline?.resourceRefs[i]
+        if (ref.kind === Kinds.GITHUB_ACTION && ref.status != ServiceStatus.CREATED) {
+          return
+        }
+      }
     }
 
     this.sharedResourceDataService.publishResourceData(event.kind, event.name)

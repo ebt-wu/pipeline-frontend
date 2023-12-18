@@ -5,7 +5,7 @@
     (onDismiss)="dismissErrorMessage()"
     *ngIf="errorMessage()"></error-message>
   <div class="flex-box">
-    <h3>Enabled for Github Organization</h3>
+    <h3 class="bottom-margin">Enabled for Github Organization</h3>
     <button
       class="auto-left-margin"
       role="button"
@@ -16,10 +16,26 @@
       fd-button></button>
   </div>
   <a [href]="githubOrganizationUrl" target="_blank">
-    {{ githubOrganizationUrl }}
+    {{ serviceDetails.githubOrganization }}
   </a>
+  <ng-container *ngIf="responsibleProjectUrl()">
+    <div class="flex-box top-margin">
+      <h3 class="heading-margin">Responsible Project</h3>
+      <button
+        class="left-margin"
+        role="button"
+        fdType="transparent"
+        glyph="hint"
+        fd-button
+        placement="top"
+        [fd-inline-help]="responsibleProjectHelp"
+        [triggers]="['click']"
+        [closeOnOutsideClick]="true"></button>
+    </div>
+    <a [href]="responsibleProjectUrl()" target="_blank">{{ serviceDetails.responsibleProject }}</a>
+  </ng-container>
   <div class="flex-box top-margin">
-    <h3>SUGAR Customer ID</h3>
+    <h3 class="heading-margin">SUGAR Customer ID</h3>
     <button
       class="left-margin"
       role="button"
@@ -40,13 +56,9 @@
     <b>Vault Path</b>
   </div>
   <fd-busy-indicator [loading]="pendingShowInVault()" size="s">
-    <button
-      class="vault-button-padding"
-      fd-button
-      fdType="transparent"
-      [disabled]="pendingShowInVault()"
-      [label]="serviceDetails.secretPath"
-      (click)="showInVault(serviceDetails.secretPath)"></button>
+    <a fd-link [disabled]="pendingShowInVault()" (click)="showInVault(serviceDetails.secretPath)">
+      {{ serviceDetails.secretPath }}
+    </a>
   </fd-busy-indicator>
   <div class="divider"></div>
   <h3 class="get-started-heading">Get started with GitHub Actions</h3>
@@ -66,7 +78,7 @@
       to ensure compliant use of GitHub Actions
     </li>
     <li>
-      <a [href]="this.catalogUrl()" target="_blank">Open catalog</a>
+      <a href="https://github.tools.sap/github/actions-mirror" target="_blank">Open catalog</a>
       to find all allowed Actions at SAP
     </li>
     <li>
@@ -81,4 +93,7 @@
     <a href="https://wiki.one.int.sap/wiki/display/DevFw/SUGAR" target="_blank">SUGAR</a>
     service creates a GitHub Actions Runner Group in your GitHub Organization.
   </div>
+</ng-template>
+<ng-template #responsibleProjectHelp>
+  <div>The project which initially enabled GitHub Actions for the GitHub organization your component lives in.</div>
 </ng-template>

@@ -12,6 +12,10 @@ a {
   margin-top: 1rem;
 }
 
+.bottom-margin {
+  margin-bottom: 0.5rem;
+}
+
 .left-margin {
   margin-left: 0.4rem;
 }
@@ -37,4 +41,9 @@ a {
 
 .get-started-list {
   margin: 0;
+}
+
+.heading-margin {
+  margin-bottom: 0.5rem;
+  margin-top: 0.5rem;
 }

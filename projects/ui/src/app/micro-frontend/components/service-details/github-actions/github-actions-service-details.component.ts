@@ -25,12 +25,19 @@ export class GithubActionsServiceDetailsComponent implements OnInit {
   githubActionsRunnerGroupUrl: string
   errorMessage = signal('')
   catalogUrl = signal('')
+  isCurrentProjectResponsible = signal(false)
+  responsibleProjectUrl = signal('')
 
   async ngOnInit(): Promise<void> {
     this.githubOrganizationUrl = `${this.serviceDetails.githubInstance}/${this.serviceDetails.githubOrganization}`
     this.githubActionsRunnerGroupUrl = `${this.serviceDetails.githubInstance}/organizations/${this.serviceDetails.githubOrganization}/settings/actions/runner-groups`
+
     const context = (await this.luigiService.getContextAsync()) as any
     this.catalogUrl.set(context.frameBaseUrl + '/catalog')
+
+    if (context.projectId != this.serviceDetails.responsibleProject) {
+      this.responsibleProjectUrl.set(`${context.frameBaseUrl}/projects/${this.serviceDetails.responsibleProject}`)
+    }
   }
 
   pendingShowInVault = signal(false)

@@ -3,7 +3,7 @@ import { FundamentalNgxCoreModule, IconModule } from '@fundamental-ngx/core'
 import { CommonModule } from '@angular/common'
 import { DebugModeService } from '../../services/debug-mode.service'
 import { KindCategory, KindName } from '../../../constants'
-import { ResourceRef } from '../../../types'
+import { Pipeline, ResourceRef } from '../../../types'
 import { firstValueFrom } from 'rxjs'
 import { Kinds, ServiceStatus } from '../../../enums'
 import { RouterModule } from '@angular/router'
@@ -12,6 +12,7 @@ export interface ServiceData {
   name: string
   kind: Kinds
   status: string
+  pipeline?: Pipeline
 }
 
 @Component({

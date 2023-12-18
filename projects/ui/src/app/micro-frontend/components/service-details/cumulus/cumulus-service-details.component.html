@@ -56,13 +56,9 @@
     <b>Vault Path</b>
   </div>
   <fd-busy-indicator [loading]="pendingShowInVault()" size="s">
-    <button
-      class="vault-button-padding"
-      fd-button
-      fdType="transparent"
-      [disabled]="pendingShowInVault()"
-      [label]="cumulusSecretPath"
-      (click)="showInVault(cumulusSecretPath)"></button>
+    <a fd-link [disabled]="pendingShowInVault()" (click)="showInVault(cumulusSecretPath)">
+      {{ cumulusSecretPath }}
+    </a>
   </fd-busy-indicator>
 </div>
 

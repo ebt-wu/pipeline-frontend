@@ -95,10 +95,15 @@ export class SecretService {
     const redirect = url.searchParams.get('redirect_to')
 
     let redirectDecoded = decodeURIComponent(redirect)
-    redirectDecoded = redirectDecoded.replace('list', 'show')
+    redirectDecoded = redirectDecoded.replace('/list', '')
 
     const redirectArr = redirectDecoded.split('?')
     redirectArr[0] += `/${secretPath}`
+
+    // path to secret after /kv needs to be encoded
+    redirectArr[0] = `/vault/secrets/piper/kv/${encodeURIComponent(
+      redirectArr[0].split('/vault/secrets/piper/kv/')[1],
+    )}`
 
     redirectDecoded = redirectArr.join('?')
 

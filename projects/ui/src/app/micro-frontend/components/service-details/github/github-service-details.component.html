@@ -1,6 +1,6 @@
 <div>
   <div class="flex-box">
-    <h3>GitHub Repository</h3>
+    <h3 class="heading-margin">GitHub Repository</h3>
     <button
       class="auto-left-margin"
       role="button"
@@ -14,7 +14,7 @@
     {{ serviceDetails.organization }}/{{ serviceDetails.repository }}
   </a>
   <div class="flex-box top-margin">
-    <h3>GitHub Instance</h3>
+    <h3 class="heading-margin">GitHub Instance</h3>
   </div>
   <a [href]="githubInstance" target="_blank">
     {{ githubInstance }}
@@ -37,13 +37,9 @@
     <b>Vault Path</b>
   </div>
   <fd-busy-indicator [loading]="pendingShowInVault()" size="s">
-    <button
-      fd-button
-      class="vault-button-padding"
-      fdType="transparent"
-      [disabled]="pendingShowInVault()"
-      [label]="serviceDetails.secretPath"
-      (click)="showInVault(serviceDetails.secretPath)"></button>
+    <a fd-link [disabled]="pendingShowInVault()" (click)="showInVault(serviceDetails.secretPath)">
+      {{ serviceDetails.secretPath }}
+    </a>
   </fd-busy-indicator>
 </div>
 
