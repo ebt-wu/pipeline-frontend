@@ -12,13 +12,6 @@
                   <i class="header-debug-text">disable with CTRL + D</i>
                 </div>
                 <div class="header-buttons">
-                  <button
-                    class="header-button"
-                    fd-button
-                    label="Give Feedback"
-                    fdType="emphasized"
-                    (click)="openFeedback()"
-                    *ngIf="isBuildPipelineSetup() && localLayout === 'OneColumnStartFullScreen'"></button>
                   <fd-busy-indicator [loading]="pendingShowCredentials()" size="s">
                     <button
                       fd-button
@@ -29,15 +22,6 @@
                       ariaLabel="Show Credentials"
                       (click)="showCredentials()"></button>
                   </fd-busy-indicator>
-                  <button
-                    title="Show documentation"
-                    role="button"
-                    class="header-button"
-                    fdType="transparent"
-                    glyph="sys-help"
-                    *ngIf="localLayout === 'OneColumnStartFullScreen'"
-                    fd-button
-                    (click)="openDocumentation()"></button>
                 </div>
               </div>
             </fd-card-content>
