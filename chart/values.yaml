@@ -3,3 +3,6 @@ protocol: https
 
 site:
   enable: true
+
+documentation:
+  url: https://pages.github.tools.sap/hyperspace/cicd-setup-documentation/

@@ -147,9 +147,9 @@ Has CDM for live:
             }
       description: Enables hyperspace pipeline management.
       displayName: Pipelines
+      documentation:
+        url: https://pages.github.tools.sap/hyperspace/cicd-setup-documentation/
       helpCenterData:
-        documentation:
-          url: https://pages.github.tools.sap/hyperspace/cicd-setup-documentation/
         feedbackTracker:
           url: https://sapit-home-prod-004.launchpad.cfapps.eu10.hana.ondemand.com/site#feedbackservice-Display&/topic/cc5045ed-6c4e-4e7b-a18d-a0b377faf593/createFeedback
         issueTracker:
@@ -330,9 +330,9 @@ Test Extension matches the snapshot:
             }
       description: Enables hyperspace pipeline management.
       displayName: Pipelines
+      documentation:
+        url: https://pages.github.tools.sap/hyperspace/cicd-setup-documentation/
       helpCenterData:
-        documentation:
-          url: https://pages.github.tools.sap/hyperspace/cicd-setup-documentation/
         feedbackTracker:
           url: https://sapit-home-prod-004.launchpad.cfapps.eu10.hana.ondemand.com/site#feedbackservice-Display&/topic/cc5045ed-6c4e-4e7b-a18d-a0b377faf593/createFeedback
         issueTracker:
