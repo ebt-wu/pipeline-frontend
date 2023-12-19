@@ -4,7 +4,7 @@ import { FundamentalNgxCoreModule } from '@fundamental-ngx/core'
 import { SecretService } from '../../../../micro-frontend/services/secret.service'
 import { GetGithubActionsCrossNamespaceQuery } from '@generated/graphql'
 import { ErrorMessageComponent } from '../../error-message/error-message.component'
-import { DxpLuigiContextService } from '@dxp/ngx-core/luigi'
+import { DxpLuigiContextService, LuigiClient } from '@dxp/ngx-core/luigi'
 
 @Component({
   selector: 'github-actions-service-details',
@@ -17,9 +17,17 @@ export class GithubActionsServiceDetailsComponent implements OnInit {
   constructor(
     private readonly secretService: SecretService,
     private readonly luigiService: DxpLuigiContextService,
+    private readonly luigiClient: LuigiClient,
   ) {}
 
   @Input() serviceDetails: GetGithubActionsCrossNamespaceQuery['getGithubActionsCrossNamespace']
+
+  readonly ACTIONS_GET_STARTED_URL =
+    'https://pages.github.tools.sap/github/features-and-usecases/features/actions/usage'
+  readonly ACTIONS_SECURITY_HARDENING_URL =
+    'https://docs.github.com/en/actions/security-guides/security-hardening-for-github-actions'
+  readonly ACTIONS_CATALOG_URL = 'https://github.tools.sap/github/actions-mirror'
+  readonly SUGAR_DOCU_URL = 'https://wiki.one.int.sap/wiki/display/DevFw/SUGAR'
 
   githubOrganizationUrl: string
   githubActionsRunnerGroupUrl: string
@@ -27,12 +35,21 @@ export class GithubActionsServiceDetailsComponent implements OnInit {
   catalogUrl = signal('')
   isCurrentProjectResponsible = signal(false)
   responsibleProjectUrl = signal('')
+  showActionsGetStartedWarning = signal(false)
 
   async ngOnInit(): Promise<void> {
     this.githubOrganizationUrl = `${this.serviceDetails.githubInstance}/${this.serviceDetails.githubOrganization}`
     this.githubActionsRunnerGroupUrl = `${this.serviceDetails.githubInstance}/organizations/${this.serviceDetails.githubOrganization}/settings/actions/runner-groups`
 
-    const context = (await this.luigiService.getContextAsync()) as any
+    const actionsGetStartedWarningDismissed = await this.luigiClient
+      .storageManager()
+      .getItem(`actions-get-started-warning`)
+
+    if (!actionsGetStartedWarningDismissed) {
+      this.showActionsGetStartedWarning.set(true)
+    }
+
+    const context = await this.luigiService.getContextAsync()
     this.catalogUrl.set(context.frameBaseUrl + '/catalog')
 
     if (context.projectId != this.serviceDetails.responsibleProject) {
@@ -65,5 +82,9 @@ export class GithubActionsServiceDetailsComponent implements OnInit {
 
   dismissErrorMessage() {
     this.errorMessage.set('')
+  }
+
+  async storeDismissInLocalStorage() {
+    await this.luigiClient.storageManager().setItem(`actions-get-started-warning`, `dismissed at: ${new Date()}`)
   }
 }
