@@ -338,7 +338,7 @@ export class SetupComponent implements OnInit, OnDestroy {
           header: 'GitHub credentials',
           subheader: async () => {
             const { githubRepoUrl, githubOrgName, githubRepoName } = await this.githubService.getGithubMetadata()
-            return `Needed to enable GitHub Actions for the ${githubOrgName} organization, get the organization level runners to use them and configure your pipeline in the <a href="${githubRepoUrl}" target="_blank">${githubOrgName}/${githubRepoName}</a> GitHub repository`
+            return `To set up and manage your CI/CD services, it is necessary for us to have access to the GitHub organization that the <a href="${githubRepoUrl}" target="_blank">${githubOrgName}/${githubRepoName}</a> GitHub repository belongs to.`
           },
         },
       },
@@ -359,7 +359,9 @@ export class SetupComponent implements OnInit, OnDestroy {
     const login = context.entityContext?.component?.annotations?.['github.dxp.sap.com/login'] ?? ''
     const repoName = context.entityContext?.component?.annotations?.['github.dxp.sap.com/repo-name'] ?? ''
     if (!repoUrl || !login || !repoName) {
-      this.errorMessage.set('Could not get GitHub metadata from Luigi context 🙄. Please reload the page and try again.')
+      this.errorMessage.set(
+        'Could not get GitHub metadata from Luigi context 🙄. Please reload the page and try again.',
+      )
       this.loading = false
       return
     }

@@ -57,7 +57,7 @@
               [href]="this.githubMetadata.githubRepoUrl + '/pulls'"
               target="_blank"
               *ngIf="this.githubMetadata.githubRepoUrl">
-              Open Github
+              Open GitHub
             </a>
           </fd-message-strip>
           <fd-card cardType="linkList" class="stage-card">
@@ -167,7 +167,7 @@
               class="upgrade-github-actions-banner"
               *ngIf="(isGithubActionsEnabledInSameComponent() || gha.isAlreadyManaged) && !isBuildStageSetup()"
               [showBalloons]="localLayout === 'OneColumnStartFullScreen'"></upgrade-banner>
-            <!--the below card will be shown if the Github Actions is enabled -->
+            <!--the below card will be shown if the GitHub Actions is enabled -->
             <fd-card
               class="github-actions-enabled-card"
               cardType="linkList"
@@ -177,7 +177,7 @@
                 <ul fd-list [byline]="true" [noBorder]="true">
                   <li
                     [ngClass]="
-                      activeTile === kinds.GITHUB_ACTION && localLayout != 'OneColumnStartFullScreen'
+                      activeTile === kinds.GITHUB_ACTION && localLayout !== 'OneColumnStartFullScreen'
                         ? 'list-item-selected'
                         : ''
                     "
@@ -276,7 +276,7 @@
                         [colorAccent]="10"></fd-avatar>
                       <div class="card-description">
                         <div class="card-content-github-actions">
-                          <h1 class="card-header"><strong>Github Actions</strong></h1>
+                          <h1 class="card-header"><strong>GitHub Actions</strong></h1>
                           <fd-info-label
                             class="card-content-label"
                             fdCozy
