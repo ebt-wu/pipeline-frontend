@@ -32,7 +32,7 @@ Has CDM for live:
                           "requiredIFramePermissions": {
                             "allow": ["clipboard-read", "clipboard-write"]
                           },
-                          "visibleForContext": "contains(['p1','p2'], entityContext.project.id)",
+                          "visibleForContext": "!enabledProjects || contains(enabledProjects, entityContext.project.id)",
                           "context": {
                             "featureFlags": {"GITHUB_ACTIONS_ENABLED":false,"enabledProjects":["p1","p2"]}
                           },
@@ -221,7 +221,7 @@ Test Extension matches the snapshot:
                             "allow": ["clipboard-read", "clipboard-write"]
                           },
                           "context": {
-                            "featureFlags": {"GITHUB_ACTIONS_ENABLED":false,"enabledProjects":[]}
+                            "featureFlags": {"GITHUB_ACTIONS_ENABLED":false}
                           },
                           "children": [
                             {
@@ -407,7 +407,7 @@ githubActions feature enabled for some projects:
                             "allow": ["clipboard-read", "clipboard-write"]
                           },
                           "context": {
-                            "featureFlags": {"GITHUB_ACTIONS_ENABLED":["hyperspace-ci-cd-examples"],"anotherFlag":true,"enabledProjects":[]}
+                            "featureFlags": {"GITHUB_ACTIONS_ENABLED":["hyperspace-ci-cd-examples"],"anotherFlag":true}
                           },
                           "children": [
                             {

@@ -23,7 +23,7 @@
                 "allow": ["clipboard-read", "clipboard-write"]
               },
               {{- if eq .Values.environment "live" }}
-              "visibleForContext": "contains({{ .Values.features.enabledProjects | toJson | replace "\"" "'" }}, entityContext.project.id)",
+              "visibleForContext": "!enabledProjects || contains(enabledProjects, entityContext.project.id)",
               {{- end }}
               {{- with .Values.features }}
               "context": {

@@ -3,17 +3,19 @@ protocol: https
 
 site:
   enable: true
+  cdmPath: /en/assets/cdm.json
 
 documentation:
   url: https://pages.github.tools.sap/hyperspace/cicd-setup-documentation/
 
-features:
-  # enabled projects with the ci-cd extensions
-  enabledProjects: []
+features: # Changes for prod landscape goes to https://github.tools.sap/hyperspace/ci-cd-setup-stack/blob/prod/landscapes/prod.yaml
+  # enabled projects with the ci-cd extensions.
+  # comment out to enable all projects
+  #enabledProjects: []
 
-  # For handling fine grained features in code see feature-flag.service.ts
+  # For handling fine-grained features in code see ./projects/ui/src/app/micro-frontend/services/feature-flag.service.ts
 
-  # Enabled Github Actions as an orchestrator
+  # Enabled GitHub Actions as an orchestrator
   # can be either true | false or a list of project ids
   # examples:
   #

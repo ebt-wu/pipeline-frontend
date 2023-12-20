@@ -22,6 +22,7 @@
               "requiredIFramePermissions": {
                 "allow": ["clipboard-read", "clipboard-write"]
               },
+              "visibleForContext": "!enabledProjects || contains(enabledProjects, entityContext.project.id)",
               "context": {
                 "featureFlags": {
                   "GITHUB_ACTIONS_ENABLED": true
