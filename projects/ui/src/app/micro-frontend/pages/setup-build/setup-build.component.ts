@@ -349,7 +349,7 @@ export class SetupComponent implements OnInit, OnDestroy {
           header: 'GitHub credentials',
           subheader: async () => {
             const { githubRepoUrl, githubOrgName, githubRepoName } = await this.githubService.getGithubMetadata()
-            return `Needed to enable GitHub Actions for the ${githubOrgName} organization, get the organization level runners to use them and configure your pipeline in the <a href="${githubRepoUrl}" target="_blank">${githubOrgName}/${githubRepoName}</a> GitHub repository`
+            return `To set up and manage your CI/CD services, it is necessary for us to have access to the GitHub organization that the <a href="${githubRepoUrl}" target="_blank">${githubOrgName}/${githubRepoName}</a> GitHub repository belongs to.`
           },
         },
       },

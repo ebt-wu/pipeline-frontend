@@ -127,7 +127,7 @@ export class PipelineComponent implements OnInit, OnDestroy {
       this.isBuildPipelineSetup.set(false)
       this.jenkinsPipelineError = false
       if (pipeline?.resourceRefs) {
-        // if true then it means that the Github Actions is enabled from the same component
+        // if true then it means that the GitHub Actions is enabled from the same component
         this.isGithubActionsEnabledInSameComponent.set(
           pipeline.resourceRefs.some((ref) => ref.kind === Kinds.GITHUB_ACTION),
         )
@@ -281,7 +281,7 @@ export class PipelineComponent implements OnInit, OnDestroy {
     this.luigiClient
       .linkManager()
       .fromVirtualTreeRoot()
-      .openAsModal('github-actions', { title: 'Enable Github Actions', width: '38rem', height: '30rem' })
+      .openAsModal('github-actions', { title: 'Enable GitHub Actions', width: '38rem', height: '30rem' })
   }
 
   openPipelineDebugModal(e: Event) {
@@ -454,7 +454,7 @@ export class PipelineComponent implements OnInit, OnDestroy {
     this.localLayout = layoutEvent
   }
 
-  // This is true when the Github Actions is enabled from one of the other components of the same project
+  // This is true when the GitHub Actions is enabled from one of the other components of the same project
   isGithubActionsEnabledInSameProject(responsibleProjectName: string): boolean {
     return this.projectId === responsibleProjectName
   }

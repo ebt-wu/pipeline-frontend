@@ -7,8 +7,8 @@ export const KindName = {
   [Kinds.PIPER_CONFIG]: 'Piper Native Build',
   [Kinds.STAGING_SERVICE_CREDENTIAL]: 'Staging Service',
   [Kinds.JENKINS_PIPELINE]: 'Jenkins Pipeline',
-  [Kinds.GITHUB_ACTION]: 'Github Actions',
-  [Kinds.GITHUB_ACTIONS_WORKFLOW]: 'Github Actions',
+  [Kinds.GITHUB_ACTION]: 'GitHub Actions',
+  [Kinds.GITHUB_ACTIONS_WORKFLOW]: 'GitHub Actions',
 }
 
 export const KindCategory = {

@@ -42,7 +42,7 @@ export enum Languages {
 export enum Orchestrators {
   JENKINS = 'Jenkins',
   AZURE_PIPELINES = 'Azure Pipelines',
-  GITHUB_ACTIONS_WORKFLOW = 'Github Actions',
+  GITHUB_ACTIONS_WORKFLOW = 'GitHub Actions',
 }
 
 export enum CredentialTypes {
