@@ -8,7 +8,7 @@ tests:
   - it: Test Extension matches the snapshot
     template: extensions.yaml
     set:
-        environment: dev
+      environment: dev
     asserts:
       - matchSnapshot: {}
   - it: Has CDM for live
@@ -17,7 +17,16 @@ tests:
       environment: live
       features:
         enabledProjects:
-        - p1
-        - p2
+          - p1
+          - p2
     asserts:
-    - matchSnapshot: {}
+      - matchSnapshot: {}
+  - it: githubActions feature enabled for some projects
+    template: extensions.yaml
+    set:
+      features:
+        GITHUB_ACTIONS_ENABLED:
+          - hyperspace-ci-cd-examples
+        anotherFlag: true
+    asserts:
+      - matchSnapshot: {}

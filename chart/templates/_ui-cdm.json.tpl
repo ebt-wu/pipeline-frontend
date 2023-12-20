@@ -25,6 +25,11 @@
               {{- if eq .Values.environment "live" }}
               "visibleForContext": "contains({{ .Values.features.enabledProjects | toJson | replace "\"" "'" }}, entityContext.project.id)",
               {{- end }}
+              {{- with .Values.features }}
+              "context": {
+                "featureFlags": {{ . | toJson }}
+              },
+              {{- end}}
               "children": [
                 {
                   "pathSegment": "setup",

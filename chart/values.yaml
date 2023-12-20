@@ -6,3 +6,19 @@ site:
 
 documentation:
   url: https://pages.github.tools.sap/hyperspace/cicd-setup-documentation/
+
+features:
+  # enabled projects with the ci-cd extensions
+  enabledProjects: []
+
+  # For handling fine grained features in code see feature-flag.service.ts
+
+  # Enabled Github Actions as an orchestrator
+  # can be either true | false or a list of project ids
+  # examples:
+  #
+  # GITHUB_ACTIONS_ENABLED:
+  # - hyperspace-ci-cd-examples
+  #
+  # GITHUB_ACTIONS_ENABLED: true
+  GITHUB_ACTIONS_ENABLED: false

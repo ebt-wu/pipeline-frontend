@@ -157,148 +157,150 @@
               </div>
             </fd-card-content>
           </fd-card>
-          <div class="automate-workflows-header">
-            <h3>Automate Workflows</h3>
-            <p>Execute different tasks beyond your Build, Validate, Deploy pipeline.</p>
-          </div>
-          <ng-container
-            *ngIf="!pendingExtensionClass() && isGithubActionsEnabledAlready$ | async as gha; else loadingContent">
-            <upgrade-banner
-              class="upgrade-github-actions-banner"
-              *ngIf="(isGithubActionsEnabledInSameComponent() || gha.isAlreadyManaged) && !isBuildStageSetup()"
-              [showBalloons]="localLayout === 'OneColumnStartFullScreen'"></upgrade-banner>
-            <!--the below card will be shown if the Github Actions is enabled -->
-            <fd-card
-              class="github-actions-enabled-card"
-              cardType="linkList"
-              class="stage-card"
-              *ngIf="gha.isAlreadyManaged || isGithubActionsEnabledInSameComponent(); else notEnabled">
-              <fd-card-content class="card-content-padding">
-                <ul fd-list [byline]="true" [noBorder]="true">
-                  <li
-                    [ngClass]="
-                      activeTile === kinds.GITHUB_ACTION && localLayout != 'OneColumnStartFullScreen'
-                        ? 'list-item-selected'
-                        : ''
-                    "
-                    fd-list-item
-                    (click)="
-                      openDetails({ name: '', kind: kinds.GITHUB_ACTION, status: 'Created', pipeline: pipeline })
-                    ">
-                    <a fd-list-link>
-                      <span fd-list-thumbnail class="thumbnail-margin">
-                        <ng-container *ngIf="isGithubActionsEnabledInSameComponent()">
-                          <ng-container *ngFor="let resourceRef of pipeline.resourceRefs">
-                            <ng-container *ngIf="resourceRef.kind === 'GithubAction'">
-                              <span
-                                *ngIf="resourceRef.status === serviceStatus.CREATED"
-                                fd-object-status
-                                class="status-icon"
-                                status="positive"
-                                glyph="message-success"></span>
-                              <fd-busy-indicator
-                                [loading]="true"
-                                *ngIf="
-                                  resourceRef.status === serviceStatus.PENDING_CREATION ||
-                                  resourceRef.status === serviceStatus.UN_KNOWN
-                                "
-                                ariaLabel="loading"
-                                size="s"
-                                title="Please Wait"></fd-busy-indicator>
-                              <span
-                                fd-object-status
-                                class="status-icon"
-                                *ngIf="resourceRef.status === serviceStatus.FAILING_CREATION"
-                                status="negative"
-                                glyph="message-error"></span>
-                              <span
-                                fd-object-status
-                                class="status-icon"
-                                *ngIf="resourceRef.status === serviceStatus.NOT_FOUND"
-                                glyph="circle-task"></span>
-                            </ng-container>
-                          </ng-container>
-                        </ng-container>
-                        <ng-container *ngIf="!isGithubActionsEnabledInSameComponent()">
-                          <span fd-object-status class="status-icon" status="positive" glyph="message-success"></span>
-                        </ng-container>
-                      </span>
-                      <div class="actions-enabled-card-content">
-                        <fd-avatar
-                          size="s"
-                          class="avatar-margin"
-                          image="{{ getIcon(kinds.GITHUB_ACTION) }}"
-                          [label]="kindName[kinds.GITHUB_ACTION]"
-                          [colorAccent]="10"></fd-avatar>
-                        <div class="name-kind">
-                          <b class="name">{{ kindName[kinds.GITHUB_ACTION] }}</b>
-                          <fd-info-label fdCozy label="Orchestration" color="10" title="Orchestrator"></fd-info-label>
-                        </div>
-                        <ng-container *ngIf="isGithubActionsEnabledInSameComponent()">
-                          <ng-container *ngFor="let resourceRef of pipeline.resourceRefs">
-                            <ng-container *ngIf="resourceRef.kind === 'GithubAction'">
-                              <ng-container
-                                *ngIf="
-                                  resourceRef.status === serviceStatus.PENDING_CREATION ||
-                                  resourceRef.status === serviceStatus.UN_KNOWN
-                                ">
-                                <p class="pending-creation">
-                                  <i>
-                                    We are setting up GitHub Actions and runners for you.
-                                    <br />
-                                    This might take 3-5 minutes.
-                                  </i>
-                                </p>
+          <ng-container *ngIf="showGithubActions()">
+            <div class="automate-workflows-header">
+              <h3>Automate Workflows</h3>
+              <p>Execute different tasks beyond your Build, Validate, Deploy pipeline.</p>
+            </div>
+            <ng-container
+              *ngIf="!pendingExtensionClass() && isGithubActionsEnabledAlready$ | async as gha; else loadingContent">
+              <upgrade-banner
+                class="upgrade-github-actions-banner"
+                *ngIf="(isGithubActionsEnabledInSameComponent() || gha.isAlreadyManaged) && !isBuildStageSetup()"
+                [showBalloons]="localLayout === 'OneColumnStartFullScreen'"></upgrade-banner>
+              <!--the below card will be shown if the Github Actions is enabled -->
+              <fd-card
+                class="github-actions-enabled-card"
+                cardType="linkList"
+                class="stage-card"
+                *ngIf="gha.isAlreadyManaged || isGithubActionsEnabledInSameComponent(); else notEnabled">
+                <fd-card-content class="card-content-padding">
+                  <ul fd-list [byline]="true" [noBorder]="true">
+                    <li
+                      [ngClass]="
+                        activeTile === kinds.GITHUB_ACTION && localLayout != 'OneColumnStartFullScreen'
+                          ? 'list-item-selected'
+                          : ''
+                      "
+                      fd-list-item
+                      (click)="
+                        openDetails({ name: '', kind: kinds.GITHUB_ACTION, status: 'Created', pipeline: pipeline })
+                      ">
+                      <a fd-list-link>
+                        <span fd-list-thumbnail class="thumbnail-margin">
+                          <ng-container *ngIf="isGithubActionsEnabledInSameComponent()">
+                            <ng-container *ngFor="let resourceRef of pipeline.resourceRefs">
+                              <ng-container *ngIf="resourceRef.kind === 'GithubAction'">
+                                <span
+                                  *ngIf="resourceRef.status === serviceStatus.CREATED"
+                                  fd-object-status
+                                  class="status-icon"
+                                  status="positive"
+                                  glyph="message-success"></span>
+                                <fd-busy-indicator
+                                  [loading]="true"
+                                  *ngIf="
+                                    resourceRef.status === serviceStatus.PENDING_CREATION ||
+                                    resourceRef.status === serviceStatus.UN_KNOWN
+                                  "
+                                  ariaLabel="loading"
+                                  size="s"
+                                  title="Please Wait"></fd-busy-indicator>
+                                <span
+                                  fd-object-status
+                                  class="status-icon"
+                                  *ngIf="resourceRef.status === serviceStatus.FAILING_CREATION"
+                                  status="negative"
+                                  glyph="message-error"></span>
+                                <span
+                                  fd-object-status
+                                  class="status-icon"
+                                  *ngIf="resourceRef.status === serviceStatus.NOT_FOUND"
+                                  glyph="circle-task"></span>
                               </ng-container>
                             </ng-container>
                           </ng-container>
-                        </ng-container>
-                        <div class="spacer"></div>
-                        <div>
-                          <fd-icon glyph="slim-arrow-right" class="arrow-right"></fd-icon>
+                          <ng-container *ngIf="!isGithubActionsEnabledInSameComponent()">
+                            <span fd-object-status class="status-icon" status="positive" glyph="message-success"></span>
+                          </ng-container>
+                        </span>
+                        <div class="actions-enabled-card-content">
+                          <fd-avatar
+                            size="s"
+                            class="avatar-margin"
+                            image="{{ getIcon(kinds.GITHUB_ACTION) }}"
+                            [label]="kindName[kinds.GITHUB_ACTION]"
+                            [colorAccent]="10"></fd-avatar>
+                          <div class="name-kind">
+                            <b class="name">{{ kindName[kinds.GITHUB_ACTION] }}</b>
+                            <fd-info-label fdCozy label="Orchestration" color="10" title="Orchestrator"></fd-info-label>
+                          </div>
+                          <ng-container *ngIf="isGithubActionsEnabledInSameComponent()">
+                            <ng-container *ngFor="let resourceRef of pipeline.resourceRefs">
+                              <ng-container *ngIf="resourceRef.kind === 'GithubAction'">
+                                <ng-container
+                                  *ngIf="
+                                    resourceRef.status === serviceStatus.PENDING_CREATION ||
+                                    resourceRef.status === serviceStatus.UN_KNOWN
+                                  ">
+                                  <p class="pending-creation">
+                                    <i>
+                                      We are setting up GitHub Actions and runners for you.
+                                      <br />
+                                      This might take 3-5 minutes.
+                                    </i>
+                                  </p>
+                                </ng-container>
+                              </ng-container>
+                            </ng-container>
+                          </ng-container>
+                          <div class="spacer"></div>
+                          <div>
+                            <fd-icon glyph="slim-arrow-right" class="arrow-right"></fd-icon>
+                          </div>
                         </div>
-                      </div>
-                    </a>
-                  </li>
-                </ul>
-              </fd-card-content>
-            </fd-card>
-            <ng-template #notEnabled>
-              <fd-card *ngIf="!isGithubActionsEnabledInSameComponent()" cardType="list">
-                <!--The GitHub Actions is not yet enabled for the corresponding GitHub organization.-->
-                <fd-card-content>
-                  <div class="github-actions-automation-workflows">
-                    <div class="card-content">
-                      <fd-avatar
-                        size="s"
-                        image="{{ getIcon(kinds.GITHUB_ACTION) }}"
-                        [label]="kindName[kinds.GITHUB_ACTION]"
-                        [colorAccent]="10"></fd-avatar>
-                      <div class="card-description">
-                        <div class="card-content-github-actions">
-                          <h1 class="card-header"><strong>Github Actions</strong></h1>
-                          <fd-info-label
-                            class="card-content-label"
-                            fdCozy
-                            label="New"
-                            color="7"
-                            title="New"></fd-info-label>
-                        </div>
-                        <div class="card-content-github-actions">
-                          <fd-info-label fdCozy label="Orchestration" color="10" title="Orchestrator"></fd-info-label>
-                        </div>
-                      </div>
-                    </div>
-                    <button
-                      class="card-content"
-                      fd-button
-                      label="Enable"
-                      fdType="standard"
-                      (click)="openGithubActionWizard($event)"></button>
-                  </div>
+                      </a>
+                    </li>
+                  </ul>
                 </fd-card-content>
               </fd-card>
-            </ng-template>
+              <ng-template #notEnabled>
+                <fd-card *ngIf="!isGithubActionsEnabledInSameComponent()" cardType="list">
+                  <!--The GitHub Actions is not yet enabled for the corresponding GitHub organization.-->
+                  <fd-card-content>
+                    <div class="github-actions-automation-workflows">
+                      <div class="card-content">
+                        <fd-avatar
+                          size="s"
+                          image="{{ getIcon(kinds.GITHUB_ACTION) }}"
+                          [label]="kindName[kinds.GITHUB_ACTION]"
+                          [colorAccent]="10"></fd-avatar>
+                        <div class="card-description">
+                          <div class="card-content-github-actions">
+                            <h1 class="card-header"><strong>Github Actions</strong></h1>
+                            <fd-info-label
+                              class="card-content-label"
+                              fdCozy
+                              label="New"
+                              color="7"
+                              title="New"></fd-info-label>
+                          </div>
+                          <div class="card-content-github-actions">
+                            <fd-info-label fdCozy label="Orchestration" color="10" title="Orchestrator"></fd-info-label>
+                          </div>
+                        </div>
+                      </div>
+                      <button
+                        class="card-content"
+                        fd-button
+                        label="Enable"
+                        fdType="standard"
+                        (click)="openGithubActionWizard($event)"></button>
+                    </div>
+                  </fd-card-content>
+                </fd-card>
+              </ng-template>
+            </ng-container>
           </ng-container>
         </div>
       </div>
