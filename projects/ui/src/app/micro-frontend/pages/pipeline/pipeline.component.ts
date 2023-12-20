@@ -19,7 +19,6 @@ import { DeleteBuildModal } from '../../components/delete-build-modal/delete-bui
 import { APIService } from '../../services/api.service'
 import { ExtensionService } from '../../services/extension.service'
 import { ExtensionClass } from '../../services/extension.types'
-import { DxpContext } from '@dxp/ngx-core/common'
 import { GithubActionsServiceDetailsComponent } from '../../components/service-details/github-actions/github-actions-service-details.component'
 import { ServiceDetailsSkeletonComponent } from '../../components/service-details-skeleton/service-details-skeleton.component'
 import { SharedDataService } from '../../services/shared-data.service'
@@ -27,6 +26,7 @@ import { ServiceData, ServiceListItemComponent } from '../../components/service-
 import { GithubMetadata } from '../../services/github.service'
 import { UpgradeBannerComponent } from '../../components/upgrade-banner/upgrade-banner.component'
 import { GithubActionsGetPayload } from '@generated/graphql'
+import { FeatureFlagService } from '../../services/feature-flag.service'
 
 type Error = {
   title: string
@@ -60,7 +60,7 @@ type Error = {
 export class PipelineComponent implements OnInit, OnDestroy {
   @Input() pipeline$!: Observable<Pipeline>
   isGithubActionsEnabledAlready$!: Observable<GithubActionsGetPayload>
-  dxpContext$: Observable<DxpContext>
+
   isBuildStageOpen = signal(false)
   isBuildStageSetup = signal(false)
   isBuildPipelineSetup = signal(false)
@@ -70,6 +70,7 @@ export class PipelineComponent implements OnInit, OnDestroy {
   pendingOpenPipeline = signal(false)
   pendingShowCredentials = signal(false)
   pendingExtensionClass = signal(false)
+  showGithubActions = signal(false)
   catalogUrl = signal('')
   errors = signal<Error[]>([])
   extensionClasses = signal<ExtensionClass[]>([])
@@ -95,6 +96,7 @@ export class PipelineComponent implements OnInit, OnDestroy {
     private readonly extensionService: ExtensionService,
     private readonly messageBoxService: MessageBoxService,
     private readonly luigiDialogUtil: LuigiDialogUtil,
+    private readonly featureFlagService: FeatureFlagService,
     readonly debugModeService: DebugModeService,
     private readonly sharedResourceDataService: SharedDataService,
   ) {}
@@ -104,10 +106,11 @@ export class PipelineComponent implements OnInit, OnDestroy {
   }
 
   async ngOnInit(): Promise<void> {
-    this.dxpContext$ = this.luigiService.contextObservable().pipe(map((value) => value.context))
     this.githubMetadata = await this.api.githubService.getGithubMetadata()
 
-    const context = (await this.luigiService.getContextAsync()) as any
+    const context = await this.luigiService.getContextAsync()
+    this.showGithubActions.set(this.featureFlagService.isGithubActionsEnabled(context.projectId))
+
     this.catalogUrl.set(context.frameBaseUrl + '/catalog')
     this.projectId = context.projectId
     await this.getExtensionClasses()

@@ -23,6 +23,7 @@ import { PlatformFormGeneratorCustomHeaderElementComponent } from '../../compone
 import { BuildTool } from '@generated/graphql'
 import { PlatformFormGeneratorCustomInfoBoxComponent } from '../../components/form-generator-info-box/form-generator-info-box.component'
 import { getNodeParams } from '@luigi-project/client'
+import { FeatureFlagService } from '../../services/feature-flag.service'
 
 @Component({
   standalone: true,
@@ -49,6 +50,7 @@ export class SetupComponent implements OnInit, OnDestroy {
     private readonly githubService: GithubService,
     private readonly jenkinsService: JenkinsService,
     private readonly piperService: PiperService,
+    private readonly featureFlagService: FeatureFlagService,
   ) {
     this._formGeneratorService.addComponent(PlatformFormGeneratorCustomHeaderElementComponent, ['header'])
     this._formGeneratorService.addComponent(PlatformFormGeneratorCustomInfoBoxComponent, ['info'])
@@ -182,7 +184,16 @@ export class SetupComponent implements OnInit, OnDestroy {
       type: 'radio',
       name: 'orchestrator',
       message: '',
-      choices: [Orchestrators.JENKINS, Orchestrators.GITHUB_ACTIONS_WORKFLOW],
+      choices: async () => {
+        const context = await this.luigiService.getContextAsync()
+        const orchestrators = [Orchestrators.JENKINS]
+
+        if (this.featureFlagService.isGithubActionsEnabled(context.projectId)) {
+          orchestrators.push(Orchestrators.GITHUB_ACTIONS_WORKFLOW)
+        }
+
+        return orchestrators
+      },
       default: () => {
         return this.defaultOrchestrator
       },
@@ -300,7 +311,7 @@ export class SetupComponent implements OnInit, OnDestroy {
       placeholder: 'Select Credential',
       default: async () => {
         const secrets = await lastValueFrom(this.secretService.getPipelineSecrets())
-        return secrets.filter((value) => value.path.includes('jenkins'))[0].path ?? null
+        return secrets.filter((value) => value.path.includes('jenkins'))?.[0].path ?? null
       },
       choices: async () => {
         const secrets = await lastValueFrom(this.secretService.getPipelineSecrets())

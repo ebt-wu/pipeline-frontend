@@ -22,6 +22,11 @@
               "requiredIFramePermissions": {
                 "allow": ["clipboard-read", "clipboard-write"]
               },
+              "context": {
+                "featureFlags": {
+                  "GITHUB_ACTIONS_ENABLED": true
+                }
+              },
               "children": [
                 {
                   "pathSegment": "setup",
