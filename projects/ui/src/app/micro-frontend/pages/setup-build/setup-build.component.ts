@@ -245,7 +245,8 @@ export class SetupComponent implements OnInit, OnDestroy {
           header: 'Jenkins credentials',
           subheader: async () => {
             return `Your credentials are stored in Vault and needed to create a pipeline
-            in your Jenkins instance.`
+            in your Jenkins instance. Technical user is preferred, you can find out how
+            to set up one in the <a href="https://pages.github.tools.sap/hyperspace/jaas-documentation/faqs_and_troubleshooting/faq/#how-can-i-get-a-service-user" target="_blank">JaaS documentation.</a>`
           },
         },
       },
@@ -280,7 +281,7 @@ export class SetupComponent implements OnInit, OnDestroy {
     {
       type: 'input',
       name: 'jenkinsUserId',
-      message: 'User ID (a technical user is preferred)',
+      message: 'User ID',
       placeholder: 'Enter ID',
       when: (formValue: any) => {
         if (formValue.orchestrator != Orchestrators.JENKINS) {
