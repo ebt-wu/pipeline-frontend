@@ -8,6 +8,7 @@ import {
 } from '@fundamental-ngx/core'
 import { DxpLuigiContextService, LuigiClient } from '@dxp/ngx-core/luigi'
 import { DxpContext } from '@dxp/ngx-core/common'
+import { AuthorizationModule } from '@dxp/ngx-core/authorization'
 import { svgRocket } from '../../../assets/ts-svg/rocket'
 import { ModalProjectGetStartedComponent } from '../modal-project-get-started/modal-project-get-started.component'
 import { GithubService } from '../../services/github.service'
@@ -20,7 +21,7 @@ import { Subscription } from 'rxjs'
   templateUrl: './card-project-promotion.component.html',
   styleUrls: ['./card-project-promotion.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [CardModule, IllustratedMessageModule, NgIf, MessageStripModule],
+  imports: [CardModule, IllustratedMessageModule, NgIf, MessageStripModule, AuthorizationModule],
   encapsulation: ViewEncapsulation.ShadowDom,
 })
 export class CardProjectPromotionComponent implements OnInit, OnDestroy {
@@ -51,7 +52,7 @@ export class CardProjectPromotionComponent implements OnInit, OnDestroy {
     private dxpLuigiContextService: DxpLuigiContextService,
     private dialogService: DialogService,
     private githubService: GithubService,
-  ) {}
+  ) { }
   ngOnDestroy(): void {
     this.githubSubscription.unsubscribe()
   }
