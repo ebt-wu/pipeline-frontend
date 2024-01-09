@@ -22,16 +22,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@angular-devkit/architect@npm:0.1602.10":
-  version: 0.1602.10
-  resolution: "@angular-devkit/architect@npm:0.1602.10"
-  dependencies:
-    "@angular-devkit/core": "npm:16.2.10"
-    rxjs: "npm:7.8.1"
-  checksum: b0c4de0e51ce8d67b563e87df1f052e2301d9dbc475928089ed28702bdec94551d5938634a398bd0ce9010df1afb8349c57d6a4fd59a8cb8f512ae57d6025202
-  languageName: node
-  linkType: hard
-
 "@angular-devkit/architect@npm:0.1602.11":
   version: 0.1602.11
   resolution: "@angular-devkit/architect@npm:0.1602.11"
@@ -293,25 +283,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@angular-devkit/core@npm:16.2.10":
-  version: 16.2.10
-  resolution: "@angular-devkit/core@npm:16.2.10"
-  dependencies:
-    ajv: "npm:8.12.0"
-    ajv-formats: "npm:2.1.1"
-    jsonc-parser: "npm:3.2.0"
-    picomatch: "npm:2.3.1"
-    rxjs: "npm:7.8.1"
-    source-map: "npm:0.7.4"
-  peerDependencies:
-    chokidar: ^3.5.2
-  peerDependenciesMeta:
-    chokidar:
-      optional: true
-  checksum: 96871403d69393040ef3d4c7ecb494511d77528b924b6c63d257798991dd9f39fa2730808ca6623c9c2d363ab4e8a3115458273efbae3445e4bc42292e164d05
-  languageName: node
-  linkType: hard
-
 "@angular-devkit/core@npm:16.2.11":
   version: 16.2.11
   resolution: "@angular-devkit/core@npm:16.2.11"
@@ -369,16 +340,16 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@angular-devkit/schematics@npm:16.2.10":
-  version: 16.2.10
-  resolution: "@angular-devkit/schematics@npm:16.2.10"
+"@angular-devkit/schematics@npm:16.2.11":
+  version: 16.2.11
+  resolution: "@angular-devkit/schematics@npm:16.2.11"
   dependencies:
-    "@angular-devkit/core": "npm:16.2.10"
+    "@angular-devkit/core": "npm:16.2.11"
     jsonc-parser: "npm:3.2.0"
     magic-string: "npm:0.30.1"
     ora: "npm:5.4.1"
     rxjs: "npm:7.8.1"
-  checksum: 101eecc5089439055b986b1936e51231da9add0e9fceb502f7d67f1d3646744ae1202621bbf0331d25067140c20bf350667b84fa11c73a9897b9a89f0354a86b
+  checksum: ceaaae98d7fa2820045706116d01fa3e73cc378f9b32f31c761e3acf91528a2effa92d8a285004385093a74901bcedcb652084004b557bbe8325dfd5c76a4b3c
   languageName: node
   linkType: hard
 
@@ -517,13 +488,13 @@ __metadata:
   linkType: hard
 
 "@angular/cli@npm:^16.2.0":
-  version: 16.2.10
-  resolution: "@angular/cli@npm:16.2.10"
+  version: 16.2.11
+  resolution: "@angular/cli@npm:16.2.11"
   dependencies:
-    "@angular-devkit/architect": "npm:0.1602.10"
-    "@angular-devkit/core": "npm:16.2.10"
-    "@angular-devkit/schematics": "npm:16.2.10"
-    "@schematics/angular": "npm:16.2.10"
+    "@angular-devkit/architect": "npm:0.1602.11"
+    "@angular-devkit/core": "npm:16.2.11"
+    "@angular-devkit/schematics": "npm:16.2.11"
+    "@schematics/angular": "npm:16.2.11"
     "@yarnpkg/lockfile": "npm:1.1.0"
     ansi-colors: "npm:4.1.3"
     ini: "npm:4.1.1"
@@ -540,7 +511,7 @@ __metadata:
     yargs: "npm:17.7.2"
   bin:
     ng: bin/ng.js
-  checksum: 20235391f7a65780031ba618606c233d93a46362971ce2c4f71fdc44187efb2d372d26f534cb3c1d8946bf5b9cd6f5562f27357ede88d18e879e57f9b48208b9
+  checksum: 264bd4d749671f8180d527451d90908f84df0f30e493a4c69910c06c9059360427434bf47c42d4c2c3bc387f705a9c52925f0271f8142ff38296c0dca3c9113c
   languageName: node
   linkType: hard
 
@@ -4660,14 +4631,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@schematics/angular@npm:16.2.10":
-  version: 16.2.10
-  resolution: "@schematics/angular@npm:16.2.10"
+"@schematics/angular@npm:16.2.11":
+  version: 16.2.11
+  resolution: "@schematics/angular@npm:16.2.11"
   dependencies:
-    "@angular-devkit/core": "npm:16.2.10"
-    "@angular-devkit/schematics": "npm:16.2.10"
+    "@angular-devkit/core": "npm:16.2.11"
+    "@angular-devkit/schematics": "npm:16.2.11"
     jsonc-parser: "npm:3.2.0"
-  checksum: c2bfe5266fa1038ebf8f489dc341d06ab98be73f6a09aa03915ab56ed24af5fac31869257c397222f3f21ccb9399f172f49c7c1b4dc4bbd2adbd024dd3bd9751
+  checksum: 358c372d0517f3ffbc91ba4513e8e2cdf3a83189f3c867a8b972c3fc02e5da640a84937d8456908327c082c481e00e3bcf6fa766cd4329e2c9f8f29dc79a0178
   languageName: node
   linkType: hard
 
