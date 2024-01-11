@@ -118,10 +118,7 @@ Has CDM for live:
                           "entityType": "project.overview::compound",
                           "url": "https://test-domain-wc/main.js#cicd-project-promotion-card",
                           "dxpOrder": 2,
-                          "visibleForContext": "!featureFlags || !featureFlags.enabledProjects || contains(featureFlags.enabledProjects, entityContext.project.id)",
-                          "context": {
-                            "featureFlags": {"GITHUB_ACTIONS_ENABLED":false,"enabledProjects":["p1","p2"]}
-                          },
+                          "visibleForContext": "contains(['p1','p2'], entityContext.project.id)",
                           "layoutConfig": {
                             "slot": "content"
                           },
@@ -308,9 +305,6 @@ Test Extension matches the snapshot:
                           "entityType": "project.overview::compound",
                           "url": "https://test-domain-wc/main.js#cicd-project-promotion-card",
                           "dxpOrder": 2,
-                          "context": {
-                            "featureFlags": {"GITHUB_ACTIONS_ENABLED":false}
-                          },
                           "layoutConfig": {
                             "slot": "content"
                           },
@@ -497,9 +491,6 @@ githubActions feature enabled for some projects:
                           "entityType": "project.overview::compound",
                           "url": "https://test-domain-wc/main.js#cicd-project-promotion-card",
                           "dxpOrder": 2,
-                          "context": {
-                            "featureFlags": {"GITHUB_ACTIONS_ENABLED":["hyperspace-ci-cd-examples"],"anotherFlag":true}
-                          },
                           "layoutConfig": {
                             "slot": "content"
                           },
