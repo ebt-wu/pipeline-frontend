@@ -4,6 +4,9 @@ templates:
 values:
   - ../values.yaml
   - ../stack-values.yaml
+set:
+  features:
+    enabledProjects:
 tests:
   - it: Test Extension matches the snapshot
     template: extensions.yaml
