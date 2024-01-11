@@ -23,7 +23,7 @@
                 "allow": ["clipboard-read", "clipboard-write"]
               },
               {{- if eq .Values.environment "live" }}
-              "visibleForContext": "!enabledProjects || contains(enabledProjects, entityContext.project.id)",
+              "visibleForContext": "!featureFlags.enabledProjects || contains(featureFlags.enabledProjects, entityContext.project.id)",
               {{- end }}
               {{- with .Values.features }}
               "context": {

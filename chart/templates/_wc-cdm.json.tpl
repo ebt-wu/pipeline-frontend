@@ -13,8 +13,13 @@
               "url": "{{$url}}/main.js#cicd-project-promotion-card",
               "dxpOrder": 2,
               {{- if eq .Values.environment "live" }}
-              "visibleForContext": "contains({{ .Values.features.enabledProjects | toJson | replace "\"" "'" }}, entityContext.project.id)",
+              "visibleForContext": "!featureFlags.enabledProjects || contains(featureFlags.enabledProjects, entityContext.project.id)",
               {{- end }}
+              {{- with .Values.features }}
+              "context": {
+                "featureFlags": {{ . | toJson }}
+              },
+              {{- end}}
               "layoutConfig": {
                 "slot": "content"
               },
