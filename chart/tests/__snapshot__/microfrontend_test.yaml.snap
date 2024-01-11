@@ -32,7 +32,7 @@ Has CDM for live:
                           "requiredIFramePermissions": {
                             "allow": ["clipboard-read", "clipboard-write"]
                           },
-                          "visibleForContext": "not_null(featureFlags) || not_null(featureFlags.enabledProjects) || contains(featureFlags.enabledProjects, entityContext.project.id)",
+                          "visibleForContext": "!featureFlags || !featureFlags.enabledProjects || contains(featureFlags.enabledProjects, entityContext.project.id)",
                           "context": {
                             "featureFlags": {"GITHUB_ACTIONS_ENABLED":false,"enabledProjects":["p1","p2"]}
                           },
@@ -118,7 +118,7 @@ Has CDM for live:
                           "entityType": "project.overview::compound",
                           "url": "https://test-domain-wc/main.js#cicd-project-promotion-card",
                           "dxpOrder": 2,
-                          "visibleForContext": "not_null(featureFlags) || not_null(featureFlags.enabledProjects) || contains(featureFlags.enabledProjects, entityContext.project.id)",
+                          "visibleForContext": "!featureFlags || !featureFlags.enabledProjects || contains(featureFlags.enabledProjects, entityContext.project.id)",
                           "context": {
                             "featureFlags": {"GITHUB_ACTIONS_ENABLED":false,"enabledProjects":["p1","p2"]}
                           },

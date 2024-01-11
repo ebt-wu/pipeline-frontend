@@ -13,7 +13,7 @@
               "url": "{{$url}}/main.js#cicd-project-promotion-card",
               "dxpOrder": 2,
               {{- if eq .Values.environment "live" }}
-              "visibleForContext": "not_null(featureFlags) || not_null(featureFlags.enabledProjects) || contains(featureFlags.enabledProjects, entityContext.project.id)",
+              "visibleForContext": "!featureFlags || !featureFlags.enabledProjects || contains(featureFlags.enabledProjects, entityContext.project.id)",
               {{- end }}
               {{- with .Values.features }}
               "context": {
