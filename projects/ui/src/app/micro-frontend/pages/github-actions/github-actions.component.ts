@@ -78,6 +78,7 @@ export class GithubActionsComponent implements OnInit {
         })
         const user: string = (await userQueryResp.json())?.login
         const secretData: SecretData[] = [
+          { key: 'username', value: user },
           { key: 'access_token', value: value.githubToken },
           { key: 'scopes', value: REQUIRED_SCOPES.join(',') },
         ]
