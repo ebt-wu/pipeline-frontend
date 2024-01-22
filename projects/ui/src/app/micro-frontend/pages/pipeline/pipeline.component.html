@@ -30,14 +30,18 @@
         <div class="pipeline-container">
           <div class="pipeline-header">
             <h3 class="heading">Your Pipeline</h3>
-            <button
-              *ngIf="debugModeService.debugModeEnabled()"
-              fd-button
-              fdType="transparent"
-              glyph="detail-view"
-              ariaLabel="Pipeline Details"
-              (click)="openPipelineDebugModal($event)"></button>
-            <code *ngIf="debugModeService.debugModeEnabled()">Name: {{ pipeline.name }}</code>
+            <div *ngIf="debugModeService.debugModeEnabled()" class="freestyle-pipeline-info">
+              <button
+                fd-button
+                fdType="transparent"
+                glyph="detail-view"
+                ariaLabel="Pipeline Details"
+                (click)="openPipelineDebugModal($event)"></button>
+              <div class="freestyle-pipeline-details" (click)="getKubeCtlCmd(pipeline.name, pipeline.namespace)">
+                <code>FreestylePipeline: {{ pipeline.name }}</code>
+                <code class="namespace">Namespace: {{ pipeline.namespace }}</code>
+              </div>
+            </div>
           </div>
           <div *ngFor="let error of errors()">
             <error-message [title]="error.title" [message]="error.message"></error-message>

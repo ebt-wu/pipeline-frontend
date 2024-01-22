@@ -21,6 +21,9 @@ export const WATCH_PIPELINE = gql`
     watchPipeline(projectId: $projectId, componentId: $componentId) {
       name
       pipelineType
+      namespace
+      automaticdClientName
+      automaticdClientNamespace
       resourceRefs {
         kind
         status

@@ -157,6 +157,22 @@ fd-info-label {
   text-transform: uppercase;
 }
 
+.freestyle-pipeline-info {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+
+  .freestyle-pipeline-details {
+    display: flex;
+    flex-direction: column;
+    cursor: pointer;
+
+    .namespace {
+      font-size: 11px;
+    }
+  }
+}
+
 .skeleton-text {
   padding: 20px;
 }

@@ -1,6 +1,12 @@
 import { CommonModule } from '@angular/common'
 import { Component, Input, OnDestroy, OnInit, signal } from '@angular/core'
-import { FlexibleColumnLayout, FundamentalNgxCoreModule, IconModule, MessageBoxService } from '@fundamental-ngx/core'
+import {
+  FlexibleColumnLayout,
+  FundamentalNgxCoreModule,
+  IconModule,
+  MessageBoxService,
+  MessageToastService,
+} from '@fundamental-ngx/core'
 import { firstValueFrom, map, Observable, Subscription } from 'rxjs'
 import { DxpLuigiContextService, LuigiClient, LuigiDialogUtil } from '@dxp/ngx-core/luigi'
 import { KindExtensionName, KindName } from '../../../constants'
@@ -90,6 +96,7 @@ export class PipelineComponent implements OnInit, OnDestroy {
   private jenkinsPipelineError = false
 
   constructor(
+    public messageToastService: MessageToastService,
     private readonly luigiClient: LuigiClient,
     private readonly api: APIService,
     private readonly luigiService: DxpLuigiContextService,
@@ -201,6 +208,14 @@ export class PipelineComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.pipelineSubscription.unsubscribe()
     this.githubActionsSubscription.unsubscribe()
+  }
+
+  getKubeCtlCmd(freestylePipelineName: string, namespace: string) {
+    const cb = navigator.clipboard
+    cb.writeText(`kubectl describe freestylepipelines ${freestylePipelineName} -n ${namespace}`)
+    this.messageToastService.open('kubectl describe command copied to clipboard', {
+      duration: 5000,
+    })
   }
 
   async getOpenPRCount(): Promise<number> {

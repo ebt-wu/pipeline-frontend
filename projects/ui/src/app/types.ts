@@ -30,6 +30,7 @@ export type ResourceRef = {
 
 export type Pipeline = {
   name?: string
+  namespace?: string
   pipelineType?: PipelineType
   resourceRefs?: ResourceRef[]
 }

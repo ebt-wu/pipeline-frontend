@@ -221,7 +221,10 @@ export type MutationWriteSecretArgs = {
 
 export type Pipeline = {
   __typename?: 'Pipeline'
+  automaticdClientName: Scalars['String']['output']
+  automaticdClientNamespace: Scalars['String']['output']
   name: Scalars['String']['output']
+  namespace: Scalars['String']['output']
   pipelineType: PipelineType
   resourceRefs?: Maybe<Array<ResourceRef>>
 }
@@ -379,6 +382,7 @@ export type WatchPipelineSubscription = {
     __typename?: 'Pipeline'
     name: string
     pipelineType: PipelineType
+    namespace: string
     resourceRefs?: Array<{
       __typename?: 'ResourceRef'
       kind: string
