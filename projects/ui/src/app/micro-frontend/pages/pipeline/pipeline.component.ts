@@ -1,42 +1,48 @@
 import { CommonModule } from '@angular/common'
 import { Component, Input, OnDestroy, OnInit, signal } from '@angular/core'
+import { RouterModule } from '@angular/router'
+import { DxpLuigiContextService, LuigiClient, LuigiDialogUtil } from '@dxp/ngx-core/luigi'
+import { DeletionPolicy, Kinds, ServiceStatus } from '@enums'
 import {
   FlexibleColumnLayout,
   FundamentalNgxCoreModule,
   IconModule,
   MessageBoxService,
-  MessageToastService,
+  MessageToastService
 } from '@fundamental-ngx/core'
-import { firstValueFrom, map, Observable, Subscription } from 'rxjs'
-import { DxpLuigiContextService, LuigiClient, LuigiDialogUtil } from '@dxp/ngx-core/luigi'
+import { GithubActionsGetPayload } from '@generated/graphql'
+import { Observable, Subscription, firstValueFrom, map } from 'rxjs'
 import { KindExtensionName, KindName } from '../../../constants'
-import { RouterModule } from '@angular/router'
 import { Pipeline, ResourceRef } from '../../../types'
-import { DeletionPolicy, Kinds, ServiceStatus } from '../../../enums'
-import { ErrorMessageComponent } from '../../components/error-message/error-message.component'
+import { DeleteBuildModal } from '../../components/delete-build-modal/delete-build-modal.component'
 import { DismissibleMessageComponent } from '../../components/dismissable-message/dismissible-message.component'
+import { ErrorMessageComponent } from '../../components/error-message/error-message.component'
+import { ServiceDetailsSkeletonComponent } from '../../components/service-details-skeleton/service-details-skeleton.component'
 import { CumlusServiceDetailsComponent } from '../../components/service-details/cumulus/cumulus-service-details.component'
+import { GithubActionsServiceDetailsComponent } from '../../components/service-details/github-actions/github-actions-service-details.component'
 import { GithubServiceDetailsComponent } from '../../components/service-details/github/github-service-details.component'
 import { JenkinServiceDetailsComponent } from '../../components/service-details/jenkins/jenkins-service-details.component'
 import { PiperServiceDetailsComponent } from '../../components/service-details/piper/piper-service-details.component'
-import { DebugModeService } from '../../services/debug-mode.service'
 import { StagingServiceServiceDetailsComponent } from '../../components/service-details/staging-service/staging-service-service-details.component'
-import { DeleteBuildModal } from '../../components/delete-build-modal/delete-build-modal.component'
+import { ServiceData, ServiceListItemComponent } from '../../components/service-list-item/service-list-item.component'
+import { UpgradeBannerComponent } from '../../components/upgrade-banner/upgrade-banner.component'
 import { APIService } from '../../services/api.service'
+import { DebugModeService } from '../../services/debug-mode.service'
 import { ExtensionService } from '../../services/extension.service'
 import { ExtensionClass } from '../../services/extension.types'
-import { GithubActionsServiceDetailsComponent } from '../../components/service-details/github-actions/github-actions-service-details.component'
-import { ServiceDetailsSkeletonComponent } from '../../components/service-details-skeleton/service-details-skeleton.component'
-import { SharedDataService } from '../../services/shared-data.service'
-import { ServiceData, ServiceListItemComponent } from '../../components/service-list-item/service-list-item.component'
-import { GithubMetadata } from '../../services/github.service'
-import { UpgradeBannerComponent } from '../../components/upgrade-banner/upgrade-banner.component'
-import { GithubActionsGetPayload } from '@generated/graphql'
 import { FeatureFlagService } from '../../services/feature-flag.service'
+import { GithubMetadata } from '../../services/github.service'
+import { SharedDataService } from '../../services/shared-data.service'
 
 type Error = {
   title: string
   message: string
+}
+
+const ENV_MAPPING = {
+  dev: 'dev',
+  int: 'stage',
+  live: 'prod',
 }
 
 @Component({
@@ -94,6 +100,7 @@ export class PipelineComponent implements OnInit, OnDestroy {
   private pipelineSubscription: Subscription
   private githubActionsSubscription: Subscription
   private jenkinsPipelineError = false
+  private tier: string = 'dev'
 
   constructor(
     public messageToastService: MessageToastService,
@@ -120,7 +127,10 @@ export class PipelineComponent implements OnInit, OnDestroy {
 
     this.catalogUrl.set(context.frameBaseUrl + '/catalog')
     this.projectId = context.projectId
-    await this.getExtensionClasses()
+    this.tier = context.frameContext.automaticDServiceApiUrl.replace(
+      /.*automaticd\.([^.]+)\.dxp\.k8s\.ondemand.com.*/,
+      '$1',
+    )
 
     this.isGithubActionsEnabledAlready$ = this.api.githubActionsService.getGithubActionsCrossNamespace(
       this.githubMetadata.githubInstance,
@@ -463,6 +473,31 @@ export class PipelineComponent implements OnInit, OnDestroy {
     }
 
     this.activeTile = event.kind
+  }
+
+  openTraces(e: Event, namespace: string) {
+    e?.stopPropagation()
+    const env = ENV_MAPPING[this.tier]
+
+    const filter = JSON.stringify({
+      traceFilter: {
+        tags: [
+          {
+            tag: 'automaticd.resource.namespace',
+            operation: 'IN',
+            values: [namespace || 'default'],
+          },
+          { tag: 'sf_environment', operation: 'IN', values: [`u3300_automaticd-${env}`] },
+        ],
+      },
+    })
+
+    const searchParams = new URLSearchParams()
+    searchParams.set('endTime', 'Now')
+    searchParams.set('startTime', '-24h')
+    const destination = `https://sap.signalfx.com/#/apm/traces?filters=${filter}&${searchParams.toString()}`
+
+    window.open(destination.toString(), '_blank')
   }
 
   updateLocalLayout(layoutEvent: FlexibleColumnLayout) {

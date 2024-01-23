@@ -36,7 +36,17 @@
                 fdType="transparent"
                 glyph="detail-view"
                 ariaLabel="Pipeline Details"
-                (click)="openPipelineDebugModal($event)"></button>
+                (click)="openPipelineDebugModal($event)">
+                Details
+              </button>
+              <button
+                fd-button
+                fdType="transparent"
+                glyph="kpi-corporate-performance"
+                ariaLabel="Pipeline Traces"
+                (click)="openTraces($event, pipeline.namespace)">
+                Traces
+              </button>
               <div class="freestyle-pipeline-details" (click)="getKubeCtlCmd(pipeline.name, pipeline.namespace)">
                 <code>FreestylePipeline: {{ pipeline.name }}</code>
                 <code class="namespace">Namespace: {{ pipeline.namespace }}</code>

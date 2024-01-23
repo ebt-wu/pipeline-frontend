@@ -13,6 +13,7 @@ module.exports = {
   globalSetup: 'jest-preset-angular/global-setup',
   moduleNameMapper: {
     '^lodash-es(.*)': 'lodash',
+    "@enums": "<rootDir>/src/app/enums.ts",
   },
   transform: {
     '^.+\\.(ts|js|mjs|html|svg)$': [

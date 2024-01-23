@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, OnInit, Output, signal } from '@angular/core'
-import { FundamentalNgxCoreModule } from '@fundamental-ngx/core'
+import { FlexibleColumnLayout, FundamentalNgxCoreModule } from '@fundamental-ngx/core'
 import { CommonModule } from '@angular/common'
 import { KindCategory, KindExtensionName, KindName } from '../../../constants'
 import { Kinds } from '../../../enums'
@@ -18,7 +18,6 @@ import { DebugModeService } from '../../services/debug-mode.service'
 import { DxpLuigiContextService } from '@dxp/ngx-core/luigi'
 import { DxpContext } from '@dxp/ngx-core/common'
 import { SharedDataService } from '../../services/shared-data.service'
-import { FlexibleColumnLayout } from '@fundamental-ngx/core/flexible-column-layout/constants'
 import { ErrorMessageComponent } from '../error-message/error-message.component'
 
 type ServiceDetails = any
