@@ -28,6 +28,7 @@ steps:
     vaultCredentialEnvPrefix: 'GCP_'
   artifactPrepareVersion:
     gitHttpsCredentialVaultSecretName: 'GROUP-SECRETS/github'
+    versioningType: cloud_noTag
   sapCallStagingService:
     url: 'https://staging.repositories.cloud.sap/stage/api'
     profile: 'group-2044-default'
