@@ -29,7 +29,6 @@
         </div>
         <div class="pipeline-container">
           <div class="pipeline-header">
-            <h3 class="heading">Your Pipeline</h3>
             <div *ngIf="debugModeService.debugModeEnabled()" class="freestyle-pipeline-info">
               <button
                 fd-button
@@ -87,7 +86,7 @@
                 </div>
                 <div class="card-description">
                   <div class="card-description-build">
-                    <h1 [ngClass]="isBuildStageSetup() ? 'stage-setup-header' : ''"><strong>Build</strong></h1>
+                    <h1 [ngClass]="isBuildStageSetup() ? 'stage-setup-header' : ''"><strong>Build Pipeline</strong></h1>
                     <fd-info-label
                       *ngIf="isBuildStageSetup()"
                       label="Compliant Setup"
@@ -149,7 +148,7 @@
                 <div class="card-content">
                   <fd-avatar [colorAccent]="10" size="m" glyph="shield"></fd-avatar>
                   <div class="card-description">
-                    <h1 class="disabled-headline"><strong>Validate</strong></h1>
+                    <h1 class="disabled-headline"><strong>Validate Code</strong></h1>
                     <p>Get feedback on the compliance of your code</p>
                   </div>
                 </div>

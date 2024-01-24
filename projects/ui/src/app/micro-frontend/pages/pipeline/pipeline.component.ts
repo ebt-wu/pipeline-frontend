@@ -120,6 +120,8 @@ export class PipelineComponent implements OnInit, OnDestroy {
   }
 
   async ngOnInit(): Promise<void> {
+    this.getExtensionClasses()
+
     this.githubMetadata = await this.api.githubService.getGithubMetadata()
 
     const context = await this.luigiService.getContextAsync()

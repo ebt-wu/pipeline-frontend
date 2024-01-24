@@ -27,7 +27,11 @@ export class ErrorMessageComponent implements OnInit {
 
   ngOnInit() {
     // check messages for error codes to link to troubleshooting instructions instead of offering the option to create a ticket
-    if (this.message.includes('GITHUB-ACTION-6')) {
+    if (
+      this.message.includes('GITHUB-ACTION-6') ||
+      this.message.includes('GITHUB-ACTION-2') ||
+      this.message.includes('GITHUB-4')
+    ) {
       this.troubleshootURL.set(
         'https://pages.github.tools.sap/hyperspace/cicd-setup-documentation/how-tos/use-github-PAT.html#replacing-an-invalid-personal-access-token',
       )
