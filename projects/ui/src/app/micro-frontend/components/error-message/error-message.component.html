@@ -1,7 +1,12 @@
 <fd-message-strip [type]="type" (onDismiss)="emitOnDismiss()" class="message-margin">
   <div class="text-flexbox">
     {{ title }}
-    <button fd-button fdType="transparent" class="ticket-button" (click)="reportError()">Create Ticket</button>
+    <button fd-button fdType="transparent" class="ticket-button" (click)="reportError()" *ngIf="!troubleshootURL()">
+      Create Ticket
+    </button>
+    <a fd-link class="ticket-button" [href]="troubleshootURL()" target="_blank" *ngIf="troubleshootURL()">
+      Troubleshoot
+    </a>
   </div>
   <div class="message-font" [innerHTML]="message"></div>
 </fd-message-strip>

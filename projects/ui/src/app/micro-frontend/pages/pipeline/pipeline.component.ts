@@ -8,7 +8,7 @@ import {
   FundamentalNgxCoreModule,
   IconModule,
   MessageBoxService,
-  MessageToastService
+  MessageToastService,
 } from '@fundamental-ngx/core'
 import { GithubActionsGetPayload } from '@generated/graphql'
 import { Observable, Subscription, firstValueFrom, map } from 'rxjs'
@@ -166,7 +166,7 @@ export class PipelineComponent implements OnInit, OnDestroy {
             this.errors.update((errors) => {
               errors.push({
                 title: `Configuration of ${KindName[ref.kind]} failed`,
-                message: `The GitHub Actions configuration may have failed due to an expired token.<br>Please ensure that the GitHub Actions credential stored in the vault is valid.<br><strong>Resource:</strong> ${ref.name}<br><strong>Status:</strong> ${ref.status}<br><strong>Error: </strong> ${ref.error}.`,
+                message: `The GitHub Actions configuration may have failed due to an expired token.<br>Please ensure that the GitHub credential stored in the vault is valid.<br><strong>Resource:</strong> ${ref.name}<br><strong>Status:</strong> ${ref.status}<br><strong>Error: </strong> ${ref.error}.`,
               })
               return errors
             })

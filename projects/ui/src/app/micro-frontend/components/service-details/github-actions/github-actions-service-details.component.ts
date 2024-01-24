@@ -25,7 +25,7 @@ export class GithubActionsServiceDetailsComponent implements OnInit {
   readonly ACTIONS_GET_STARTED_URL =
     'https://pages.github.tools.sap/github/features-and-usecases/features/actions/usage'
   readonly ACTIONS_SECURITY_HARDENING_URL =
-    'https://docs.github.com/en/actions/security-guides/security-hardening-for-github-actions'
+    'https://pages.github.tools.sap/github/features-and-usecases/features/actions/security-hardening/'
   readonly ACTIONS_CATALOG_URL = 'https://github.tools.sap/github/actions-mirror'
   readonly SUGAR_DOCU_URL = 'https://wiki.one.int.sap/wiki/display/DevFw/SUGAR'
 

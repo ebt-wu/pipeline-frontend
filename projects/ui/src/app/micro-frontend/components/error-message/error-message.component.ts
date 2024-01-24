@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common'
-import { Component, EventEmitter, Input, Output } from '@angular/core'
+import { Component, EventEmitter, Input, OnInit, Output, signal } from '@angular/core'
 import { DxpLuigiContextService } from '@dxp/ngx-core/luigi'
 import { FundamentalNgxCoreModule } from '@fundamental-ngx/core'
 import { GitHubIssueLabels, GitHubIssueLinkService } from '../../services/github-issue-link.service'
@@ -11,7 +11,7 @@ import { GitHubIssueLabels, GitHubIssueLinkService } from '../../services/github
   styleUrls: ['./error-message.component.css'],
   imports: [CommonModule, FundamentalNgxCoreModule],
 })
-export class ErrorMessageComponent {
+export class ErrorMessageComponent implements OnInit {
   constructor(
     private readonly luigiService: DxpLuigiContextService,
     private readonly githubIssueLinkService: GitHubIssueLinkService,
@@ -21,7 +21,18 @@ export class ErrorMessageComponent {
   @Input() title: string
   @Input() message: string
 
+  troubleshootURL = signal('')
+
   @Output() onDismiss = new EventEmitter()
+
+  ngOnInit() {
+    // check messages for error codes to link to troubleshooting instructions instead of offering the option to create a ticket
+    if (this.message.includes('GITHUB-ACTION-6')) {
+      this.troubleshootURL.set(
+        'https://pages.github.tools.sap/hyperspace/cicd-setup-documentation/how-tos/use-github-PAT.html#replacing-an-invalid-personal-access-token',
+      )
+    }
+  }
 
   emitOnDismiss() {
     this.onDismiss.emit()
