@@ -30,12 +30,24 @@ jobs:
       version: helm-${{ needs.createVersion.outputs.version }}
     secrets: inherit
 
-  updateStack:
+  updateDevStack:
     needs: [createVersion, publishVersion]
     uses: dxp/.github/.github/workflows/update-stack.yaml@main
     with:
       stackRepo: hyperspace/ci-cd-setup-stack
       stackRepoBranch: dev
+      componentVersionKey: pipelineFrontendChart
+      version: ${{ needs.createVersion.outputs.version }}
+    secrets:
+      GH_ACCESS_TOKEN: ${{ secrets.GH_HYPERSPACE_USER_TOKEN }}
+
+  # We want to deploy to dev and int at the same time to have 2 testing landscapes and avoid the additional time to transport changes from dev to prod before go-live
+  updateIntStack:
+    needs: [createVersion, publishVersion]
+    uses: dxp/.github/.github/workflows/update-stack.yaml@main
+    with:
+      stackRepo: hyperspace/ci-cd-setup-stack
+      stackRepoBranch: int
       componentVersionKey: pipelineFrontendChart
       version: ${{ needs.createVersion.outputs.version }}
     secrets:
