@@ -479,6 +479,10 @@ export class PipelineComponent implements OnInit, OnDestroy {
 
   openTraces(e: Event, namespace: string) {
     e?.stopPropagation()
+    window.open(this.getTracesURL(namespace), '_blank')
+  }
+
+  getTracesURL(namespace: string): string {
     const env = ENV_MAPPING[this.tier]
 
     const filter = JSON.stringify({
@@ -497,9 +501,10 @@ export class PipelineComponent implements OnInit, OnDestroy {
     const searchParams = new URLSearchParams()
     searchParams.set('endTime', 'Now')
     searchParams.set('startTime', '-24h')
+
     const destination = `https://sap.signalfx.com/#/apm/traces?filters=${filter}&${searchParams.toString()}`
 
-    window.open(destination.toString(), '_blank')
+    return destination
   }
 
   updateLocalLayout(layoutEvent: FlexibleColumnLayout) {

@@ -20,6 +20,8 @@ export class ErrorMessageComponent implements OnInit {
   @Input() type: 'warning' | 'error' = 'error'
   @Input() title: string
   @Input() message: string
+  @Input() automaticdNamespace?: string
+  @Input() tracesUrl?: string
 
   troubleshootURL = signal('')
 
@@ -65,6 +67,11 @@ ${issueDescription.trim()}
 **Project and component:** [\`${context.projectId}/${context.componentId}\`](${context.frameBaseUrl}/projects/${
         context.projectId
       }/components/${context.componentId}/pipeline-ui)
+${
+  this.tracesUrl && this.automaticdNamespace
+    ? `**Automaticd namespace traces:** [\`${this.automaticdNamespace}\`](${this.tracesUrl})`
+    : ''
+}
 **Timestamp:** ${new Date()}
 **User ID:** [\`${context.userid}\`](${githubUrl}/${context.userid})
     `,
