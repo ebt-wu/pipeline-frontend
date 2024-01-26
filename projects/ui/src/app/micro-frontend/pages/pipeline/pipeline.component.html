@@ -43,7 +43,7 @@
                 fdType="transparent"
                 glyph="kpi-corporate-performance"
                 ariaLabel="Pipeline Traces"
-                (click)="openTraces($event, pipeline.namespace)">
+                (click)="debugModeService.openTraces($event, pipeline.namespace)">
                 Traces
               </button>
               <div class="freestyle-pipeline-details" (click)="getKubeCtlCmd(pipeline.name, pipeline.namespace)">
@@ -57,7 +57,8 @@
               [title]="error.title"
               [message]="error.message"
               [automaticdNamespace]="pipeline.namespace"
-              [tracesUrl]="getTracesURL(pipeline.namespace)"></error-message>
+              [automaticdResourceName]="error.resourceName"
+              [tracesUrl]="debugModeService.getTracesURL(pipeline.namespace)"></error-message>
           </div>
           <dismissible-message
             *ngIf="isBuildPipelineSetup()"

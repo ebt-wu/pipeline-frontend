@@ -1,19 +1,35 @@
-import { Injectable, signal } from '@angular/core'
+import { Injectable, OnInit, signal } from '@angular/core'
 import { MessageToastService } from '@fundamental-ngx/core'
 import { BaseAPIService } from './base.service'
 import { DxpLuigiContextService } from '@dxp/ngx-core/luigi'
 import { combineLatest, first, mergeMap } from 'rxjs'
 import { FORCE_DEBUG_RECONCILIATION } from './queries'
 
+const ENV_MAPPING = {
+  dev: 'dev',
+  int: 'stage',
+  live: 'prod',
+}
+
 @Injectable({ providedIn: 'root' })
-export class DebugModeService {
+export class DebugModeService implements OnInit {
+  protected tier: string = 'dev'
+  debugModeEnabled = signal(false)
+
   constructor(
     public messageToastService: MessageToastService,
     private readonly apiService: BaseAPIService,
-    private readonly luigiService: DxpLuigiContextService,
+    private readonly luigiService: DxpLuigiContextService
   ) {}
 
-  debugModeEnabled = signal(false)
+  async ngOnInit(): Promise<void> {
+    const context = await this.luigiService.getContextAsync()
+
+    this.tier = context.frameContext.automaticDServiceApiUrl.replace(
+      /.*automaticd\.([^.]+)\.dxp\.k8s\.ondemand.com.*/,
+      '$1'
+    )
+  }
 
   toggleDebugMode() {
     this.debugModeEnabled.set(!this.debugModeEnabled())
@@ -40,7 +56,43 @@ export class DebugModeService {
             resourceName: resourceName,
           },
         })
-      }),
+      })
     )
+  }
+
+  openTraces(e: Event, namespace: string, resourceName?: string) {
+    e?.stopPropagation()
+    window.open(this.getTracesURL(namespace, resourceName), '_blank')
+  }
+
+  getTracesURL(namespace: string, resourceName?: string): string {
+    const env = ENV_MAPPING[this.tier]
+
+    const tagFilter = [
+      { tag: 'sf_environment', operation: 'IN', values: [`u3300_automaticd-${env}`] },
+      {
+        tag: 'automaticd.resource.namespace',
+        operation: 'IN',
+        values: [namespace || 'default'],
+      },
+    ]
+    if (resourceName) {
+      tagFilter.push({
+        tag: 'automaticd.resource.name',
+        operation: 'IN',
+        values: [resourceName],
+      })
+    }
+    const filter = JSON.stringify({
+      traceFilter: {
+        tags: tagFilter,
+      },
+    })
+
+    const searchParams = new URLSearchParams()
+    searchParams.set('endTime', 'Now')
+    searchParams.set('startTime', '-24h')
+
+    return `https://sap.signalfx.com/#/apm/traces?filters=${filter}&${searchParams.toString()}`
   }
 }

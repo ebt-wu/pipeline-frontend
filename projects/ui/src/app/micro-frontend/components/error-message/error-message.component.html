@@ -1,6 +1,17 @@
 <fd-message-strip [type]="type" (onDismiss)="emitOnDismiss()" class="message-margin">
   <div class="text-flexbox">
-    {{ title }}
+    <span class="error-title">
+      {{ title }}
+    </span>
+    <button
+      fd-button
+      fdType="transparent"
+      class="ticket-button"
+      glyph="kpi-corporate-performance"
+      (click)="debugModeService.openTraces($event, automaticdNamespace, automaticdResourceName)"
+      *ngIf="!troubleshootURL() && debugModeService.debugModeEnabled()">
+      Traces
+    </button>
     <button fd-button fdType="transparent" class="ticket-button" (click)="reportError()" *ngIf="!troubleshootURL()">
       Create Ticket
     </button>
