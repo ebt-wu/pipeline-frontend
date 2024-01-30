@@ -1,6 +1,6 @@
 dependencies:
 - name: helm-dxp
   repository: oci://europe-docker.pkg.dev/sap-gcp-dxp-prod/dxp-eu/com.sap.dxp/helm-dxp/helm
-  version: 0.2.44
-digest: sha256:3569c6511abfd19ec417aaf370a594d99801626d04e4bf8f138096a97d620c1e
-generated: "2024-01-22T17:48:02.11237122Z"
+  version: 0.2.45
+digest: sha256:441f6504768cecb0230855edf7d701157a4b456a58b3864aecc8d3424a4e5263
+generated: "2024-01-26T12:14:29.904539186Z"

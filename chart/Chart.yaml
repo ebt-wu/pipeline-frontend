@@ -6,5 +6,5 @@ version: 0.0.1
 
 dependencies:
   - name: helm-dxp
-    version: 0.2.44
+    version: 0.2.45
     repository: oci://europe-docker.pkg.dev/sap-gcp-dxp-prod/dxp-eu/com.sap.dxp/helm-dxp/helm
