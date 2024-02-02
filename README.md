@@ -6,21 +6,18 @@
  
 ## Prequisites
 
-1. [yarn](https://classic.yarnpkg.com/lang/en/docs/install/#mac-stable)
-2. [gcloud cli](https://cloud.google.com/sdk/docs/install)
-3. [CAM Profile BTP DXP Developer](https://spc.ondemand.com/sap/bc/webdynpro/a1sspc/cam_wd_central?item=request&profile=BTP%20DXP%20Developer#)
+1. [yarn](https://yarnpkg.com/getting-started/install)
 
 ### Setup
 
 1. Clone the repository
-2. Run `./setup.sh`
-3. Run `yarn` in the project folder to install the dependencies
-4. Run one of the following commands in the project folder
+2. Run `yarn` in the project folder to install the dependencies
+3. Run one of the following commands in the project folder
    - `yarn start:ui` to start the application
    - `yarn start:ui-local` to start the application with the local pipeline-backend
    - `yarn start:wc` to start the webcomponents (cards, dialogs on component and pipeline landing pages)
    - `yarn start:wc-local` to start the webcomponents (cards, dialogs on component and pipeline landing pages) with the local pipeline backend
-5. Visit https://portal.d1.hyperspace.tools.sap navigate to a component and the CI/CD tab to view the MFE within DXP
+4. Visit https://portal.d1.hyperspace.tools.sap navigate to a component and the CI/CD tab to view the MFE within DXP
 
 ### FAQ
 

@@ -2688,50 +2688,60 @@ __metadata:
   linkType: hard
 
 "@dxp/eslint-config-angular@npm:^2.0.2":
-  version: 2.0.2
-  resolution: "@dxp/eslint-config-angular@npm:2.0.2::__archiveUrl=https%3A%2F%2Feurope-npm.pkg.dev%2Fsap-gcp-dxp-prod%2Fdxp%2F%40dxp%2Feslint-config-angular%2F-%2F%40dxp%2Feslint-config-angular-2.0.2.tgz"
+  version: 2.0.7
+  resolution: "@dxp/eslint-config-angular@npm:2.0.7::__archiveUrl=https%3A%2F%2Fint.repositories.cloud.sap%2Fartifactory%2Fapi%2Fnpm%2Fproxy-deploy-releases-hyperspace-npm%2F%40dxp%2Feslint-config-angular%2F-%2F%40dxp%2Feslint-config-angular-2.0.7.tgz"
   peerDependencies:
-    "@angular-eslint/builder": ">=14.1.2"
-    "@angular-eslint/eslint-plugin": ">=14.1.2"
-    "@angular-eslint/eslint-plugin-template": ">=14.1.2"
-    "@angular-eslint/schematics": ">=14.1.2"
-    "@angular-eslint/template-parser": ">=14.1.2"
-    "@dxp/config-prettier": 1.0.4
+    "@angular-eslint/builder": ">=16.0.2"
+    "@angular-eslint/eslint-plugin": ">=16.0.2"
+    "@angular-eslint/eslint-plugin-template": ">=16.0.2"
+    "@angular-eslint/schematics": ">=16.0.2"
+    "@angular-eslint/template-parser": ">=16.0.2"
+    "@dxp/config-prettier": ">=1.0.6"
     "@typescript-eslint/eslint-plugin": ">=5.39.0"
     "@typescript-eslint/parser": ">=5.39.0"
     eslint: ">=8.24.0"
-    eslint-config-prettier: ~8.8.0
+    eslint-config-prettier: ~8.8.0 || ~8.10.0 || ~9.1.0
     eslint-plugin-jest: ">=25.2.2"
-    eslint-plugin-prettier: ~4.2.1
-    prettier: 2.8.8
-  checksum: 67d1d70ce0f1ff32a22634f2e14eca6d77dc5abc293c482f121c2786ddbf967b3ad3dd4920380b6119b3061179bb542e1b268427cf03c3311e62d2d9919d5ffc
+    eslint-plugin-prettier: ~4.2.1 || ~5.1.0
+    prettier: ">=2.8.8"
+  checksum: 60cffed0c8ff1083338097d08be4e997dfca9994a9c166d80e7bdee196608d0646a67ecb51e57f655e1ae82488470c982710e6669f52ae72de5d14d0b7e9e93b
   languageName: node
   linkType: hard
 
-"@dxp/ngx-core@npm:0.17.8":
-  version: 0.17.8
-  resolution: "@dxp/ngx-core@npm:0.17.8::__archiveUrl=https%3A%2F%2Feurope-npm.pkg.dev%2Fsap-gcp-dxp-prod%2Fdxp%2F%40dxp%2Fngx-core%2F-%2F%40dxp%2Fngx-core-0.17.8.tgz"
+"@dxp/ngx-core@npm:0.19.0":
+  version: 0.19.0
+  resolution: "@dxp/ngx-core@npm:0.19.0::__archiveUrl=https%3A%2F%2Fint.repositories.cloud.sap%2Fartifactory%2Fapi%2Fnpm%2Fproxy-deploy-releases-hyperspace-npm%2F%40dxp%2Fngx-core%2F-%2F%40dxp%2Fngx-core-0.19.0.tgz"
   dependencies:
     tslib: "npm:^2.5.0"
   peerDependencies:
-    "@angular/common": ^15.0.0
-    "@angular/core": ^15.0.0
-    "@angular/elements": ^15.0.0
-    "@angular/localize": 15.2.3
-    "@apollo/client": ^3.0.0
-    "@dynatrace/dtrum-api-types": ^1.229.5
-    "@fundamental-ngx/core": ~0.39.0
-    "@fundamental-ngx/moment-adapter": ~0.39.0
-    "@fundamental-ngx/platform": ~0.39.0
-    "@luigi-project/client": ^2.0.0
-    "@luigi-project/client-support-angular": ^2.0.0
-    "@ngrx/effects": ^15.0.0
-    "@ngrx/store": ^15.0.0
-    "@sap-theming/theming-base-content": ^11.1.49
-    apollo-angular: ^4.0.0
-    deepmerge: ^4.2.2
-    moment: ^2.29.2
-  checksum: b5bfa010e2b9103defb245913b993cfb5b5c500bb89909773d7ca885ed1fa1cb02928cee8e0d047ca1d2f6a778e01b4c36be60f94aabd7268c63c5b841e80f9a
+    "@angular/animations": ^16.2.12
+    "@angular/cdk": ^16.2.12
+    "@angular/common": ^16.2.12
+    "@angular/compiler": ^16.2.12
+    "@angular/core": ^16.2.12
+    "@angular/elements": ^16.2.12
+    "@angular/forms": ^16.2.12
+    "@angular/localize": ^16.2.12
+    "@angular/platform-browser": ^16.2.12
+    "@angular/platform-browser-dynamic": ^16.2.12
+    "@angular/router": ^16.2.12
+    "@apollo/client": ^3.8.0
+    "@dynatrace/dtrum-api-types": 1.257.2
+    "@fundamental-ngx/core": ^0.46.0
+    "@fundamental-ngx/moment-adapter": ^0.46.0
+    "@fundamental-ngx/platform": ^0.46.0
+    "@fundamental-styles/common-css": ^0.30.0
+    "@luigi-project/client": ^2.0.1
+    "@luigi-project/client-support-angular": ^2.0.1
+    "@ngrx/effects": ^16.2.12
+    "@ngrx/store": ^16.2.12
+    "@sap-theming/theming-base-content": ^11.6.4
+    apollo-angular: ^5.0.2
+    deepmerge: ^4.3.1
+    moment: ^2.29.4
+    rxjs: ^7.8.0
+    ts-md5: ">=1.3.1"
+  checksum: 30b80b5cb3766e217e7d7652e6b37ba513558c04a65c3fc738ba5da89a50d5356304f1c963e01664d997baca06d86fba8a709c858431a0643824adaef4f5ca4e
   languageName: node
   linkType: hard
 
@@ -13986,7 +13996,7 @@ __metadata:
     "@angular/router": "npm:^16.2.2"
     "@apollo/client": "npm:^3.8.1"
     "@dxp/eslint-config-angular": "npm:^2.0.2"
-    "@dxp/ngx-core": "npm:0.17.8"
+    "@dxp/ngx-core": "npm:0.19.0"
     "@dynatrace/dtrum-api-types": "npm:1.279.1"
     "@fundamental-ngx/core": "npm:0.45.1"
     "@fundamental-ngx/platform": "npm:0.45.1"
