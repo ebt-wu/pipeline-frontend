@@ -2745,10 +2745,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@dynatrace/dtrum-api-types@npm:1.279.1":
-  version: 1.279.1
-  resolution: "@dynatrace/dtrum-api-types@npm:1.279.1"
-  checksum: c379814ac0200755e4c247675dc54b5b4776012c9b5647bb4cff560fceb3c182372d9d6fc63a0df7d0a90f6a4299aa9c496f85fa3fff6585dab0ef8d581405bb
+"@dynatrace/dtrum-api-types@npm:1.283.3":
+  version: 1.283.3
+  resolution: "@dynatrace/dtrum-api-types@npm:1.283.3"
+  checksum: ca1335dd6a3f7179d1a61d6f8e39d5793d9b3e8f37ebabcfa72e1ed3856ac6877d5691638705a922e6525d9e68176591035488580e6c0839c6d4dd990434b799
   languageName: node
   linkType: hard
 
@@ -13997,7 +13997,7 @@ __metadata:
     "@apollo/client": "npm:^3.8.1"
     "@dxp/eslint-config-angular": "npm:^2.0.2"
     "@dxp/ngx-core": "npm:0.19.0"
-    "@dynatrace/dtrum-api-types": "npm:1.279.1"
+    "@dynatrace/dtrum-api-types": "npm:1.283.3"
     "@fundamental-ngx/core": "npm:0.45.1"
     "@fundamental-ngx/platform": "npm:0.45.1"
     "@fundamental-styles/common-css": "npm:0.30.2"
