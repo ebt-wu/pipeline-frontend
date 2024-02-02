@@ -2708,9 +2708,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@dxp/ngx-core@npm:0.19.0":
-  version: 0.19.0
-  resolution: "@dxp/ngx-core@npm:0.19.0::__archiveUrl=https%3A%2F%2Fint.repositories.cloud.sap%2Fartifactory%2Fapi%2Fnpm%2Fproxy-deploy-releases-hyperspace-npm%2F%40dxp%2Fngx-core%2F-%2F%40dxp%2Fngx-core-0.19.0.tgz"
+"@dxp/ngx-core@npm:0.20.14":
+  version: 0.20.14
+  resolution: "@dxp/ngx-core@npm:0.20.14::__archiveUrl=https%3A%2F%2Fint.repositories.cloud.sap%2Fartifactory%2Fapi%2Fnpm%2Fproxy-deploy-releases-hyperspace-npm%2F%40dxp%2Fngx-core%2F-%2F%40dxp%2Fngx-core-0.20.14.tgz"
   dependencies:
     tslib: "npm:^2.5.0"
   peerDependencies:
@@ -2726,22 +2726,24 @@ __metadata:
     "@angular/platform-browser-dynamic": ^16.2.12
     "@angular/router": ^16.2.12
     "@apollo/client": ^3.8.0
-    "@dynatrace/dtrum-api-types": 1.257.2
-    "@fundamental-ngx/core": ^0.46.0
-    "@fundamental-ngx/moment-adapter": ^0.46.0
-    "@fundamental-ngx/platform": ^0.46.0
+    "@dynatrace/dtrum-api-types": 1.283.3
+    "@fundamental-ngx/cdk": ^0.47.0 || ^0.47.3-rc.2
+    "@fundamental-ngx/core": ^0.47.0 || ^0.47.3-rc.2
+    "@fundamental-ngx/i18n": ^0.47.0 || ^0.47.3-rc.2
+    "@fundamental-ngx/moment-adapter": ^0.47.0 || ^0.47.3-rc.2
+    "@fundamental-ngx/platform": ^0.47.0 || ^0.47.3-rc.2
     "@fundamental-styles/common-css": ^0.30.0
     "@luigi-project/client": ^2.0.1
     "@luigi-project/client-support-angular": ^2.0.1
-    "@ngrx/effects": ^16.2.12
-    "@ngrx/store": ^16.2.12
-    "@sap-theming/theming-base-content": ^11.6.4
+    "@ngrx/effects": ^16.2.0
+    "@ngrx/store": ^16.2.0
+    "@sap-theming/theming-base-content": ^11.10.0
     apollo-angular: ^5.0.2
     deepmerge: ^4.3.1
     moment: ^2.29.4
     rxjs: ^7.8.0
     ts-md5: ">=1.3.1"
-  checksum: 10/30b80b5cb3766e217e7d7652e6b37ba513558c04a65c3fc738ba5da89a50d5356304f1c963e01664d997baca06d86fba8a709c858431a0643824adaef4f5ca4e
+  checksum: 10/5d5770c09254d0cc3b647e785e40ba719e33a70129a5a05cbf4b35da9ed8ae840719e57b461a6a2834d62c9506e1b73b409ad32ccdc81e35027b876321795677
   languageName: node
   linkType: hard
 
@@ -13996,7 +13998,7 @@ __metadata:
     "@angular/router": "npm:^16.2.2"
     "@apollo/client": "npm:^3.8.1"
     "@dxp/eslint-config-angular": "npm:^2.0.2"
-    "@dxp/ngx-core": "npm:0.19.0"
+    "@dxp/ngx-core": "npm:0.20.14"
     "@dynatrace/dtrum-api-types": "npm:1.283.3"
     "@fundamental-ngx/core": "npm:0.45.1"
     "@fundamental-ngx/platform": "npm:0.45.1"
