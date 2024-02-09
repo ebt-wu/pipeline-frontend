@@ -46,6 +46,7 @@ export class HomePageComponent implements OnInit {
   constructor(
     private readonly pipelineService: PipelineService,
     private readonly debugModeService: DebugModeService,
+    private readonly luigiService: DxpLuigiContextService,
     private readonly luigiClient: LuigiClient,
     private readonly context: DxpLuigiContextService,
   ) {}
@@ -53,6 +54,27 @@ export class HomePageComponent implements OnInit {
   async ngOnInit(): Promise<void> {
     await this.initializePipeline()
     this.watch$ = this.pipelineService.watchPipeline().pipe(debounceTime(50))
+
+    const context = await this.luigiService.getContextAsync()
+
+    if (context.analyticsTrackerConfig?.apiKey && context.analyticsTrackerConfig?.visitorId) {
+      const script = this.getPendoInitializeScript(
+        context.analyticsTrackerConfig.apiKey,
+        context.analyticsTrackerConfig.visitorId,
+      )
+
+      const scriptTag = document.createElement('script')
+      scriptTag.text = script
+      document.body.appendChild(scriptTag)
+
+      console.log('Appended Pendo script.')
+    } else {
+      console.warn('Could not initialize Pendo Analytics. Missing configuration from frame context.')
+    }
+  }
+
+  getPendoInitializeScript(apiKey: string, visitorId: string): string {
+    return `(function(apiKey, visitorId){(function(p,e,n,d,o){var v,w,x,y,z;o=p[d]=p[d]||{};o._q=o._q||[];v=['initialize','identify','updateOptions','pageLoad','track'];for(w=0,x=v.length;w<x;++w)(function(m){o[m]=o[m]||function(){o._q[m===v[0]?'unshift':'push']([m].concat([].slice.call(arguments,0)));};})(v[w]);y=e.createElement(n);y.async=!0;y.src='https://cdn.pendo.io/agent/static/'+apiKey+'/pendo.js'; z=e.getElementsByTagName(n)[0];z.parentNode.insertBefore(y,z);})(window,document,'script','pendo');pendo.initialize({visitor: {id: visitorId}});})('${apiKey}', '${visitorId}')`
   }
 
   navigateToProjectMembers() {
