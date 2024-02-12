@@ -117,6 +117,7 @@ export const GET_CUMULUS_PIPELINE = gql`
       id
       key
       creationTimestamp
+      groupId
     }
   }
 `

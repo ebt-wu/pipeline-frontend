@@ -106,7 +106,7 @@ export class PipelineComponent implements OnInit, OnDestroy {
     private readonly luigiDialogUtil: LuigiDialogUtil,
     private readonly featureFlagService: FeatureFlagService,
     readonly debugModeService: DebugModeService,
-    private readonly sharedResourceDataService: SharedDataService
+    private readonly sharedResourceDataService: SharedDataService,
   ) {}
 
   get showOpenPipelineURL(): boolean {
@@ -126,7 +126,7 @@ export class PipelineComponent implements OnInit, OnDestroy {
 
     this.isGithubActionsEnabledAlready$ = this.api.githubActionsService.getGithubActionsCrossNamespace(
       this.githubMetadata.githubInstance,
-      this.githubMetadata.githubOrgName
+      this.githubMetadata.githubOrgName,
     )
 
     this.pipelineSubscription = this.pipeline$.subscribe(async (pipeline) => {
@@ -138,7 +138,7 @@ export class PipelineComponent implements OnInit, OnDestroy {
       if (pipeline?.resourceRefs) {
         // if true then it means that the GitHub Actions is enabled from the same component
         this.isGithubActionsEnabledInSameComponent.set(
-          pipeline.resourceRefs.some((ref) => ref.kind === Kinds.GITHUB_ACTION)
+          pipeline.resourceRefs.some((ref) => ref.kind === Kinds.GITHUB_ACTION),
         )
 
         for (const ref of pipeline.resourceRefs) {
@@ -184,7 +184,7 @@ export class PipelineComponent implements OnInit, OnDestroy {
 
         const orchestrators = [Kinds.JENKINS_PIPELINE, Kinds.GITHUB_ACTIONS_WORKFLOW]
         const isOrchestratorMissingInBuildStage = !pipeline.resourceRefs.find((ref) =>
-          orchestrators.find((value) => ref.kind === value)
+          orchestrators.find((value) => ref.kind === value),
         )
 
         if (isRequiredKindMissingInBuildStage || isOrchestratorMissingInBuildStage) {
@@ -237,8 +237,8 @@ export class PipelineComponent implements OnInit, OnDestroy {
             value: luigiContext.context.githubToolsToken as string,
             domain: 'github.tools.sap',
           }
-        })
-      )
+        }),
+      ),
     )
 
     if (!token?.value || !this.githubMetadata.githubRepoUrl) {
@@ -269,8 +269,16 @@ export class PipelineComponent implements OnInit, OnDestroy {
   openFeedback() {
     window.open(
       'https://sapit-home-prod-004.launchpad.cfapps.eu10.hana.ondemand.com/site#feedbackservice-Display&/topic/cc5045ed-6c4e-4e7b-a18d-a0b377faf593/createFeedback',
-      '_blank'
+      '_blank',
     )
+  }
+  openCumulusModal(e: Event) {
+    e.stopPropagation()
+    this.luigiClient.linkManager().fromVirtualTreeRoot().openAsModal('cumulus-info', {
+      width: '30rem',
+      height: '32rem',
+      title: 'Cumulus',
+    })
   }
 
   getIcon(serviceName: Kinds): string {
@@ -364,7 +372,7 @@ export class PipelineComponent implements OnInit, OnDestroy {
     const componentId = (await this.luigiService.getContextAsync()).componentId
 
     const orchestratorKind = pipeline.resourceRefs.find((ref) =>
-      [Kinds.GITHUB_ACTIONS_WORKFLOW, Kinds.JENKINS_PIPELINE].includes(ref.kind)
+      [Kinds.GITHUB_ACTIONS_WORKFLOW, Kinds.JENKINS_PIPELINE].includes(ref.kind),
     )?.kind
 
     const mb = this.messageBoxService.open(DeleteBuildModal, {

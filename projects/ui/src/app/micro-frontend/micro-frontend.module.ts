@@ -16,27 +16,29 @@ import { JenkinServiceDetailsComponent } from './components/service-details/jenk
 import { PiperServiceDetailsComponent } from './components/service-details/piper/piper-service-details.component'
 import { StagingServiceServiceDetailsComponent } from './components/service-details/staging-service/staging-service-service-details.component'
 import { PlatformFormGeneratorCustomInfoBoxComponent } from './components/form-generator-info-box/form-generator-info-box.component'
+import { CumulusInfoModalComponent } from './components/cumulus-info-modal/cumulus-info-modal.component'
 
 @NgModule({
   providers: [ContentDensityService, ThemingService],
   imports: [
     CommonModule,
+    CumlusServiceDetailsComponent,
+    CumulusInfoModalComponent,
+    DismissibleMessageComponent,
     ErrorMessageComponent,
     FundamentalNgxCoreModule,
     FundamentalNgxPlatformModule,
+    GithubServiceDetailsComponent,
     HomePageComponent,
+    JenkinServiceDetailsComponent,
     LuigiAngularSupportModule,
-    DismissibleMessageComponent,
     MicroFrontendRoutingModule,
     PipelineComponent,
-    SetupComponent,
-    CumlusServiceDetailsComponent,
-    GithubServiceDetailsComponent,
-    JenkinServiceDetailsComponent,
     PiperServiceDetailsComponent,
-    StagingServiceServiceDetailsComponent,
     PlatformFormGeneratorCustomHeaderElementComponent,
     PlatformFormGeneratorCustomInfoBoxComponent,
+    SetupComponent,
+    StagingServiceServiceDetailsComponent,
   ],
 })
 export class MicroFrontendModule {}

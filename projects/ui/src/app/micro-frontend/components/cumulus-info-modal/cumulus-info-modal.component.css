@@ -1,0 +1,36 @@
+.busy-indicator {
+  height: 80vh;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.container {
+  margin: 1.5rem 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.icon-padding {
+  padding-right: 1rem;
+}
+
+.remove-top-margin {
+  margin-top: 0;
+}
+
+.neutral-color {
+  color: var(--sapNeutralColor);
+}
+
+.storage-token-text-padding {
+  padding-right: 2rem;
+}
+
+.dialog-footer {
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+}
