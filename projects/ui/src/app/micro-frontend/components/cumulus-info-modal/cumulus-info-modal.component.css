@@ -7,10 +7,16 @@
 }
 
 .container {
-  margin: 1.5rem 2rem;
+  margin: 16px;
   display: flex;
   flex-direction: column;
   gap: 0;
+}
+
+
+.link {
+  color: var(--sapLink_Active_Color);
+  text-decoration: none;
 }
 
 .icon-padding {
@@ -21,12 +27,19 @@
   margin-top: 0;
 }
 
-.neutral-color {
+.icon {
   color: var(--sapNeutralColor);
+  cursor: pointer;
 }
 
 .storage-token-text-padding {
   padding-right: 2rem;
+}
+.documentation-button {
+  position: absolute;
+  bottom: 32px;
+  left: 16px;
+  margin-bottom: 24px;
 }
 
 .dialog-footer {

@@ -60,6 +60,12 @@ Has CDM for live:
                               "entityType": "project.component",
                               "url": "https://test-domain/{i18n.currentLocale}/#/pipeline-ui/import-pipeline",
                               "hideSideNav": false
+                            },
+                            {
+                              "pathSegment": "cumulus-info",
+                              "entityType": "project.component",
+                              "urlSuffix": "https://test-domain/{i18n.currentLocale}/#/pipeline-ui/cumulus-info",
+                              "hideSideNav": false
                             }
                           ]
                         },
@@ -247,6 +253,12 @@ Test Extension matches the snapshot:
                               "entityType": "project.component",
                               "url": "https://test-domain/{i18n.currentLocale}/#/pipeline-ui/import-pipeline",
                               "hideSideNav": false
+                            },
+                            {
+                              "pathSegment": "cumulus-info",
+                              "entityType": "project.component",
+                              "urlSuffix": "https://test-domain/{i18n.currentLocale}/#/pipeline-ui/cumulus-info",
+                              "hideSideNav": false
                             }
                           ]
                         },
@@ -432,6 +444,12 @@ githubActions feature enabled for some projects:
                               "pathSegment": "import-pipeline",
                               "entityType": "project.component",
                               "url": "https://test-domain/{i18n.currentLocale}/#/pipeline-ui/import-pipeline",
+                              "hideSideNav": false
+                            },
+                            {
+                              "pathSegment": "cumulus-info",
+                              "entityType": "project.component",
+                              "urlSuffix": "https://test-domain/{i18n.currentLocale}/#/pipeline-ui/cumulus-info",
                               "hideSideNav": false
                             }
                           ]

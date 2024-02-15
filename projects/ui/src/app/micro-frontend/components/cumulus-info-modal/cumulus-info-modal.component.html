@@ -8,38 +8,63 @@
       <div>
         <b>
           Pipeline Key
-          <fd-icon glyph="message-information" class="neutral-color"></fd-icon>
         </b>
+        <fd-icon
+          [fd-inline-help]="cumulusPopover"
+          [triggers]="['click']"
+          class="icon"
+          glyph="hint"></fd-icon>
+
         <p class="remove-top-margin">{{ cumulusInfo.key }}</p>
       </div>
       <div>
         <b>
           Pipeline ID
-          <fd-icon glyph="message-information" class="neutral-color"></fd-icon>
         </b>
         <p class="remove-top-margin">{{ cumulusInfo.id }}</p>
       </div>
       <div>
         <b>
           Group ID
-          <fd-icon glyph="message-information" class="neutral-color"></fd-icon>
         </b>
         <p class="remove-top-margin">{{ cumulusInfo.groupId }}</p>
       </div>
 
       <div>
-        <h2>Need a cumulus storage token?</h2>
+        <h2>Need a Cumulus storage token?</h2>
         <p class="storage-token-text-padding">
           The storage token is needed to connect your pipeline orchestrator to the GCP bucket where the files from your
           pipeline will be stored.
         </p>
-        <button fd-button (click)="showCumulusTokenInVault()">Show Token in Vault</button>
+        <button (click)="showCumulusTokenInVault()" fd-button>Show Token in Vault</button>
+      </div>
+      <div class="documentation-button">
+        <button
+          fd-button
+          glyph="question-mark"
+          (click)="openDocumentation()"
+          fdType="transparent"
+          ariaLabel="Learn More"
+          label="Learn More"
+          role="button">
+        </button>
       </div>
     </div>
   </div>
 </fd-dialog-body>
+
 <div barDesign="footer" class="dialog-footer" fd-bar>
   <div fd-bar-right>
     <button (click)="close()" ariaLabel="Close" fd-button fdCompact fdType="transparent" label="Close">Close</button>
   </div>
 </div>
+
+<ng-template #cumulusPopover>
+  <div>
+    Use this key to <a class="link" href="https://wiki.one.int.sap/wiki/x/iK5Yh" rel="noopener noreferrer"
+                       target="_blank">
+    add your pipeline to Sirius</a>
+    <br />
+    to view its compliance results
+  </div>
+</ng-template>

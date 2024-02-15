@@ -277,7 +277,7 @@ export class PipelineComponent implements OnInit, OnDestroy {
     this.luigiClient.linkManager().fromVirtualTreeRoot().openAsModal('cumulus-info', {
       width: '30rem',
       height: '32rem',
-      title: 'Cumulus',
+      title: 'Cumulus Info',
     })
   }
 

@@ -9,6 +9,7 @@ import { CumulusService } from '../../services/cumulus.service'
 import { SecretService } from '../../services/secret.service'
 import { CumulusPipeline } from '@generated/graphql'
 import { LuigiClient } from '@dxp/ngx-core/luigi'
+import { PlatformButtonModule } from '@fundamental-ngx/platform'
 
 @Component({
   selector: 'app-cumulus-info-modal',
@@ -16,7 +17,7 @@ import { LuigiClient } from '@dxp/ngx-core/luigi'
   styleUrls: ['./cumulus-info-modal.component.css'],
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [NgIf, FundamentalNgxCoreModule],
+  imports: [NgIf, FundamentalNgxCoreModule, PlatformButtonModule],
 })
 export class CumulusInfoModalComponent implements OnInit {
   watch$: Observable<Pipeline>
@@ -44,6 +45,13 @@ export class CumulusInfoModalComponent implements OnInit {
     // cumulus secret path is hardcoded here: https://github.tools.sap/hyperspace/pipeline-backend/blob/937fc53e719077cc63b97c7b6277fde838c304dd/service/cumulus/service.go#L79
     const cumulusSecretPath = 'GROUP-SECRETS/cumulus'
     window.open(await this.secretService.getVaultUrlOfSecret(cumulusSecretPath), '_blank')
+  }
+
+  openDocumentation() {
+    window.open(
+      'https://pages.github.tools.sap/hyperspace/cicd-setup-documentation/connected-tools/build/cumulus.html',
+      '_blank',
+    )
   }
 
   close() {

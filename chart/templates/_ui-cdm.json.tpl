@@ -54,6 +54,12 @@
                   "entityType": "project.component",
                   "url": "{{$url}}/{i18n.currentLocale}/#/pipeline-ui/import-pipeline",
                   "hideSideNav": false
+                },
+                {
+                  "pathSegment": "cumulus-info",
+                  "entityType": "project.component",
+                  "urlSuffix": "{{$url}}/{i18n.currentLocale}/#/pipeline-ui/cumulus-info",
+                  "hideSideNav": false
                 }
               ]
             },
