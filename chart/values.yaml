@@ -9,10 +9,6 @@ documentation:
   url: https://pages.github.tools.sap/hyperspace/cicd-setup-documentation/
 
 features: # Changes for prod landscape goes to https://github.tools.sap/hyperspace/ci-cd-setup-stack/blob/prod/landscapes/prod.yaml
-  # enabled projects with the ci-cd extensions.
-  # comment out to enable all projects
-  #enabledProjects: []
-
   # For handling fine-grained features in code see ./projects/ui/src/app/micro-frontend/services/feature-flag.service.ts
 
   # Enabled GitHub Actions as an orchestrator

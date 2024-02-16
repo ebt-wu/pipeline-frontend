@@ -12,9 +12,6 @@
               "entityType": "project.overview::compound",
               "url": "{{$url}}/main.js#cicd-project-promotion-card",
               "dxpOrder": 2,
-              {{- if and (eq .Values.environment "live") .Values.features.enabledProjects }}
-              "visibleForContext": "contains({{ .Values.features.enabledProjects | toJson | replace "\"" "'" }}, entityContext.project.id)",
-              {{- end }}
               "layoutConfig": {
                 "slot": "content"
               },

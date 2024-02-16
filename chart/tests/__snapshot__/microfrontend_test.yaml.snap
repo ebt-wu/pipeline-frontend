@@ -32,10 +32,6 @@ Has CDM for live:
                           "requiredIFramePermissions": {
                             "allow": ["clipboard-read", "clipboard-write"]
                           },
-                          "visibleForContext": "!featureFlags || !featureFlags.enabledProjects || contains(featureFlags.enabledProjects, entityContext.project.id)",
-                          "context": {
-                            "featureFlags": {"GITHUB_ACTIONS_ENABLED":false,"enabledProjects":["p1","p2"]}
-                          },
                           "children": [
                             {
                               "pathSegment": "setup",
@@ -124,7 +120,6 @@ Has CDM for live:
                           "entityType": "project.overview::compound",
                           "url": "https://test-domain-wc/main.js#cicd-project-promotion-card",
                           "dxpOrder": 2,
-                          "visibleForContext": "contains(['p1','p2'], entityContext.project.id)",
                           "layoutConfig": {
                             "slot": "content"
                           },

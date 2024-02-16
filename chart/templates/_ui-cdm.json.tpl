@@ -22,9 +22,6 @@
               "requiredIFramePermissions": {
                 "allow": ["clipboard-read", "clipboard-write"]
               },
-              {{- if eq .Values.environment "live" }}
-              "visibleForContext": "!featureFlags || !featureFlags.enabledProjects || contains(featureFlags.enabledProjects, entityContext.project.id)",
-              {{- end }}
               {{- with .Values.features }}
               "context": {
                 "featureFlags": {{ . | toJson }}

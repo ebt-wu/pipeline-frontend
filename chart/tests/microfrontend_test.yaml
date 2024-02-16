@@ -16,9 +16,6 @@ tests:
     set:
       environment: live
       features:
-        enabledProjects:
-          - p1
-          - p2
     asserts:
       - matchSnapshot: {}
   - it: githubActions feature enabled for some projects
