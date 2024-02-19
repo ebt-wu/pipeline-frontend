@@ -12,6 +12,7 @@ import {
   ContentDensityMode,
   FundamentalNgxCoreModule,
 } from '@fundamental-ngx/core'
+import { AnalyticsTrackerService } from '@dxp/ngx-core/analytics-tracker'
 
 if (environment.production) {
   enableProdMode()
@@ -33,4 +34,9 @@ bootstrapApplication(AppComponent, {
     ContentDensityService,
     provideNoopAnimations(),
   ],
-}).catch((err) => console.error(err))
+})
+  .then((ref) => {
+    const analyticsTrackerService = ref.injector.get(AnalyticsTrackerService)
+    analyticsTrackerService.injectScript().catch((err) => console.error(err))
+  })
+  .catch((err) => console.error(err))
