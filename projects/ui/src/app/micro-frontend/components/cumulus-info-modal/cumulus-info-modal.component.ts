@@ -7,7 +7,7 @@ import { Pipeline } from '@types'
 import { Kinds } from '@enums'
 import { CumulusService } from '../../services/cumulus.service'
 import { SecretService } from '../../services/secret.service'
-import { CumulusPipeline } from '@generated/graphql'
+import { CumulusPipeline, PipelineType } from '@generated/graphql'
 import { LuigiClient } from '@dxp/ngx-core/luigi'
 import { PlatformButtonModule } from '@fundamental-ngx/platform'
 
@@ -31,6 +31,9 @@ export class CumulusInfoModalComponent implements OnInit {
   ) {}
 
   async ngOnInit() {
+    // If there is no pipeline we create one on-the-fly
+    await firstValueFrom(this.pipelineService.createPipeline(PipelineType.FullPipeline).pipe(debounceTime(100)))
+
     this.watch$ = this.pipelineService.watchPipeline().pipe(debounceTime(50))
 
     const cumulusRef = (await firstValueFrom(this.watch$)).resourceRefs.find(
