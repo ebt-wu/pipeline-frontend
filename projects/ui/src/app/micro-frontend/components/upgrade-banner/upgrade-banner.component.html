@@ -18,7 +18,11 @@
       </div>
       <img src="./assets/balloons.svg" *ngIf="showBalloons" class="banner-balloons" />
       <div class="spacer"></div>
-      <button fd-button label="Use in Pipeline" (click)="openSetupWizard($event)"></button>
+      <button
+        fd-button
+        label="Use in Pipeline"
+        (click)="openSetupWizard($event)"
+        *dxpRequiredPolicies="['projectAdmin', 'projectMember']; operator: 'or'"></button>
     </div>
   </fd-card-content>
 </fd-card>

@@ -2,23 +2,29 @@
   <div *ngIf="watch$ | async as pipeline" class="container">
     <h3 class="watch-pipeline-header">Watch pipeline:</h3>
     <pre class="hide-scrollbar pipeline-json">{{ pipeline | json }}</pre>
-    <h3 class="delete-freestyle-resource-header">Delete FreestylePipeline Resource</h3>
-    <p>
-      Deleting the FreestylePipeline resource may have
-      <b class="text-red">unintended side effects</b>
-      such as orphaned resources.
-    </p>
-    <fd-message-strip type="warning" (onDismiss)="shiftMessage.set(false)" class="shift-message" *ngIf="shiftMessage()">
-      Press
-      <code><i>shift</i></code>
-      while clicking the button to confirm that you know what you are doing.
-    </fd-message-strip>
-    <button
-      fd-button
-      label="Delete FreestylePipeline"
-      fdType="negative"
-      glyph="delete"
-      (click)="deletePipeline($event)"
-      class="delete-button"></button>
+    <div *dxpRequiredPolicies="['projectAdmin', 'projectMember']; operator: 'or'">
+      <h3 class="delete-freestyle-resource-header">Delete FreestylePipeline Resource</h3>
+      <p>
+        Deleting the FreestylePipeline resource may have
+        <b class="text-red">unintended side effects</b>
+        such as orphaned resources.
+      </p>
+      <fd-message-strip
+        type="warning"
+        (onDismiss)="shiftMessage.set(false)"
+        class="shift-message"
+        *ngIf="shiftMessage()">
+        Press
+        <code><i>shift</i></code>
+        while clicking the button to confirm that you know what you are doing.
+      </fd-message-strip>
+      <button
+        fd-button
+        label="Delete FreestylePipeline"
+        fdType="negative"
+        glyph="delete"
+        (click)="deletePipeline($event)"
+        class="delete-button"></button>
+    </div>
   </div>
 </fd-dialog-body>

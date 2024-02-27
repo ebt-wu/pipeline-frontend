@@ -6,31 +6,20 @@
 
     <div *ngIf="cumulusInfo && cumulusInfo.key && cumulusInfo.id && cumulusInfo.groupId">
       <div>
-        <b>
-          Pipeline Key
-        </b>
-        <fd-icon
-          [fd-inline-help]="cumulusPopover"
-          [triggers]="['click']"
-          class="icon"
-          glyph="hint"></fd-icon>
+        <b>Pipeline Key</b>
+        <fd-icon [fd-inline-help]="cumulusPopover" [triggers]="['click']" class="icon" glyph="hint"></fd-icon>
 
         <p class="remove-top-margin">{{ cumulusInfo.key }}</p>
       </div>
       <div>
-        <b>
-          Pipeline ID
-        </b>
+        <b>Pipeline ID</b>
         <p class="remove-top-margin">{{ cumulusInfo.id }}</p>
       </div>
       <div>
-        <b>
-          Group ID
-        </b>
+        <b>Group ID</b>
         <p class="remove-top-margin">{{ cumulusInfo.groupId }}</p>
       </div>
-
-      <div>
+      <div *dxpRequiredPolicies="['projectAdmin', 'projectMember']; operator: 'or'">
         <h2>Need a Cumulus storage token?</h2>
         <p class="storage-token-text-padding">
           The storage token is needed to connect your pipeline orchestrator to the GCP bucket where the files from your
@@ -46,8 +35,7 @@
           fdType="transparent"
           ariaLabel="Learn More"
           label="Learn More"
-          role="button">
-        </button>
+          role="button"></button>
       </div>
     </div>
   </div>
@@ -61,9 +49,10 @@
 
 <ng-template #cumulusPopover>
   <div>
-    Use this key to <a class="link" href="https://wiki.one.int.sap/wiki/x/iK5Yh" rel="noopener noreferrer"
-                       target="_blank">
-    add your pipeline to Sirius</a>
+    Use this key to
+    <a class="link" href="https://wiki.one.int.sap/wiki/x/iK5Yh" rel="noopener noreferrer" target="_blank">
+      add your pipeline to Sirius
+    </a>
     <br />
     to view its compliance results
   </div>

@@ -12,9 +12,11 @@
       *ngIf="!troubleshootURL() && debugModeService.debugModeEnabled()">
       Traces
     </button>
-    <button fd-button fdType="transparent" class="ticket-button" (click)="reportError()" *ngIf="!troubleshootURL()">
-      Create Ticket
-    </button>
+    <div *dxpRequiredPolicies="['projectAdmin', 'projectMember']; operator: 'or'">
+      <button fd-button fdType="transparent" class="ticket-button" (click)="reportError()" *ngIf="!troubleshootURL()">
+        Create Ticket
+      </button>
+    </div>
     <a fd-link class="ticket-button" [href]="troubleshootURL()" target="_blank" *ngIf="troubleshootURL()">
       Troubleshoot
     </a>

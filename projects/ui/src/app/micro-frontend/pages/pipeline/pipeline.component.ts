@@ -33,6 +33,7 @@ import { ExtensionClass } from '../../services/extension.types'
 import { FeatureFlagService } from '../../services/feature-flag.service'
 import { GithubMetadata } from '../../services/github.service'
 import { SharedDataService } from '../../services/shared-data.service'
+import { AuthorizationModule } from '@dxp/ngx-core/authorization'
 
 type Error = {
   title: string
@@ -62,6 +63,7 @@ type Error = {
     ServiceDetailsSkeletonComponent,
     ServiceListItemComponent,
     UpgradeBannerComponent,
+    AuthorizationModule,
   ],
 })
 export class PipelineComponent implements OnInit, OnDestroy {
