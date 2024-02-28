@@ -2710,9 +2710,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@dxp/ngx-core@npm:0.20.22":
-  version: 0.20.22
-  resolution: "@dxp/ngx-core@npm:0.20.22::__archiveUrl=https%3A%2F%2Fint.repositories.cloud.sap%2Fartifactory%2Fapi%2Fnpm%2Fproxy-deploy-releases-hyperspace-npm%2F%40dxp%2Fngx-core%2F-%2F%40dxp%2Fngx-core-0.20.22.tgz"
+"@dxp/ngx-core@npm:0.20.25":
+  version: 0.20.25
+  resolution: "@dxp/ngx-core@npm:0.20.25::__archiveUrl=https%3A%2F%2Fint.repositories.cloud.sap%2Fartifactory%2Fapi%2Fnpm%2Fproxy-deploy-releases-hyperspace-npm%2F%40dxp%2Fngx-core%2F-%2F%40dxp%2Fngx-core-0.20.25.tgz"
   dependencies:
     tslib: "npm:^2.5.0"
   peerDependencies:
@@ -2745,7 +2745,7 @@ __metadata:
     moment: ^2.29.4
     rxjs: ^7.8.0
     ts-md5: ">=1.3.1"
-  checksum: 10/b7cf2131f55470cb765de055e9cc23f41fece8699ff524d34e87a08b04b0cab1fa597ceb1bcc58e0870ab07b6b633fe553b7727f8a8047d536fa1eea1f7201f3
+  checksum: 10/5994f40bd16dc6218cef5742fb13c4f9b573856a116d5d480b970119fd8f09b06a363019c8c4200aec524e18d549f368e83ee109f6098b9d9eb432cce21a2d4b
   languageName: node
   linkType: hard
 
@@ -14016,7 +14016,7 @@ __metadata:
     "@angular/router": "npm:^16.2.2"
     "@apollo/client": "npm:^3.8.1"
     "@dxp/eslint-config-angular": "npm:^2.0.2"
-    "@dxp/ngx-core": "npm:0.20.22"
+    "@dxp/ngx-core": "npm:0.20.25"
     "@dynatrace/dtrum-api-types": "npm:1.283.3"
     "@fundamental-ngx/core": "npm:0.45.1"
     "@fundamental-ngx/platform": "npm:0.45.1"
