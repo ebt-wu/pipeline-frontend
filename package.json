@@ -45,7 +45,7 @@
     "@angular/platform-browser-dynamic": "^16.2.2",
     "@angular/router": "^16.2.2",
     "@apollo/client": "^3.8.1",
-    "@dxp/ngx-core": "0.20.25",
+    "@dxp/ngx-core": "0.20.26",
     "@dynatrace/dtrum-api-types": "1.283.3",
     "@fundamental-ngx/core": "0.45.1",
     "@fundamental-ngx/platform": "0.45.1",
