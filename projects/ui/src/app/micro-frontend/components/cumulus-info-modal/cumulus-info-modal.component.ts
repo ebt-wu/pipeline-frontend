@@ -8,7 +8,7 @@ import { Kinds } from '@enums'
 import { CumulusService } from '../../services/cumulus.service'
 import { SecretService } from '../../services/secret.service'
 import { CumulusPipeline, PipelineType } from '@generated/graphql'
-import { LuigiClient } from '@dxp/ngx-core/luigi'
+import { DxpLuigiContextService, LuigiClient } from '@dxp/ngx-core/luigi'
 import { PlatformButtonModule } from '@fundamental-ngx/platform'
 import { AuthorizationModule } from '@dxp/ngx-core/authorization'
 
@@ -29,11 +29,16 @@ export class CumulusInfoModalComponent implements OnInit {
     private readonly cumulusService: CumulusService,
     private readonly secretService: SecretService,
     private readonly luigiClient: LuigiClient,
+    private readonly context: DxpLuigiContextService,
   ) {}
 
   async ngOnInit() {
     // If there is no pipeline we create one on-the-fly
-    await firstValueFrom(this.pipelineService.createPipeline(PipelineType.FullPipeline).pipe(debounceTime(100)))
+    const userPolicies = (await this.context.getContextAsync()).entityContext.project.policies
+
+    if (userPolicies.includes('projectAdmin') || userPolicies.includes('projectMember')) {
+      await firstValueFrom(this.pipelineService.createPipeline(PipelineType.FullPipeline).pipe(debounceTime(100)))
+    }
 
     this.watch$ = this.pipelineService.watchPipeline().pipe(debounceTime(50))
 
