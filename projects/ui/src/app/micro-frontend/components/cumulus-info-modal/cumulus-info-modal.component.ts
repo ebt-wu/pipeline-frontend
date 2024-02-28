@@ -52,10 +52,7 @@ export class CumulusInfoModalComponent implements OnInit {
   }
 
   openDocumentation() {
-    window.open(
-      'https://pages.github.tools.sap/hyperspace/cicd-setup-documentation/connected-tools/build/cumulus.html',
-      '_blank',
-    )
+    window.open('https://wiki.one.int.sap/wiki/x/3z5mh', '_blank')
   }
 
   close() {
