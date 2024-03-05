@@ -5,14 +5,13 @@ import { PipelineService } from '../../services/pipeline.service'
 import { Observable, debounceTime, firstValueFrom } from 'rxjs'
 import { Pipeline } from '@types'
 import { LuigiClient } from '@dxp/ngx-core/luigi'
-import { AuthorizationModule } from '@dxp/ngx-core/authorization'
 
 @Component({
   standalone: true,
   selector: 'pipeline-debug',
   templateUrl: 'pipeline-debug.component.html',
   styleUrls: ['pipeline-debug.component.css'],
-  imports: [CommonModule, FundamentalNgxCoreModule, FormattedTextModule, AuthorizationModule],
+  imports: [CommonModule, FundamentalNgxCoreModule, FormattedTextModule],
 })
 export class PipelineDebugModal {
   constructor(

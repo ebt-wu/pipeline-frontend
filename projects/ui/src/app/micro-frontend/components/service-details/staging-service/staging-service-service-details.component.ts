@@ -3,14 +3,13 @@ import { Component, Input, signal } from '@angular/core'
 import { FundamentalNgxCoreModule } from '@fundamental-ngx/core'
 import { SecretService } from '../../../../micro-frontend/services/secret.service'
 import { GetStagingServiceCredentialQuery } from '@generated/graphql'
-import { AuthorizationModule } from '@dxp/ngx-core/authorization'
 
 @Component({
   selector: 'staging-service-service-details',
   templateUrl: 'staging-service-service-details.component.html',
   standalone: true,
   styleUrls: ['staging-service-service-details.component.css'],
-  imports: [CommonModule, FundamentalNgxCoreModule, AuthorizationModule],
+  imports: [CommonModule, FundamentalNgxCoreModule],
 })
 export class StagingServiceServiceDetailsComponent {
   constructor(private readonly secretService: SecretService) {}

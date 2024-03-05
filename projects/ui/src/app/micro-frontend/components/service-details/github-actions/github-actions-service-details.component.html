@@ -48,20 +48,18 @@
       [closeOnOutsideClick]="true"></button>
   </div>
   <div>{{ serviceDetails.solinasCustomerID }}</div>
-  <div *dxpRequiredPolicies="['projectAdmin', 'projectMember']; operator: 'or'">
-    <a [href]="githubActionsRunnerGroupUrl" target="_blank">Open Runners Group</a>
-    <div class="flex-box top-margin">
-      <h3>GitHub Actions Credentials</h3>
-    </div>
-    <div>
-      <b>Vault Path</b>
-    </div>
-    <fd-busy-indicator [loading]="pendingShowInVault()" size="s">
-      <a fd-link [disabled]="pendingShowInVault()" (click)="showInVault(serviceDetails.secretPath)">
-        {{ serviceDetails.secretPath }}
-      </a>
-    </fd-busy-indicator>
+  <a [href]="githubActionsRunnerGroupUrl" target="_blank">Open Runners Group</a>
+  <div class="flex-box top-margin">
+    <h3>GitHub Actions Credentials</h3>
   </div>
+  <div>
+    <b>Vault Path</b>
+  </div>
+  <fd-busy-indicator [loading]="pendingShowInVault()" size="s">
+    <a fd-link [disabled]="pendingShowInVault()" (click)="showInVault(serviceDetails.secretPath)">
+      {{ serviceDetails.secretPath }}
+    </a>
+  </fd-busy-indicator>
   <div class="divider"></div>
   <h3 class="get-started-heading">Get started with GitHub Actions</h3>
   <fd-message-strip

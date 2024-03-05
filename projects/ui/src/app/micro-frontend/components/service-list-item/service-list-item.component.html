@@ -41,20 +41,18 @@
           </code>
         </div>
         <div class="spacer"></div>
-        <div *dxpRequiredPolicies="['projectAdmin', 'projectMember']; operator: 'or'">
-          <button
-            *ngIf="
-              localLayout === 'OneColumnStartFullScreen' &&
-              (debugModeService.debugModeEnabled() || resourceRef.status === ServiceStatus.FAILING_CREATION)
-            "
-            fd-button
-            label="Retry"
-            glyph="refresh"
-            fdType="transparent"
-            ariaLabel="Retry"
-            class="retry-button"
-            (click)="retryService($event, resourceRef)"></button>
-        </div>
+        <button
+          *ngIf="
+            localLayout === 'OneColumnStartFullScreen' &&
+            (debugModeService.debugModeEnabled() || resourceRef.status === ServiceStatus.FAILING_CREATION)
+          "
+          fd-button
+          label="Retry"
+          glyph="refresh"
+          fdType="transparent"
+          ariaLabel="Retry"
+          class="retry-button"
+          (click)="retryService($event, resourceRef)"></button>
         <div class="details-icon">
           <fd-icon *ngIf="resourceRef.status === ServiceStatus.CREATED" glyph="slim-arrow-right" class="icon"></fd-icon>
         </div>

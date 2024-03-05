@@ -4,21 +4,21 @@ import { DxpLuigiContextService } from '@dxp/ngx-core/luigi'
 import { FundamentalNgxCoreModule } from '@fundamental-ngx/core'
 import { GitHubIssueLabels, GitHubIssueLinkService } from '../../services/github-issue-link.service'
 import { DebugModeService } from '../../services/debug-mode.service'
-import { AuthorizationModule } from '@dxp/ngx-core/authorization'
 
 @Component({
   standalone: true,
   selector: 'error-message',
   templateUrl: './error-message.component.html',
   styleUrls: ['./error-message.component.css'],
-  imports: [CommonModule, FundamentalNgxCoreModule, AuthorizationModule],
+  imports: [CommonModule, FundamentalNgxCoreModule],
 })
 export class ErrorMessageComponent implements OnInit {
   constructor(
     private readonly luigiService: DxpLuigiContextService,
     private readonly githubIssueLinkService: GitHubIssueLinkService,
-    readonly debugModeService: DebugModeService,
-  ) {}
+    readonly debugModeService: DebugModeService
+  ) {
+  }
 
   @Input() type: 'warning' | 'error' = 'error'
   @Input() title: string
@@ -39,7 +39,7 @@ export class ErrorMessageComponent implements OnInit {
       this.message.includes('GITHUB-4')
     ) {
       this.troubleshootURL.set(
-        'https://pages.github.tools.sap/hyperspace/cicd-setup-documentation/how-tos/use-github-PAT.html#replacing-an-invalid-personal-access-token',
+        'https://pages.github.tools.sap/hyperspace/cicd-setup-documentation/how-tos/use-github-PAT.html#replacing-an-invalid-personal-access-token'
       )
     }
   }
@@ -72,14 +72,14 @@ ${issueDescription.trim()}
         context.projectId
       }/components/${context.componentId}/pipeline-ui)
 ${
-  this.tracesUrl && this.automaticdNamespace
-    ? `**Automaticd namespace traces:** [\`${this.automaticdNamespace}\`](${this.tracesUrl})`
-    : ''
-}
+        this.tracesUrl && this.automaticdNamespace
+          ? `**Automaticd namespace traces:** [\`${this.automaticdNamespace}\`](${this.tracesUrl})`
+          : ''
+      }
 **Timestamp:** ${new Date()}
 **User ID:** [\`${context.userid}\`](${githubUrl}/${context.userid})
     `,
-      [GitHubIssueLabels.BUG, GitHubIssueLabels.EXTERNAL],
+      [GitHubIssueLabels.BUG, GitHubIssueLabels.EXTERNAL]
     )
     window.open(issueURL, '_blank')
   }

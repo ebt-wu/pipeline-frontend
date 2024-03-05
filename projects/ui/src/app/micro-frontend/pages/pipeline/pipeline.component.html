@@ -14,7 +14,6 @@
                 <div class="header-buttons">
                   <fd-busy-indicator [loading]="pendingShowCredentials()" size="s">
                     <button
-                      *dxpRequiredPolicies="['projectAdmin', 'projectMember']; operator: 'or'"
                       (click)="showCredentials()"
                       [disabled]="pendingShowCredentials()"
                       ariaLabel="Show Credentials"
@@ -51,7 +50,13 @@
                 <code>FreestylePipeline: {{ pipeline.name }}</code>
                 <code class="namespace">Namespace: {{ pipeline.namespace }}</code>
               </div>
-              <button (click)="openCumulusModal($event)" ariaLabel="Cumulus info" fd-button>Show Cumulus info</button>
+              <button
+                (click)="openCumulusModal($event)"
+                ariaLabel="Cumulus info"
+                fd-button
+              >Show Cumulus info
+              </button>
+
             </div>
           </div>
           <div *ngFor="let error of errors()">
@@ -103,20 +108,18 @@
                   <p *ngIf="!isBuildStageSetup()">Get a pipeline that builds and packages your code</p>
                 </div>
                 <div class="spacer"></div>
-                <div *dxpRequiredPolicies="['projectAdmin', 'projectMember']; operator: 'or'">
-                  <button
-                    (click)="openSetupWizard($event)"
-                    *ngIf="!isBuildStageSetup()"
-                    fd-button
-                    fdType="emphasized"
-                    label="Set Up"></button>
-                  <button
-                    (click)="deletePipeline($event, pipeline)"
-                    *ngIf="isBuildStageSetup() && !pendingDeletion()"
-                    fd-button
-                    glyph="delete"
-                    title="Delete"></button>
-                </div>
+                <button
+                  (click)="openSetupWizard($event)"
+                  *ngIf="!isBuildStageSetup()"
+                  fd-button
+                  fdType="emphasized"
+                  label="Set Up"></button>
+                <button
+                  (click)="deletePipeline($event, pipeline)"
+                  *ngIf="isBuildStageSetup() && !pendingDeletion()"
+                  fd-button
+                  glyph="delete"
+                  title="Delete"></button>
                 <fd-busy-indicator [loading]="pendingOpenPipeline()" size="s">
                   <a
                     (click)="$event.stopPropagation()"
@@ -313,7 +316,6 @@
                         </div>
                       </div>
                       <button
-                        *dxpRequiredPolicies="['projectAdmin', 'projectMember']; operator: 'or'"
                         (click)="openGithubActionWizard($event)"
                         class="card-content"
                         fd-button

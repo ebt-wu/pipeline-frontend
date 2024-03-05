@@ -7,7 +7,6 @@ import { Pipeline, ResourceRef } from '../../../types'
 import { firstValueFrom } from 'rxjs'
 import { Kinds, ServiceStatus } from '../../../enums'
 import { RouterModule } from '@angular/router'
-import { AuthorizationModule } from '@dxp/ngx-core/authorization'
 
 export interface ServiceData {
   name: string
@@ -21,7 +20,7 @@ export interface ServiceData {
   templateUrl: './service-list-item.component.html',
   styleUrls: ['./service-list-item.component.css'],
   standalone: true,
-  imports: [CommonModule, FundamentalNgxCoreModule, RouterModule, IconModule, AuthorizationModule],
+  imports: [CommonModule, FundamentalNgxCoreModule, RouterModule, IconModule],
 })
 export class ServiceListItemComponent {
   @Input() resourceRef: ResourceRef // Change the type to match your data structure

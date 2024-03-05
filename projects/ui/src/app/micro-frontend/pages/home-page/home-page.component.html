@@ -5,6 +5,32 @@
         <app-pipeline [pipeline$]="watch$"></app-pipeline>
       </ng-container>
     </div>
+    <ng-container *dxpRequiredPolicies="['!projectAdmin', '!projectMember']">
+      <fd-card style="width: max-content; margin: 0 auto">
+        <fd-card-header [interactive]="false">
+          <h2 fd-card-title>CI/CD Setup</h2>
+        </fd-card-header>
+        <fd-card-content>
+          <figure fd-illustrated-message type="spot" [svgConfig]="spotConfig">
+            <figcaption fd-illustrated-message-figcaption id="spot-description">
+              <p fd-illustrated-message-title>
+                Access Restricted: CI/CD Setup only
+                <br />
+                for project members
+              </p>
+              <p fd-illustrated-message-text>
+                To gain access, please contact the project owner to be added as a member.
+              </p>
+            </figcaption>
+          </figure>
+        </fd-card-content>
+        <fd-card-footer>
+          <p class="card-footer">
+            <button fd-button label="Contact project owner" (click)="navigateToProjectMembers()"></button>
+          </p>
+        </fd-card-footer>
+      </fd-card>
+    </ng-container>
     <ng-template #loading>
       <div class="busy-indicator">
         <fd-busy-indicator [loading]="true" ariaLabel="loading" title="Please Wait"></fd-busy-indicator>

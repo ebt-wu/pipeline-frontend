@@ -65,12 +65,7 @@ export class HomePageComponent implements OnInit {
   }
 
   private async initializePipeline(): Promise<void> {
-    const userPolicies = (await this.context.getContextAsync()).entityContext.project.policies
-
-    if (userPolicies.includes('projectAdmin') || userPolicies.includes('projectMember')) {
-      await firstValueFrom(this.pipelineService.createPipeline(this.pipelineType.FullPipeline).pipe(debounceTime(100)))
-    }
-
+    await firstValueFrom(this.pipelineService.createPipeline(this.pipelineType.FullPipeline).pipe(debounceTime(100)))
     this.pipelineAvail.next(true)
   }
 }

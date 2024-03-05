@@ -32,27 +32,25 @@
       [closeOnOutsideClick]="true"></fd-icon>
   </div>
   {{ serviceDetails.key }}
-  <div *dxpRequiredPolicies="['projectAdmin', 'projectMember']; operator: 'or'">
-    <div class="flex-box top-margin">
-      <h3>Cumulus Credentials</h3>
-      <fd-icon
-        class="left-margin icon"
-        glyph="hint"
-        placement="top"
-        [fd-inline-help]="credentialsHelp"
-        [triggers]="['click']"
-        [closeOnOutsideClick]="true"></fd-icon>
-      <br />
-    </div>
-    <div>
-      <b>Vault Path</b>
-    </div>
-    <fd-busy-indicator [loading]="pendingShowInVault()" size="s">
-      <a fd-link [disabled]="pendingShowInVault()" (click)="showInVault(cumulusSecretPath)">
-        {{ cumulusSecretPath }}
-      </a>
-    </fd-busy-indicator>
+  <div class="flex-box top-margin">
+    <h3>Cumulus Credentials</h3>
+    <fd-icon
+      class="left-margin icon"
+      glyph="hint"
+      placement="top"
+      [fd-inline-help]="credentialsHelp"
+      [triggers]="['click']"
+      [closeOnOutsideClick]="true"></fd-icon>
+    <br />
   </div>
+  <div>
+    <b>Vault Path</b>
+  </div>
+  <fd-busy-indicator [loading]="pendingShowInVault()" size="s">
+    <a fd-link [disabled]="pendingShowInVault()" (click)="showInVault(cumulusSecretPath)">
+      {{ cumulusSecretPath }}
+    </a>
+  </fd-busy-indicator>
 </div>
 
 <ng-template #idHelp>
