@@ -17,6 +17,10 @@ import { PiperServiceDetailsComponent } from './components/service-details/piper
 import { StagingServiceServiceDetailsComponent } from './components/service-details/staging-service/staging-service-service-details.component'
 import { PlatformFormGeneratorCustomInfoBoxComponent } from './components/form-generator-info-box/form-generator-info-box.component'
 import { CumulusInfoModalComponent } from './components/cumulus-info-modal/cumulus-info-modal.component'
+import { GithubActionsServiceDetailsComponent } from './components/service-details/github-actions/github-actions-service-details.component'
+import { StaticSecurityCheckDetailsComponent } from './components/service-details/static-security-check/static-security-check-details.component'
+import { ResourceStagePipe } from './pipes/resource-stage.pipe'
+import { SetupServiceListItemComponent } from './components/setup-service-list-item/setup-service-list-item.component'
 
 @NgModule({
   providers: [ContentDensityService, ThemingService],
@@ -28,6 +32,7 @@ import { CumulusInfoModalComponent } from './components/cumulus-info-modal/cumul
     ErrorMessageComponent,
     FundamentalNgxCoreModule,
     FundamentalNgxPlatformModule,
+    GithubActionsServiceDetailsComponent,
     GithubServiceDetailsComponent,
     HomePageComponent,
     JenkinServiceDetailsComponent,
@@ -37,8 +42,11 @@ import { CumulusInfoModalComponent } from './components/cumulus-info-modal/cumul
     PiperServiceDetailsComponent,
     PlatformFormGeneratorCustomHeaderElementComponent,
     PlatformFormGeneratorCustomInfoBoxComponent,
+    ResourceStagePipe,
     SetupComponent,
+    SetupServiceListItemComponent,
     StagingServiceServiceDetailsComponent,
+    StaticSecurityCheckDetailsComponent,
   ],
 })
 export class MicroFrontendModule {}

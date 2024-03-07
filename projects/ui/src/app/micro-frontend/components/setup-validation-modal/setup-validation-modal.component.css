@@ -1,0 +1,67 @@
+.setup-validation-margin {
+  margin: 1rem;
+}
+
+.headline {
+  font-size: 18px;
+  font-style: normal;
+  font-weight: 700;
+  margin-bottom: 16px;
+}
+
+.select-box {
+  width: 30rem;
+}
+.validation-language-content {
+  font-family: var(--sapFontFamily);
+  font-size: var(--sapFontSize);
+  color: var(--sapField_TextColor);
+}
+
+.recommendation-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+.separator {
+  width: 380px;
+  height: 1px;
+  background: #d9d9d9;
+}
+.cx-one-not-available-message {
+  padding-top: 24px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+.centered-text {
+  margin-left: 16px;
+  margin-right: 16px;
+  text-align: center;
+}
+
+.footer-buttons-gap {
+  gap: 0.5rem;
+}
+
+.actions-footer {
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+}
+
+.documentation-button {
+  position: absolute;
+  bottom: 32px;
+  left: 16px;
+  margin-bottom: 24px;
+}
+
+.loading-indicator {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+}

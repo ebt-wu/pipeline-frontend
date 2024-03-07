@@ -101,56 +101,40 @@ export class SetupComponent implements OnInit, OnDestroy {
         const context = (await this.luigiService.getContextAsync()) as any
         const repoUrl = context.entityContext?.component?.annotations['github.dxp.sap.com/repo-url'] ?? null
 
-        const ghToken = await firstValueFrom(
-          this.luigiService.contextObservable().pipe(
-            map((luigiContext) => {
-              return luigiContext.context?.githubToolsToken
-                ? {
-                    value: luigiContext.context.githubToolsToken as string,
-                    domain: 'github.tools.sap',
-                  }
-                : this.luigiClient.sendCustomMessage({
-                    id: `token.request.github.tools.sap`,
-                  })
-            }),
-          ),
-        )
+        let languages
+        try {
+          languages = await this.githubService.getRepositoryLanguages(this.luigiClient, this.luigiService, repoUrl)
+        } catch (error) {
+          this.errorMessage.set(error.message)
+        }
 
-        if (repoUrl && ghToken) {
-          const url = new URL(repoUrl)
-          const languagesResp = await fetch(`${url.origin}/api/v3/repos${url.pathname}/languages`, {
-            headers: {
-              Authorization: `Bearer ${ghToken.value}`,
-            },
-          })
-          const languages = await languagesResp.json()
-
-          const languagesMap = new Map()
-          for (const [key, value] of Object.entries(languages)) {
-            languagesMap.set(key, value)
-          }
-          const sortedLanguages = new Map([...languagesMap].sort((a, b) => b[1] - a[1]))
-
-          if (sortedLanguages.has(Languages.DOCKERFILE)) {
-            return BuildTool.Docker
-          }
-
-          for (const [key, _] of sortedLanguages) {
-            switch (key) {
-              case Languages.JAVA:
-                return BuildTool.Maven
-              case Languages.GO:
-                return BuildTool.Golang
-              case Languages.TYPESCRIPT:
-              case Languages.JAVASCRIPT:
-                return BuildTool.Npm
-              case Languages.PYTHON:
-                return BuildTool.Python
-            }
-          }
+        if (!languages) {
           return BuildTool.Docker
         }
 
+        const languagesMap = new Map()
+        for (const [key, value] of Object.entries(languages)) {
+          languagesMap.set(key, value)
+        }
+        const sortedLanguages = new Map([...languagesMap].sort((a, b) => b[1] - a[1]))
+
+        if (sortedLanguages.has(Languages.DOCKERFILE)) {
+          return BuildTool.Docker
+        }
+
+        for (const [key, _] of sortedLanguages) {
+          switch (key) {
+            case Languages.JAVA:
+              return BuildTool.Maven
+            case Languages.GO:
+              return BuildTool.Golang
+            case Languages.TYPESCRIPT:
+            case Languages.JAVASCRIPT:
+              return BuildTool.Npm
+            case Languages.PYTHON:
+              return BuildTool.Python
+          }
+        }
         return BuildTool.Docker
       },
       guiOptions: {

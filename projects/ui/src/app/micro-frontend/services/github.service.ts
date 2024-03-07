@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core'
 import { BaseAPIService } from './base.service'
 import { first, map, mergeMap } from 'rxjs/operators'
-import { combineLatest, lastValueFrom, Observable } from 'rxjs'
-import { DxpLuigiContextService } from '@dxp/ngx-core/luigi'
+import { combineLatest, firstValueFrom, lastValueFrom, Observable } from 'rxjs'
+import { DxpLuigiContextService, LuigiClient } from '@dxp/ngx-core/luigi'
 import { CREATE_GITHUB_REPOSITORY, DELETE_GITHUB_REPOSITORY, GET_GITHUB_REPOSITORY } from './queries'
 import {
   CreateGithubRepositoryMutation,
@@ -82,8 +82,8 @@ export class GithubService {
             return 'Please provide a valid token.'
           }
           // check if all required scopes are present in the user token
-          const hasRequiredScopes = REQUIRED_SCOPES.every(
-            (scope) => repoResp.headers.get('X-OAuth-Scopes')?.includes(scope),
+          const hasRequiredScopes = REQUIRED_SCOPES.every((scope) =>
+            repoResp.headers.get('X-OAuth-Scopes')?.includes(scope),
           )
           if (!hasRequiredScopes) {
             return `Please provide a token with the following scopes: ${REQUIRED_SCOPES.join(', ')}`
@@ -121,9 +121,9 @@ export class GithubService {
           header: 'Instructions',
           instructions: async () => {
             const { githubTechnicalUserSelfServiceUrl, githubInstance } = await this.getGithubMetadata()
-            return `<ol> 
+            return `<ol>
             <li>
-              <a href="${githubTechnicalUserSelfServiceUrl}" target="_blank" 
+              <a href="${githubTechnicalUserSelfServiceUrl}" target="_blank"
                 >Create a GitHub service user</a
               >
               (preferred) or use your C/I/D personal user
@@ -269,5 +269,45 @@ export class GithubService {
           .pipe(map((res) => res.data?.deleteGithubRepository ?? ''))
       }),
     )
+  }
+
+  async getRepositoryLanguages(
+    luigiClient: LuigiClient,
+    luigiContext: DxpLuigiContextService,
+    repoUrl: string,
+  ): Promise<any> {
+    const ghToken = await firstValueFrom(
+      luigiContext.contextObservable().pipe(
+        map((luigiContext) => {
+          return luigiContext.context?.githubToolsToken
+            ? {
+                value: luigiContext.context.githubToolsToken as string,
+                domain: 'github.tools.sap',
+              }
+            : luigiClient.sendCustomMessage({
+                id: `token.request.github.tools.sap`,
+              })
+        }),
+      ),
+    )
+
+    if (!repoUrl || !ghToken) {
+      return undefined
+    }
+
+    const url = new URL(repoUrl)
+    let languagesResp
+    try {
+      languagesResp = await fetch(`${url.origin}/api/v3/repos${url.pathname}/languages`, {
+        headers: {
+          Authorization: `Bearer ${ghToken.value}`,
+        },
+      })
+    } catch (error) {
+      throw new Error(`Error (${error.message}) when fetching the GitHub Repository languages for: ${repoUrl}`)
+    }
+
+    const languages = await languagesResp.json()
+    return languages
   }
 }

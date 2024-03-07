@@ -1,0 +1,35 @@
+<div class="outer-container" *ngIf="!loading()">
+  <div class="inner-container">
+    <div>
+      <fd-facet type="key-value">
+        <label [colon]="true" fd-form-label>Enabled for GitHub Repository</label>
+        <a [href]="serviceDetails.repoUrl" fd-link rel="noopener noreferrer"
+           target="_blank">{{ serviceDetails.githubOrganization }}/{{ serviceDetails.githubRepoName }}</a>
+      </fd-facet>
+
+    </div>
+    <div *ngIf="cumulusInfo && cumulusInfo.id">
+      <!-- TODO: add readonly checks here-->
+      <h3>Compliance Upload – Report to Sirius</h3>
+      <fd-facet type="key-value">
+        <label [colon]="true" fd-form-label>Cumulus Pipeline ID</label>
+        <span>{{ cumulusInfo.id }}</span>
+      </fd-facet>
+      <div style="margin-top: 1rem;">
+      <em>
+        Need changes? See how in the <a [href]="" fd-link rel="noopener noreferrer" target="_blank">documentation</a>
+      </em>
+      </div>
+    </div>
+  </div>
+  <button
+    role="button"
+    glyph="question-mark"
+    label="Learn More"
+    [toggled]="true"
+    fd-button></button>
+</div>
+
+<div *ngIf="loading()">
+  <fd-busy-indicator [loading]="true" ariaLabel="loading" title="Please Wait"></fd-busy-indicator>
+</div>

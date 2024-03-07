@@ -301,3 +301,41 @@ export const GET_GITHUB_ACTIONS_CROSS_NAMESPACE = gql`
     }
   }
 `
+
+export const CREATE_GITHUB_ADVANCED_SECURITY = gql`
+  mutation CreateGitHubAdvancedSecurity(
+    $projectId: String!
+    $componentId: String!
+    $githubInstance: String!
+    $githubOrganization: String!
+    $githubRepository: String!
+    $codeScanJobOrchestrator: Orchestrators
+  ) {
+    createGitHubAdvancedSecurity(
+      projectId: $projectId
+      componentId: $componentId
+      params: {
+        githubInstance: $githubInstance
+        githubOrganization: $githubOrganization
+        githubRepository: $githubRepository
+        codeScanJobOrchestrator: $codeScanJobOrchestrator
+      }
+    )
+  }
+`
+
+export const GET_GITHUB_ADVANCED_SECURITY = gql`
+  query getGitHubAdvancedSecurity($projectId: String!, $resourceName: String!) {
+    getGitHubAdvancedSecurity(projectId: $projectId, resourceName: $resourceName) {
+      githubInstance
+      githubOrganization
+      creationTimestamp
+    }
+  }
+`
+
+export const DELETE_GITHUB_ADVANCED_SECURITY = gql`
+  mutation deleteGitHubAdvancedSecurity($projectId: String!, $resourceName: String!) {
+    deleteGitHubAdvancedSecurity(projectId: $projectId, resourceName: $resourceName)
+  }
+`

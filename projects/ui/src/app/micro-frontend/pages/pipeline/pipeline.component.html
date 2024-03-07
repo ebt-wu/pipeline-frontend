@@ -87,25 +87,21 @@
           </fd-message-strip>
           <fd-card cardType="linkList" class="stage-card">
             <fd-card-content class="card-content-padding">
-              <div (click)="openBuildStage()" class="card-content build-stage-padding">
+              <div (click)="openBuildStage()" class="card-content stage-headline-padding">
                 <div class="icons">
-                  <fd-avatar *ngIf="!isBuildStageSetup()" [colorAccent]="1" glyph="wrench" size="m"></fd-avatar>
                   <fd-icon
                     *ngIf="!isBuildStageOpen() && isBuildStageSetup()"
                     class="icon"
                     glyph="slim-arrow-right"></fd-icon>
                   <fd-icon *ngIf="isBuildStageOpen()" class="icon" glyph="slim-arrow-down"></fd-icon>
+                  <div *ngIf="!isBuildStageSetup()" class="placeholder"></div>
+                  <fd-avatar [colorAccent]="10" glyph="wrench" size="xs"></fd-avatar>
                 </div>
                 <div class="card-description">
-                  <div class="card-description-build">
-                    <h1 [ngClass]="isBuildStageSetup() ? 'stage-setup-header' : ''"><strong>Build Pipeline</strong></h1>
-                    <fd-info-label
-                      *ngIf="isBuildStageSetup()"
-                      color="8"
-                      label="Compliant Setup"
-                      title="New"></fd-info-label>
+                  <div class="card-description-stage-headline">
+                    <h1>Build Pipeline</h1>
+                    <p *ngIf="localLayout === 'OneColumnStartFullScreen'">Builds and packages your code</p>
                   </div>
-                  <p *ngIf="!isBuildStageSetup()">Get a pipeline that builds and packages your code</p>
                 </div>
                 <div class="spacer"></div>
                 <button
@@ -136,20 +132,60 @@
                   [loading]="true"
                   ariaLabel="loading"
                   label="Pending Deletion"></fd-busy-indicator>
+                <span *ngIf="isBuildStageSetup()"
+                      fd-object-status
+                      glyph="status-completed"
+                      label="setup compliant"
+                      status="positive"></span>
               </div>
               <ng-container *ngIf="isBuildStageOpen()">
-                <div *ngFor="let resourceRef of pipeline.resourceRefs">
-                  <!-- CumulusGroup should be ignored for the UI, since CumulusPipeline is the valid reference for a single pipeline -->
-                  <div *ngIf="resourceRef.kind !== 'CumulusGroup'">
-                    <!--The GithubAction resource is not part of the build stage yet. -->
-                    <div *ngIf="resourceRef.kind !== 'GithubAction'" class="card">
+                <div *ngFor="let resourceRef of (pipeline.resourceRefs | resourceStage: stages.BUILD)">
                       <app-service-list-item
                         (openDetailsEvent)="openDetails($event)"
                         [activeTile]="activeTile"
                         [localLayout]="localLayout"
                         [resourceRef]="resourceRef"></app-service-list-item>
-                    </div>
+                </div>
+              </ng-container>
+            </fd-card-content>
+          </fd-card>
+          <fd-card cardType="linkList" class="stage-card">
+            <fd-card-content class="card-content-padding">
+              <div (click)="openValidationStage()" class="card-content stage-headline-padding">
+                <div class="icons">
+                  <fd-icon
+                    *ngIf="!isValidationStageOpen() "
+                    class="icon"
+                    glyph="slim-arrow-right"></fd-icon>
+                  <fd-icon *ngIf="isValidationStageOpen()" class="icon" glyph="slim-arrow-down"></fd-icon>
+                  <fd-avatar [colorAccent]="10" glyph="shield" size="xs"></fd-avatar>
+                </div>
+                <div class="card-description">
+                  <div class="card-description-stage-headline">
+                    <h1>Validate Code</h1>
+                    <p *ngIf="localLayout === 'OneColumnStartFullScreen'">Conduct tests to validate the compliance of your code</p>
                   </div>
+                </div>
+              </div>
+              <ng-container *ngIf="isValidationStageOpen()">
+                <div *ngFor="let resourceRef of (pipeline.resourceRefs | resourceStage: stages.VALIDATE)">
+                  <app-service-list-item
+                    (openDetailsEvent)="openDetails($event)"
+                    [activeTile]="activeTile"
+                    [localLayout]="localLayout"
+                    [resourceRef]="resourceRef">
+                  </app-service-list-item>
+                </div>
+                <!--If there is are no pipeline refs for the items we use dummy items to allow them to be set up-->
+                <div *ngIf="!isStaticSecurityChecksSetup()">
+                  <app-setup-service-list-item [setupDialogType]="categories.STATIC_SECURITY_CHECKS"
+                                               serviceName="Static Security Checks"></app-setup-service-list-item>
+                </div>
+                <div *ngIf="!isStaticCodeChecksSetup()">
+                  <app-setup-service-list-item serviceName="Static Code Checks" labelText="coming soon"></app-setup-service-list-item>
+                </div>
+                <div *ngIf="!isOpenSourceChecksSetup()">
+                  <app-setup-service-list-item serviceName="Open Source Checks" labelText="coming soon"></app-setup-service-list-item>
                 </div>
               </ng-container>
             </fd-card-content>
@@ -157,28 +193,20 @@
           <fd-card cardType="linkList" class="stage-card disabled">
             <fd-card-content>
               <div class="coming-soon-stage">
-                <div class="card-content">
-                  <fd-avatar [colorAccent]="10" glyph="shield" size="m"></fd-avatar>
+                <div class="card-content stage-headline-padding">
+                  <div class="icons">
+                    <div class="placeholder"></div>
+                    <fd-avatar [colorAccent]="10" glyph="shipping-status" size="xs"></fd-avatar>
+                  </div>
                   <div class="card-description">
-                    <h1 class="disabled-headline"><strong>Validate Code</strong></h1>
-                    <p>Get feedback on the compliance of your code</p>
+                    <div class="card-description-stage-headline">
+                      <h1 class="disabled-headline">Deploy</h1>
+                      <p *ngIf="localLayout === 'OneColumnStartFullScreen'">Enable a deployment of your packaged code</p>
+                      <fd-info-label color="10" fdCozy label="Vision" title="Vision"></fd-info-label>
+
+                    </div>
                   </div>
                 </div>
-                <fd-info-label color="10" label="Coming Soon" title="Coming Soon"></fd-info-label>
-              </div>
-            </fd-card-content>
-          </fd-card>
-          <fd-card cardType="linkList" class="stage-card disabled">
-            <fd-card-content>
-              <div class="coming-soon-stage">
-                <div class="card-content">
-                  <fd-avatar [colorAccent]="10" glyph="shipping-status" size="m"></fd-avatar>
-                  <div class="card-description">
-                    <h1 class="disabled-headline"><strong>Deploy</strong></h1>
-                    <p>Enable a deployment of your packaged code</p>
-                  </div>
-                </div>
-                <fd-info-label color="10" fdCozy label="Coming Soon" title="Coming Soon"></fd-info-label>
               </div>
             </fd-card-content>
           </fd-card>

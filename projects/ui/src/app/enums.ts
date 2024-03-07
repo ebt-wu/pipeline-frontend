@@ -7,6 +7,8 @@ export enum Kinds {
   JENKINS_PIPELINE = 'JenkinsPipeline',
   CUMULUS_GROUP = 'CumulusGroup',
   GITHUB_ACTIONS_WORKFLOW = 'GithubActionsWorkflow',
+  GITHUB_ADVANCED_SECURITY = 'GitHubAdvancedSecurity',
+  CX_ONE = 'CxOne',
 }
 
 export enum Categories {
@@ -15,6 +17,14 @@ export enum Categories {
   CODE_TRANSPORTATION = 'Code Transportation',
   ORCHESTRATION = 'Orchestration',
   CODE_BUILD = 'Code Build',
+  STATIC_SECURITY_CHECKS = 'Static Security Checks',
+  STATIC_CODE_CHECKS = 'Static Code Checks',
+  OPEN_SOURCE_CHECKS = 'Open Source Checks',
+}
+export enum Stages {
+  BUILD = 'BUILD',
+  VALIDATE = 'VALIDATE',
+  DEPLOY = 'DEPLOY',
 }
 
 export enum DeletionPolicy {
@@ -48,4 +58,9 @@ export enum Orchestrators {
 export enum CredentialTypes {
   EXISTING = 'Use Existing',
   NEW = 'Enter New',
+}
+
+export enum ValidationTools {
+  GHAS = 'GitHub Advanced Security',
+  CX = 'CxOne',
 }

@@ -47,13 +47,36 @@
           <span class="subheader">{{ kindCategory[activeTile] }}</span>
         </div>
         <button
-          *ngIf="serviceUrl()"
+          *ngIf="serviceUrl() && activeTile !== kinds.GITHUB_ADVANCED_SECURITY"
           class="open-service-button"
           fd-button
           fdType="emphasized"
           label="Open Service"
           (click)="openService()"
           ariaLabel="Close Details"></button>
+        <button
+          *ngIf="activeTile === kinds.GITHUB_ADVANCED_SECURITY"
+          [fdMenuTrigger]="menuShortcut"
+          [fdMenu]="true"
+          class="open-service-button"
+          fd-button
+          fdType="emphasized"
+          label="Open"
+        >
+        </button>
+        <fd-menu #menuShortcut>
+          <li fd-menu-item>
+            <a fd-menu-interactive (click)="openGHASScannnerResults()">
+              <span fd-menu-title> Show scanner results</span></a>
+          </li>
+          <li fd-menu-item>
+            <a fd-menu-interactive (click)="openGHASSettings()">
+              <span fd-menu-title>
+              Open configuration in GitHub
+                 </span>
+            </a>
+          </li>
+        </fd-menu>
       </div>
       <div class="service-meta">
         <fd-avatar
@@ -84,26 +107,29 @@
           <div title="">
             <div class="tab-margin" *ngIf="!serviceDetailsLoading()" [ngSwitch]="activeTile">
               <cumulus-service-details
-                *ngSwitchCase="'CumulusPipeline'"
+                *ngSwitchCase="kinds.CUMULUS_PIPELINE"
                 [serviceDetails]="serviceDetails()"></cumulus-service-details>
               <github-service-details
-                *ngSwitchCase="'GithubRepository'"
+                *ngSwitchCase="kinds.GITHUB_REPOSITORY"
                 [serviceDetails]="serviceDetails()"></github-service-details>
               <jenkins-service-details
-                *ngSwitchCase="'JenkinsPipeline'"
+                *ngSwitchCase="kinds.JENKINS_PIPELINE"
                 [serviceDetails]="serviceDetails()"></jenkins-service-details>
               <piper-service-details
-                *ngSwitchCase="'PiperConfig'"
+                *ngSwitchCase="kinds.PIPER_CONFIG"
                 [serviceDetails]="serviceDetails()"></piper-service-details>
               <staging-service-service-details
-                *ngSwitchCase="'StagingServiceCredential'"
+                *ngSwitchCase="kinds.STAGING_SERVICE_CREDENTIAL"
                 [serviceDetails]="serviceDetails()"></staging-service-service-details>
               <github-actions-service-details
-                *ngSwitchCase="'GithubAction'"
+                *ngSwitchCase="kinds.GITHUB_ACTION"
                 [serviceDetails]="serviceDetails()"></github-actions-service-details>
               <github-actions-service-details
-                *ngSwitchCase="'GithubActionsWorkflow'"
+                *ngSwitchCase="kinds.GITHUB_ACTIONS_WORKFLOW"
                 [serviceDetails]="serviceDetails()"></github-actions-service-details>
+              <static-security-check-details
+                *ngSwitchCase="kinds.GITHUB_ADVANCED_SECURITY"
+                [serviceDetails]="serviceDetails()"></static-security-check-details>
             </div>
             <div class="tab-margin">
               <fd-skeleton width="350px" height="10rem" *ngIf="serviceDetailsLoading()">

@@ -13,15 +13,6 @@ export class ExtensionService {
     private luigiClient: LuigiClient,
   ) {}
 
-  extensionsToQuery = [
-    Extensions.GITHUB_ACTIONS_TOOLS_SAP,
-    Extensions.CUMULUS,
-    Extensions.GITHUB_TOOLS,
-    Extensions.JAAS,
-    Extensions.PIPER,
-    Extensions.STAGING_SERVICE_EXTERNAL,
-  ]
-
   getExtensionClassesForScopesQuery(): Observable<ExtensionClass[]> {
     return combineLatest([this.extensionApolloClientService.apollo(), this.luigiService.contextObservable()]).pipe(
       first(),
@@ -39,9 +30,7 @@ export class ExtensionService {
           })
           .pipe(
             map((apolloResponse) => {
-              return apolloResponse.data.getExtensionClassesForScopes.filter((extension) =>
-                this.extensionsToQuery.find((value) => value == extension.name),
-              )
+              return apolloResponse.data.getExtensionClassesForScopes
             }),
           )
       }),

@@ -1,8 +1,8 @@
 import { Component, EventEmitter, Input, OnInit, Output, signal } from '@angular/core'
 import { FlexibleColumnLayout, FundamentalNgxCoreModule } from '@fundamental-ngx/core'
 import { CommonModule } from '@angular/common'
-import { KindCategory, KindExtensionName, KindName } from '../../../constants'
-import { Kinds } from '../../../enums'
+import { KindCategory, KindExtensionName, KindName } from '@constants'
+import { Kinds } from '@enums'
 import { firstValueFrom, map, Observable } from 'rxjs'
 import { APIService } from '../../services/api.service'
 import { CumlusServiceDetailsComponent } from '../service-details/cumulus/cumulus-service-details.component'
@@ -19,15 +19,13 @@ import { DxpLuigiContextService } from '@dxp/ngx-core/luigi'
 import { DxpContext } from '@dxp/ngx-core/common'
 import { SharedDataService } from '../../services/shared-data.service'
 import { ErrorMessageComponent } from '../error-message/error-message.component'
+import { ErrorMessage } from '@types'
+import { StaticSecurityCheckDetailsComponent } from '../service-details/static-security-check/static-security-check-details.component'
+import { PlatformMenuButtonModule } from '@fundamental-ngx/platform'
 
 type ServiceDetails = any
 
 const dateFormatter = new Intl.DateTimeFormat('en', { year: 'numeric', month: 'short', day: 'numeric' })
-
-type Error = {
-  title: string
-  message: string
-}
 
 @Component({
   selector: 'app-service-details-skeleton',
@@ -44,6 +42,8 @@ type Error = {
     StagingServiceServiceDetailsComponent,
     GithubActionsServiceDetailsComponent,
     ErrorMessageComponent,
+    StaticSecurityCheckDetailsComponent,
+    PlatformMenuButtonModule,
   ],
 })
 export class ServiceDetailsSkeletonComponent implements OnInit {
@@ -54,6 +54,7 @@ export class ServiceDetailsSkeletonComponent implements OnInit {
   // maps
   kindName = KindName
   kindCategory = KindCategory
+  kinds = Kinds
 
   dxpContext$: Observable<DxpContext>
 
@@ -61,7 +62,7 @@ export class ServiceDetailsSkeletonComponent implements OnInit {
   serviceDetails = signal<ServiceDetails>({})
   serviceUrl = signal('')
   serviceCreationTimestamp = signal<Date>(null)
-  errors = signal<Error[]>([])
+  errors = signal<ErrorMessage[]>([])
   extensionClasses = signal<ExtensionClass[]>([])
   catalogUrl = signal('')
 
@@ -105,7 +106,8 @@ export class ServiceDetailsSkeletonComponent implements OnInit {
   }
 
   async loadDetails(kind: Kinds, name: string) {
-    const { githubRepoUrl, githubInstance, githubOrgName } = await this.api.githubService.getGithubMetadata()
+    const { githubRepoUrl, githubInstance, githubOrgName, githubRepoName } =
+      await this.api.githubService.getGithubMetadata()
 
     this.serviceDetailsLoading.set(true)
 
@@ -143,6 +145,17 @@ export class ServiceDetailsSkeletonComponent implements OnInit {
           if (githubRepoUrl) {
             this.serviceUrl.set(githubRepoUrl + '/actions')
           }
+          break
+
+        case Kinds.GITHUB_ADVANCED_SECURITY:
+          if (githubRepoUrl) {
+            this.serviceUrl.set(githubRepoUrl)
+          }
+          this.serviceDetails.set({
+            ...(await firstValueFrom(this.api.githubAdvancedSecurityService.getGithubAdvancedSecurity(name))),
+            repoUrl: this.serviceUrl(),
+            githubRepoName,
+          })
           break
       }
 
@@ -228,5 +241,12 @@ The information might be missing in the Hyperspace portal extension backend, Lea
 
   formatDate(date: Date) {
     return dateFormatter.format(date)
+  }
+
+  openGHASScannnerResults() {
+    window.open(this.serviceUrl() + '/security/code-scanning', '_blank')
+  }
+  openGHASSettings() {
+    window.open(this.serviceUrl() + '/settings/security_analysis/', '_blank')
   }
 }

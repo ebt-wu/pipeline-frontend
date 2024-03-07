@@ -3,30 +3,30 @@
     fd-list-item
     (click)="openDetails(resourceRef.kind, resourceRef.name, resourceRef.status)"
     [ngClass]="
-      activeTile === resourceRef.kind && localLayout != 'OneColumnStartFullScreen' ? 'list-item-selected ' : ''
+      activeTile === resourceRef.kind && localLayout !== 'OneColumnStartFullScreen' ? 'list-item-selected ' : ''
     "
     class="list-item-border">
     <a fd-list-link>
       <span fd-list-thumbnail>
-        <ng-container *ngIf="resourceRef.status === ServiceStatus.CREATED">
-          <span fd-object-status class="status-icon" size="m" status="positive" glyph="message-success"></span>
+        <ng-container *ngIf="resourceRef.status === serviceStatus.CREATED">
+          <span fd-object-status class="status-icon" size="m" status="positive" glyph="status-completed"></span>
         </ng-container>
         <fd-busy-indicator
           [loading]="true"
-          *ngIf="resourceRef.status === ServiceStatus.PENDING_CREATION || resourceRef.status === ServiceStatus.UN_KNOWN"
+          *ngIf="resourceRef.status === serviceStatus.PENDING_CREATION || resourceRef.status === serviceStatus.UN_KNOWN"
           ariaLabel="loading"
           size="s"
           title="Please Wait"></fd-busy-indicator>
         <span
           fd-object-status
           class="status-icon"
-          *ngIf="resourceRef.status === ServiceStatus.FAILING_CREATION"
+          *ngIf="resourceRef.status === serviceStatus.FAILING_CREATION"
           status="negative"
           glyph="message-error"></span>
         <span
           fd-object-status
           class="status-icon"
-          *ngIf="resourceRef.status === ServiceStatus.NOT_FOUND"
+          *ngIf="resourceRef.status === serviceStatus.NOT_FOUND"
           glyph="circle-task"></span>
       </span>
       <div class="service">
@@ -44,7 +44,7 @@
         <button
           *ngIf="
             localLayout === 'OneColumnStartFullScreen' &&
-            (debugModeService.debugModeEnabled() || resourceRef.status === ServiceStatus.FAILING_CREATION)
+            (debugModeService.debugModeEnabled() || resourceRef.status === serviceStatus.FAILING_CREATION)
           "
           fd-button
           label="Retry"
@@ -54,11 +54,11 @@
           class="retry-button"
           (click)="retryService($event, resourceRef)"></button>
         <div class="details-icon">
-          <fd-icon *ngIf="resourceRef.status === ServiceStatus.CREATED" glyph="slim-arrow-right" class="icon"></fd-icon>
+          <fd-icon *ngIf="resourceRef.status === serviceStatus.CREATED" glyph="slim-arrow-right" class="icon"></fd-icon>
         </div>
         <ng-container
           *ngIf="
-            resourceRef.status === ServiceStatus.PENDING_CREATION || resourceRef.status === ServiceStatus.UN_KNOWN
+            resourceRef.status === serviceStatus.PENDING_CREATION || resourceRef.status === serviceStatus.UN_KNOWN
           ">
           <p>
             <i>{{ inProgressMsg }}</i>

@@ -6,6 +6,7 @@ import { PiperService } from './piper.service'
 import { StagingServiceService } from './staging-service.service'
 import { SecretService } from './secret.service'
 import { GithubActionsService } from './github-actions.service'
+import { GithubAdvancedSecurityService } from './github-advanced-security.service'
 
 @Injectable({ providedIn: 'root' })
 export class APIService {
@@ -17,5 +18,6 @@ export class APIService {
     public readonly cumulusService: CumulusService,
     public readonly secretService: SecretService,
     public readonly stagingServiceService: StagingServiceService,
+    public readonly githubAdvancedSecurityService: GithubAdvancedSecurityService,
   ) {}
 }

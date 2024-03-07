@@ -2,7 +2,7 @@ import { CommonModule } from '@angular/common'
 import { Component, Input, OnDestroy, OnInit, signal } from '@angular/core'
 import { RouterModule } from '@angular/router'
 import { DxpLuigiContextService, LuigiClient, LuigiDialogUtil } from '@dxp/ngx-core/luigi'
-import { DeletionPolicy, Kinds, ServiceStatus } from '@enums'
+import { Categories, DeletionPolicy, Kinds, ServiceStatus, Stages } from '@enums'
 import {
   FlexibleColumnLayout,
   FundamentalNgxCoreModule,
@@ -11,9 +11,9 @@ import {
   MessageToastService,
 } from '@fundamental-ngx/core'
 import { GithubActionsGetPayload } from '@generated/graphql'
-import { Observable, Subscription, firstValueFrom, map, filter } from 'rxjs'
-import { KindExtensionName, KindName } from '../../../constants'
-import { Pipeline, ResourceRef } from '../../../types'
+import { firstValueFrom, map, Observable, Subscription } from 'rxjs'
+import { KindExtensionName, KindName } from '@constants'
+import { Pipeline, ResourceRef } from '@types'
 import { DeleteBuildModal } from '../../components/delete-build-modal/delete-build-modal.component'
 import { DismissibleMessageComponent } from '../../components/dismissable-message/dismissible-message.component'
 import { ErrorMessageComponent } from '../../components/error-message/error-message.component'
@@ -33,6 +33,8 @@ import { ExtensionClass } from '../../services/extension.types'
 import { FeatureFlagService } from '../../services/feature-flag.service'
 import { GithubMetadata } from '../../services/github.service'
 import { SharedDataService } from '../../services/shared-data.service'
+import { ResourceStagePipe } from '../../pipes/resource-stage.pipe'
+import { SetupServiceListItemComponent } from '../../components/setup-service-list-item/setup-service-list-item.component'
 
 type Error = {
   title: string
@@ -62,6 +64,8 @@ type Error = {
     ServiceDetailsSkeletonComponent,
     ServiceListItemComponent,
     UpgradeBannerComponent,
+    ResourceStagePipe,
+    SetupServiceListItemComponent,
   ],
 })
 export class PipelineComponent implements OnInit, OnDestroy {
@@ -71,6 +75,12 @@ export class PipelineComponent implements OnInit, OnDestroy {
   isBuildStageOpen = signal(false)
   isBuildStageSetup = signal(false)
   isBuildPipelineSetup = signal(false)
+
+  isStaticSecurityChecksSetup = signal(false)
+  isStaticCodeChecksSetup = signal(false)
+  isOpenSourceChecksSetup = signal(false)
+
+  isValidationStageOpen = signal(false)
   isGithubActionsEnabledInSameComponent = signal(false)
   // hacky workaround solution
   pendingDeletion = signal(false)
@@ -91,6 +101,8 @@ export class PipelineComponent implements OnInit, OnDestroy {
   kindName = KindName
   kinds = Kinds
   serviceStatus = ServiceStatus
+  categories = Categories
+  stages = Stages
   pipelineURL = signal('')
   private pipelineSubscription: Subscription
   private githubActionsSubscription: Subscription
@@ -186,6 +198,14 @@ export class PipelineComponent implements OnInit, OnDestroy {
         const isOrchestratorMissingInBuildStage = !pipeline.resourceRefs.find((ref) =>
           orchestrators.find((value) => ref.kind === value),
         )
+
+        if (
+          pipeline.resourceRefs.find((ref) => ref.kind === Kinds.GITHUB_ADVANCED_SECURITY || ref.kind === Kinds.CX_ONE)
+        ) {
+          this.isStaticSecurityChecksSetup.set(true)
+        }
+
+        this.isValidationStageOpen.set(true)
 
         if (isRequiredKindMissingInBuildStage || isOrchestratorMissingInBuildStage) {
           this.isBuildStageSetup.set(false)
@@ -303,6 +323,14 @@ export class PipelineComponent implements OnInit, OnDestroy {
     this.luigiClient.linkManager().fromVirtualTreeRoot().openAsModal('setup', { size: 's', title: 'Set up Build' })
   }
 
+  openStaticSecurityCheckWizard(e: Event) {
+    e.stopPropagation()
+    this.luigiClient
+      .linkManager()
+      .fromVirtualTreeRoot()
+      .openAsModal('setup-validation', { title: 'Add Static Security Checks', width: '420px', height: '670px' })
+  }
+
   openGithubActionWizard(e: Event) {
     e.stopPropagation()
     this.luigiClient
@@ -323,6 +351,10 @@ export class PipelineComponent implements OnInit, OnDestroy {
     if (this.isBuildStageSetup()) {
       this.isBuildStageOpen.set(!this.isBuildStageOpen())
     }
+  }
+
+  openValidationStage() {
+    this.isValidationStageOpen.set(!this.isValidationStageOpen())
   }
 
   async getPipelineURL(pipeline: Pipeline) {

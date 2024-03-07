@@ -18,6 +18,7 @@ export enum Extensions {
   GITHUB_ACTIONS_TOOLS_SAP = 'git-hub-actions-github-tools-sap',
   PIPER = 'piper',
   JAAS = 'jaas',
+  GITHUB_ADVANCED_SECURITY = 'github-advanced-security-github-tools-sap',
 }
 
 export interface ExtensionClass {

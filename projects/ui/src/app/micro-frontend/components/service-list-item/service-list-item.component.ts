@@ -5,8 +5,9 @@ import { DebugModeService } from '../../services/debug-mode.service'
 import { KindCategory, KindName } from '../../../constants'
 import { Pipeline, ResourceRef } from '../../../types'
 import { firstValueFrom } from 'rxjs'
-import { Kinds, ServiceStatus } from '../../../enums'
+import { Categories, Kinds, ServiceStatus } from '../../../enums'
 import { RouterModule } from '@angular/router'
+import { LuigiClient } from '@dxp/ngx-core/luigi'
 
 export interface ServiceData {
   name: string
@@ -30,9 +31,13 @@ export class ServiceListItemComponent {
 
   kindName = KindName
   kindCategory = KindCategory
+  serviceStatus = ServiceStatus
   @Output() openDetailsEvent = new EventEmitter<ServiceData>()
 
-  constructor(readonly debugModeService: DebugModeService) {}
+  constructor(
+    readonly debugModeService: DebugModeService,
+    readonly luigiClient: LuigiClient,
+  ) {}
 
   openDetails(kind: Kinds, name: string, status: string) {
     this.openDetailsEvent.emit({ kind, name, status })
@@ -42,6 +47,4 @@ export class ServiceListItemComponent {
     e?.stopPropagation()
     await firstValueFrom(this.debugModeService.forceDebugReconciliation(resourceRef.kind, resourceRef.name))
   }
-
-  protected readonly ServiceStatus = ServiceStatus
 }

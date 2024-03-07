@@ -1,0 +1,10 @@
+.outer-container {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+}
+.inner-container {
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+}

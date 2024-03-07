@@ -1,5 +1,5 @@
 import { BuildTool, PipelineType } from '../generated/graphql'
-import { CredentialTypes, Kinds, Orchestrators, ServiceStatus } from './enums'
+import { CredentialTypes, Kinds, Orchestrators, ServiceStatus, ValidationTools } from './enums'
 
 export type SetupBuildFormValue = {
   buildTool?: BuildTool
@@ -33,4 +33,16 @@ export type Pipeline = {
   namespace?: string
   pipelineType?: PipelineType
   resourceRefs?: ResourceRef[]
+}
+
+export type ValidationLanguage = {
+  id: string
+  displayName: string
+  githubLinguistName: string
+  order: number
+  validationTool?: ValidationTools
+}
+export type ErrorMessage = {
+  title: string
+  message: string
 }

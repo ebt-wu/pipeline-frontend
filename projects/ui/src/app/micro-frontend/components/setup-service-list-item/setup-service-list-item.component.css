@@ -1,0 +1,36 @@
+.list-item-border {
+    border-top: 1px !important;
+    border-color: var(--sapList_BorderColor) !important;
+    border-style: solid !important;
+}
+
+.list-item-border:hover {
+    background: var(--sapList_Hover_Background);
+}
+
+li::before {
+    border-radius: var(--fdCard_Border_Radius) !important;
+}
+
+.service {
+    display: flex;
+    width: 100%;
+    align-items: center;
+    justify-content: space-between;
+
+    .name {
+        display: flex;
+        flex-direction: column;
+
+        .category {
+            font-size: 16px;
+        }
+    }
+}
+
+
+@media only screen and (max-width: 960px) {
+    .hide-on-small-screen {
+        display: none;
+    }
+}
