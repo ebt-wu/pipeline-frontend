@@ -25,11 +25,11 @@
         <div
           *ngIf="languageSelection.getRawValue()?.validationTool === validationTools.GHAS"
           class="recommendation-item">
-          <img src="../../../../assets/github-logo.svg" alt="GitHub Logo" />
+          <img src="./assets/github-logo.svg" alt="GitHub Logo" />
           GitHub Advanced Security
         </div>
         <div *ngIf="languageSelection.getRawValue()?.validationTool === validationTools.CX" class="recommendation-item">
-          <img alt="CxOne Logo" src="../../../../assets/cx-one-logo.svg" />
+          <img alt="CxOne Logo" src="./assets/cx-one-logo.svg" />
           CxOne (coming soon)
         </div>
 
@@ -60,7 +60,7 @@
           ">
           <div class="separator"></div>
           <div class="cx-one-not-available-message">
-            <img alt="Illustation of a tent" src="../../../../assets/tent.svg" />
+            <img alt="Illustration of a tent" src="./assets/tent.svg" />
             <figure [noSvg]="true" fd-illustrated-message type="spot">
               <figcaption fd-illustrated-message-figcaption id="tent-description">
                 <h3 fd-illustrated-message-title>CxOne is not yet available</h3>
