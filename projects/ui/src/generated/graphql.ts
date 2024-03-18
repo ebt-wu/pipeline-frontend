@@ -34,6 +34,7 @@ export type CumulusPipeline = {
   __typename?: 'CumulusPipeline';
   creationTimestamp?: Maybe<Scalars['String']['output']>;
   groupId?: Maybe<Scalars['String']['output']>;
+  groupKey?: Maybe<Scalars['String']['output']>;
   id?: Maybe<Scalars['String']['output']>;
   key?: Maybe<Scalars['String']['output']>;
 };
@@ -513,7 +514,7 @@ export type GetCumulusPipelineQueryVariables = Exact<{
 }>;
 
 
-export type GetCumulusPipelineQuery = { __typename?: 'Query', getCumulusPipeline?: { __typename?: 'CumulusPipeline', id?: string | null, key?: string | null, creationTimestamp?: string | null, groupId?: string | null } | null };
+export type GetCumulusPipelineQuery = { __typename?: 'Query', getCumulusPipeline?: { __typename?: 'CumulusPipeline', id?: string | null, key?: string | null, creationTimestamp?: string | null, groupId?: string | null, groupKey?: string | null } | null };
 
 export type RemoveStagingServiceCredentialMutationVariables = Exact<{
   projectId: Scalars['String']['input'];
@@ -641,7 +642,7 @@ export type CreateGitHubAdvancedSecurityMutationVariables = Exact<{
   githubInstance: Scalars['String']['input'];
   githubOrganization: Scalars['String']['input'];
   githubRepository: Scalars['String']['input'];
-  codeScanJobOrchestrator: Orchestrators;
+  codeScanJobOrchestrator?: InputMaybe<Orchestrators>;
 }>;
 
 

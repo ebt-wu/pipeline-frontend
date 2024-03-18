@@ -126,7 +126,7 @@ export class PipelineComponent implements OnInit, OnDestroy {
   }
 
   async ngOnInit(): Promise<void> {
-    this.getExtensionClasses()
+    await this.getExtensionClasses()
 
     this.githubMetadata = await this.api.githubService.getGithubMetadata()
 
@@ -321,14 +321,6 @@ export class PipelineComponent implements OnInit, OnDestroy {
   openSetupWizard(e: Event) {
     e.stopPropagation()
     this.luigiClient.linkManager().fromVirtualTreeRoot().openAsModal('setup', { size: 's', title: 'Set up Build' })
-  }
-
-  openStaticSecurityCheckWizard(e: Event) {
-    e.stopPropagation()
-    this.luigiClient
-      .linkManager()
-      .fromVirtualTreeRoot()
-      .openAsModal('setup-validation', { title: 'Add Static Security Checks', width: '420px', height: '670px' })
   }
 
   openGithubActionWizard(e: Event) {

@@ -1,16 +1,33 @@
 <fd-dialog-body>
   <div class="container">
-    <div *ngIf="!cumulusInfo" class="busy-indicator">
+    <div *ngIf="!cumulusInfo && loading" class="busy-indicator">
       <fd-busy-indicator [loading]="true" ariaLabel="loading" title="Please Wait"></fd-busy-indicator>
     </div>
-
+    <div *ngIf="!cumulusInfo && !loading" class="not-found-message">
+      <img src="./assets/notFoundPage.svg" alt="Cards with a question mark" width="60%"/>
+      <figure fd-illustrated-message [noSvg]="true"  type="spot">
+        <figcaption fd-illustrated-message-figcaption id="not-found-description">
+            <h3 fd-illustrated-message-title>Failed to get Cumulus data</h3>
+            <p fd-illustrated-message-text>
+              Please try again later
+            </p>
+          </figcaption>
+      </figure>
+    </div>
     <div *ngIf="cumulusInfo && cumulusInfo.key && cumulusInfo.id && cumulusInfo.groupId">
       <div>
-        <b>
-          Pipeline Key
-        </b>
+        <span class="label">
+          Cumulus Pipeline ID:
+        </span>
+        <p class="remove-top-margin">{{ cumulusInfo.id }}</p>
+      </div>
+
+      <div>
+        <span class="label">
+          Cumulus Pipeline Key:
+        </span>
         <fd-icon
-          [fd-inline-help]="cumulusPopover"
+          [fd-inline-help]="pipelineKeyPopover"
           [triggers]="['click']"
           class="icon"
           glyph="hint"></fd-icon>
@@ -18,38 +35,43 @@
         <p class="remove-top-margin">{{ cumulusInfo.key }}</p>
       </div>
       <div>
-        <b>
-          Pipeline ID
-        </b>
-        <p class="remove-top-margin">{{ cumulusInfo.id }}</p>
-      </div>
-      <div>
-        <b>
-          Group ID
-        </b>
-        <p class="remove-top-margin">{{ cumulusInfo.groupId }}</p>
-      </div>
+        <span class="label">
+          Cumulus Group Key:
+        </span>
+        <fd-icon
+        [fd-inline-help]="groupKeyPopover"
+        [triggers]="['click']"
+        class="icon"
+        glyph="hint"></fd-icon>
+        <p class="remove-top-margin">{{ cumulusInfo.groupKey }}</p>
 
-      <div>
-        <h2>Need a Cumulus storage token?</h2>
-        <p class="storage-token-text-padding">
-          The storage token is needed to connect your pipeline orchestrator to the GCP bucket where the files from your
-          pipeline will be stored.
-        </p>
-        <button (click)="showCumulusTokenInVault()" fd-button>Show Token in Vault</button>
       </div>
-      <div class="documentation-button">
+      <div class="separator"></div>
+
+
+      <span class="section-heading">Complete the setup</span>
+      <p class="remove-top-margin">Set up a fully compliant build pipeline with Cumulus to store its results</p>
+      <button (click)="openPipelineUi()" class="button-margin" fd-button fdType="emphasized"
+              label="Set up CI/CD"></button>
+
+
+      <span class="section-heading">Already have a pipeline?</span>
+      <p class="remove-top-margin">
+        Add the storage token to your Vault and use the pipeline ID in your pipeline configuration to enable the upload to Cumulus. Then, use the key to register your pipeline in Sirius.
+      </p>
+      <div class="buttons">
+        <button (click)="showCumulusTokenInVault()" fd-button>Show Token in Vault</button>
         <button
-          fd-button
-          glyph="question-mark"
           (click)="openDocumentation()"
-          fdType="transparent"
           ariaLabel="Learn More"
+          fd-button
+          fdType="transparent"
           label="Learn More"
           role="button">
         </button>
       </div>
     </div>
+
   </div>
 </fd-dialog-body>
 
@@ -59,12 +81,20 @@
   </div>
 </div>
 
-<ng-template #cumulusPopover>
+<ng-template #pipelineKeyPopover>
   <div>
     Use this key to <a class="link" href="https://wiki.one.int.sap/wiki/x/iK5Yh" rel="noopener noreferrer"
                        target="_blank">
     add your pipeline to Sirius</a>
     <br />
     to view its compliance results
+  </div>
+</ng-template>
+<ng-template #groupKeyPopover>
+  <div>
+    Use this key to <br /><a class="link" href="https://wiki.one.int.sap/wiki/x/iK5Yh" rel="noopener noreferrer"
+                       target="_blank">
+    add a group of pipelines to Sirius</a>
+    <br /> to view their compliance results
   </div>
 </ng-template>

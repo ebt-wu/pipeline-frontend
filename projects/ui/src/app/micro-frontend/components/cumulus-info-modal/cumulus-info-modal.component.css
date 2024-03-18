@@ -11,16 +11,44 @@
   display: flex;
   flex-direction: column;
   gap: 0;
+
+  .not-found-message {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+  }
+
+  .label {
+    color: var(--sapContent_LabelColor)
+  }
+  .separator {
+    width: 100%;
+    height: 1px;
+    background: #d9d9d9;
+    margin-bottom: 16px;
+  }
+
+  .section-heading {
+    font-weight: 700;
+    font-size: 16px;
+    display: block;
+  }
+
+  .button-margin {
+    margin-bottom: 30px;
+  }
+
+  .buttons {
+    display: flex;
+    gap: 8px;
+  }
 }
 
 
 .link {
   color: var(--sapLink_Active_Color);
   text-decoration: none;
-}
-
-.icon-padding {
-  padding-right: 1rem;
 }
 
 .remove-top-margin {
@@ -32,15 +60,6 @@
   cursor: pointer;
 }
 
-.storage-token-text-padding {
-  padding-right: 2rem;
-}
-.documentation-button {
-  position: absolute;
-  bottom: 32px;
-  left: 16px;
-  margin-bottom: 24px;
-}
 
 .dialog-footer {
   position: fixed;

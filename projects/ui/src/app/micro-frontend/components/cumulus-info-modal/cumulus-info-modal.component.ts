@@ -22,6 +22,7 @@ import { PlatformButtonModule } from '@fundamental-ngx/platform'
 export class CumulusInfoModalComponent implements OnInit {
   watch$: Observable<Pipeline>
   cumulusInfo: CumulusPipeline
+  loading: boolean
 
   constructor(
     private readonly pipelineService: PipelineService,
@@ -32,12 +33,14 @@ export class CumulusInfoModalComponent implements OnInit {
   ) {}
 
   async ngOnInit() {
+    this.loading = true
     // If there is no pipeline we create one on-the-fly
     const userPolicies = (await this.context.getContextAsync()).entityContext.project.policies
 
     if (userPolicies.includes('projectAdmin') || userPolicies.includes('projectMember')) {
       await firstValueFrom(this.pipelineService.createPipeline(PipelineType.FullPipeline).pipe(debounceTime(100)))
     }
+    this.luigiClient.linkManager().updateModalSettings({ height: '565px', width: '420px' })
 
     this.watch$ = this.pipelineService.watchPipeline().pipe(debounceTime(50))
 
@@ -47,6 +50,7 @@ export class CumulusInfoModalComponent implements OnInit {
     if (cumulusRef && cumulusRef.name) {
       this.cumulusInfo = await firstValueFrom(this.cumulusService.getCumulusPipeline(cumulusRef.name))
     }
+    this.loading = false
   }
 
   async showCumulusTokenInVault() {
@@ -59,6 +63,9 @@ export class CumulusInfoModalComponent implements OnInit {
     window.open('https://wiki.one.int.sap/wiki/x/3z5mh', '_blank')
   }
 
+  openPipelineUi() {
+    this.luigiClient.linkManager().fromContext('component').navigate('pipeline-ui')
+  }
   close() {
     this.luigiClient.uxManager().closeCurrentModal()
   }
