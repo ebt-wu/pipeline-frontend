@@ -1,5 +1,7 @@
 name: Build WebComponent Workflow
 on:
+  workflow_dispatch:
+
   push:
     paths:
       - '.github/workflows/build-wc.yaml'

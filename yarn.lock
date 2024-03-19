@@ -22,16 +22,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@angular-devkit/architect@npm:0.1602.11":
-  version: 0.1602.11
-  resolution: "@angular-devkit/architect@npm:0.1602.11"
-  dependencies:
-    "@angular-devkit/core": "npm:16.2.11"
-    rxjs: "npm:7.8.1"
-  checksum: 10/6f2bd604eba2974f4bb4189da4a043556bdfa7b3028f92ffcb6fe7f27baf480d8ce664affbd08738b01e3fe234466ad4132f8f1335db856b7d372dccc4564066
-  languageName: node
-  linkType: hard
-
 "@angular-devkit/architect@npm:0.1602.12":
   version: 0.1602.12
   resolution: "@angular-devkit/architect@npm:0.1602.12"
@@ -298,25 +288,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@angular-devkit/core@npm:16.2.11":
-  version: 16.2.11
-  resolution: "@angular-devkit/core@npm:16.2.11"
-  dependencies:
-    ajv: "npm:8.12.0"
-    ajv-formats: "npm:2.1.1"
-    jsonc-parser: "npm:3.2.0"
-    picomatch: "npm:2.3.1"
-    rxjs: "npm:7.8.1"
-    source-map: "npm:0.7.4"
-  peerDependencies:
-    chokidar: ^3.5.2
-  peerDependenciesMeta:
-    chokidar:
-      optional: true
-  checksum: 10/9cefaf083d5b6d270524a79ce571974db77711b10010dd0c2ee1726a1b2dac6d3b519bf79732bea33237f859ea175fb625fc3b9dfe9a6b682ddef1501e3df880
-  languageName: node
-  linkType: hard
-
 "@angular-devkit/core@npm:16.2.12":
   version: 16.2.12
   resolution: "@angular-devkit/core@npm:16.2.12"
@@ -374,16 +345,16 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@angular-devkit/schematics@npm:16.2.11":
-  version: 16.2.11
-  resolution: "@angular-devkit/schematics@npm:16.2.11"
+"@angular-devkit/schematics@npm:16.2.12":
+  version: 16.2.12
+  resolution: "@angular-devkit/schematics@npm:16.2.12"
   dependencies:
-    "@angular-devkit/core": "npm:16.2.11"
+    "@angular-devkit/core": "npm:16.2.12"
     jsonc-parser: "npm:3.2.0"
     magic-string: "npm:0.30.1"
     ora: "npm:5.4.1"
     rxjs: "npm:7.8.1"
-  checksum: 10/ceaaae98d7fa2820045706116d01fa3e73cc378f9b32f31c761e3acf91528a2effa92d8a285004385093a74901bcedcb652084004b557bbe8325dfd5c76a4b3c
+  checksum: 10/90a8e54c9a78382d1a02c5f51b39ab912084cde79664b237f77e960a076e1f105d450521200b8ba8406d716e31b02639bd7cda3aa23da719423c57944fa73555
   languageName: node
   linkType: hard
 
@@ -505,8 +476,8 @@ __metadata:
   linkType: hard
 
 "@angular/cdk@npm:^16.2.1":
-  version: 16.2.13
-  resolution: "@angular/cdk@npm:16.2.13"
+  version: 16.2.14
+  resolution: "@angular/cdk@npm:16.2.14"
   dependencies:
     parse5: "npm:^7.1.2"
     tslib: "npm:^2.3.0"
@@ -517,18 +488,18 @@ __metadata:
   dependenciesMeta:
     parse5:
       optional: true
-  checksum: 10/0799c7d96e4d8005c03aa605286d6527cdde858671c14bc2ae4ff6b68f2cdb1fe27e6e6434dfe36a110a452621a4a3a4f413cbf21513f8e7a0985542590fa35a
+  checksum: 10/2c05039dead71258eb3c5f904e007eb8726ebab1b48159ea0c962841165b66b995feeac528abd8cb5ec31d8c2fb81dc399c83f31a503bbe0c53dee293d653629
   languageName: node
   linkType: hard
 
 "@angular/cli@npm:^16.2.0":
-  version: 16.2.11
-  resolution: "@angular/cli@npm:16.2.11"
+  version: 16.2.12
+  resolution: "@angular/cli@npm:16.2.12"
   dependencies:
-    "@angular-devkit/architect": "npm:0.1602.11"
-    "@angular-devkit/core": "npm:16.2.11"
-    "@angular-devkit/schematics": "npm:16.2.11"
-    "@schematics/angular": "npm:16.2.11"
+    "@angular-devkit/architect": "npm:0.1602.12"
+    "@angular-devkit/core": "npm:16.2.12"
+    "@angular-devkit/schematics": "npm:16.2.12"
+    "@schematics/angular": "npm:16.2.12"
     "@yarnpkg/lockfile": "npm:1.1.0"
     ansi-colors: "npm:4.1.3"
     ini: "npm:4.1.1"
@@ -545,7 +516,7 @@ __metadata:
     yargs: "npm:17.7.2"
   bin:
     ng: bin/ng.js
-  checksum: 10/264bd4d749671f8180d527451d90908f84df0f30e493a4c69910c06c9059360427434bf47c42d4c2c3bc387f705a9c52925f0271f8142ff38296c0dca3c9113c
+  checksum: 10/4a9d0f2a17baf5cd8873557bd919a20b24dd61002022a008ef5157ade46b46340691cfdf6be7a9c9b2eaea6d427541dcb48aa2ca803d459170df61993cd9d611
   languageName: node
   linkType: hard
 
@@ -3620,86 +3591,136 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@fundamental-ngx/cdk@npm:0.45.1":
-  version: 0.45.1
-  resolution: "@fundamental-ngx/cdk@npm:0.45.1"
+"@formatjs/ecma402-abstract@npm:1.18.2":
+  version: 1.18.2
+  resolution: "@formatjs/ecma402-abstract@npm:1.18.2"
   dependencies:
-    "@fundamental-ngx/i18n": "npm:0.45.1"
-    "@fundamental-styles/cx": "npm:0.28.3"
-    "@sap-theming/theming-base-content": "npm:^11.6.0"
-    compare-versions: "npm:^6.0.0"
-    fast-deep-equal: "npm:3.1.3"
-    focus-trap: "npm:^7.1.0"
-    fundamental-styles: "npm:0.28.3"
-    lodash-es: "npm:^4.17.0"
-    tslib: "npm:^2.0.0"
-  peerDependencies:
-    "@angular/animations": ^16.1.0
-    "@angular/cdk": ^16.1.0
-    "@angular/common": ^16.1.0
-    "@angular/core": ^16.1.0
-    "@angular/forms": ^16.1.0
-    "@angular/platform-browser": ^16.1.0
-    "@angular/router": ^16.1.0
-    rxjs: ^7.8.0
-  checksum: 10/bf983d65541258a9e97590bfdc1ee43301a7346bffdd710ce9a086e402576cb9d91a5cdbf471c61ebf29eb67c875b853ea5c2312dc05aa472f66a9a2b04f836c
+    "@formatjs/intl-localematcher": "npm:0.5.4"
+    tslib: "npm:^2.4.0"
+  checksum: 10/e761653887e4446188daa023f4cb7245790ed65eb56cef4821225467e63f271f1addff386cfcbb4eb73eb67704b1f3a2b35ea4082fcadd4d05cfa0b3be3d5577
   languageName: node
   linkType: hard
 
-"@fundamental-ngx/core@npm:0.45.1":
-  version: 0.45.1
-  resolution: "@fundamental-ngx/core@npm:0.45.1"
+"@formatjs/fast-memoize@npm:2.2.0":
+  version: 2.2.0
+  resolution: "@formatjs/fast-memoize@npm:2.2.0"
   dependencies:
-    "@fundamental-ngx/cdk": "npm:0.45.1"
-    "@fundamental-ngx/i18n": "npm:0.45.1"
+    tslib: "npm:^2.4.0"
+  checksum: 10/8697fe72a7ece252d600a7d08105f2a2f758e2dd96f54ac0a4c508b1205a559fc08835635e1f8e5ca9dcc3ee61ce1fca4a0e7047b402f29fc96051e293a280ff
+  languageName: node
+  linkType: hard
+
+"@formatjs/icu-messageformat-parser@npm:2.7.6":
+  version: 2.7.6
+  resolution: "@formatjs/icu-messageformat-parser@npm:2.7.6"
+  dependencies:
+    "@formatjs/ecma402-abstract": "npm:1.18.2"
+    "@formatjs/icu-skeleton-parser": "npm:1.8.0"
+    tslib: "npm:^2.4.0"
+  checksum: 10/5baf9c1cf4b3f70d95bbac602b0695fcf67c6e2ff098e39dd53bdad0a16d192b9b5fe74dbdbeb76404bbdcdc95628d2623d24f786736074751fef13490cb6237
+  languageName: node
+  linkType: hard
+
+"@formatjs/icu-skeleton-parser@npm:1.8.0":
+  version: 1.8.0
+  resolution: "@formatjs/icu-skeleton-parser@npm:1.8.0"
+  dependencies:
+    "@formatjs/ecma402-abstract": "npm:1.18.2"
+    tslib: "npm:^2.4.0"
+  checksum: 10/8cd96d9075d1d369e4746dfaea6e3f478d21ed0672f4b777c4ee53b2660ef8c9a081976e6a8c73bba889eddc7edc52dba6eeea5fd62a8c03aa73e266b3cd89e9
+  languageName: node
+  linkType: hard
+
+"@formatjs/intl-localematcher@npm:0.5.4":
+  version: 0.5.4
+  resolution: "@formatjs/intl-localematcher@npm:0.5.4"
+  dependencies:
+    tslib: "npm:^2.4.0"
+  checksum: 10/780cb29b42e1ea87f2eb5db268577fcdc53da52d9f096871f3a1bb78603b4ba81d208ea0b0b9bc21548797c941ce435321f62d2522795b83b740f90b0ceb5778
+  languageName: node
+  linkType: hard
+
+"@fundamental-ngx/cdk@npm:0.47.4":
+  version: 0.47.4
+  resolution: "@fundamental-ngx/cdk@npm:0.47.4"
+  dependencies:
+    "@fundamental-styles/cx": "npm:0.32.0"
+    "@sap-theming/theming-base-content": "npm:^11.9.0"
+    compare-versions: "npm:^6.0.0"
+    fast-deep-equal: "npm:3.1.3"
+    focus-trap: "npm:^7.1.0"
+    fundamental-styles: "npm:0.32.0"
+    lodash-es: "npm:^4.17.0"
+    tslib: "npm:^2.0.0"
+  peerDependencies:
+    "@angular/animations": ^16.2.0
+    "@angular/cdk": ^16.2.0
+    "@angular/common": ^16.2.0
+    "@angular/core": ^16.2.0
+    "@angular/forms": ^16.2.0
+    "@angular/platform-browser": ^16.2.0
+    "@angular/router": ^16.2.0
+    rxjs: ^7.8.0
+  checksum: 10/ee99cfa49f1d1d1298ba5bae8ca2d4f5be566806ed4790aee3c8e2f3dad25f0dd986cefaeaee3c5ec9ed7abe841d28571728317de9c54e9aa89e4ae3c33b3ec6
+  languageName: node
+  linkType: hard
+
+"@fundamental-ngx/core@npm:0.47.4":
+  version: 0.47.4
+  resolution: "@fundamental-ngx/core@npm:0.47.4"
+  dependencies:
     compare-versions: "npm:^6.0.0"
     fast-deep-equal: "npm:3.1.3"
     focus-trap: "npm:^7.1.0"
     lodash-es: "npm:^4.17.0"
     tslib: "npm:^2.0.0"
   peerDependencies:
-    "@angular/animations": ^16.1.0
-    "@angular/cdk": ^16.1.0
-    "@angular/common": ^16.1.0
-    "@angular/core": ^16.1.0
-    "@angular/forms": ^16.1.0
-    "@angular/platform-browser": ^16.1.0
-    "@angular/router": ^16.1.0
-    "@sap-theming/theming-base-content": ^11.6.0
-    fundamental-styles: 0.28.3
+    "@angular/animations": ^16.2.0
+    "@angular/cdk": ^16.2.0
+    "@angular/common": ^16.2.0
+    "@angular/core": ^16.2.0
+    "@angular/forms": ^16.2.0
+    "@angular/platform-browser": ^16.2.0
+    "@angular/router": ^16.2.0
+    "@fundamental-ngx/cdk": 0.47.4
+    "@fundamental-ngx/i18n": 0.47.4
+    "@sap-theming/theming-base-content": ^11.9.0
+    fundamental-styles: 0.32.0
     rxjs: ^7.8.0
-  checksum: 10/6f3f884049888d2e889ac2ba14ce03d16d9dad4475c78de87e25f3b1979b5137a823d45960ac6760173cd1b50447853441a89befd0b7d14dade1436ac5e2797d
+  checksum: 10/e31b352832f7af6f9d30dc34b8b34473c873b244d4aae8d3b725bde8fef067074ef155b443a7081c4f8985f5d4a5a3a3c323f049da9107bff39cef8007862525
   languageName: node
   linkType: hard
 
-"@fundamental-ngx/i18n@npm:0.45.1":
-  version: 0.45.1
-  resolution: "@fundamental-ngx/i18n@npm:0.45.1"
+"@fundamental-ngx/i18n@npm:0.47.4":
+  version: 0.47.4
+  resolution: "@fundamental-ngx/i18n@npm:0.47.4"
   dependencies:
     fast-deep-equal: "npm:3.1.3"
+    intl-messageformat: "npm:^10.5.0"
     lodash-es: "npm:^4.17.0"
     tslib: "npm:^2.3.0"
   peerDependencies:
-    "@angular/common": ^16.1.0
-    "@angular/core": ^16.1.0
+    "@angular/common": ^16.2.0
+    "@angular/core": ^16.2.0
+    "@fundamental-ngx/cdk": 0.47.4
     rxjs: ^7.8.0
-  checksum: 10/2553749d1200f4f95ee5c129bd0f5bccb63211503c712344eb4886b81276132a9809061619e00aebfe28d49c401579fe825f4ad6779b5e016963fc5ef14a8236
+  checksum: 10/69548600025bad3dab03ce487469ba40c37b13502ca12cae4509570b4e1ebc3de33d1d2240e9ecc9e3c30db7e155dc89f617bc634dcf5a8288b7fe4af9a5943d
   languageName: node
   linkType: hard
 
-"@fundamental-ngx/platform@npm:0.45.1":
-  version: 0.45.1
-  resolution: "@fundamental-ngx/platform@npm:0.45.1"
+"@fundamental-ngx/platform@npm:0.47.4":
+  version: 0.47.4
+  resolution: "@fundamental-ngx/platform@npm:0.47.4"
   dependencies:
-    "@fundamental-ngx/cdk": "npm:0.45.1"
-    "@fundamental-ngx/i18n": "npm:0.45.1"
     fast-deep-equal: "npm:3.1.3"
     focus-trap: "npm:^7.1.0"
     lodash-es: "npm:^4.17.0"
     tslib: "npm:^2.0.0"
   peerDependencies:
-    "@fundamental-ngx/core": 0.45.1
-  checksum: 10/1304e659be194cf5d985b0b66587b3b6d4cf245c5bb8c3218bf6e43bdbfe20045b83838fd0afa48baba4a0f7c75534953770560f61befc4baec1aa0114c8ee8e
+    "@fundamental-ngx/cdk": 0.47.4
+    "@fundamental-ngx/core": 0.47.4
+    "@fundamental-ngx/i18n": 0.47.4
+  checksum: 10/0b5e93538aece9e3662d4c3b23b38fd3b82d4d7653466f05a061f0b923c0b0b0068fabcfc09bac9854b32e25625a4bc99624505cf2396db6ca6d1eadf7dc3085
   languageName: node
   linkType: hard
 
@@ -3712,10 +3733,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@fundamental-styles/cx@npm:0.28.3":
-  version: 0.28.3
-  resolution: "@fundamental-styles/cx@npm:0.28.3"
-  checksum: 10/7a245295dc1c403a8c274cc88623295279a410581bff906dd3a96c0a889d836b16ba9624c264330cccfeaa8ed1eb6e36188d2008f638109b02a4cd9ad3c100a6
+"@fundamental-styles/cx@npm:0.32.0":
+  version: 0.32.0
+  resolution: "@fundamental-styles/cx@npm:0.32.0"
+  checksum: 10/0d3aa68479e8f50946873a933a5e560e675671c4bf33e64e16782a8d2a536f158a017ecc00a4bf01f7d8eaa891f966ec1f2a4c96cea8254ec15f391ce74d96d3
   languageName: node
   linkType: hard
 
@@ -5236,21 +5257,28 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@sap-theming/theming-base-content@npm:11.9.0, @sap-theming/theming-base-content@npm:^11.6.0, @sap-theming/theming-base-content@npm:^11.7.0":
+"@sap-theming/theming-base-content@npm:11.9.0, @sap-theming/theming-base-content@npm:^11.7.0":
   version: 11.9.0
   resolution: "@sap-theming/theming-base-content@npm:11.9.0"
   checksum: 10/73d86a0378a99043d5df473bb9d04d234d436e0e1a860419822ffd529d566b5960a43e0d75d18606890fb2abfc2eda82b37da49c112c5d2721ed8ff8c8e4e623
   languageName: node
   linkType: hard
 
-"@schematics/angular@npm:16.2.11":
-  version: 16.2.11
-  resolution: "@schematics/angular@npm:16.2.11"
+"@sap-theming/theming-base-content@npm:^11.9.0":
+  version: 11.13.0
+  resolution: "@sap-theming/theming-base-content@npm:11.13.0"
+  checksum: 10/ed732ca5dd904ccd8de722c537ffc1d7a482571e0b8a973e59951301dbd986a6a83881eccad7d8c1cbe7717ab93760c2acb93c3421dbfd5f3d4f0afb928f0baf
+  languageName: node
+  linkType: hard
+
+"@schematics/angular@npm:16.2.12":
+  version: 16.2.12
+  resolution: "@schematics/angular@npm:16.2.12"
   dependencies:
-    "@angular-devkit/core": "npm:16.2.11"
-    "@angular-devkit/schematics": "npm:16.2.11"
+    "@angular-devkit/core": "npm:16.2.12"
+    "@angular-devkit/schematics": "npm:16.2.12"
     jsonc-parser: "npm:3.2.0"
-  checksum: 10/358c372d0517f3ffbc91ba4513e8e2cdf3a83189f3c867a8b972c3fc02e5da640a84937d8456908327c082c481e00e3bcf6fa766cd4329e2c9f8f29dc79a0178
+  checksum: 10/183d8c40a61a744107aa86e8fe58ab5310d3b977805df905a1f5a37c5b6003cfa7af3cbdf236b55555d58674e09d7af3d56a4ec3148b9edacc9796deb755f5b3
   languageName: node
   linkType: hard
 
@@ -10040,13 +10068,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"fundamental-styles@npm:0.28.3":
-  version: 0.28.3
-  resolution: "fundamental-styles@npm:0.28.3"
+"fundamental-styles@npm:0.32.0":
+  version: 0.32.0
+  resolution: "fundamental-styles@npm:0.32.0"
   peerDependencies:
-    "@fundamental-styles/common-css": 0.28.3
-    "@sap-theming/theming-base-content": ^11.2.0
-  checksum: 10/3e73b31dc0cae65696480d8bac7037265f0253d97d180ff918c2eeedb9d62c8b4627c92fca6e4cb423f2a07dc0e1ae3756733be4acd32ae5301fe9ef006f7da2
+    "@sap-theming/theming-base-content": ^11.9.0
+    "@sap-ui/common-css": 0.32.0
+  checksum: 10/cbf1d206e715f8fbc2855d69773461f4c798844c538a18bdb63fcb339ab4244642f7444ab4f728d1f6d4ad3d480e275a45de3252bb3ab2f9f51ea07a97500c90
   languageName: node
   linkType: hard
 
@@ -10922,6 +10950,18 @@ __metadata:
     hasown: "npm:^2.0.0"
     side-channel: "npm:^1.0.4"
   checksum: 10/bc2022eb1f277f2fcb2a60e7ced451c7ffc7a769b12e63c7a3fb247af8b5a1bed06428ce724046a8bca39ed6eb5b6832501a42f2e9a5ec4a9a7dc4e634431616
+  languageName: node
+  linkType: hard
+
+"intl-messageformat@npm:^10.5.0":
+  version: 10.5.11
+  resolution: "intl-messageformat@npm:10.5.11"
+  dependencies:
+    "@formatjs/ecma402-abstract": "npm:1.18.2"
+    "@formatjs/fast-memoize": "npm:2.2.0"
+    "@formatjs/icu-messageformat-parser": "npm:2.7.6"
+    tslib: "npm:^2.4.0"
+  checksum: 10/2146f4d3e2c4bcf2c4fa343e4ee070fe1124d3821caa2fa0e7112a68fdefbedbbda6a3778f3ba04e38bbce3db33511ca9eecbb0a7e06013e6699255c153813ce
   languageName: node
   linkType: hard
 
@@ -14118,8 +14158,10 @@ __metadata:
     "@dxp/eslint-config-angular": "npm:^2.0.2"
     "@dxp/ngx-core": "npm:0.20.27"
     "@dynatrace/dtrum-api-types": "npm:1.283.3"
-    "@fundamental-ngx/core": "npm:0.45.1"
-    "@fundamental-ngx/platform": "npm:0.45.1"
+    "@fundamental-ngx/cdk": "npm:0.47.4"
+    "@fundamental-ngx/core": "npm:0.47.4"
+    "@fundamental-ngx/i18n": "npm:0.47.4"
+    "@fundamental-ngx/platform": "npm:0.47.4"
     "@fundamental-styles/common-css": "npm:0.30.2"
     "@graphql-codegen/cli": "npm:5.0.2"
     "@graphql-codegen/typescript": "npm:^4.0.1"
@@ -14140,7 +14182,7 @@ __metadata:
     eslint-plugin-jest: "npm:27.9.0"
     eslint-plugin-prettier: "npm:^5.0.1"
     eslint-plugin-unused-imports: "npm:^3.0.0"
-    fundamental-styles: "npm:0.28.3"
+    fundamental-styles: "npm:0.32.0"
     graphql: "npm:^16.8.0"
     graphql-sse: "npm:^2.3.0"
     jest: "npm:29.7.0"

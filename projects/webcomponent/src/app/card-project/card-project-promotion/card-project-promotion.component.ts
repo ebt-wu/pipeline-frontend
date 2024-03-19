@@ -1,5 +1,6 @@
 import { ChangeDetectionStrategy, Component, Input, OnDestroy, OnInit, ViewEncapsulation, signal } from '@angular/core'
 import {
+  ButtonComponent,
   CardModule,
   DialogService,
   IllustratedMessageModule,
@@ -21,7 +22,7 @@ import { Subscription } from 'rxjs'
   templateUrl: './card-project-promotion.component.html',
   styleUrls: ['./card-project-promotion.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [CardModule, IllustratedMessageModule, NgIf, MessageStripModule, AuthorizationModule],
+  imports: [CardModule, IllustratedMessageModule, NgIf, MessageStripModule, AuthorizationModule, ButtonComponent],
   encapsulation: ViewEncapsulation.ShadowDom,
 })
 export class CardProjectPromotionComponent implements OnInit, OnDestroy {
@@ -52,7 +53,7 @@ export class CardProjectPromotionComponent implements OnInit, OnDestroy {
     private dxpLuigiContextService: DxpLuigiContextService,
     private dialogService: DialogService,
     private githubService: GithubService,
-  ) { }
+  ) {}
   ngOnDestroy(): void {
     this.githubSubscription.unsubscribe()
   }
