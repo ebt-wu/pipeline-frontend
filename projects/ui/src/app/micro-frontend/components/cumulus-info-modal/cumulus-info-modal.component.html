@@ -19,6 +19,11 @@
         <span class="label">
           Cumulus Pipeline ID:
         </span>
+        <fd-icon
+          [fd-inline-help]="pipelineIdPopover"
+          [triggers]="['click']"
+          class="icon"
+          glyph="hint"></fd-icon>
         <p class="remove-top-margin">{{ cumulusInfo.id }}</p>
       </div>
 
@@ -81,6 +86,13 @@
   </div>
 </div>
 
+<ng-template #pipelineIdPopover>
+  <div>
+    Use this ID to <a class="link" href="https://github.wdf.sap.corp/pages/ContinuousDelivery/piper-doc/steps/sapCumulusUpload/" rel="noopener noreferrer" target="_blank">upload
+    your pipeline's results</a> <br />using the sapCumulusUpload Piper step
+  </div>
+</ng-template>
+
 <ng-template #pipelineKeyPopover>
   <div>
     Use this key to <a class="link" href="https://wiki.one.int.sap/wiki/x/iK5Yh" rel="noopener noreferrer"
@@ -90,11 +102,12 @@
     to view its compliance results
   </div>
 </ng-template>
+
 <ng-template #groupKeyPopover>
   <div>
     Use this key to <br /><a class="link" href="https://wiki.one.int.sap/wiki/x/iK5Yh" rel="noopener noreferrer"
-                       target="_blank">
-    add a group of pipelines to Sirius</a>
-    <br /> to view their compliance results
+                             target="_blank">add all the pipelines of this Project to Sirius</a><br />
+    to view their compliance results
   </div>
 </ng-template>
+
