@@ -148,12 +148,10 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
+    padding-right: 16px;
   }
 }
 
-fd-info-label {
-  text-transform: uppercase;
-}
 
 .freestyle-pipeline-info {
   display: flex;
@@ -234,9 +232,6 @@ fd-info-label {
     display: flex;
     flex-direction: row;
     gap: 0.5rem;
-    .card-content-label {
-      margin-top: 6px;
-    }
   }
 }
 

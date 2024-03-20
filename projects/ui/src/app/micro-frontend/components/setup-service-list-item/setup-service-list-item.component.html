@@ -6,7 +6,8 @@
       <span fd-list-thumbnail></span>
       <div class="service">
         <div class="name">
-          <b class="category">{{ serviceName }}</b>
+          <strong>{{ serviceName }}</strong>
+          <fd-icon *ngIf="infoPopoverText" class="icon" glyph="hint" [fd-inline-help]="infoPopoverText"></fd-icon>
         </div>
         <!-- TODO: add the readonly check back in when the backend can deliver the dxp data again-->
 <!--        <div *dxpRequiredPolicies="['projectAdmin', 'projectMember']; operator: 'or'">-->

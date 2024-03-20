@@ -3,7 +3,9 @@ import { AuthorizationModule } from '@dxp/ngx-core/authorization'
 import {
   BusyIndicatorModule,
   ButtonModule,
+  IconModule,
   InfoLabelModule,
+  InlineHelpModule,
   ListModule,
   ObjectStatusModule,
 } from '@fundamental-ngx/core'
@@ -29,12 +31,15 @@ import { NgIf } from '@angular/common'
     NgIf,
     ObjectStatusModule,
     InfoLabelModule,
+    IconModule,
+    InlineHelpModule,
   ],
 })
 export class SetupServiceListItemComponent {
   @Input() serviceName: string
   @Input() setupDialogType?: Categories
   @Input() labelText?: string
+  @Input() infoPopoverText?: string
 
   constructor(private readonly luigiClient: LuigiClient) {}
 

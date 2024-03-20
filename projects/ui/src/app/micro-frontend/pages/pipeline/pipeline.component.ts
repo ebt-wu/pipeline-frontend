@@ -203,9 +203,8 @@ export class PipelineComponent implements OnInit, OnDestroy {
           pipeline.resourceRefs.find((ref) => ref.kind === Kinds.GITHUB_ADVANCED_SECURITY || ref.kind === Kinds.CX_ONE)
         ) {
           this.isStaticSecurityChecksSetup.set(true)
+          this.isValidationStageOpen.set(true)
         }
-
-        this.isValidationStageOpen.set(true)
 
         if (isRequiredKindMissingInBuildStage || isOrchestratorMissingInBuildStage) {
           this.isBuildStageSetup.set(false)
@@ -492,12 +491,12 @@ export class PipelineComponent implements OnInit, OnDestroy {
       this.localLayout = 'TwoColumnsMidExpanded'
     }
 
-    if (this.activeTile == event.kind) {
+    if (this.activeTile === event.kind) {
       this.localLayout =
-        this.localLayout == 'OneColumnStartFullScreen' ? 'TwoColumnsMidExpanded' : 'OneColumnStartFullScreen'
+        this.localLayout === 'OneColumnStartFullScreen' ? 'TwoColumnsMidExpanded' : 'OneColumnStartFullScreen'
     }
 
-    if (this.activeTile != event.kind) {
+    if (this.activeTile !== event.kind) {
       this.localLayout = 'TwoColumnsMidExpanded'
     }
 

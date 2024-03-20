@@ -15,7 +15,7 @@ import { ExtensionClass, ServiceLevel } from '../../services/extension.types'
 import { GitHubIssueLabels, GitHubIssueLinkService } from '../../services/github-issue-link.service'
 import { ExtensionService } from '../../services/extension.service'
 import { DebugModeService } from '../../services/debug-mode.service'
-import { DxpLuigiContextService } from '@dxp/ngx-core/luigi'
+import { DxpLuigiContextService, LuigiClient } from '@dxp/ngx-core/luigi'
 import { DxpContext } from '@dxp/ngx-core/common'
 import { SharedDataService } from '../../services/shared-data.service'
 import { ErrorMessageComponent } from '../error-message/error-message.component'
@@ -65,11 +65,13 @@ export class ServiceDetailsSkeletonComponent implements OnInit {
   errors = signal<ErrorMessage[]>([])
   extensionClasses = signal<ExtensionClass[]>([])
   catalogUrl = signal('')
+  resourceName = signal('')
 
   constructor(
     private readonly api: APIService,
     private readonly extensionService: ExtensionService,
     private readonly luigiService: DxpLuigiContextService,
+    private readonly luigiClient: LuigiClient,
     private readonly githubIssueLinkService: GitHubIssueLinkService,
     private readonly sharedService: SharedDataService,
     readonly debugModeService: DebugModeService,
@@ -81,11 +83,11 @@ export class ServiceDetailsSkeletonComponent implements OnInit {
     this.catalogUrl.set(context.frameBaseUrl + '/catalog')
     const extensionClasses = await firstValueFrom(this.extensionService.getExtensionClassesForScopesQuery())
     this.extensionClasses.set(extensionClasses)
-
     this.sharedService.selectedResourceData$.subscribe(async (resource) => {
       if (resource == null) {
         return
       }
+      this.resourceName.set(resource.name)
       await this.loadDetails(resource.kind, resource.name)
     })
   }
@@ -171,6 +173,26 @@ export class ServiceDetailsSkeletonComponent implements OnInit {
     } finally {
       this.serviceDetailsLoading.set(false)
     }
+  }
+
+  async deleteGHAS() {
+    await this.luigiClient
+      .uxManager()
+      .showConfirmationModal({
+        header: 'Remove Static Security Checks',
+        body: 'Are you sure you want to remove static security checks?',
+        buttonConfirm: 'Yes',
+        buttonDismiss: 'No',
+      })
+      .then(async () => {
+        await firstValueFrom(this.api.githubAdvancedSecurityService.deleteGithubAdvancedSecurity(this.resourceName()))
+      })
+      .catch((err) => {
+        this.errors.update((errors) => {
+          errors.push({ title: 'Deleting Static Security Checks failed', message: err.toString() })
+          return errors
+        })
+      })
   }
 
   openService() {

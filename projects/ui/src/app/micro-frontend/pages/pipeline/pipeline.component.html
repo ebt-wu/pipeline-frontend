@@ -100,7 +100,7 @@
                 <div class="card-description">
                   <div class="card-description-stage-headline">
                     <h1>Build Pipeline</h1>
-                    <p *ngIf="localLayout === 'OneColumnStartFullScreen'">Builds and packages your code</p>
+                    <p *ngIf="localLayout === 'OneColumnStartFullScreen'">Build and package your code</p>
                   </div>
                 </div>
                 <div class="spacer"></div>
@@ -135,7 +135,7 @@
                 <span *ngIf="isBuildStageSetup()"
                       fd-object-status
                       glyph="status-completed"
-                      label="setup compliant"
+                      [label]="localLayout ==='TwoColumnsMidExpanded' ? '': 'setup compliant'"
                       status="positive"></span>
               </div>
               <ng-container *ngIf="isBuildStageOpen()">
@@ -163,7 +163,7 @@
                 <div class="card-description">
                   <div class="card-description-stage-headline">
                     <h1>Validate Code</h1>
-                    <p *ngIf="localLayout === 'OneColumnStartFullScreen'">Conduct tests to validate the compliance of your code</p>
+                    <p *ngIf="localLayout === 'OneColumnStartFullScreen'">Add checks to evaluate the compliance of your code</p>
                   </div>
                 </div>
               </div>
@@ -179,13 +179,14 @@
                 <!--If there is are no pipeline refs for the items we use dummy items to allow them to be set up-->
                 <div *ngIf="!isStaticSecurityChecksSetup()">
                   <app-setup-service-list-item [setupDialogType]="categories.STATIC_SECURITY_CHECKS"
+                                               infoPopoverText="Configure Static Security tools like GitHub Advanced Security and CxOne"
                                                serviceName="Static Security Checks"></app-setup-service-list-item>
                 </div>
                 <div *ngIf="!isStaticCodeChecksSetup()">
-                  <app-setup-service-list-item serviceName="Static Code Checks" labelText="coming soon"></app-setup-service-list-item>
+                  <app-setup-service-list-item serviceName="Static Code Checks" infoPopoverText="Configure Static Code Check tools like SonarQube" labelText="coming soon"></app-setup-service-list-item>
                 </div>
                 <div *ngIf="!isOpenSourceChecksSetup()">
-                  <app-setup-service-list-item serviceName="Open Source Checks" labelText="coming soon"></app-setup-service-list-item>
+                  <app-setup-service-list-item serviceName="Open Source Checks" infoPopoverText="Configure the new Open Source Compliance Service" labelText="coming soon"></app-setup-service-list-item>
                 </div>
               </ng-container>
             </fd-card-content>
@@ -202,11 +203,10 @@
                     <div class="card-description-stage-headline">
                       <h1 class="disabled-headline">Deploy</h1>
                       <p *ngIf="localLayout === 'OneColumnStartFullScreen'">Enable a deployment of your packaged code</p>
-                      <fd-info-label color="10" fdCozy label="Vision" title="Vision"></fd-info-label>
-
                     </div>
                   </div>
                 </div>
+                <fd-info-label color="10" fdCozy label="Vision" title="Vision"></fd-info-label>
               </div>
             </fd-card-content>
           </fd-card>
@@ -332,7 +332,6 @@
                           <div class="card-content-github-actions">
                             <h1 class="card-header"><strong>GitHub Actions</strong></h1>
                             <fd-info-label
-                              class="card-content-label"
                               color="7"
                               fdCozy
                               label="New"

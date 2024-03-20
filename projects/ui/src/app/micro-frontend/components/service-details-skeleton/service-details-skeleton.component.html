@@ -5,7 +5,22 @@
         <h1 class="header-text">
           <strong>{{ kindCategory[activeTile] }}</strong>
         </h1>
-        <div class="buttons-seperator">
+        <div class="buttons">
+          <button *ngIf="activeTile === kinds.GITHUB_ADVANCED_SECURITY" ariaLabel="Show Options"
+                  class="button-margin"
+                  fd-button
+                  fdType="transparent"
+                  glyph="overflow"
+          [fdMenuTrigger]="showOptionsMenu"></button>
+          <fd-menu #showOptionsMenu>
+            <li fd-menu-item>
+              <a fd-menu-interactive (click)="deleteGHAS()">
+                <fd-menu-addon position="before" glyph="delete"></fd-menu-addon>
+                <span fd-menu-title>Delete Step</span>
+              </a>
+            </li>
+          </fd-menu>
+          <div class="buttons-separator"></div>
           <button
             class="button-margin"
             fd-button
@@ -30,6 +45,7 @@
             (click)="closeDetails()"></button>
         </div>
       </div>
+
     </fd-card-content>
   </fd-card>
   <div *ngFor="let error of errors()">
