@@ -6,7 +6,6 @@ import { debounceTime, firstValueFrom, Observable } from 'rxjs'
 import { Kinds } from '@enums'
 import { Pipeline } from '@types'
 import { CumulusService } from '../../../services/cumulus.service'
-import { AuthorizationTestingModule } from '@dxp/ngx-core/authorization'
 import { AsyncPipe, NgIf } from '@angular/common'
 
 @Component({
@@ -14,16 +13,7 @@ import { AsyncPipe, NgIf } from '@angular/common'
   selector: 'static-security-check-details',
   templateUrl: './static-security-check-details.component.html',
   styleUrls: ['./static-security-check-details.component.css'],
-  imports: [
-    BusyIndicatorModule,
-    ButtonModule,
-    FacetModule,
-    LinkModule,
-    FormLabelModule,
-    AuthorizationTestingModule,
-    AsyncPipe,
-    NgIf,
-  ],
+  imports: [BusyIndicatorModule, ButtonModule, FacetModule, LinkModule, FormLabelModule, AsyncPipe, NgIf],
 })
 export class StaticSecurityCheckDetailsComponent implements OnInit {
   @Input() serviceDetails: GetGitHubAdvancedSecurityQuery['getGitHubAdvancedSecurity'] & {
