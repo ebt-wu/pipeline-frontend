@@ -1,2 +1,3 @@
 gcp-monitoring.yaml
 chart/templates/*.yaml
+projects/ui/src/generated/*.ts

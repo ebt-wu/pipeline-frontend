@@ -30,7 +30,8 @@
     "format:ui": "prettier --write ./projects/ui",
     "format:wc": "prettier --write ./projects/webcomponent",
     "extract:ui": "ng xi18n --output-path=projects/ui/src/locale",
-    "codegen": "graphql-codegen -r ts-node/register --config codegen.ts"
+    "codegen": "graphql-codegen -r ts-node/register --config codegen.ts",
+    "prepare": "husky || true"
   },
   "dependencies": {
     "@angular/animations": "^16.2.2",
@@ -89,14 +90,26 @@
     "eslint-plugin-jest": "27.9.0",
     "eslint-plugin-prettier": "^5.0.1",
     "eslint-plugin-unused-imports": "^3.0.0",
+    "husky": "^9.0.11",
     "jest": "29.7.0",
     "jest-mock-extended": "3.0.5",
     "jest-preset-angular": "13.1.6",
+    "lint-staged": "^15.2.2",
     "ngx-build-plus": "^17.0.0",
     "openid-client": "^5.5.0",
     "prettier": "3.2.5",
     "ts-node": "^10.9.1",
     "typescript": "5.1.x"
+  },
+  "lint-staged": {
+    "*.ts": [
+      "prettier --write",
+      "eslint --cache --fix"
+    ],
+    "*.html": [
+      "prettier --write",
+      "eslint --cache --fix"
+    ]
   },
   "packageManager": "yarn@4.1.1"
 }
