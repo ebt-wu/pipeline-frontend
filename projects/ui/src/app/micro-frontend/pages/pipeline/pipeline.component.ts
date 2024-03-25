@@ -33,6 +33,7 @@ import { ExtensionClass } from '../../services/extension.types'
 import { FeatureFlagService } from '../../services/feature-flag.service'
 import { GithubMetadata } from '../../services/github.service'
 import { SharedDataService } from '../../services/shared-data.service'
+import { AuthorizationModule } from '@dxp/ngx-core/authorization'
 import { ResourceStagePipe } from '../../pipes/resource-stage.pipe'
 import { SetupServiceListItemComponent } from '../../components/setup-service-list-item/setup-service-list-item.component'
 
@@ -64,8 +65,9 @@ type Error = {
     ServiceDetailsSkeletonComponent,
     ServiceListItemComponent,
     UpgradeBannerComponent,
+    AuthorizationModule,
     ResourceStagePipe,
-    SetupServiceListItemComponent,
+    SetupServiceListItemComponent
   ],
 })
 export class PipelineComponent implements OnInit, OnDestroy {

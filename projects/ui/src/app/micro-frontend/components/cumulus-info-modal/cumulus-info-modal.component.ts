@@ -10,6 +10,7 @@ import { SecretService } from '../../services/secret.service'
 import { CumulusPipeline, PipelineType } from '@generated/graphql'
 import { DxpLuigiContextService, LuigiClient } from '@dxp/ngx-core/luigi'
 import { PlatformButtonModule } from '@fundamental-ngx/platform'
+import { AuthorizationModule } from '@dxp/ngx-core/authorization'
 
 @Component({
   selector: 'app-cumulus-info-modal',
@@ -17,7 +18,7 @@ import { PlatformButtonModule } from '@fundamental-ngx/platform'
   styleUrls: ['./cumulus-info-modal.component.css'],
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [NgIf, FundamentalNgxCoreModule, PlatformButtonModule],
+  imports: [NgIf, FundamentalNgxCoreModule, PlatformButtonModule, AuthorizationModule],
 })
 export class CumulusInfoModalComponent implements OnInit {
   watch$: Observable<Pipeline>

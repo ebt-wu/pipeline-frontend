@@ -40,28 +40,30 @@
     <br />
   </div>
   {{ serviceDetails.profileName }}
-  <div class="flex-box top-margin">
-    <h3>Staging Service Credentials</h3>
-    <button
-      class="left-margin"
-      role="button"
-      fdType="transparent"
-      glyph="hint"
-      fd-button
-      placement="top"
-      [fd-inline-help]="credentialsHelp"
-      [triggers]="['click']"
-      [closeOnOutsideClick]="true"></button>
-    <br />
+  <div *dxpRequiredPolicies="['projectAdmin', 'projectMember']; operator: 'or'">
+    <div class="flex-box top-margin">
+      <h3>Staging Service Credentials</h3>
+      <button
+        class="left-margin"
+        role="button"
+        fdType="transparent"
+        glyph="hint"
+        fd-button
+        placement="top"
+        [fd-inline-help]="credentialsHelp"
+        [triggers]="['click']"
+        [closeOnOutsideClick]="true"></button>
+      <br />
+    </div>
+    <div>
+      <b>Vault Path</b>
+    </div>
+    <fd-busy-indicator [loading]="pendingShowInVault()" size="s">
+      <a fd-link [disabled]="pendingShowInVault()" (click)="showInVault(serviceDetails.secretPath)">
+        {{ serviceDetails.secretPath }}
+      </a>
+    </fd-busy-indicator>
   </div>
-  <div>
-    <b>Vault Path</b>
-  </div>
-  <fd-busy-indicator [loading]="pendingShowInVault()" size="s">
-    <a fd-link [disabled]="pendingShowInVault()" (click)="showInVault(serviceDetails.secretPath)">
-      {{ serviceDetails.secretPath }}
-    </a>
-  </fd-busy-indicator>
 </div>
 
 <ng-template #instanceHelp>

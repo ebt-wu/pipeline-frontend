@@ -1,7 +1,5 @@
 <ul fd-list [byline]="true" [noBorder]="true">
-  <li
-    fd-list-item
-    class="list-item-border">
+  <li fd-list-item class="list-item-border">
     <a fd-list-link>
       <span fd-list-thumbnail></span>
       <div class="service">
@@ -9,11 +7,14 @@
           <strong>{{ serviceName }}</strong>
           <fd-icon *ngIf="infoPopoverText" class="icon" glyph="hint" [fd-inline-help]="infoPopoverText"></fd-icon>
         </div>
-        <!-- TODO: add the readonly check back in when the backend can deliver the dxp data again-->
-<!--        <div *dxpRequiredPolicies="['projectAdmin', 'projectMember']; operator: 'or'">-->
-          <button (click)="openDialog($event, setupDialogType)" *ngIf="setupDialogType" ariaLabel="Add" fd-button
-                  label="Add"></button>
-<!--        </div>-->
+        <div *dxpRequiredPolicies="['projectAdmin', 'projectMember']; operator: 'or'">
+          <button
+            (click)="openDialog($event, setupDialogType)"
+            *ngIf="setupDialogType"
+            ariaLabel="Add"
+            fd-button
+            label="Add"></button>
+        </div>
         <fd-info-label *ngIf="labelText" color="10" font="SAP-icons-TNT" [label]="labelText"></fd-info-label>
       </div>
     </a>

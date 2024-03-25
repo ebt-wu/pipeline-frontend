@@ -41,6 +41,7 @@
           </code>
         </div>
         <div class="spacer"></div>
+        <div *dxpRequiredPolicies="['projectAdmin', 'projectMember']; operator: 'or'">
         <button
           *ngIf="
             localLayout === 'OneColumnStartFullScreen' &&
@@ -53,6 +54,7 @@
           ariaLabel="Retry"
           class="retry-button"
           (click)="retryService($event, resourceRef)"></button>
+        </div>
         <div class="details-icon">
           <fd-icon *ngIf="resourceRef.status === serviceStatus.CREATED" glyph="slim-arrow-right" class="icon"></fd-icon>
         </div>

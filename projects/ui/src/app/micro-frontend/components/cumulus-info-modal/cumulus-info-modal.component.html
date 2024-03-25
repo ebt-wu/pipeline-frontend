@@ -53,7 +53,7 @@
       </div>
       <div class="separator"></div>
 
-
+      <div *dxpRequiredPolicies="['projectAdmin', 'projectMember']; operator: 'or'">
       <span class="section-heading">Complete the setup</span>
       <p class="remove-top-margin">Set up a fully compliant build pipeline with Cumulus to store its results</p>
       <button (click)="openPipelineUi()" class="button-margin" fd-button fdType="emphasized"
@@ -72,11 +72,10 @@
           fd-button
           fdType="transparent"
           label="Learn More"
-          role="button">
-        </button>
+          role="button"></button>
       </div>
     </div>
-
+    </div>
   </div>
 </fd-dialog-body>
 
@@ -95,9 +94,10 @@
 
 <ng-template #pipelineKeyPopover>
   <div>
-    Use this key to <a class="link" href="https://wiki.one.int.sap/wiki/x/iK5Yh" rel="noopener noreferrer"
-                       target="_blank">
-    add your pipeline to Sirius</a>
+    Use this key to
+    <a class="link" href="https://wiki.one.int.sap/wiki/x/iK5Yh" rel="noopener noreferrer" target="_blank">
+      add your pipeline to Sirius
+    </a>
     <br />
     to view its compliance results
   </div>

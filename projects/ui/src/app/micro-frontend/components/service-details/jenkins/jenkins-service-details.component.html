@@ -32,14 +32,16 @@
       [closeOnOutsideClick]="true"></button>
     <br />
   </div>
-  <div>
-    <b>Vault Path</b>
+  <div *dxpRequiredPolicies="['projectAdmin', 'projectMember']; operator: 'or'">
+    <div>
+      <b>Vault Path</b>
+    </div>
+    <fd-busy-indicator [loading]="pendingShowInVault()" size="s">
+      <a fd-link [disabled]="pendingShowInVault()" (click)="showInVault(serviceDetails.secretPath)">
+        {{ serviceDetails.secretPath }}
+      </a>
+    </fd-busy-indicator>
   </div>
-  <fd-busy-indicator [loading]="pendingShowInVault()" size="s">
-    <a fd-link [disabled]="pendingShowInVault()" (click)="showInVault(serviceDetails.secretPath)">
-      {{ serviceDetails.secretPath }}
-    </a>
-  </fd-busy-indicator>
 </div>
 
 <ng-template #credentialsHelp>

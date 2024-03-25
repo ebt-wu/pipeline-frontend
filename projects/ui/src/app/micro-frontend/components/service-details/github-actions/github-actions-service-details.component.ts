@@ -5,12 +5,13 @@ import { SecretService } from '../../../../micro-frontend/services/secret.servic
 import { GetGithubActionsCrossNamespaceQuery } from '@generated/graphql'
 import { ErrorMessageComponent } from '../../error-message/error-message.component'
 import { DxpLuigiContextService, LuigiClient } from '@dxp/ngx-core/luigi'
+import { AuthorizationModule } from '@dxp/ngx-core/authorization'
 
 @Component({
   selector: 'github-actions-service-details',
   templateUrl: 'github-actions-service-details.component.html',
   standalone: true,
-  imports: [CommonModule, FundamentalNgxCoreModule, ErrorMessageComponent],
+  imports: [CommonModule, FundamentalNgxCoreModule, ErrorMessageComponent, AuthorizationModule],
   styleUrls: ['github-actions-service-details.component.css'],
 })
 export class GithubActionsServiceDetailsComponent implements OnInit {

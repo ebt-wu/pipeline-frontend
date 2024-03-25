@@ -3,12 +3,13 @@ import { Component, Input, signal } from '@angular/core'
 import { FundamentalNgxCoreModule } from '@fundamental-ngx/core'
 import { SecretService } from '../../../../micro-frontend/services/secret.service'
 import { GetCumulusPipelineQuery } from '@generated/graphql'
+import { AuthorizationModule } from '@dxp/ngx-core/authorization'
 
 @Component({
   standalone: true,
   selector: 'cumulus-service-details',
   templateUrl: 'cumulus-service-details.component.html',
-  imports: [CommonModule, FundamentalNgxCoreModule],
+  imports: [CommonModule, FundamentalNgxCoreModule, AuthorizationModule],
   styleUrls: ['cumulus-service-details.component.css'],
 })
 export class CumlusServiceDetailsComponent {
