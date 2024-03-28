@@ -6,6 +6,7 @@ type FeatureFlags = {
 }
 export const Flags = {
   GITHUB_ACTIONS_ENABLED: 'GITHUB_ACTIONS_ENABLED',
+  GHAS_ENABLED: 'GHAS_ENABLED',
 } as const
 
 export type FlagKeys = (typeof Flags)[keyof typeof Flags]
@@ -16,6 +17,10 @@ export class FeatureFlagService {
 
   isGithubActionsEnabled(projectId: string) {
     return this.getFlagValue(Flags.GITHUB_ACTIONS_ENABLED, projectId)
+  }
+
+  isGhasEnabled(projectId: string) {
+    return this.getFlagValue(Flags.GHAS_ENABLED, projectId)
   }
 
   private getFlagValue(flag: FlagKeys, projectId: string): boolean {

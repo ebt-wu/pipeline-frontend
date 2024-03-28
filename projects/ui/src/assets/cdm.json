@@ -24,7 +24,8 @@
               },
               "context": {
                 "featureFlags": {
-                  "GITHUB_ACTIONS_ENABLED": true
+                  "GITHUB_ACTIONS_ENABLED": true,
+                  "GHAS_ENABLED": true
                 }
               },
               "children": [

@@ -129,63 +129,91 @@
                   [loading]="true"
                   ariaLabel="loading"
                   label="Pending Deletion"></fd-busy-indicator>
-                <span *ngIf="isBuildStageSetup()"
-                      fd-object-status
-                      glyph="status-completed"
-                      [label]="localLayout ==='TwoColumnsMidExpanded' ? '': 'setup compliant'"
-                      status="positive"></span>
+                <span
+                  *ngIf="isBuildStageSetup()"
+                  fd-object-status
+                  glyph="status-completed"
+                  [label]="localLayout === 'TwoColumnsMidExpanded' ? '' : 'setup compliant'"
+                  status="positive"></span>
               </div>
               <ng-container *ngIf="isBuildStageOpen()">
-                <div *ngFor="let resourceRef of (pipeline.resourceRefs | resourceStage: stages.BUILD)">
-                      <app-service-list-item
-                        (openDetailsEvent)="openDetails($event)"
-                        [activeTile]="activeTile"
-                        [localLayout]="localLayout"
-                        [resourceRef]="resourceRef"></app-service-list-item>
+                <div *ngFor="let resourceRef of pipeline.resourceRefs | resourceStage: stages.BUILD">
+                  <app-service-list-item
+                    (openDetailsEvent)="openDetails($event)"
+                    [activeTile]="activeTile"
+                    [localLayout]="localLayout"
+                    [resourceRef]="resourceRef"></app-service-list-item>
                 </div>
               </ng-container>
             </fd-card-content>
           </fd-card>
-          <fd-card cardType="linkList" class="stage-card">
+          <!-- TODO: remove feature flag for GHAS when GHAS is live -->
+          <fd-card cardType="linkList" class="stage-card" *ngIf="showGHAS()">
             <fd-card-content class="card-content-padding">
               <div (click)="openValidationStage()" class="card-content stage-headline-padding">
                 <div class="icons">
-                  <fd-icon
-                    *ngIf="!isValidationStageOpen() "
-                    class="icon"
-                    glyph="slim-arrow-right"></fd-icon>
+                  <fd-icon *ngIf="!isValidationStageOpen()" class="icon" glyph="slim-arrow-right"></fd-icon>
                   <fd-icon *ngIf="isValidationStageOpen()" class="icon" glyph="slim-arrow-down"></fd-icon>
                   <fd-avatar [colorAccent]="10" glyph="shield" size="xs"></fd-avatar>
                 </div>
                 <div class="card-description">
                   <div class="card-description-stage-headline">
                     <h1>Validate Code</h1>
-                    <p *ngIf="localLayout === 'OneColumnStartFullScreen'">Add checks to evaluate the compliance of your code</p>
+                    <p *ngIf="localLayout === 'OneColumnStartFullScreen'">
+                      Add checks to evaluate the compliance of your code
+                    </p>
                   </div>
                 </div>
               </div>
               <ng-container *ngIf="isValidationStageOpen()">
-                <div *ngFor="let resourceRef of (pipeline.resourceRefs | resourceStage: stages.VALIDATE)">
+                <div *ngFor="let resourceRef of pipeline.resourceRefs | resourceStage: stages.VALIDATE">
                   <app-service-list-item
                     (openDetailsEvent)="openDetails($event)"
                     [activeTile]="activeTile"
                     [localLayout]="localLayout"
-                    [resourceRef]="resourceRef">
-                  </app-service-list-item>
+                    [resourceRef]="resourceRef"></app-service-list-item>
                 </div>
                 <!--If there is are no pipeline refs for the items we use dummy items to allow them to be set up-->
                 <div *ngIf="!isStaticSecurityChecksSetup()">
-                  <app-setup-service-list-item [setupDialogType]="categories.STATIC_SECURITY_CHECKS"
-                                               infoPopoverText="Configure Static Security tools like GitHub Advanced Security and CxOne"
-                                               serviceName="Static Security Checks"></app-setup-service-list-item>
+                  <app-setup-service-list-item
+                    [setupDialogType]="categories.STATIC_SECURITY_CHECKS"
+                    infoPopoverText="Configure Static Security tools like GitHub Advanced Security and CxOne"
+                    serviceName="Static Security Checks"></app-setup-service-list-item>
                 </div>
                 <div *ngIf="!isStaticCodeChecksSetup()">
-                  <app-setup-service-list-item serviceName="Static Code Checks" infoPopoverText="Configure Static Code Check tools like SonarQube" labelText="coming soon"></app-setup-service-list-item>
+                  <app-setup-service-list-item
+                    serviceName="Static Code Checks"
+                    infoPopoverText="Configure Static Code Check tools like SonarQube"
+                    labelText="coming soon"></app-setup-service-list-item>
                 </div>
                 <div *ngIf="!isOpenSourceChecksSetup()">
-                  <app-setup-service-list-item serviceName="Open Source Checks" infoPopoverText="Configure the new Open Source Compliance Service" labelText="coming soon"></app-setup-service-list-item>
+                  <app-setup-service-list-item
+                    serviceName="Open Source Checks"
+                    infoPopoverText="Configure the new Open Source Compliance Service"
+                    labelText="coming soon"></app-setup-service-list-item>
                 </div>
               </ng-container>
+            </fd-card-content>
+          </fd-card>
+          <fd-card cardType="linkList" class="stage-card disabled" *ngIf="!showGHAS()">
+            <fd-card-content>
+              <div class="coming-soon-stage">
+                <div class="card-content stage-headline-padding">
+                  <div class="icons">
+                    <div class="placeholder"></div>
+                    <fd-avatar [colorAccent]="10" glyph="shield" size="xs"></fd-avatar>
+                  </div>
+                  <div class="card-description">
+                    <div class="card-description-stage-headline">
+                      <h1 class="disabled-headline">Validate Code</h1>
+                      <p *ngIf="localLayout === 'OneColumnStartFullScreen'">
+                        Add checks to evaluate the compliance of your code
+                      </p>
+                    </div>
+                  </div>
+                </div>
+                <fd-info-label color="10" fdCozy label="Coming soon" title="Coming soon"></fd-info-label>
+              </div>
             </fd-card-content>
           </fd-card>
           <fd-card cardType="linkList" class="stage-card disabled">
@@ -199,7 +227,9 @@
                   <div class="card-description">
                     <div class="card-description-stage-headline">
                       <h1 class="disabled-headline">Deploy</h1>
-                      <p *ngIf="localLayout === 'OneColumnStartFullScreen'">Enable a deployment of your packaged code</p>
+                      <p *ngIf="localLayout === 'OneColumnStartFullScreen'">
+                        Enable a deployment of your packaged code
+                      </p>
                     </div>
                   </div>
                 </div>
@@ -328,11 +358,7 @@
                         <div class="card-description">
                           <div class="card-content-github-actions">
                             <h1 class="card-header"><strong>GitHub Actions</strong></h1>
-                            <fd-info-label
-                              color="7"
-                              fdCozy
-                              label="New"
-                              title="New"></fd-info-label>
+                            <fd-info-label color="7" fdCozy label="New" title="New"></fd-info-label>
                           </div>
                           <div class="card-content-github-actions">
                             <fd-info-label color="10" fdCozy label="Orchestration" title="Orchestrator"></fd-info-label>

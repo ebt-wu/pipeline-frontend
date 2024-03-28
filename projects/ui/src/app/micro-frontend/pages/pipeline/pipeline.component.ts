@@ -89,11 +89,14 @@ export class PipelineComponent implements OnInit, OnDestroy {
   pendingOpenPipeline = signal(false)
   pendingShowCredentials = signal(false)
   pendingExtensionClass = signal(false)
-  showGithubActions = signal(false)
   catalogUrl = signal('')
   errors = signal<Error[]>([])
   extensionClasses = signal<ExtensionClass[]>([])
   openPRCount = signal(0)
+
+  // Feature flags
+  showGithubActions = signal(false)
+  showGHAS = signal(false)
 
   localLayout: FlexibleColumnLayout = 'OneColumnStartFullScreen'
   activeTile: string = ''
@@ -133,7 +136,10 @@ export class PipelineComponent implements OnInit, OnDestroy {
     this.githubMetadata = await this.api.githubService.getGithubMetadata()
 
     const context = await this.luigiService.getContextAsync()
+
+    // Only show GHA and GHAS if their feature flags are toggled on
     this.showGithubActions.set(this.featureFlagService.isGithubActionsEnabled(context.projectId))
+    this.showGHAS.set(this.featureFlagService.isGhasEnabled(context.projectId))
 
     this.catalogUrl.set(context.frameBaseUrl + '/catalog')
     this.projectId = context.projectId
@@ -242,7 +248,7 @@ export class PipelineComponent implements OnInit, OnDestroy {
       duration: 5000,
     })
   }
-
+  // eslint-disable
   async getOpenPRCount(): Promise<number> {
     const token = await firstValueFrom(
       this.luigiService.contextObservable().pipe(
