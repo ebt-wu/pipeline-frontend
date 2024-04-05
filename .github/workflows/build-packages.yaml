@@ -19,13 +19,25 @@ jobs:
       build_command: 'yarn build:ui'
       test_command: 'yarn test:ui:cov'
 
-  updateStack:
+  updateStackDev:
     needs: [buildPackages]
     if: ${{ github.ref == 'refs/heads/main' }}
     uses: dxp/.github/.github/workflows/update-stack.yaml@main
     with:
       stackRepo: hyperspace/ci-cd-setup-stack
       stackRepoBranch: dev
+      componentVersionKey: pipelineFrontend
+      version: ${{ needs.buildPackages.outputs.version }}
+    secrets:
+      GH_ACCESS_TOKEN: ${{ secrets.GH_HYPERSPACE_USER_TOKEN }}
+
+  updateStackInt:
+    needs: [buildPackages]
+    if: ${{ github.ref == 'refs/heads/main' }}
+    uses: dxp/.github/.github/workflows/update-stack.yaml@main
+    with:
+      stackRepo: hyperspace/ci-cd-setup-stack
+      stackRepoBranch: int
       componentVersionKey: pipelineFrontend
       version: ${{ needs.buildPackages.outputs.version }}
     secrets:
