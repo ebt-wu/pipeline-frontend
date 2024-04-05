@@ -61,7 +61,7 @@ export class CumulusInfoModalComponent implements OnInit {
   }
 
   openDocumentation() {
-    window.open('https://wiki.one.int.sap/wiki/x/3z5mh', '_blank')
+    window.open('https://pages.github.tools.sap/hyperspace/cicd-setup-documentation/how-tos/store-compliance-artifacts.html#using-cumulus-to-store-pipeline-compliance-results', '_blank')
   }
 
   openPipelineUi() {
