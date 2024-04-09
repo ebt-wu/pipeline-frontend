@@ -40,6 +40,7 @@ export class SetupServiceListItemComponent {
   @Input() setupDialogType?: Categories
   @Input() labelText?: string
   @Input() infoPopoverText?: string
+  @Input() isSetupButtonDisabled?: boolean = false
 
   constructor(private readonly luigiClient: LuigiClient) {}
 

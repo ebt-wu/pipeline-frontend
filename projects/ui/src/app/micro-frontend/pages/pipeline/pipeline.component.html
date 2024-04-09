@@ -177,6 +177,7 @@
                 <div *ngIf="!isStaticSecurityChecksSetup()">
                   <app-setup-service-list-item
                     [setupDialogType]="categories.STATIC_SECURITY_CHECKS"
+                    [isSetupButtonDisabled]="!isBuildStageSetup()"
                     infoPopoverText="Configure Static Security tools like GitHub Advanced Security and CxOne"
                     serviceName="Static Security Checks"></app-setup-service-list-item>
                 </div>
@@ -252,8 +253,7 @@
               <fd-card
                 *ngIf="gha.isAlreadyManaged || isGithubActionsEnabledInSameComponent(); else notEnabled"
                 cardType="linkList"
-                class="stage-card"
-                class="github-actions-enabled-card">
+                class="stage-card github-actions-enabled-card">
                 <fd-card-content class="card-content-padding">
                   <ul [byline]="true" [noBorder]="true" fd-list>
                     <li

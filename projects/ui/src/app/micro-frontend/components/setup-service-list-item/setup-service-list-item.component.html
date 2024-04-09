@@ -10,7 +10,15 @@
         <div *dxpRequiredPolicies="['projectAdmin', 'projectMember']; operator: 'or'">
           <button
             (click)="openDialog($event, setupDialogType)"
-            *ngIf="setupDialogType"
+            *ngIf="setupDialogType && !isSetupButtonDisabled"
+            ariaLabel="Add"
+            fd-button
+            label="Add"></button>
+          <button
+            (click)="openDialog($event, setupDialogType)"
+            *ngIf="setupDialogType && isSetupButtonDisabled"
+            [aria-disabled]="isSetupButtonDisabled"
+            [fd-inline-help]="'The build stage needs to be set up before this step can be configured.'"
             ariaLabel="Add"
             fd-button
             label="Add"></button>
