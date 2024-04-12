@@ -296,7 +296,7 @@ export class SetupComponent implements OnInit, OnDestroy {
       placeholder: 'Select Credential',
       default: async () => {
         const secrets = await lastValueFrom(this.secretService.getPipelineSecrets())
-        return secrets.filter((value) => value.path.includes('jenkins'))?.[0].path ?? null
+        return secrets.filter((value) => value.path?.includes('jenkins'))?.[0]?.path ?? null
       },
       choices: async () => {
         const secrets = await lastValueFrom(this.secretService.getPipelineSecrets())

@@ -6,7 +6,7 @@ on:
     paths:
       - '.github/workflows/build-wc.yaml'
       - 'projects/webcomponent/**'
-      - 'yarn.lock'
+      - 'package-lock.json'
       - 'package.json'
 
 jobs:
@@ -15,8 +15,11 @@ jobs:
     secrets: inherit
     with:
       artifact: pipeline-frontend-wc
-      build_command: 'yarn build:wc'
-      test_command: 'yarn test:wc:cov'
+      package_manager: 'npm'
+      hyperspace_project: 'PIPELINE-GROUP-2044'
+      build_command: 'npm run build:wc'
+      test_command: 'npm run test:wc:cov'
+      node-versions: '[ "20.x" ]'
       release_prefix: wc-
       lint: false
 

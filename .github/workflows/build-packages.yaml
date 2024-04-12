@@ -6,7 +6,7 @@ on:
     paths:
       - '.github/workflows/build-packages.yaml'
       - 'projects/ui/**'
-      - 'yarn.lock'
+      - 'package-lock.json'
       - 'package.json'
 
 jobs:
@@ -16,8 +16,11 @@ jobs:
     with:
       artifact: pipeline-frontend
       lint: false
-      build_command: 'yarn build:ui'
-      test_command: 'yarn test:ui:cov'
+      package_manager: "npm"
+      hyperspace_project: "PIPELINE-GROUP-2044"
+      build_command: 'npm run build:ui'
+      test_command: 'npm run test:ui:cov'
+      node-versions: '[ "20.x" ]'
 
   updateStackDev:
     needs: [buildPackages]
