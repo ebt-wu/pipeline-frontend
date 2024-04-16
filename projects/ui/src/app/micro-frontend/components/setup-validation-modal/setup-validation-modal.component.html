@@ -5,12 +5,11 @@
       [message]="errorMessage()"
       (onDismiss)="dismissErrorMessage()"
       *ngIf="errorMessage()"></error-message>
-    </div>
+  </div>
   <div class="setup-validation-margin">
     <div>
       <div class="validation-language-content">
         <div class="headline">Select your programming language</div>
-
         <fd-select [formControl]="languageSelection" class="select-box" style="margin-bottom: 40px">
           <li fd-option *ngFor="let language of selectionOptions()" [value]="language">
             <span *ngIf="recommendedLanguage().id === language.id">
@@ -27,6 +26,7 @@
           class="recommendation-item">
           <img src="./assets/ghas-logo.svg" alt="GitHub Logo" />
           GitHub Advanced Security
+          <button fd-button fdType="transparent" glyph="hint" (click)="onButtonLearnMore()"></button>
         </div>
         <div *ngIf="languageSelection.getRawValue()?.validationTool === validationTools.CX" class="recommendation-item">
           <img alt="CxOne Logo" src="./assets/cx-one-logo.svg" />
@@ -34,10 +34,17 @@
         </div>
 
         <div *ngIf="!languageSelection.getRawValue()?.validationTool">
-          <div class="headline">
-            Select a Service
+          <div class="flexbox">
+            <div class="service-headline">Select a Service</div>
+            <div>
+              <a
+                fd-link
+                href="https://github.wdf.sap.corp/pages/Security-Testing/doc/security%20testing/tools/"
+                target="_blank">
+                Show Service Info
+              </a>
+            </div>
           </div>
-
           <fieldset fd-fieldset>
             <fd-form-group>
               <div *ngFor="let validationTool of validationToolsArray" fd-form-item>
@@ -65,8 +72,7 @@
               <figcaption fd-illustrated-message-figcaption id="tent-description">
                 <h3 fd-illustrated-message-title>CxOne is not yet available</h3>
                 <p fd-illustrated-message-text>
-                  We are working on providing this service in the future. In the meantime, you can install CxOne
-                  manually.
+                  We are working on providing this service in the future. In the meantime, you can add CxOne manually.
                 </p>
               </figcaption>
               <fd-illustrated-message-actions>
@@ -75,51 +81,45 @@
                   fdCompact
                   fdType="ghost"
                   (click)="onButtonClickInstallManually()"
-                  label="Install Manually"></button>
-                <button
-                  fd-button
-                  fdCompact
-                  fdType="transparent"
-                  (click)="onButtonClickShowRoadmap()"
-                  label="Show Roadmap"></button>
+                  label="Add Manually"></button>
               </fd-illustrated-message-actions>
             </figure>
           </div>
         </div>
-
-        <div class="documentation-button">
-          <button
-            fd-button
-            glyph="question-mark"
-            (click)="onButtonLearnMore()"
-            fdType="transparent"
-            ariaLabel="Learn More"
-            label="Learn More"
-            role="button"></button>
-        </div>
+      </div>
+    </div>
+  </div>
+  <div
+    *ngIf="
+      languageSelection.getRawValue()?.validationTool === validationTools.GHAS ||
+      toolSelection.getRawValue() === validationTools.GHAS
+    ">
+    <div>
+      <div *ngIf="!githubResourceExists()">
+        <div class="credential-headline">Add your GitHub credentials</div>
+        <fdp-message-popover-form-wrapper [forms]="formGenerator?.formGroup" [formFields]="formGenerator?.formFields">
+          <fdp-form-generator [formItems]="ghCredentialForm"></fdp-form-generator>
+        </fdp-message-popover-form-wrapper>
       </div>
     </div>
   </div>
   <div fd-bar barDesign="footer" class="actions-footer">
     <div fd-bar-left></div>
     <div fd-bar-right class="footer-buttons-gap">
-      <fdp-button
-        buttonType="emphasized"
+      <button
+        (click)="submit()"
+        fd-button
         *ngIf="
           languageSelection.getRawValue()?.validationTool !== validationTools.CX &&
           toolSelection.getRawValue() !== validationTools.CX
         "
-        [disabled]="!languageSelection.value"
+        [disabled]="!languageSelection.value || !formGenerator?.formGroup?.form?.valid"
         label="Add"
-        (click)="submit()"></fdp-button>
-      <fdp-button buttonType="transparent" label="Cancel" (click)="cancel()"></fdp-button>
+        fdType="emphasized"></button>
+      <button (click)="cancel()" fd-button fdType="transparent" label="Cancel"></button>
     </div>
   </div>
 </div>
 <div *ngIf="loading" class="loading-indicator">
   <fd-busy-indicator [loading]="true" ariaLabel="loading" title="Please Wait"></fd-busy-indicator>
 </div>
-
-<ng-template #cumulusPopover>
-  <div>Popover with links per tool</div>
-</ng-template>

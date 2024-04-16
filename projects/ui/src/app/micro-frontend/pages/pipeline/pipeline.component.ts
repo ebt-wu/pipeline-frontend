@@ -67,7 +67,7 @@ type Error = {
     UpgradeBannerComponent,
     AuthorizationModule,
     ResourceStagePipe,
-    SetupServiceListItemComponent
+    SetupServiceListItemComponent,
   ],
 })
 export class PipelineComponent implements OnInit, OnDestroy {
@@ -212,6 +212,8 @@ export class PipelineComponent implements OnInit, OnDestroy {
         ) {
           this.isStaticSecurityChecksSetup.set(true)
           this.isValidationStageOpen.set(true)
+        } else {
+          this.isStaticSecurityChecksSetup.set(false)
         }
 
         if (isRequiredKindMissingInBuildStage || isOrchestratorMissingInBuildStage) {

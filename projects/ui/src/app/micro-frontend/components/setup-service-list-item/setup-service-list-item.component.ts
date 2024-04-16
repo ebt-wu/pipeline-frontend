@@ -51,7 +51,7 @@ export class SetupServiceListItemComponent {
         this.luigiClient
           .linkManager()
           .fromVirtualTreeRoot()
-          .openAsModal('setup-validation', { title: 'Add Static Security Checks', width: '420px', height: '670px' })
+          .openAsModal('setup-validation', { title: 'Add Static Security Checks', width: '600px', height: '780px' })
         break
     }
   }

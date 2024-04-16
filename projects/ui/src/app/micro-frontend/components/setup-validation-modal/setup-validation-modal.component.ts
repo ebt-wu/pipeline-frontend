@@ -1,18 +1,26 @@
 import { CommonModule, NgFor } from '@angular/common'
-import { ChangeDetectionStrategy, Component, OnDestroy, OnInit, signal } from '@angular/core'
+import { ChangeDetectionStrategy, Component, OnDestroy, OnInit, signal, ViewChild } from '@angular/core'
 import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms'
 import { ValidationLanguages } from '@constants'
 import { DxpLuigiContextService, LuigiClient } from '@dxp/ngx-core/luigi'
-import { Kinds, ValidationTools } from '@enums'
+import { CredentialTypes, Kinds, ValidationTools } from '@enums'
 import { FormattedTextModule, FormModule, FundamentalNgxCoreModule, RadioModule } from '@fundamental-ngx/core'
-import { FundamentalNgxPlatformModule, PlatformMessagePopoverModule } from '@fundamental-ngx/platform'
-import { Orchestrators } from '@generated/graphql'
-import { Pipeline, ResourceRef, ValidationLanguage } from '@types'
+import {
+  DynamicFormItem,
+  FormGeneratorComponent,
+  FormGeneratorService,
+  FundamentalNgxPlatformModule,
+  PlatformMessagePopoverModule,
+} from '@fundamental-ngx/platform'
+import { BuildTool, Orchestrators } from '@generated/graphql'
+import { ghTokenFormValue, Pipeline, ResourceRef, ValidationLanguage } from '@types'
 import { debounceTime, firstValueFrom, Observable, Subscription } from 'rxjs'
 import { ErrorMessageComponent } from '../error-message/error-message.component'
 import { GithubAdvancedSecurityService } from '../../services/github-advanced-security.service'
-import { GithubService } from '../../services/github.service'
+import { GithubService, REQUIRED_SCOPES } from '../../services/github.service'
 import { PipelineService } from '../../services/pipeline.service'
+import { PlatformFormGeneratorCustomInfoBoxComponent } from '../form-generator-info-box/form-generator-info-box.component'
+import { SecretData, SecretService } from '../../services/secret.service'
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -35,13 +43,7 @@ import { PipelineService } from '../../services/pipeline.service'
   ],
 })
 export class SetupValidationModalComponent implements OnInit, OnDestroy {
-  constructor(
-    private readonly githubService: GithubService,
-    private readonly pipelineService: PipelineService,
-    private readonly githubAdvancedSecurityService: GithubAdvancedSecurityService,
-    private readonly luigiService: DxpLuigiContextService,
-    private luigiClient: LuigiClient,
-  ) {}
+  githubResourceExists = signal(false)
 
   validationTools = ValidationTools
   validationToolsArray = Object.keys(ValidationTools)
@@ -54,6 +56,20 @@ export class SetupValidationModalComponent implements OnInit, OnDestroy {
 
   languageSelection = new FormControl(null as ValidationLanguage)
   toolSelection = new FormControl(null)
+  @ViewChild(FormGeneratorComponent) formGenerator: FormGeneratorComponent
+  ghCredentialForm: DynamicFormItem[] = [...this.githubService.GITHUB_CREDENTIAL_FORM]
+
+  constructor(
+    private readonly githubService: GithubService,
+    private readonly pipelineService: PipelineService,
+    private readonly githubAdvancedSecurityService: GithubAdvancedSecurityService,
+    private readonly luigiService: DxpLuigiContextService,
+    private readonly secretService: SecretService,
+    private readonly _formGeneratorService: FormGeneratorService,
+    private luigiClient: LuigiClient,
+  ) {
+    this._formGeneratorService.addComponent(PlatformFormGeneratorCustomInfoBoxComponent, ['info'])
+  }
 
   async ngOnInit() {
     await this.recommendLanguage()
@@ -61,8 +77,12 @@ export class SetupValidationModalComponent implements OnInit, OnDestroy {
     this.languageSelectionFormChange = this.languageSelection.valueChanges.subscribe(() => {
       this.toolSelection.reset()
     })
-
     this.watch$ = this.pipelineService.watchPipeline().pipe(debounceTime(50))
+
+    const refs = (await firstValueFrom(this.watch$)).resourceRefs
+    if (refs.find((ref) => ref.kind === Kinds.GITHUB_REPOSITORY)) {
+      this.githubResourceExists.set(true)
+    }
   }
 
   ngOnDestroy() {
@@ -118,16 +138,34 @@ export class SetupValidationModalComponent implements OnInit, OnDestroy {
   }
 
   async submit() {
+    let assumedBuildTool: BuildTool
     const metadata = await this.getMetadata()
     this.loading = true
 
+    if (!this.githubResourceExists()) {
+      const formVal = this.formGenerator.formGroup.form.value.ungrouped as ghTokenFormValue
+      await this.createGithubResource(formVal)
+    }
+
+    // set assumedbuildtool depending on what the user selected as a language
+    switch (this.languageSelection.value.id) {
+      case 'java':
+        assumedBuildTool = BuildTool.Maven
+        break
+      case 'python':
+        assumedBuildTool = BuildTool.Python
+        break
+      default:
+        assumedBuildTool = null
+    }
     await firstValueFrom(
-      this.githubAdvancedSecurityService.createGithubAdvancedSecurity(
-        metadata.githubInstance,
-        metadata.githubOrganization,
-        metadata.githubRepository,
-        metadata.codeScanJobOrchestrator,
-      ),
+      this.githubAdvancedSecurityService.createGithubAdvancedSecurity({
+        githubInstance: metadata.githubInstance,
+        githubOrganization: metadata.githubOrganization,
+        githubRepository: metadata.githubRepository,
+        codeScanJobOrchestrator: metadata.codeScanJobOrchestrator,
+        buildTool: assumedBuildTool,
+      }),
     )
       .then(() => {
         this.loading = false
@@ -151,8 +189,75 @@ export class SetupValidationModalComponent implements OnInit, OnDestroy {
     window.open('https://github.wdf.sap.corp/pages/Security-Testing/doc/security%20testing/tools/', '_blank')
   }
 
-  onButtonClickShowRoadmap() {
-    // FIXME: link to the roadmap
-    window.open('https://google.com/', '_blank')
+  async createGithubResource(value: ghTokenFormValue): Promise<void> {
+    const context = (await this.luigiService.getContextAsync()) as any
+
+    const repoUrl: string = context.entityContext?.component?.annotations?.['github.dxp.sap.com/repo-url'] ?? ''
+    const login: string = context.entityContext?.component?.annotations?.['github.dxp.sap.com/login'] ?? ''
+    const repoName: string = context.entityContext?.component?.annotations?.['github.dxp.sap.com/repo-name'] ?? ''
+    const credentialType = value.githubCredentialType
+    const givenToken = value.githubToken
+
+    console.log(`submitted, ${repoUrl}, ${login}, ${repoName}`)
+    console.log(`form values: ${credentialType}, ${givenToken}`)
+
+    const githubRepoUrl = new URL(repoUrl)
+
+    try {
+      let githubSecretPath: string
+
+      if (value.githubCredentialType === CredentialTypes.NEW) {
+        const { githubInstance } = await this.githubService.getGithubMetadata()
+        const userQueryResp = await fetch(`${githubInstance}/api/v3/user`, {
+          headers: {
+            Authorization: `Bearer ${value.githubToken}`,
+          },
+        })
+        const user = (await userQueryResp.json())?.login
+        const secretData: SecretData[] = [
+          { key: 'username', value: user },
+          { key: 'scopes', value: REQUIRED_SCOPES.join(',') },
+          { key: 'access_token', value: value.githubToken },
+        ]
+        githubSecretPath = await this.storeCredential(
+          // replace the dots in the hostname with dashes to avoid issues with vault path
+          `${githubRepoUrl.hostname.replace(/\./g, '-')}`,
+          secretData,
+          user,
+        )
+        await firstValueFrom(this.secretService.writeSecret(githubSecretPath, secretData))
+      } else if (value.githubCredentialType === CredentialTypes.EXISTING) {
+        githubSecretPath = this.getCredentialPath(value.githubSelectCredential, context.componentId)
+      }
+
+      if (!repoUrl || !login || !repoName) {
+        throw new Error('Could not get GitHub repository details from frame context')
+      }
+
+      const repositoryResource = await firstValueFrom(
+        this.githubService.createGithubRepository(githubRepoUrl.origin, login, repoName, githubSecretPath, false),
+      )
+
+      console.log('created repository resource:', repositoryResource)
+    } catch (e) {
+      if (e.message) {
+        this.errorMessage.set(e.message)
+      } else {
+        this.errorMessage.set('Unknown error')
+      }
+    }
+  }
+
+  private async storeCredential(credentialPrefix: string, secretData: SecretData[], userId: string): Promise<string> {
+    const path = `GROUP-SECRETS/${credentialPrefix}-${userId}`
+    await firstValueFrom(this.secretService.writeSecret(path, secretData))
+    return path
+  }
+
+  private getCredentialPath(selectCredentialValue: string, componentId: string): string {
+    if (selectCredentialValue.includes('GROUP-SECRETS')) {
+      return selectCredentialValue
+    }
+    return `${componentId}/${selectCredentialValue}`
   }
 }

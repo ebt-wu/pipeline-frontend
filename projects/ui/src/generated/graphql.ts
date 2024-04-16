@@ -45,6 +45,7 @@ export enum DeletionPolicy {
 }
 
 export type GitHubAdvancedSecurityCreatePayload = {
+  buildTool?: InputMaybe<BuildTool>;
   codeScanJobOrchestrator?: InputMaybe<Orchestrators>;
   githubInstance: Scalars['String']['input'];
   githubOrganization: Scalars['String']['input'];
@@ -643,6 +644,7 @@ export type CreateGitHubAdvancedSecurityMutationVariables = Exact<{
   githubOrganization: Scalars['String']['input'];
   githubRepository: Scalars['String']['input'];
   codeScanJobOrchestrator?: InputMaybe<Orchestrators>;
+  buildTool?: InputMaybe<BuildTool>;
 }>;
 
 

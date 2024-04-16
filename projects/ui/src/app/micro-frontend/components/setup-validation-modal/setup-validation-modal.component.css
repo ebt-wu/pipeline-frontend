@@ -9,6 +9,29 @@
   margin-bottom: 16px;
 }
 
+.service-headline {
+  font-size: 18px;
+  font-style: normal;
+  font-weight: 700;
+}
+
+.flexbox {
+  display: flex;
+  align-items: baseline;
+  gap: 16px;
+  margin-bottom: 16px;
+}
+
+.credential-headline {
+  font-family: var(--sapFontFamily);
+  color: var(--sapField_TextColor);
+  font-size: 18px;
+  font-style: normal;
+  font-weight: 700;
+  margin-left: 16px;
+  padding-top: 16px;
+}
+
 .select-box {
   width: 30rem;
 }
@@ -25,7 +48,7 @@
   margin-bottom: 16px;
 }
 .separator {
-  width: 380px;
+  width: 560px;
   height: 1px;
   background: #d9d9d9;
 }
@@ -50,13 +73,6 @@
   position: fixed;
   bottom: 0;
   width: 100%;
-}
-
-.documentation-button {
-  position: absolute;
-  bottom: 32px;
-  left: 16px;
-  margin-bottom: 24px;
 }
 
 .loading-indicator {

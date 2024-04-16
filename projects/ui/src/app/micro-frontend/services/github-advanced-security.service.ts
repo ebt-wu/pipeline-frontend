@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core'
 import { combineLatest, Observable } from 'rxjs'
 import { first, map, mergeMap } from 'rxjs/operators'
 import {
+  BuildTool,
   CreateGitHubAdvancedSecurityMutation,
   CreateGitHubAdvancedSecurityMutationVariables,
   DeleteGitHubAdvancedSecurityMutation,
@@ -28,12 +29,19 @@ export class GithubAdvancedSecurityService {
     private readonly luigiService: DxpLuigiContextService,
   ) {}
 
-  createGithubAdvancedSecurity(
-    githubInstance: string,
-    githubOrganization: string,
-    githubRepository: string,
-    codeScanJobOrchestrator?: Orchestrators,
-  ): Observable<string> {
+  createGithubAdvancedSecurity({
+    githubInstance,
+    githubOrganization,
+    githubRepository,
+    codeScanJobOrchestrator,
+    buildTool,
+  }: {
+    githubInstance: string
+    githubOrganization: string
+    githubRepository: string
+    codeScanJobOrchestrator?: Orchestrators
+    buildTool?: BuildTool
+  }): Observable<string> {
     return combineLatest([this.apiService.apollo(), this.luigiService.contextObservable()]).pipe(
       first(),
       mergeMap(([client, ctx]) => {
@@ -47,6 +55,7 @@ export class GithubAdvancedSecurityService {
               githubOrganization,
               githubRepository,
               codeScanJobOrchestrator,
+              buildTool,
             },
           })
           .pipe(map((res) => res.data?.createGitHubAdvancedSecurity ?? ''))

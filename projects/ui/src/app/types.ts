@@ -1,6 +1,12 @@
 import { BuildTool, PipelineType } from '../generated/graphql'
 import { CredentialTypes, Kinds, Orchestrators, ServiceStatus, ValidationTools } from './enums'
 
+export type ghTokenFormValue = {
+  githubToken?: string
+  githubCredentialType?: CredentialTypes
+  githubSelectCredential?: string
+}
+
 export type SetupBuildFormValue = {
   buildTool?: BuildTool
   buildToolHeader?: string

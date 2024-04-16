@@ -311,6 +311,7 @@ export const CREATE_GITHUB_ADVANCED_SECURITY = gql`
     $githubOrganization: String!
     $githubRepository: String!
     $codeScanJobOrchestrator: Orchestrators
+    $buildTool: BuildTool
   ) {
     createGitHubAdvancedSecurity(
       projectId: $projectId
@@ -320,6 +321,7 @@ export const CREATE_GITHUB_ADVANCED_SECURITY = gql`
         githubOrganization: $githubOrganization
         githubRepository: $githubRepository
         codeScanJobOrchestrator: $codeScanJobOrchestrator
+        buildTool: $buildTool
       }
     )
   }
