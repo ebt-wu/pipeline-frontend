@@ -81,3 +81,14 @@
   justify-content: center;
   height: 100vh;
 }
+
+.code {
+  font-family: 'Courier New', monospace;
+  white-space: nowrap;
+  display: inline;
+}
+
+.message-strip-container {
+  margin-left: 16px;
+  margin-right: 16px;
+}
