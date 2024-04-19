@@ -231,6 +231,8 @@ export class PipelineComponent implements OnInit, OnDestroy {
         }
 
         this.isBuildPipelineSetup.set(true)
+        // if build setup is completed, the validation section should be open as per UX
+        this.isValidationStageOpen.set(true)
 
         await this.getPipelineURL(pipeline)
         this.openPRCount.set(await this.getOpenPRCount())

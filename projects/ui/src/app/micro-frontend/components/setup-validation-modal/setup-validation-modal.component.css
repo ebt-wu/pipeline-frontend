@@ -1,5 +1,5 @@
 .setup-validation-margin {
-  margin: 1rem;
+  margin: 1rem 1rem 0 1rem;
 }
 
 .headline {
@@ -22,13 +22,16 @@
   margin-bottom: 16px;
 }
 
+.select-a-service-box {
+  margin-bottom: 16px;
+}
+
 .credential-headline {
   font-family: var(--sapFontFamily);
   color: var(--sapField_TextColor);
   font-size: 18px;
   font-style: normal;
   font-weight: 700;
-  margin-left: 16px;
   padding-top: 16px;
 }
 
@@ -89,6 +92,5 @@
 }
 
 .message-strip-container {
-  margin-left: 16px;
-  margin-right: 16px;
+  margin: 16px 16px 0 0;
 }
