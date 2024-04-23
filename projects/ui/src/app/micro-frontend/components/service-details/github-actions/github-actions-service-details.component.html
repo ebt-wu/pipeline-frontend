@@ -1,9 +1,9 @@
 <div>
-  <error-message
+  <app-error-message
     title="Opening Vault Failed"
     [message]="errorMessage()"
     (onDismiss)="dismissErrorMessage()"
-    *ngIf="errorMessage()"></error-message>
+    *ngIf="errorMessage()"></app-error-message>
   <div class="flex-box">
     <h3 class="bottom-margin">Enabled for GitHub Organization</h3>
     <button

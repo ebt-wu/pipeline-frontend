@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common'
-import { Component, EventEmitter, Input, OnInit, Output, signal } from '@angular/core'
+import { Component, EventEmitter, Input, OnInit, Output, signal, ChangeDetectionStrategy } from '@angular/core'
 import { DxpLuigiContextService } from '@dxp/ngx-core/luigi'
 import { FundamentalNgxCoreModule } from '@fundamental-ngx/core'
 import { GitHubIssueLabels, GitHubIssueLinkService } from '../../services/github-issue-link.service'
@@ -7,8 +7,9 @@ import { DebugModeService } from '../../services/debug-mode.service'
 import { AuthorizationModule } from '@dxp/ngx-core/authorization'
 
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: true,
-  selector: 'error-message',
+  selector: 'app-error-message',
   templateUrl: './error-message.component.html',
   styleUrls: ['./error-message.component.css'],
   imports: [CommonModule, FundamentalNgxCoreModule, AuthorizationModule],
@@ -29,7 +30,7 @@ export class ErrorMessageComponent implements OnInit {
 
   troubleshootURL = signal('')
 
-  @Output() onDismiss = new EventEmitter()
+  @Output() byDismiss = new EventEmitter()
 
   ngOnInit() {
     // check messages for error codes to link to troubleshooting instructions instead of offering the option to create a ticket
@@ -44,8 +45,8 @@ export class ErrorMessageComponent implements OnInit {
     }
   }
 
-  emitOnDismiss() {
-    this.onDismiss.emit()
+  emitByDismiss() {
+    this.byDismiss.emit()
   }
 
   async reportError() {
@@ -76,7 +77,7 @@ ${
     ? `**Automaticd namespace traces:** [\`${this.automaticdNamespace}\`](${this.tracesUrl})`
     : ''
 }
-**Timestamp:** ${new Date()}
+**Timestamp:** ${Date.now()}
 **User ID:** [\`${context.userid}\`](${githubUrl}/${context.userid})
     `,
       [GitHubIssueLabels.BUG, GitHubIssueLabels.EXTERNAL],

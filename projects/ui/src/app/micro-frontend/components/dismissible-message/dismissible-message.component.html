@@ -1,4 +1,4 @@
-<fd-message-strip [type]="type" (onDismiss)="emitOnDismiss()" *ngIf="displayMessage()" class="message-margin">
+<fd-message-strip [type]="type" (onDismiss)="emitByDismiss()" *ngIf="displayMessage()" class="message-margin">
   <div class="container">
     <div [innerHTML]="message"></div>
     <a

@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common'
-import { Component, Input, OnDestroy, OnInit, signal } from '@angular/core'
+import { Component, Input, OnDestroy, OnInit, signal, ChangeDetectionStrategy } from '@angular/core'
 import { RouterModule } from '@angular/router'
 import { DxpLuigiContextService, LuigiClient, LuigiDialogUtil } from '@dxp/ngx-core/luigi'
 import { Categories, DeletionPolicy, Kinds, ServiceStatus, Stages } from '@enums'
@@ -7,6 +7,7 @@ import {
   FlexibleColumnLayout,
   FundamentalNgxCoreModule,
   IconModule,
+  MessageBoxRef,
   MessageBoxService,
   MessageToastService,
 } from '@fundamental-ngx/core'
@@ -14,8 +15,8 @@ import { GithubActionsGetPayload } from '@generated/graphql'
 import { firstValueFrom, map, Observable, Subscription } from 'rxjs'
 import { KindExtensionName, KindName } from '@constants'
 import { Pipeline, ResourceRef } from '@types'
-import { DeleteBuildModal } from '../../components/delete-build-modal/delete-build-modal.component'
-import { DismissibleMessageComponent } from '../../components/dismissable-message/dismissible-message.component'
+import { DeleteBuildModalComponent } from '../../components/delete-build-modal/delete-build-modal.component'
+import { DismissibleMessageComponent } from '../../components/dismissible-message/dismissible-message.component'
 import { ErrorMessageComponent } from '../../components/error-message/error-message.component'
 import { ServiceDetailsSkeletonComponent } from '../../components/service-details-skeleton/service-details-skeleton.component'
 import { CumlusServiceDetailsComponent } from '../../components/service-details/cumulus/cumulus-service-details.component'
@@ -44,6 +45,7 @@ type Error = {
 }
 
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-pipeline',
   templateUrl: './pipeline.component.html',
   standalone: true,
@@ -60,7 +62,7 @@ type Error = {
     JenkinServiceDetailsComponent,
     PiperServiceDetailsComponent,
     StagingServiceServiceDetailsComponent,
-    DeleteBuildModal,
+    DeleteBuildModalComponent,
     GithubActionsServiceDetailsComponent,
     ServiceDetailsSkeletonComponent,
     ServiceListItemComponent,
@@ -149,7 +151,7 @@ export class PipelineComponent implements OnInit, OnDestroy {
       this.githubMetadata.githubOrgName,
     )
 
-    this.pipelineSubscription = this.pipeline$.subscribe(async (pipeline) => {
+    this.pipelineSubscription = this.pipeline$.subscribe((pipeline: Pipeline) => {
       // error reporting
       this.errors.set([])
       this.openPRCount.set(0)
@@ -233,9 +235,10 @@ export class PipelineComponent implements OnInit, OnDestroy {
         this.isBuildPipelineSetup.set(true)
         // if build setup is completed, the validation section should be open as per UX
         this.isValidationStageOpen.set(true)
-
-        await this.getPipelineURL(pipeline)
-        this.openPRCount.set(await this.getOpenPRCount())
+        ;async () => {
+          await this.getPipelineURL(pipeline)
+          this.openPRCount.set(await this.getOpenPRCount())
+        }
       }
     })
   }
@@ -245,9 +248,9 @@ export class PipelineComponent implements OnInit, OnDestroy {
     this.githubActionsSubscription.unsubscribe()
   }
 
-  getKubeCtlCmd(freestylePipelineName: string, namespace: string) {
+  async getKubeCtlCmd(freestylePipelineName: string, namespace: string) {
     const cb = navigator.clipboard
-    cb.writeText(`kubectl describe freestylepipelines ${freestylePipelineName} -n ${namespace}`)
+    await cb.writeText(`kubectl describe freestylepipelines ${freestylePipelineName} -n ${namespace}`)
     this.messageToastService.open('kubectl describe command copied to clipboard', {
       duration: 5000,
     })
@@ -283,16 +286,12 @@ export class PipelineComponent implements OnInit, OnDestroy {
       },
     })
 
-    const pulls = (await pullsResp.json()) as any[]
+    const pulls = (await pullsResp.json()) as { head: { ref: string } }[]
     return pulls.reduce((prev, curr) => {
-      if (
-        curr.head?.ref === 'hyperspace-jenkinsfile' ||
-        curr.head?.ref === 'piper-onboarding' ||
-        curr.head?.ref === 'hyperspace-github-actions'
-      ) {
+      const ref = curr.head?.ref
+      if (ref === 'hyperspace-jenkinsfile' || ref === 'piper-onboarding' || ref === 'hyperspace-github-actions') {
         return prev + 1
       }
-
       return prev
     }, 0)
   }
@@ -321,7 +320,7 @@ export class PipelineComponent implements OnInit, OnDestroy {
   }
 
   getExtensionClass(serviceName: string): ExtensionClass {
-    const extensionName = KindExtensionName[serviceName]
+    const extensionName = KindExtensionName[serviceName] as string
     return this.extensionClasses().find((extensionClass) => extensionClass.name == extensionName)
   }
 
@@ -389,11 +388,12 @@ export class PipelineComponent implements OnInit, OnDestroy {
       window.open(jenkinsPipeline.jobUrl, '_blank')
       this.pendingOpenPipeline.set(false)
     } catch (e) {
+      const errorMessage = (e as Error).message
       this.errors.update((errors) => {
         errors.push({
           title: `Open Pipeline failed`,
           resourceName: pipeline.name,
-          message: `${e.message}\nJenkins status: ${JSON.stringify(jenkinsStatus)}`,
+          message: `${errorMessage}\nJenkins status: ${JSON.stringify(jenkinsStatus)}`,
         })
         return errors
       })
@@ -410,7 +410,7 @@ export class PipelineComponent implements OnInit, OnDestroy {
       [Kinds.GITHUB_ACTIONS_WORKFLOW, Kinds.JENKINS_PIPELINE].includes(ref.kind),
     )?.kind
 
-    const mb = this.messageBoxService.open(DeleteBuildModal, {
+    const mb = this.messageBoxService.open(DeleteBuildModalComponent, {
       type: 'warning',
       width: '30rem',
       showSemanticIcon: true,
@@ -420,9 +420,9 @@ export class PipelineComponent implements OnInit, OnDestroy {
       },
     })
 
-    this.luigiDialogUtil.manageLuigiBackdrops(mb as any)
+    this.luigiDialogUtil.manageLuigiBackdrops(mb as MessageBoxRef<{ componentId: string; orchestratorKind: Kinds }>)
 
-    const action = await firstValueFrom(mb.afterClosed)
+    const action = (await firstValueFrom(mb.afterClosed)) as string
 
     if (action === 'cancel') {
       return
@@ -452,11 +452,12 @@ export class PipelineComponent implements OnInit, OnDestroy {
         await firstValueFrom(this.api.jenkinsService.deleteJenkinsPipeline(jenkinsRef.name, jenkinsDeletionPolicy))
       }
     } catch (e) {
+      const errorMessage = (e as Error).message
       this.errors.update((errors) => {
         errors.push({
           title: `Delete build stage failed`,
           resourceName: pipeline.name,
-          message: `${e.message}`,
+          message: `${errorMessage}`,
         })
         return errors
       })
@@ -469,11 +470,12 @@ export class PipelineComponent implements OnInit, OnDestroy {
       const vaultInfo = await firstValueFrom(this.api.secretService.ensureVaultOnboarding())
       window.open(vaultInfo.vaultUrl, '_blank')
     } catch (e) {
+      const errorMessage = (e as Error).message
       this.errors.update((errors) => {
         errors.push({
           title: `Show Credentials failed`,
           resourceName: undefined,
-          message: `${e.message}`,
+          message: `${errorMessage}`,
         })
         return errors
       })
@@ -482,8 +484,8 @@ export class PipelineComponent implements OnInit, OnDestroy {
     }
   }
 
-  async openDetails(event: ServiceData) {
-    if (event.status != ServiceStatus.CREATED) {
+  openDetails(event: ServiceData) {
+    if (event.status != ServiceStatus.CREATED.toString()) {
       return
     }
 
@@ -503,12 +505,12 @@ export class PipelineComponent implements OnInit, OnDestroy {
       this.localLayout = 'TwoColumnsMidExpanded'
     }
 
-    if (this.activeTile === event.kind) {
+    if (this.activeTile === event.kind.toString()) {
       this.localLayout =
         this.localLayout === 'OneColumnStartFullScreen' ? 'TwoColumnsMidExpanded' : 'OneColumnStartFullScreen'
     }
 
-    if (this.activeTile !== event.kind) {
+    if (this.activeTile !== event.kind.toString()) {
       this.localLayout = 'TwoColumnsMidExpanded'
     }
 

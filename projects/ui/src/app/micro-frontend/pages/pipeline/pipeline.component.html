@@ -55,21 +55,21 @@
             </div>
           </div>
           <div *ngFor="let error of errors()">
-            <error-message
+            <app-error-message
               [automaticdNamespace]="pipeline.namespace"
               [automaticdResourceName]="error.resourceName"
               [message]="error.message"
               [title]="error.title"
-              [tracesUrl]="debugModeService.getTracesURL(pipeline.namespace)"></error-message>
+              [tracesUrl]="debugModeService.getTracesURL(pipeline.namespace)"></app-error-message>
           </div>
-          <dismissible-message
+          <app-dismissible-message
             *ngIf="isBuildPipelineSetup()"
             [displayLink]="true"
             [href]="pipelineURL()"
             [showOnlyOnce]="true"
             linkText="See It in Action"
             message="YAY! Your build pipeline is set up."
-            type="success"></dismissible-message>
+            type="success"></app-dismissible-message>
           <fd-message-strip *ngIf="this.openPRCount()" class="pull-requests-message" type="warning">
             Merge {{ this.openPRCount() }} open pull requests.
             <a

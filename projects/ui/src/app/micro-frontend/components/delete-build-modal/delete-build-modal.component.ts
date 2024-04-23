@@ -1,17 +1,18 @@
 import { CommonModule } from '@angular/common'
-import { Component, signal } from '@angular/core'
+import { Component, signal, ChangeDetectionStrategy } from '@angular/core'
 import { FormsModule } from '@angular/forms'
 import { Kinds } from '@enums'
 import { FormModule, FundamentalNgxCoreModule, MessageBoxRef } from '@fundamental-ngx/core'
 
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: true,
-  selector: 'delete-build-modal',
-  templateUrl: 'delete-build-modal.component.html',
-  styleUrls: ['delete-build-modal.component.css'],
+  selector: 'app-delete-build-modal',
+  templateUrl: './delete-build-modal.component.html',
+  styleUrls: ['./delete-build-modal.component.css'],
   imports: [CommonModule, FundamentalNgxCoreModule, FormModule, FormsModule],
 })
-export class DeleteBuildModal {
+export class DeleteBuildModalComponent {
   typedComponentId = ''
   advancedSettingsOpen = signal(false)
   softDeleteServices = false

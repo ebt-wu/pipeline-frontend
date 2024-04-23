@@ -1,10 +1,10 @@
 <div *ngIf="!loading">
   <div class="setup-validation-margin">
-    <error-message
+    <app-error-message
       title="Setup validation could not be completed"
       [message]="errorMessage()"
       (onDismiss)="dismissErrorMessage()"
-      *ngIf="errorMessage()"></error-message>
+      *ngIf="errorMessage()"></app-error-message>
   </div>
   <div class="setup-validation-margin">
     <div>

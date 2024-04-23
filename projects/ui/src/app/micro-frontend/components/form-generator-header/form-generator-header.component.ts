@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common'
-import { Component, NO_ERRORS_SCHEMA } from '@angular/core'
+import { Component, NO_ERRORS_SCHEMA, ChangeDetectionStrategy } from '@angular/core'
 import {
   BaseDynamicFormGeneratorControl,
   dynamicFormFieldProvider,
@@ -8,7 +8,8 @@ import {
 import { ReactiveFormsModule } from '@angular/forms'
 
 @Component({
-  selector: 'fdp-form-generator-header',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  selector: 'app-fdp-form-generator-header',
   templateUrl: './form-generator-header.component.html',
   viewProviders: [dynamicFormFieldProvider, dynamicFormGroupChildProvider],
   standalone: true,

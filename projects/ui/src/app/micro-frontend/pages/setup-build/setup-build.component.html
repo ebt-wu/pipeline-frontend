@@ -1,10 +1,10 @@
 <div>
   <div class="setup-build-margin">
-    <error-message
+    <app-error-message
       title="Setup build could not be completed"
       [message]="errorMessage()"
       (onDismiss)="dismissErrorMessage()"
-      *ngIf="errorMessage()"></error-message>
+      *ngIf="errorMessage()"></app-error-message>
     <div class="busy-indicator" *ngIf="loading">
       <fd-busy-indicator [loading]="true" ariaLabel="loading" title="Please Wait"></fd-busy-indicator>
     </div>
