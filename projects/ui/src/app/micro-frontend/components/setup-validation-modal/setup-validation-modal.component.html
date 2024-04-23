@@ -3,7 +3,7 @@
     <app-error-message
       title="Setup validation could not be completed"
       [message]="errorMessage()"
-      (onDismiss)="dismissErrorMessage()"
+      (byDismiss)="dismissErrorMessage()"
       *ngIf="errorMessage()"></app-error-message>
   </div>
   <div class="setup-validation-margin">

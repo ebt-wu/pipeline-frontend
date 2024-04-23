@@ -2,7 +2,7 @@
   <app-error-message
     title="Opening Vault Failed"
     [message]="errorMessage()"
-    (onDismiss)="dismissErrorMessage()"
+    (byDismiss)="dismissErrorMessage()"
     *ngIf="errorMessage()"></app-error-message>
   <div class="flex-box">
     <h3 class="bottom-margin">Enabled for GitHub Organization</h3>

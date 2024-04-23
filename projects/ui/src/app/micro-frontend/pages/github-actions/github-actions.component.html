@@ -1,7 +1,7 @@
 <app-error-message
   title="Setup Actions could not be completed"
   [message]="errorMessage()"
-  (onDismiss)="dismissErrorMessage()"
+  (byDismiss)="dismissErrorMessage()"
   *ngIf="errorMessage()"></app-error-message>
 <div class="busy-indicator" *ngIf="loading">
   <fd-busy-indicator [loading]="true" ariaLabel="loading" title="Please Wait"></fd-busy-indicator>
