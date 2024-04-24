@@ -1,4 +1,4 @@
-<div *ngIf="!loading">
+<div *ngIf="!loading()">
   <div class="setup-validation-margin">
     <app-error-message
       title="Setup validation could not be completed"
@@ -26,25 +26,49 @@
           class="recommendation-item">
           <img src="./assets/ghas-logo.svg" alt="GitHub Logo" />
           GitHub Advanced Security
-          <button fd-button fdType="transparent" glyph="hint" (click)="onButtonLearnMore()"></button>
+          <fd-icon
+            class="info-icon"
+            glyph="hint"
+            [fd-inline-help]="learnMoreGHAS"
+            [triggers]="['click']"
+            [closeOnOutsideClick]="true"></fd-icon>
         </div>
+        <ng-template #learnMoreGHAS>
+          <a fd-link (click)="onButtonLearnMore(validationTools.GHAS)">Learn more</a>
+        </ng-template>
         <div *ngIf="languageSelection.getRawValue()?.validationTool === validationTools.CX" class="recommendation-item">
-          <img alt="CxOne Logo" src="./assets/cx-one-logo.svg" />
-          CxOne (coming soon)
+          <img alt="CxONE Logo" src="./assets/cx-one-logo.svg" />
+          CxONE (coming soon)
+          <fd-icon
+            class="info-icon"
+            glyph="hint"
+            [fd-inline-help]="learnMoreCxONE"
+            [triggers]="['click']"
+            [closeOnOutsideClick]="true"></fd-icon>
+          <ng-template #learnMoreCxONE>
+            <a fd-link (click)="onButtonLearnMore(validationTools.CX)">Learn more</a>
+          </ng-template>
         </div>
 
         <div *ngIf="!languageSelection.getRawValue()?.validationTool" class="select-a-service-box">
           <div class="flexbox">
             <div class="service-headline">Select a Service</div>
-            <div>
-              <a
-                fd-link
-                href="https://github.wdf.sap.corp/pages/Security-Testing/doc/security%20testing/tools/"
-                target="_blank">
-                Show Service Info
-              </a>
-            </div>
+            <fd-icon
+              glyph="hint"
+              class="info-icon"
+              placement="top"
+              [fd-inline-help]="showServiceInfo"
+              [triggers]="['click']"
+              [closeOnOutsideClick]="true"></fd-icon>
           </div>
+          <ng-template #showServiceInfo>
+            <a
+              fd-link
+              href="https://github.wdf.sap.corp/pages/Security-Testing/doc/security%20testing/tools/#sast-tools"
+              target="_blank">
+              See recommendations
+            </a>
+          </ng-template>
           <fieldset fd-fieldset>
             <fd-form-group>
               <div *ngFor="let validationTool of validationToolsArray" fd-form-item>
@@ -70,9 +94,9 @@
             <img alt="Illustration of a tent" src="./assets/tent.svg" />
             <figure [noSvg]="true" fd-illustrated-message type="spot">
               <figcaption fd-illustrated-message-figcaption id="tent-description">
-                <h3 fd-illustrated-message-title>CxOne is not yet available</h3>
+                <h3 fd-illustrated-message-title>CxONE is not yet available</h3>
                 <p fd-illustrated-message-text>
-                  We are working on providing this service in the future. In the meantime, you can add CxOne manually.
+                  We are working on providing this service in the future. In the meantime, you can add CxONE manually.
                 </p>
               </figcaption>
               <fd-illustrated-message-actions>
@@ -94,12 +118,19 @@
         toolSelection.getRawValue() === validationTools.GHAS
       ">
       <div>
-        <div class="separator"></div>
+        <div *ngIf="!githubResourceExists()" class="separator"></div>
         <div *ngIf="toolSelection.getRawValue() === validationTools.GHAS" class="message-strip-container">
           <fd-message-strip type="warning" [dismissible]="false">
             After adding GHAS, since we do not have the full information of your pipeline, the
             <div class="code">config.yml</div>
-            might have to be manually adjusted before merging the Pull Request we create for you.
+            might have to be manually adjusted before merging the pull request we create for you.
+            <a
+              fd-link
+              href="https://pages.github.tools.sap/hyperspace/cicd-setup-documentation/connected-tools/validate/ghas.html#enabling-github-advanced-security-without-a-build-pipeline"
+              target="_blank"
+              rel="noopener">
+              Learn more
+            </a>
           </fd-message-strip>
         </div>
         <div *ngIf="!githubResourceExists()">
@@ -129,10 +160,19 @@
         "
         label="Add"
         fdType="emphasized"></button>
-      <button (click)="cancel()" fd-button fdType="transparent" label="Cancel"></button>
+      <button
+        (click)="cancel()"
+        [label]="
+          languageSelection.getRawValue()?.validationTool !== validationTools.CX &&
+          toolSelection.getRawValue() !== validationTools.CX
+            ? 'Cancel'
+            : 'Close'
+        "
+        fd-button
+        fdType="transparent"></button>
     </div>
   </div>
 </div>
-<div *ngIf="loading" class="loading-indicator">
+<div *ngIf="loading()" class="loading-indicator">
   <fd-busy-indicator [loading]="true" ariaLabel="loading" title="Please Wait"></fd-busy-indicator>
 </div>

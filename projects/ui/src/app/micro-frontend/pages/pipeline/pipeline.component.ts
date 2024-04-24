@@ -37,6 +37,13 @@ import { SharedDataService } from '../../services/shared-data.service'
 import { AuthorizationModule } from '@dxp/ngx-core/authorization'
 import { ResourceStagePipe } from '../../pipes/resource-stage.pipe'
 import { SetupServiceListItemComponent } from '../../components/setup-service-list-item/setup-service-list-item.component'
+import {
+  DynamicPageComponent,
+  DynamicPageContentComponent,
+  DynamicPageGlobalActionsComponent,
+  DynamicPageHeaderComponent,
+  DynamicPageTitleComponent,
+} from '@fundamental-ngx/platform'
 
 type Error = {
   title: string
@@ -70,6 +77,11 @@ type Error = {
     AuthorizationModule,
     ResourceStagePipe,
     SetupServiceListItemComponent,
+    DynamicPageTitleComponent,
+    DynamicPageHeaderComponent,
+    DynamicPageComponent,
+    DynamicPageContentComponent,
+    DynamicPageGlobalActionsComponent,
   ],
 })
 export class PipelineComponent implements OnInit, OnDestroy {

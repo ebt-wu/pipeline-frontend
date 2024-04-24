@@ -11,7 +11,7 @@ export const KindName = {
   [Kinds.GITHUB_ACTION]: 'GitHub Actions',
   [Kinds.GITHUB_ACTIONS_WORKFLOW]: 'GitHub Actions',
   [Kinds.GITHUB_ADVANCED_SECURITY]: 'GitHub Advanced Security',
-  [Kinds.CX_ONE]: 'CxOne',
+  [Kinds.CX_ONE]: 'CxONE',
 }
 
 export const KindCategory = {

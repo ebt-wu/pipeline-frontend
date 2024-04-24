@@ -26,19 +26,21 @@
       <fdp-message-popover id="message-popover" [wrapper]="formGeneratorWrapper"></fdp-message-popover>
     </div>
     <div fd-bar-right class="footer-buttons-gap">
-      <fdp-button
+      <button
+        fd-button
         *ngIf="formCreated"
         (click)="submitForm()"
         [disabled]="loading"
         type="submit"
-        buttonType="emphasized"
-        label="Set up Build"></fdp-button>
-      <fdp-button
+        fdType="emphasized"
+        label="Set up Build"></button>
+      <button
+        fd-button
         *ngIf="formCreated"
-        buttonType="transparent"
+        fdType="transparent"
         [disabled]="loading"
         label="Cancel"
-        (click)="cancel()"></fdp-button>
+        (click)="cancel()"></button>
     </div>
   </div>
 </div>

@@ -1,403 +1,425 @@
 <div class="variable-overwrites">
-  <fd-flexible-column-layout [(layout)]="localLayout">
-    <ng-template #startColumn>
-      <div *ngIf="pipeline$ | async as pipeline; else skeleton" class="scrollable-container">
-        <div class="ci-cd-header">
-          <fd-card cardType="linkList">
-            <fd-card-content class="header">
-              <div class="header-content">
-                <h1 class="header-text"><strong>CI/CD Setup</strong></h1>
-                <div *ngIf="debugModeService.debugModeEnabled()" class="header-debug-mode">
-                  <span>Debug Mode</span>
-                  <i class="header-debug-text">disable with CTRL + D</i>
-                </div>
-                <div class="header-buttons">
-                  <fd-busy-indicator [loading]="pendingShowCredentials()" size="s">
-                    <button
-                      *dxpRequiredPolicies="['projectAdmin', 'projectMember']; operator: 'or'"
-                      (click)="showCredentials()"
-                      [disabled]="pendingShowCredentials()"
-                      ariaLabel="Show Credentials"
-                      fd-button
-                      fdType="transparent"
-                      glyph="key"
-                      label="Show Credentials"></button>
-                  </fd-busy-indicator>
-                </div>
+  <fdp-dynamic-page ariaLabel="CI/CD Setup">
+    <fdp-dynamic-page-title title="CI/CD Setup">
+      <fdp-dynamic-page-global-actions>
+        <fd-toolbar [clearBorder]="true" fdType="transparent">
+          <fd-busy-indicator [loading]="pendingShowCredentials()" size="s"></fd-busy-indicator>
+          <button
+            (click)="showCredentials()"
+            *dxpRequiredPolicies="['projectAdmin', 'projectMember']; operator: 'or'"
+            [disabled]="pendingShowCredentials()"
+            ariaLabel="Show Credentials"
+            fd-button
+            fdType="transparent"
+            glyph="key"
+            label="Show Credentials"></button>
+        </fd-toolbar>
+      </fdp-dynamic-page-global-actions>
+    </fdp-dynamic-page-title>
+    <fdp-dynamic-page-header
+      [collapsed]="false"
+      [collapsible]="false"
+      [pinnable]="false"
+      class="ci-cd-header"></fdp-dynamic-page-header>
+    <fdp-dynamic-page-content>
+      <fd-flexible-column-layout [(layout)]="localLayout">
+        <ng-template #startColumn>
+          <div *ngIf="pipeline$ | async as pipeline; else skeleton" class="scrollable-container">
+            <div class="header-content">
+              <div *ngIf="debugModeService.debugModeEnabled()" class="header-debug-mode">
+                <span>Debug Mode</span>
+                <i class="header-debug-text">disable with CTRL + D</i>
               </div>
-            </fd-card-content>
-          </fd-card>
-        </div>
-        <div class="pipeline-container">
-          <div class="pipeline-header">
-            <div *ngIf="debugModeService.debugModeEnabled()" class="freestyle-pipeline-info">
-              <button
-                (click)="openPipelineDebugModal($event)"
-                ariaLabel="Pipeline Details"
-                fd-button
-                fdType="transparent"
-                glyph="detail-view">
-                Details
-              </button>
-              <button
-                (click)="debugModeService.openTraces($event, pipeline.namespace)"
-                ariaLabel="Pipeline Traces"
-                fd-button
-                fdType="transparent"
-                glyph="kpi-corporate-performance">
-                Traces
-              </button>
-              <div (click)="getKubeCtlCmd(pipeline.name, pipeline.namespace)" class="freestyle-pipeline-details">
-                <code>FreestylePipeline: {{ pipeline.name }}</code>
-                <code class="namespace">Namespace: {{ pipeline.namespace }}</code>
-              </div>
-              <button (click)="openCumulusModal($event)" ariaLabel="Cumulus info" fd-button>Show Cumulus info</button>
             </div>
-          </div>
-          <div *ngFor="let error of errors()">
-            <app-error-message
-              [automaticdNamespace]="pipeline.namespace"
-              [automaticdResourceName]="error.resourceName"
-              [message]="error.message"
-              [title]="error.title"
-              [tracesUrl]="debugModeService.getTracesURL(pipeline.namespace)"></app-error-message>
-          </div>
-          <app-dismissible-message
-            *ngIf="isBuildPipelineSetup()"
-            [displayLink]="true"
-            [href]="pipelineURL()"
-            [showOnlyOnce]="true"
-            linkText="See It in Action"
-            message="YAY! Your build pipeline is set up."
-            type="success"></app-dismissible-message>
-          <fd-message-strip *ngIf="this.openPRCount()" class="pull-requests-message" type="warning">
-            Merge {{ this.openPRCount() }} open pull requests.
-            <a
-              *ngIf="this.githubMetadata.githubRepoUrl"
-              [href]="this.githubMetadata.githubRepoUrl + '/pulls'"
-              fd-link
-              target="_blank">
-              Open GitHub
-            </a>
-          </fd-message-strip>
-          <fd-card cardType="linkList" class="stage-card">
-            <fd-card-content class="card-content-padding">
-              <div (click)="openBuildStage()" class="card-content stage-headline-padding">
-                <div class="icons">
-                  <fd-icon
-                    *ngIf="!isBuildStageOpen() && isBuildStageSetup()"
-                    class="icon"
-                    glyph="slim-arrow-right"></fd-icon>
-                  <fd-icon *ngIf="isBuildStageOpen()" class="icon" glyph="slim-arrow-down"></fd-icon>
-                  <div *ngIf="!isBuildStageSetup()" class="placeholder"></div>
-                  <fd-avatar [colorAccent]="10" glyph="wrench" size="xs"></fd-avatar>
-                </div>
-                <div class="card-description">
-                  <div class="card-description-stage-headline">
-                    <h1>Build Pipeline</h1>
-                    <p *ngIf="localLayout === 'OneColumnStartFullScreen'">Build and package your code</p>
-                  </div>
-                </div>
-                <div class="spacer"></div>
-                <div *dxpRequiredPolicies="['projectAdmin', 'projectMember']; operator: 'or'">
+            <div class="pipeline-container">
+              <div class="pipeline-header">
+                <div *ngIf="debugModeService.debugModeEnabled()" class="freestyle-pipeline-info">
                   <button
-                    (click)="openSetupWizard($event)"
-                    *ngIf="!isBuildStageSetup()"
+                    (click)="openPipelineDebugModal($event)"
+                    ariaLabel="Pipeline Details"
                     fd-button
-                    fdType="emphasized"
-                    label="Set Up"></button>
+                    fdType="transparent"
+                    glyph="detail-view">
+                    Details
+                  </button>
                   <button
-                    (click)="deletePipeline($event, pipeline)"
-                    *ngIf="isBuildStageSetup() && !pendingDeletion()"
+                    (click)="debugModeService.openTraces($event, pipeline.namespace)"
+                    ariaLabel="Pipeline Traces"
                     fd-button
-                    glyph="delete"
-                    title="Delete"></button>
-                </div>
-                <fd-busy-indicator [loading]="pendingOpenPipeline()" size="s">
-                  <a
-                    (click)="$event.stopPropagation()"
-                    *ngIf="showOpenPipelineURL && pipelineURL()"
-                    [href]="pipelineURL()"
-                    [style.pointer-events]="showOpenPipelineURL && pipelineURL() ? '' : 'none'"
-                    fd-link
-                    target="_blank">
-                    Open Pipeline
-                  </a>
-                </fd-busy-indicator>
-                <fd-busy-indicator
-                  *ngIf="isBuildStageSetup() && pendingDeletion()"
-                  [loading]="true"
-                  ariaLabel="loading"
-                  label="Pending Deletion"></fd-busy-indicator>
-                <span
-                  *ngIf="isBuildStageSetup()"
-                  fd-object-status
-                  glyph="status-completed"
-                  [label]="localLayout === 'TwoColumnsMidExpanded' ? '' : 'setup compliant'"
-                  status="positive"></span>
-              </div>
-              <ng-container *ngIf="isBuildStageOpen()">
-                <div *ngFor="let resourceRef of pipeline.resourceRefs | resourceStage: stages.BUILD">
-                  <app-service-list-item
-                    (openDetailsEvent)="openDetails($event)"
-                    [activeTile]="activeTile"
-                    [localLayout]="localLayout"
-                    [resourceRef]="resourceRef"></app-service-list-item>
-                </div>
-              </ng-container>
-            </fd-card-content>
-          </fd-card>
-          <!-- TODO: remove feature flag for GHAS when GHAS is live -->
-          <fd-card cardType="linkList" class="stage-card" *ngIf="showGHAS()">
-            <fd-card-content class="card-content-padding">
-              <div (click)="openValidationStage()" class="card-content stage-headline-padding">
-                <div class="icons">
-                  <fd-icon *ngIf="!isValidationStageOpen()" class="icon" glyph="slim-arrow-right"></fd-icon>
-                  <fd-icon *ngIf="isValidationStageOpen()" class="icon" glyph="slim-arrow-down"></fd-icon>
-                  <fd-avatar [colorAccent]="10" glyph="shield" size="xs"></fd-avatar>
-                </div>
-                <div class="card-description">
-                  <div class="card-description-stage-headline">
-                    <h1>Validate Code</h1>
-                    <p *ngIf="localLayout === 'OneColumnStartFullScreen'">
-                      Add checks to evaluate the compliance of your code
-                    </p>
+                    fdType="transparent"
+                    glyph="kpi-corporate-performance">
+                    Traces
+                  </button>
+                  <div (click)="getKubeCtlCmd(pipeline.name, pipeline.namespace)" class="freestyle-pipeline-details">
+                    <code>FreestylePipeline: {{ pipeline.name }}</code>
+                    <code class="namespace">Namespace: {{ pipeline.namespace }}</code>
                   </div>
+                  <button (click)="openCumulusModal($event)" ariaLabel="Cumulus info" fd-button>
+                    Show Cumulus info
+                  </button>
                 </div>
               </div>
-              <ng-container *ngIf="isValidationStageOpen()">
-                <div *ngFor="let resourceRef of pipeline.resourceRefs | resourceStage: stages.VALIDATE">
-                  <app-service-list-item
-                    (openDetailsEvent)="openDetails($event)"
-                    [activeTile]="activeTile"
-                    [localLayout]="localLayout"
-                    [resourceRef]="resourceRef"></app-service-list-item>
-                </div>
-                <!--If there is are no pipeline refs for the items we use dummy items to allow them to be set up-->
-                <div *ngIf="!isStaticSecurityChecksSetup()">
-                  <app-setup-service-list-item
-                    [setupDialogType]="categories.STATIC_SECURITY_CHECKS"
-                    infoPopoverText="Configure Static Security tools like GitHub Advanced Security and CxOne"
-                    serviceName="Static Security Checks"></app-setup-service-list-item>
-                </div>
-                <div *ngIf="!isStaticCodeChecksSetup()">
-                  <app-setup-service-list-item
-                    serviceName="Static Code Checks"
-                    infoPopoverText="Configure Static Code Check tools like SonarQube"
-                    labelText="coming soon"></app-setup-service-list-item>
-                </div>
-                <div *ngIf="!isOpenSourceChecksSetup()">
-                  <app-setup-service-list-item
-                    serviceName="Open Source Checks"
-                    infoPopoverText="Configure the new Open Source Compliance Service"
-                    labelText="coming soon"></app-setup-service-list-item>
-                </div>
-              </ng-container>
-            </fd-card-content>
-          </fd-card>
-          <fd-card cardType="linkList" class="stage-card disabled" *ngIf="!showGHAS()">
-            <fd-card-content>
-              <div class="coming-soon-stage">
-                <div class="card-content stage-headline-padding">
-                  <div class="icons">
-                    <div class="placeholder"></div>
-                    <fd-avatar [colorAccent]="10" glyph="shield" size="xs"></fd-avatar>
-                  </div>
-                  <div class="card-description">
-                    <div class="card-description-stage-headline">
-                      <h1 class="disabled-headline">Validate Code</h1>
-                      <p *ngIf="localLayout === 'OneColumnStartFullScreen'">
-                        Add checks to evaluate the compliance of your code
-                      </p>
-                    </div>
-                  </div>
-                </div>
-                <fd-info-label color="10" fdCozy label="Coming soon" title="Coming soon"></fd-info-label>
+              <div *ngFor="let error of errors()">
+                <app-error-message
+                  [automaticdNamespace]="pipeline.namespace"
+                  [automaticdResourceName]="error.resourceName"
+                  [message]="error.message"
+                  [title]="error.title"
+                  [tracesUrl]="debugModeService.getTracesURL(pipeline.namespace)"></app-error-message>
               </div>
-            </fd-card-content>
-          </fd-card>
-          <fd-card cardType="linkList" class="stage-card disabled">
-            <fd-card-content>
-              <div class="coming-soon-stage">
-                <div class="card-content stage-headline-padding">
-                  <div class="icons">
-                    <div class="placeholder"></div>
-                    <fd-avatar [colorAccent]="10" glyph="shipping-status" size="xs"></fd-avatar>
-                  </div>
-                  <div class="card-description">
-                    <div class="card-description-stage-headline">
-                      <h1 class="disabled-headline">Deploy</h1>
-                      <p *ngIf="localLayout === 'OneColumnStartFullScreen'">
-                        Enable a deployment of your packaged code
-                      </p>
-                    </div>
-                  </div>
-                </div>
-                <fd-info-label color="10" fdCozy label="Vision" title="Vision"></fd-info-label>
-              </div>
-            </fd-card-content>
-          </fd-card>
-          <ng-container *ngIf="showGithubActions()">
-            <div class="automate-workflows-header">
-              <h3>Automate Workflows</h3>
-              <p>Execute different tasks beyond your Build, Validate, Deploy pipeline.</p>
-            </div>
-            <ng-container
-              *ngIf="!pendingExtensionClass() && isGithubActionsEnabledAlready$ | async as gha; else loadingContent">
-              <upgrade-banner
-                *ngIf="(isGithubActionsEnabledInSameComponent() || gha.isAlreadyManaged) && !isBuildStageSetup()"
-                [showBalloons]="localLayout === 'OneColumnStartFullScreen'"
-                class="upgrade-github-actions-banner"></upgrade-banner>
-              <!--the below card will be shown if the GitHub Actions is enabled -->
-              <fd-card
-                *ngIf="gha.isAlreadyManaged || isGithubActionsEnabledInSameComponent(); else notEnabled"
-                cardType="linkList"
-                class="stage-card github-actions-enabled-card">
+              <app-dismissible-message
+                *ngIf="isBuildPipelineSetup()"
+                [displayLink]="true"
+                [href]="pipelineURL()"
+                [showOnlyOnce]="true"
+                linkText="See It in Action"
+                message="YAY! Your build pipeline is set up."
+                type="success"></app-dismissible-message>
+              <fd-message-strip *ngIf="this.openPRCount()" class="pull-requests-message" type="warning">
+                Merge {{ this.openPRCount() }} open pull requests.
+                <a
+                  *ngIf="this.githubMetadata.githubRepoUrl"
+                  [href]="this.githubMetadata.githubRepoUrl + '/pulls'"
+                  fd-link
+                  target="_blank">
+                  Open GitHub
+                </a>
+              </fd-message-strip>
+              <fd-card cardType="linkList" class="stage-card">
                 <fd-card-content class="card-content-padding">
-                  <ul [byline]="true" [noBorder]="true" fd-list>
-                    <li
-                      (click)="
-                        openDetails({ name: '', kind: kinds.GITHUB_ACTION, status: 'Created', pipeline: pipeline })
-                      "
-                      [ngClass]="
-                        activeTile === kinds.GITHUB_ACTION && localLayout !== 'OneColumnStartFullScreen'
-                          ? 'list-item-selected'
-                          : ''
-                      "
-                      fd-list-item>
-                      <a fd-list-link>
-                        <span class="thumbnail-margin" fd-list-thumbnail>
-                          <ng-container *ngIf="isGithubActionsEnabledInSameComponent()">
-                            <ng-container *ngFor="let resourceRef of pipeline.resourceRefs">
-                              <ng-container *ngIf="resourceRef.kind === 'GithubAction'">
+                  <div (click)="openBuildStage()" class="card-content stage-headline-padding">
+                    <div class="icons">
+                      <fd-icon
+                        *ngIf="!isBuildStageOpen() && isBuildStageSetup()"
+                        class="icon"
+                        glyph="slim-arrow-right"></fd-icon>
+                      <fd-icon *ngIf="isBuildStageOpen()" class="icon" glyph="slim-arrow-down"></fd-icon>
+                      <div *ngIf="!isBuildStageSetup()" class="placeholder"></div>
+                      <fd-avatar [colorAccent]="10" glyph="wrench" size="xs"></fd-avatar>
+                    </div>
+                    <div class="card-description">
+                      <div class="card-description-stage-headline">
+                        <h1>Build Pipeline</h1>
+                        <p *ngIf="localLayout === 'OneColumnStartFullScreen'">Build and package your code</p>
+                      </div>
+                    </div>
+                    <div class="spacer"></div>
+                    <div *dxpRequiredPolicies="['projectAdmin', 'projectMember']; operator: 'or'">
+                      <button
+                        (click)="openSetupWizard($event)"
+                        *ngIf="!isBuildStageSetup()"
+                        fd-button
+                        fdType="emphasized"
+                        label="Set Up"></button>
+                      <button
+                        (click)="deletePipeline($event, pipeline)"
+                        *ngIf="isBuildStageSetup() && !pendingDeletion()"
+                        fd-button
+                        glyph="delete"
+                        title="Delete"></button>
+                    </div>
+                    <fd-busy-indicator [loading]="pendingOpenPipeline()" size="s">
+                      <a
+                        (click)="$event.stopPropagation()"
+                        *ngIf="showOpenPipelineURL && pipelineURL()"
+                        [href]="pipelineURL()"
+                        [style.pointer-events]="showOpenPipelineURL && pipelineURL() ? '' : 'none'"
+                        fd-link
+                        target="_blank">
+                        Open Pipeline
+                      </a>
+                    </fd-busy-indicator>
+                    <fd-busy-indicator
+                      *ngIf="isBuildStageSetup() && pendingDeletion()"
+                      [loading]="true"
+                      ariaLabel="loading"
+                      label="Pending Deletion"></fd-busy-indicator>
+                    <span
+                      *ngIf="isBuildStageSetup()"
+                      [label]="localLayout === 'TwoColumnsMidExpanded' ? '' : 'setup compliant'"
+                      fd-object-status
+                      glyph="status-completed"
+                      status="positive"></span>
+                  </div>
+                  <ng-container *ngIf="isBuildStageOpen()">
+                    <div *ngFor="let resourceRef of pipeline.resourceRefs | resourceStage: stages.BUILD">
+                      <app-service-list-item
+                        (openDetailsEvent)="openDetails($event)"
+                        [activeTile]="activeTile"
+                        [localLayout]="localLayout"
+                        [resourceRef]="resourceRef"></app-service-list-item>
+                    </div>
+                  </ng-container>
+                </fd-card-content>
+              </fd-card>
+              <!-- TODO: remove feature flag for GHAS when GHAS is live -->
+              <fd-card *ngIf="showGHAS()" cardType="linkList" class="stage-card">
+                <fd-card-content class="card-content-padding">
+                  <div (click)="openValidationStage()" class="card-content stage-headline-padding">
+                    <div class="icons">
+                      <fd-icon *ngIf="!isValidationStageOpen()" class="icon" glyph="slim-arrow-right"></fd-icon>
+                      <fd-icon *ngIf="isValidationStageOpen()" class="icon" glyph="slim-arrow-down"></fd-icon>
+                      <fd-avatar [colorAccent]="10" glyph="shield" size="xs"></fd-avatar>
+                    </div>
+                    <div class="card-description">
+                      <div class="card-description-stage-headline">
+                        <h1>Validate Code</h1>
+                        <p *ngIf="localLayout === 'OneColumnStartFullScreen'">
+                          Add checks to evaluate the compliance of your code
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                  <ng-container *ngIf="isValidationStageOpen()">
+                    <div *ngFor="let resourceRef of pipeline.resourceRefs | resourceStage: stages.VALIDATE">
+                      <app-service-list-item
+                        (openDetailsEvent)="openDetails($event)"
+                        [activeTile]="activeTile"
+                        [localLayout]="localLayout"
+                        [resourceRef]="resourceRef"></app-service-list-item>
+                    </div>
+                    <!--If there is are no pipeline refs for the items we use dummy items to allow them to be set up-->
+                    <div *ngIf="!isStaticSecurityChecksSetup()">
+                      <app-setup-service-list-item
+                        [setupDialogType]="categories.STATIC_SECURITY_CHECKS"
+                        infoPopoverText="Configure Static Security tools like GitHub Advanced Security and CxONE"
+                        serviceName="Static Security Checks"></app-setup-service-list-item>
+                    </div>
+                    <div *ngIf="!isStaticCodeChecksSetup()">
+                      <app-setup-service-list-item
+                        infoPopoverText="Configure Static Code Check tools like SonarQube"
+                        labelText="coming soon"
+                        serviceName="Static Code Checks"></app-setup-service-list-item>
+                    </div>
+                    <div *ngIf="!isOpenSourceChecksSetup()">
+                      <app-setup-service-list-item
+                        infoPopoverText="Configure the new Open Source Compliance Service"
+                        labelText="coming soon"
+                        serviceName="Open Source Checks"></app-setup-service-list-item>
+                    </div>
+                  </ng-container>
+                </fd-card-content>
+              </fd-card>
+              <fd-card *ngIf="!showGHAS()" cardType="linkList" class="stage-card disabled">
+                <fd-card-content>
+                  <div class="coming-soon-stage">
+                    <div class="card-content stage-headline-padding">
+                      <div class="icons">
+                        <div class="placeholder"></div>
+                        <fd-avatar [colorAccent]="10" glyph="shield" size="xs"></fd-avatar>
+                      </div>
+                      <div class="card-description">
+                        <div class="card-description-stage-headline">
+                          <h1 class="disabled-headline">Validate Code</h1>
+                          <p *ngIf="localLayout === 'OneColumnStartFullScreen'">
+                            Add checks to evaluate the compliance of your code
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                    <fd-info-label color="10" fdCozy label="Coming soon" title="Coming soon"></fd-info-label>
+                  </div>
+                </fd-card-content>
+              </fd-card>
+              <fd-card cardType="linkList" class="stage-card disabled">
+                <fd-card-content>
+                  <div class="coming-soon-stage">
+                    <div class="card-content stage-headline-padding">
+                      <div class="icons">
+                        <div class="placeholder"></div>
+                        <fd-avatar [colorAccent]="10" glyph="shipping-status" size="xs"></fd-avatar>
+                      </div>
+                      <div class="card-description">
+                        <div class="card-description-stage-headline">
+                          <h1 class="disabled-headline">Deploy</h1>
+                          <p *ngIf="localLayout === 'OneColumnStartFullScreen'">
+                            Enable a deployment of your packaged code
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                    <fd-info-label color="10" fdCozy label="Vision" title="Vision"></fd-info-label>
+                  </div>
+                </fd-card-content>
+              </fd-card>
+              <ng-container *ngIf="showGithubActions()">
+                <div class="automate-workflows-header">
+                  <h3>Automate Workflows</h3>
+                  <p>Execute different tasks beyond your Build, Validate, Deploy pipeline.</p>
+                </div>
+                <ng-container
+                  *ngIf="
+                    !pendingExtensionClass() && isGithubActionsEnabledAlready$ | async as gha;
+                    else loadingContent
+                  ">
+                  <upgrade-banner
+                    *ngIf="(isGithubActionsEnabledInSameComponent() || gha.isAlreadyManaged) && !isBuildStageSetup()"
+                    [showBalloons]="localLayout === 'OneColumnStartFullScreen'"
+                    class="upgrade-github-actions-banner"></upgrade-banner>
+                  <!--the below card will be shown if the GitHub Actions is enabled -->
+                  <fd-card
+                    *ngIf="gha.isAlreadyManaged || isGithubActionsEnabledInSameComponent(); else notEnabled"
+                    cardType="linkList"
+                    class="stage-card github-actions-enabled-card">
+                    <fd-card-content class="card-content-padding">
+                      <ul [byline]="true" [noBorder]="true" fd-list>
+                        <li
+                          (click)="
+                            openDetails({ name: '', kind: kinds.GITHUB_ACTION, status: 'Created', pipeline: pipeline })
+                          "
+                          [ngClass]="
+                            activeTile === kinds.GITHUB_ACTION && localLayout !== 'OneColumnStartFullScreen'
+                              ? 'list-item-selected'
+                              : ''
+                          "
+                          fd-list-item>
+                          <a fd-list-link>
+                            <span class="thumbnail-margin" fd-list-thumbnail>
+                              <ng-container *ngIf="isGithubActionsEnabledInSameComponent()">
+                                <ng-container *ngFor="let resourceRef of pipeline.resourceRefs">
+                                  <ng-container *ngIf="resourceRef.kind === 'GithubAction'">
+                                    <span
+                                      *ngIf="resourceRef.status === serviceStatus.CREATED"
+                                      class="status-icon"
+                                      fd-object-status
+                                      glyph="message-success"
+                                      status="positive"></span>
+                                    <fd-busy-indicator
+                                      *ngIf="
+                                        resourceRef.status === serviceStatus.PENDING_CREATION ||
+                                        resourceRef.status === serviceStatus.UN_KNOWN
+                                      "
+                                      [loading]="true"
+                                      ariaLabel="loading"
+                                      size="s"
+                                      title="Please Wait"></fd-busy-indicator>
+                                    <span
+                                      *ngIf="resourceRef.status === serviceStatus.FAILING_CREATION"
+                                      class="status-icon"
+                                      fd-object-status
+                                      glyph="message-error"
+                                      status="negative"></span>
+                                    <span
+                                      *ngIf="resourceRef.status === serviceStatus.NOT_FOUND"
+                                      class="status-icon"
+                                      fd-object-status
+                                      glyph="circle-task"></span>
+                                  </ng-container>
+                                </ng-container>
+                              </ng-container>
+                              <ng-container *ngIf="!isGithubActionsEnabledInSameComponent()">
                                 <span
-                                  *ngIf="resourceRef.status === serviceStatus.CREATED"
                                   class="status-icon"
                                   fd-object-status
                                   glyph="message-success"
                                   status="positive"></span>
-                                <fd-busy-indicator
-                                  *ngIf="
-                                    resourceRef.status === serviceStatus.PENDING_CREATION ||
-                                    resourceRef.status === serviceStatus.UN_KNOWN
-                                  "
-                                  [loading]="true"
-                                  ariaLabel="loading"
-                                  size="s"
-                                  title="Please Wait"></fd-busy-indicator>
-                                <span
-                                  *ngIf="resourceRef.status === serviceStatus.FAILING_CREATION"
-                                  class="status-icon"
-                                  fd-object-status
-                                  glyph="message-error"
-                                  status="negative"></span>
-                                <span
-                                  *ngIf="resourceRef.status === serviceStatus.NOT_FOUND"
-                                  class="status-icon"
-                                  fd-object-status
-                                  glyph="circle-task"></span>
                               </ng-container>
-                            </ng-container>
-                          </ng-container>
-                          <ng-container *ngIf="!isGithubActionsEnabledInSameComponent()">
-                            <span class="status-icon" fd-object-status glyph="message-success" status="positive"></span>
-                          </ng-container>
-                        </span>
-                        <div class="actions-enabled-card-content">
-                          <fd-avatar
-                            [colorAccent]="10"
-                            [label]="kindName[kinds.GITHUB_ACTION]"
-                            class="avatar-margin"
-                            image="{{ getIcon(kinds.GITHUB_ACTION) }}"
-                            size="s"></fd-avatar>
-                          <div class="name-kind">
-                            <b class="name">{{ kindName[kinds.GITHUB_ACTION] }}</b>
-                            <fd-info-label color="10" fdCozy label="Orchestration" title="Orchestrator"></fd-info-label>
-                          </div>
-                          <ng-container *ngIf="isGithubActionsEnabledInSameComponent()">
-                            <ng-container *ngFor="let resourceRef of pipeline.resourceRefs">
-                              <ng-container *ngIf="resourceRef.kind === 'GithubAction'">
-                                <ng-container
-                                  *ngIf="
-                                    resourceRef.status === serviceStatus.PENDING_CREATION ||
-                                    resourceRef.status === serviceStatus.UN_KNOWN
-                                  ">
-                                  <p class="pending-creation">
-                                    <i>
-                                      We are setting up GitHub Actions and runners for you.
-                                      <br />
-                                      This might take 3-5 minutes.
-                                    </i>
-                                  </p>
+                            </span>
+                            <div class="actions-enabled-card-content">
+                              <fd-avatar
+                                [colorAccent]="10"
+                                [label]="kindName[kinds.GITHUB_ACTION]"
+                                class="avatar-margin"
+                                image="{{ getIcon(kinds.GITHUB_ACTION) }}"
+                                size="s"></fd-avatar>
+                              <div class="name-kind">
+                                <b class="name">{{ kindName[kinds.GITHUB_ACTION] }}</b>
+                                <fd-info-label
+                                  color="10"
+                                  fdCozy
+                                  label="Orchestration"
+                                  title="Orchestrator"></fd-info-label>
+                              </div>
+                              <ng-container *ngIf="isGithubActionsEnabledInSameComponent()">
+                                <ng-container *ngFor="let resourceRef of pipeline.resourceRefs">
+                                  <ng-container *ngIf="resourceRef.kind === 'GithubAction'">
+                                    <ng-container
+                                      *ngIf="
+                                        resourceRef.status === serviceStatus.PENDING_CREATION ||
+                                        resourceRef.status === serviceStatus.UN_KNOWN
+                                      ">
+                                      <p class="pending-creation">
+                                        <i>
+                                          We are setting up GitHub Actions and runners for you.
+                                          <br />
+                                          This might take 3-5 minutes.
+                                        </i>
+                                      </p>
+                                    </ng-container>
+                                  </ng-container>
                                 </ng-container>
                               </ng-container>
-                            </ng-container>
-                          </ng-container>
-                          <div class="spacer"></div>
-                          <div>
-                            <fd-icon class="arrow-right" glyph="slim-arrow-right"></fd-icon>
+                              <div class="spacer"></div>
+                              <div>
+                                <fd-icon class="arrow-right" glyph="slim-arrow-right"></fd-icon>
+                              </div>
+                            </div>
+                          </a>
+                        </li>
+                      </ul>
+                    </fd-card-content>
+                  </fd-card>
+                  <ng-template #notEnabled>
+                    <fd-card *ngIf="!isGithubActionsEnabledInSameComponent()" cardType="list">
+                      <!--The GitHub Actions is not yet enabled for the corresponding GitHub organization.-->
+                      <fd-card-content>
+                        <div class="github-actions-automation-workflows">
+                          <div class="card-content">
+                            <fd-avatar
+                              [colorAccent]="10"
+                              [label]="kindName[kinds.GITHUB_ACTION]"
+                              image="{{ getIcon(kinds.GITHUB_ACTION) }}"
+                              size="s"></fd-avatar>
+                            <div class="card-description">
+                              <div class="card-content-github-actions">
+                                <h1 class="card-header"><strong>GitHub Actions</strong></h1>
+                                <fd-info-label color="7" fdCozy label="New" title="New"></fd-info-label>
+                              </div>
+                              <div class="card-content-github-actions">
+                                <fd-info-label
+                                  color="10"
+                                  fdCozy
+                                  label="Orchestration"
+                                  title="Orchestrator"></fd-info-label>
+                              </div>
+                            </div>
                           </div>
+                          <button
+                            (click)="openGithubActionWizard($event)"
+                            *dxpRequiredPolicies="['projectAdmin', 'projectMember']; operator: 'or'"
+                            class="card-content"
+                            fd-button
+                            fdType="standard"
+                            label="Enable"></button>
                         </div>
-                      </a>
-                    </li>
-                  </ul>
-                </fd-card-content>
-              </fd-card>
-              <ng-template #notEnabled>
-                <fd-card *ngIf="!isGithubActionsEnabledInSameComponent()" cardType="list">
-                  <!--The GitHub Actions is not yet enabled for the corresponding GitHub organization.-->
-                  <fd-card-content>
-                    <div class="github-actions-automation-workflows">
-                      <div class="card-content">
-                        <fd-avatar
-                          [colorAccent]="10"
-                          [label]="kindName[kinds.GITHUB_ACTION]"
-                          image="{{ getIcon(kinds.GITHUB_ACTION) }}"
-                          size="s"></fd-avatar>
-                        <div class="card-description">
-                          <div class="card-content-github-actions">
-                            <h1 class="card-header"><strong>GitHub Actions</strong></h1>
-                            <fd-info-label color="7" fdCozy label="New" title="New"></fd-info-label>
-                          </div>
-                          <div class="card-content-github-actions">
-                            <fd-info-label color="10" fdCozy label="Orchestration" title="Orchestrator"></fd-info-label>
-                          </div>
-                        </div>
-                      </div>
-                      <button
-                        *dxpRequiredPolicies="['projectAdmin', 'projectMember']; operator: 'or'"
-                        (click)="openGithubActionWizard($event)"
-                        class="card-content"
-                        fd-button
-                        fdType="standard"
-                        label="Enable"></button>
-                    </div>
-                  </fd-card-content>
-                </fd-card>
-              </ng-template>
-            </ng-container>
-          </ng-container>
-        </div>
-      </div>
-      <ng-template #skeleton>
-        <fd-skeleton height="6rem" type="rectangle" width="100%"></fd-skeleton>
-        <div class="pipeline-container">
-          <fd-skeleton class="skeleton-text" textLines="2" type="text" width="15rem"></fd-skeleton>
-          <fd-skeleton class="skeleton-top-margin" height="6rem" type="rectangle" width="100%"></fd-skeleton>
-          <fd-skeleton class="skeleton-top-margin" height="6rem" type="rectangle" width="100%"></fd-skeleton>
-          <fd-skeleton class="skeleton-top-margin" height="6rem" type="rectangle" width="100%"></fd-skeleton>
-        </div>
-      </ng-template>
-    </ng-template>
-    <ng-template #midColumn>
-      <div class="scrollable-container">
-        <app-service-details-skeleton
-          (localLayoutEvent)="updateLocalLayout($event)"
-          [activeTile]="activeTile"
-          [localLayout]="localLayout"></app-service-details-skeleton>
-      </div>
-    </ng-template>
-  </fd-flexible-column-layout>
+                      </fd-card-content>
+                    </fd-card>
+                  </ng-template>
+                </ng-container>
+              </ng-container>
+            </div>
+          </div>
+          <ng-template #skeleton>
+            <fd-skeleton height="6rem" type="rectangle" width="100%"></fd-skeleton>
+            <div class="pipeline-container">
+              <fd-skeleton class="skeleton-text" textLines="2" type="text" width="15rem"></fd-skeleton>
+              <fd-skeleton class="skeleton-top-margin" height="6rem" type="rectangle" width="100%"></fd-skeleton>
+              <fd-skeleton class="skeleton-top-margin" height="6rem" type="rectangle" width="100%"></fd-skeleton>
+              <fd-skeleton class="skeleton-top-margin" height="6rem" type="rectangle" width="100%"></fd-skeleton>
+            </div>
+          </ng-template>
+        </ng-template>
+        <ng-template #midColumn>
+          <div class="scrollable-container">
+            <app-service-details-skeleton
+              (localLayoutEvent)="updateLocalLayout($event)"
+              [activeTile]="activeTile"
+              [localLayout]="localLayout"></app-service-details-skeleton>
+          </div>
+        </ng-template>
+      </fd-flexible-column-layout>
+    </fdp-dynamic-page-content>
+  </fdp-dynamic-page>
 </div>
 
 <ng-template #loadingContent>

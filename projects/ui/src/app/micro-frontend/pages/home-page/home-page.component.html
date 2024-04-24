@@ -1,14 +1,21 @@
-<fdp-dynamic-page ariaLabel="CI/CD Dynamic Page">
-  <fdp-dynamic-page-content id="basic">
-    <div *ngIf="pipelineAvail | async; else loading" class="home-page-content">
-      <ng-container>
-        <app-pipeline [pipeline$]="watch$"></app-pipeline>
-      </ng-container>
+<div *ngIf="!loading()" class="home-page-content">
+  <div *ngIf="pipelineAvail | async; else errorMessage">
+    <ng-container>
+      <app-pipeline [pipeline$]="watch$"></app-pipeline>
+    </ng-container>
+  </div>
+  <ng-template #errorMessage>
+    <div class="unable-to-load-message">
+      <img src="./assets/notFoundPage.svg" alt="Cards with a question mark" width="300px" />
+      <figure fd-illustrated-message [noSvg]="true" type="spot">
+        <figcaption fd-illustrated-message-figcaption id="not-found-description">
+          <h3 fd-illustrated-message-title>Failed to load CI/CD Setup</h3>
+          <p fd-illustrated-message-text>Please try again later</p>
+        </figcaption>
+      </figure>
     </div>
-    <ng-template #loading>
-      <div class="busy-indicator">
-        <fd-busy-indicator [loading]="true" ariaLabel="loading" title="Please Wait"></fd-busy-indicator>
-      </div>
-    </ng-template>
-  </fdp-dynamic-page-content>
-</fdp-dynamic-page>
+  </ng-template>
+</div>
+<div class="busy-indicator" *ngIf="loading()">
+  <fd-busy-indicator [loading]="loading()" ariaLabel="loading" title="Please Wait"></fd-busy-indicator>
+</div>

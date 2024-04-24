@@ -1,10 +1,36 @@
-.outer-container {
+.flex-box {
     display: flex;
-    align-items: flex-start;
-    justify-content: space-between;
+    align-items: center;
 }
-.inner-container {
-    display: flex;
-    justify-content: center;
-    flex-direction: column;
+
+.auto-left-margin {
+    margin-left: auto;
+}
+
+.icon {
+    color: var(--sapNeutralColor);
+    cursor: pointer;
+}
+
+.left-margin {
+    margin-left: 0.4rem;
+}
+
+a {
+    color: var(--sapLinkColor);
+    text-decoration: none;
+}
+
+h3 {
+    margin-bottom: 4px;
+}
+
+.divider {
+    border-top: 1px solid var(--sapNeutralBorderColor);
+    width: 100%;
+    margin: 18px 0;
+}
+
+.no-margin {
+    margin: 0;
 }

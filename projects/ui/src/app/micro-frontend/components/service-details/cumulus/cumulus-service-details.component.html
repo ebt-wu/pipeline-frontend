@@ -4,9 +4,9 @@
     <button
       class="auto-left-margin"
       role="button"
+      fdType="transparent"
       glyph="question-mark"
       label="Learn More"
-      [toggled]="true"
       (click)="openDocumentation()"
       fd-button></button>
   </div>
@@ -57,23 +57,27 @@
 
 <ng-template #idHelp>
   <div>
-    The ID of your Pipeline in Cumulus.
-    <br />
-    It is used by the
-    <a href="https://github.wdf.sap.corp/pages/ContinuousDelivery/piper-doc/steps/sapCumulusUpload/" target="_blank">
-      sapCumulusUpload
+    Use this ID to
+    <a
+      class="link"
+      href="https://github.wdf.sap.corp/pages/ContinuousDelivery/piper-doc/steps/sapCumulusUpload/"
+      rel="noopener noreferrer"
+      target="_blank">
+      upload your pipeline's results
     </a>
-    Piper step
     <br />
-    to automatically upload compliance documents.
+    using the sapCumulusUpload Piper step
   </div>
 </ng-template>
 
 <ng-template #keyHelp>
   <div>
-    Search for this key to find this pipeline in the pipeline view of your
-    <a href="https://sirius.tools.sap.corp/sirius/#/search" target="_blank">Sirius</a>
-    program.
+    Use this key to
+    <a class="link" href="https://wiki.one.int.sap/wiki/x/iK5Yh" rel="noopener noreferrer" target="_blank">
+      add your pipeline to Sirius
+    </a>
+    <br />
+    to view its compliance results
   </div>
 </ng-template>
 

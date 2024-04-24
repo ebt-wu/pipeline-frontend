@@ -21,7 +21,7 @@ import { SharedDataService } from '../../services/shared-data.service'
 import { ErrorMessageComponent } from '../error-message/error-message.component'
 import { ErrorMessage } from '@types'
 import { StaticSecurityCheckDetailsComponent } from '../service-details/static-security-check/static-security-check-details.component'
-import { PlatformMenuButtonModule } from '@fundamental-ngx/platform'
+import { MenuComponent, MenuTriggerDirective, PlatformMenuButtonModule } from '@fundamental-ngx/platform'
 
 type ServiceDetails = any
 
@@ -44,6 +44,8 @@ const dateFormatter = new Intl.DateTimeFormat('en', { year: 'numeric', month: 's
     ErrorMessageComponent,
     StaticSecurityCheckDetailsComponent,
     PlatformMenuButtonModule,
+    MenuTriggerDirective,
+    MenuComponent,
   ],
 })
 export class ServiceDetailsSkeletonComponent implements OnInit {

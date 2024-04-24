@@ -7,9 +7,16 @@
 }
 
 .home-page-content {
-  padding: 1rem;
   padding-bottom: 0;
   overflow: hidden;
+  .unable-to-load-message {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    height: 80vh;
+    width: 100%;
+  }
 }
 
 .card-footer {

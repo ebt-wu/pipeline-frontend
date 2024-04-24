@@ -12,6 +12,16 @@
   background: var(--sapList_Hover_Background);
 }
 
+.list-item-icon {
+  /* Need to override this to align the with the chevron and icon of the list heading*/
+    width: fit-content !important;
+    min-width: 16px !important;
+    max-width: 16px !important;
+    margin-left: 8px !important;
+    margin-right: 16px !important;
+}
+
+
 .status-icon {
   font-size: 16px;
 }
@@ -24,6 +34,7 @@ li::before {
   display: flex;
   width: 100%;
   align-items: center;
+  flex-direction: row;
 
   .name {
     display: flex;

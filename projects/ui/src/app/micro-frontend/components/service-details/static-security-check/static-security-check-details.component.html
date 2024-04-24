@@ -1,35 +1,93 @@
-<div class="outer-container" *ngIf="!loading()">
-  <div class="inner-container">
+<div *ngIf="!loading()">
+  <div class="flex-box">
     <div>
-      <fd-facet type="key-value">
-        <label [colon]="true" fd-form-label>Enabled for GitHub Repository</label>
-        <a [href]="serviceDetails.repoUrl" fd-link rel="noopener noreferrer"
-           target="_blank">{{ serviceDetails.githubOrganization }}/{{ serviceDetails.githubRepoName }}</a>
-      </fd-facet>
-
+      <h3>Enabled for GitHub Repository</h3>
+      <a [href]="serviceDetails.repoUrl" fd-link rel="noopener noreferrer" target="_blank">
+        {{ serviceDetails.githubOrganization }}/{{ serviceDetails.githubRepoName }}
+      </a>
     </div>
+
+    <button
+      role="button"
+      class="auto-left-margin"
+      glyph="question-mark"
+      label="Learn More"
+      fdType="transparent"
+      fd-button
+      (click)="openDocumentation()"></button>
+  </div>
+  <div *dxpRequiredPolicies="['projectAdmin', 'projectMember']; operator: 'or'">
     <div *ngIf="cumulusInfo && cumulusInfo.id">
-      <!-- TODO: add readonly checks here-->
-      <h3>Compliance Upload – Report to Sirius</h3>
-      <fd-facet type="key-value">
-        <label [colon]="true" fd-form-label>Cumulus Pipeline ID</label>
-        <span>{{ cumulusInfo.id }}</span>
-      </fd-facet>
-      <div style="margin-top: 1rem;">
-      <em>
-        Need changes? See how in the <a [href]="" fd-link rel="noopener noreferrer" target="_blank">documentation</a>
-      </em>
+      <h3>Cumulus Pipeline</h3>
+      <div class="flex-box">
+        <strong>Pipeline ID</strong>
+        <fd-icon
+          class="icon left-margin"
+          glyph="hint"
+          placement="top"
+          [fd-inline-help]="pipelineIdPopover"
+          [triggers]="['click']"
+          [closeOnOutsideClick]="true"></fd-icon>
+        <ng-template #pipelineIdPopover>
+          <div>
+            Use this ID to
+            <a
+              class="link"
+              href="https://github.wdf.sap.corp/pages/ContinuousDelivery/piper-doc/steps/sapCumulusUpload/"
+              rel="noopener noreferrer"
+              target="_blank">
+              upload your pipeline's results
+            </a>
+            <br />
+            using the sapCumulusUpload Piper step
+          </div>
+        </ng-template>
+      </div>
+      {{ cumulusInfo.id }}
+      <div style="margin-top: 1rem">
+        <span>
+          <em>
+            Don't have a Build Pipeline set up in the Hyperspace Portal, but you're using Cumulus?
+            <br />
+            <a
+              href="https://pages.github.tools.sap/hyperspace/cicd-setup-documentation/connected-tools/validate/ghas.html#enabling-github-advanced-security-without-a-build-pipeline"
+              fd-link
+              rel="noopener noreferrer"
+              target="_blank">
+              See how to choose the right Pipeline ID
+            </a>
+          </em>
+        </span>
       </div>
     </div>
+    <div *ngIf="githubSecret">
+      <h3>GitHub Credentials</h3>
+      <div>
+        <strong>Vault Path</strong>
+      </div>
+      <fd-busy-indicator [loading]="pendingShowInVault()" size="s">
+        <a (click)="showInVault(githubSecret.path)" [disabled]="pendingShowInVault()" fd-link>
+          {{ githubSecret.path }}
+        </a>
+      </fd-busy-indicator>
+    </div>
+    <div class="divider"></div>
+    <h3>Get started with GitHub Advanced Security</h3>
+    <ul class="no-margin">
+      <li>
+        <a [href]="GITHUB_ACTIONS_DOCU_LINK" target="_blank">Produce scan results</a>
+        using GitHub Actions
+      </li>
+      <li>
+        <a [href]="AUDIT_FINDINGS_DOCU_LINK" target="_blank">Learn which findings to audit</a>
+      </li>
+      <li>
+        <a [href]="ADD_SCAN_PROJECT_SIRIUS_DOCU_LINK" target="_blank">Add your results</a>
+        as a Scan Project in Sirius
+      </li>
+    </ul>
   </div>
-  <button
-    role="button"
-    glyph="question-mark"
-    label="Learn More"
-    [toggled]="true"
-    fd-button></button>
 </div>
-
 <div *ngIf="loading()">
   <fd-busy-indicator [loading]="true" ariaLabel="loading" title="Please Wait"></fd-busy-indicator>
 </div>

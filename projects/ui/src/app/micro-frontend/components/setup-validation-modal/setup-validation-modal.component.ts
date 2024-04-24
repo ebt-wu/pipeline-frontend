@@ -49,7 +49,7 @@ export class SetupValidationModalComponent implements OnInit, OnDestroy {
   validationToolsArray = Object.keys(ValidationTools)
   languageSelectionFormChange: Subscription = null
   watch$: Observable<Pipeline>
-  loading = false
+  loading = signal(false)
   selectionOptions = signal([])
   recommendedLanguage = signal({} as ValidationLanguage)
   errorMessage = signal('')
@@ -72,6 +72,7 @@ export class SetupValidationModalComponent implements OnInit, OnDestroy {
   }
 
   async ngOnInit() {
+    this.loading.set(true)
     await this.recommendLanguage()
     this.languageSelection.patchValue(this.recommendedLanguage())
     this.languageSelectionFormChange = this.languageSelection.valueChanges.subscribe(() => {
@@ -83,6 +84,7 @@ export class SetupValidationModalComponent implements OnInit, OnDestroy {
     if (refs.find((ref) => ref.kind === Kinds.GITHUB_REPOSITORY)) {
       this.githubResourceExists.set(true)
     }
+    this.loading.set(false)
   }
 
   ngOnDestroy() {
@@ -140,7 +142,7 @@ export class SetupValidationModalComponent implements OnInit, OnDestroy {
   async submit() {
     let assumedBuildTool: BuildTool
     const metadata = await this.getMetadata()
-    this.loading = true
+    this.loading.set(true)
 
     if (!this.githubResourceExists()) {
       const formVal = this.formGenerator.formGroup.form.value.ungrouped as ghTokenFormValue
@@ -168,12 +170,13 @@ export class SetupValidationModalComponent implements OnInit, OnDestroy {
       }),
     )
       .then(() => {
-        this.loading = false
         this.luigiClient.uxManager().closeCurrentModal()
       })
       .catch((err) => {
-        this.loading = false
         this.errorMessage.set(err)
+      })
+      .finally(() => {
+        this.loading.set(false)
       })
   }
 
@@ -185,8 +188,18 @@ export class SetupValidationModalComponent implements OnInit, OnDestroy {
     window.open('https://github.wdf.sap.corp/pages/Security-Testing/doc/cxone/Getting_Started/', '_blank')
   }
 
-  onButtonLearnMore() {
-    window.open('https://github.wdf.sap.corp/pages/Security-Testing/doc/security%20testing/tools/', '_blank')
+  onButtonLearnMore(tool: ValidationTools) {
+    if (tool === ValidationTools.GHAS) {
+      window.open(
+        'https://pages.github.tools.sap/hyperspace/cicd-setup-documentation/connected-tools/validate/ghas.html',
+        '_blank',
+      )
+    } else if (tool === ValidationTools.CX) {
+      window.open(
+        'https://pages.github.tools.sap/hyperspace/cicd-setup-documentation/connected-tools/validate/cxone.html',
+        '_blank',
+      )
+    }
   }
 
   async createGithubResource(value: ghTokenFormValue): Promise<void> {
@@ -195,11 +208,6 @@ export class SetupValidationModalComponent implements OnInit, OnDestroy {
     const repoUrl: string = context.entityContext?.component?.annotations?.['github.dxp.sap.com/repo-url'] ?? ''
     const login: string = context.entityContext?.component?.annotations?.['github.dxp.sap.com/login'] ?? ''
     const repoName: string = context.entityContext?.component?.annotations?.['github.dxp.sap.com/repo-name'] ?? ''
-    const credentialType = value.githubCredentialType
-    const givenToken = value.githubToken
-
-    console.log(`submitted, ${repoUrl}, ${login}, ${repoName}`)
-    console.log(`form values: ${credentialType}, ${givenToken}`)
 
     const githubRepoUrl = new URL(repoUrl)
 
@@ -234,12 +242,10 @@ export class SetupValidationModalComponent implements OnInit, OnDestroy {
         throw new Error('Could not get GitHub repository details from frame context')
       }
 
-      const repositoryResource = await firstValueFrom(
+      await firstValueFrom(
         this.githubService.createGithubRepository(githubRepoUrl.origin, login, repoName, githubSecretPath, false),
       )
-
-      console.log('created repository resource:', repositoryResource)
-    } catch (e) {
+    } catch (e: any) {
       if (e.message) {
         this.errorMessage.set(e.message)
       } else {

@@ -6,20 +6,24 @@
           <strong>{{ kindCategory[activeTile] }}</strong>
         </h1>
         <div class="buttons">
-          <button *ngIf="activeTile === kinds.GITHUB_ADVANCED_SECURITY" ariaLabel="Show Options"
-                  class="button-margin"
-                  fd-button
-                  fdType="transparent"
-                  glyph="overflow"
-          [fdMenuTrigger]="showOptionsMenu"></button>
-          <fd-menu #showOptionsMenu>
+          <button
+            *ngIf="activeTile === kinds.GITHUB_ADVANCED_SECURITY"
+            ariaLabel="Show Options"
+            class="button-margin"
+            fd-button
+            fdType="transparent"
+            glyph="overflow"
+            [fdpMenuTriggerFor]="showOptionsMenu"></button>
+          <!-- Using the deprecated fdp-menu instead of fd-menu because it
+          fixes an issue with the menu items not closing after being clicked -->
+          <fdp-menu #showOptionsMenu>
             <li fd-menu-item>
               <a fd-menu-interactive (click)="deleteGHAS()">
                 <fd-menu-addon position="before" glyph="delete"></fd-menu-addon>
                 <span fd-menu-title>Delete Step</span>
               </a>
             </li>
-          </fd-menu>
+          </fdp-menu>
           <div class="buttons-separator"></div>
           <button
             class="button-margin"
@@ -45,7 +49,6 @@
             (click)="closeDetails()"></button>
         </div>
       </div>
-
     </fd-card-content>
   </fd-card>
   <div *ngFor="let error of errors()">
@@ -77,19 +80,16 @@
           class="open-service-button"
           fd-button
           fdType="emphasized"
-          label="Open"
-        >
-        </button>
+          label="Open"></button>
         <fd-menu #menuShortcut>
           <li fd-menu-item>
             <a fd-menu-interactive (click)="openGHASScannnerResults()">
-              <span fd-menu-title> Show scanner results</span></a>
+              <span fd-menu-title>Show scanner results</span>
+            </a>
           </li>
           <li fd-menu-item>
             <a fd-menu-interactive (click)="openGHASSettings()">
-              <span fd-menu-title>
-              Open configuration in GitHub
-                 </span>
+              <span fd-menu-title>Open configuration in GitHub</span>
             </a>
           </li>
         </fd-menu>

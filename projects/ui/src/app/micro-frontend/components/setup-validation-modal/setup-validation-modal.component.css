@@ -21,6 +21,10 @@
   gap: 16px;
   margin-bottom: 16px;
 }
+.info-icon {
+  color: var(--sapNeutralColor);
+  cursor: pointer;
+}
 
 .select-a-service-box {
   margin-bottom: 16px;

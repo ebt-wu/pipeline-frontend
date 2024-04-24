@@ -7,291 +7,269 @@
   --fdFlexibleColumnLayout_Background_Solid: transparent;
 }
 
-.ci-cd-header {
-  margin: 0.1rem 0.5rem 0.1rem 0.1rem;
 
-  .header-content {
-    display: flex;
-    align-items: center;
-  }
-
-  .header {
-    padding: 0.75rem 1.5rem;
-
-    .header-text {
-      font-size: 1.5rem;
-      margin: 1rem;
-    }
-  }
-
-  .header-debug-mode {
+.header-debug-mode {
     display: flex;
     flex-direction: column;
     color: var(--sapNeutralColor);
-  }
-
-  .header-debug-text {
-    font-size: var(--sapFontSmallSize);
-  }
-
-  .header-buttons {
-    margin-left: auto !important;
-  }
-
-  .header-button {
-    margin-left: 0.5rem;
-    margin-right: 1rem !important;
-  }
 }
 
+.header-debug-text {
+    font-size: var(--sapFontSmallSize);
+}
+
+
 .pipeline-container {
-  display: flex;
-  flex-direction: column;
-  max-width: 50rem;
-  padding: 0.5rem;
-
-  .pipeline-header {
     display: flex;
-    align-items: end;
-    gap: 0.5rem;
-  }
+    flex-direction: column;
+    max-width: 50rem;
+    padding: 0.5rem;
 
-  .pull-requests-message {
-    margin-top: 0.5rem;
-  }
+    .pipeline-header {
+        display: flex;
+        align-items: end;
+        gap: 0.5rem;
+    }
+
+    .pull-requests-message {
+        margin-top: 0.5rem;
+    }
 }
 
 .stage-card {
-  margin-top: 1rem;
-
-  .card-content-padding {
-    padding: 0;
-  }
-
-  .stage-headline-padding {
-    padding: 2px 2px 2px 8px;
-  }
-
-  .card-content {
-    display: flex;
-    gap: 1rem;
-    align-items: center;
-    padding-right: 1rem;
-
-    .icons {
-      height: 4rem;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-
-      .icon {
-        margin-left: 1rem;
-        width: 32px;
-        font-size: 20px;
-        color: var(--sapButton_Lite_TextColor);
-
-      }
-
-      .placeholder {
-        width: 32px;
-        margin-left: 1rem;
-      }
-    }
+    margin-top: 1rem;
 
     .card-content-padding {
-      padding: 0;
+        padding: 0;
     }
 
-    .card-description {
-      display: flex;
-      flex-direction: column;
+    .stage-headline-padding {
+        padding: 2px 2px 2px 8px;
+    }
 
-      .card-description-stage-headline {
+    .card-content {
         display: flex;
-        flex-direction: row;
-        gap: 0.5rem;
+        gap: 1rem;
         align-items: center;
+        padding-right: 1rem;
 
-        h1 {
-          margin: 0;
-          font-size: 18px;
+        .icons {
+            height: 4rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+
+            .icon {
+                margin-left: 1rem;
+                width: 32px;
+                font-size: 20px;
+                color: var(--sapButton_Lite_TextColor);
+
+            }
+
+            .placeholder {
+                width: 32px;
+                margin-left: 1rem;
+            }
         }
-        p {
-          font-size: 14px;
+
+        .card-content-padding {
+            padding: 0;
         }
-      }
 
-      .disabled-headline {
-        color: var(--sapAccentColor10);
-        font-size: 18px;
-        margin: 0;
-      }
+        .card-description {
+            display: flex;
+            flex-direction: column;
 
+            .card-description-stage-headline {
+                display: flex;
+                flex-direction: row;
+                gap: 0.5rem;
+                align-items: center;
+
+                h1 {
+                    margin: 0;
+                    font-size: 18px;
+                }
+
+                p {
+                    font-size: 14px;
+                }
+            }
+
+            .disabled-headline {
+                color: var(--sapAccentColor10);
+                font-size: 18px;
+                margin: 0;
+            }
+
+        }
+
+        .card-description p {
+            margin: 0;
+            color: var(--sapNeutralColor);
+        }
     }
 
-    .card-description p {
-      margin: 0;
-      color: var(--sapNeutralColor);
+    .list-item-selected {
+        background-color: var(--sapList_SelectionBackgroundColor);
     }
-  }
 
-  .list-item-selected {
-    background-color: var(--sapList_SelectionBackgroundColor);
-  }
+    .status-icon {
+        font-size: 16px;
+    }
 
-  .status-icon {
-    font-size: 16px;
-  }
-
-  .coming-soon-stage {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding-right: 16px;
-  }
+    .coming-soon-stage {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding-right: 16px;
+    }
 }
 
 
 .freestyle-pipeline-info {
-  display: flex;
-  gap: 0.5rem;
-  align-items: center;
-
-  .freestyle-pipeline-details {
     display: flex;
-    flex-direction: column;
-    cursor: pointer;
+    gap: 0.5rem;
+    align-items: center;
 
-    .namespace {
-      font-size: 11px;
+    .freestyle-pipeline-details {
+        display: flex;
+        flex-direction: column;
+        cursor: pointer;
+
+        .namespace {
+            font-size: 11px;
+        }
     }
-  }
 }
 
 .skeleton-text {
-  padding: 20px;
+    padding: 20px;
 }
 
 .skeleton-top-margin {
-  margin-top: 1rem;
+    margin-top: 1rem;
 }
 
 .spacer {
-  flex-grow: 1;
+    flex-grow: 1;
 }
 
 .disabled {
-  background-color: transparent;
-  box-shadow: none !important;
-  border: 1px solid var(--sapObjectHeader_BorderColor);
+    background-color: transparent;
+    box-shadow: none !important;
+    border: 1px solid var(--sapObjectHeader_BorderColor);
 }
 
 .automate-workflows-header {
-  h3 {
-    margin: 2rem 0 0 0;
-  }
-  p {
-    margin: 0 0 1.5rem 0;
-  }
+    h3 {
+        margin: 2rem 0 0 0;
+    }
+
+    p {
+        margin: 0 0 1.5rem 0;
+    }
 }
 
 .upgrade-github-actions-banner {
-  margin-bottom: 1rem;
+    margin-bottom: 1rem;
 }
 
 .github-actions-automation-workflows {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 16px;
-
-  .card-content {
-    gap: 1rem;
     display: flex;
+    justify-content: space-between;
     align-items: center;
+    padding: 16px;
 
-    .card-description {
-      display: flex;
-      flex-direction: column;
+    .card-content {
+        gap: 1rem;
+        display: flex;
+        align-items: center;
+
+        .card-description {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .card-header {
+            margin: 0;
+            font-size: 1rem;
+        }
     }
 
-    .card-header {
-      margin: 0;
-      font-size: 1rem;
+    .card-content p {
+        margin: 0;
+        color: var(--sapNeutralColor);
+        font-size: 0.8rem;
     }
-  }
 
-  .card-content p {
-    font-size: 1rem;
-    margin: 0;
-    color: var(--sapNeutralColor);
-    font-size: 0.8rem;
-  }
-  .card-content-github-actions {
-    display: flex;
-    flex-direction: row;
-    gap: 0.5rem;
-  }
+    .card-content-github-actions {
+        display: flex;
+        flex-direction: row;
+        gap: 0.5rem;
+    }
 }
 
 li::before {
-  border-radius: var(--fdCard_Border_Radius) !important;
+    border-radius: var(--fdCard_Border_Radius) !important;
 }
 
 .scrollable-container {
-  overflow: scroll;
-  height: 94.5vh;
-  -ms-overflow-style: none;
-  scrollbar-width: none;
+    overflow: scroll;
+    height: 94.5vh;
+    -ms-overflow-style: none;
+    scrollbar-width: none;
 }
 
 .scrollable-container::-webkit-scrollbar {
-  display: none;
+    display: none;
 }
 
 .github-actions-enabled-card {
-  margin-top: 0;
+    margin-top: 0;
 
-  .thumbnail-margin {
-    margin: 0 !important;
-  }
-}
-.actions-enabled-card-content {
-  display: flex;
-  width: 100%;
-  align-items: center;
-
-  .avatar-margin {
-    margin-right: 0.75rem;
-  }
-
-  .name-kind {
-    display: flex;
-    flex-direction: column;
-
-    .name {
-      font-size: 16px;
+    .thumbnail-margin {
+        margin: 0 !important;
     }
-  }
+}
 
-  .pending-creation {
-    margin-left: 1rem;
-  }
+.actions-enabled-card-content {
+    display: flex;
+    width: 100%;
+    align-items: center;
 
-  .arrow-right {
-    font-size: 20px;
-    color: var(--sapNeutralColor);
-    margin-right: 1rem;
-  }
+    .avatar-margin {
+        margin-right: 0.75rem;
+    }
+
+    .name-kind {
+        display: flex;
+        flex-direction: column;
+
+        .name {
+            font-size: 16px;
+        }
+    }
+
+    .pending-creation {
+        margin-left: 1rem;
+    }
+
+    .arrow-right {
+        font-size: 20px;
+        color: var(--sapNeutralColor);
+        margin-right: 1rem;
+    }
 }
 
 .github-actions-result {
-  padding: 0;
+    padding: 0;
 }
 
 @media only screen and (max-width: 960px) {
-  .hide-on-small-screen {
-    display: none;
-  }
+    .hide-on-small-screen {
+        display: none;
+    }
 }

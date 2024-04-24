@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, HostListener, OnInit } from '@angular/core'
+import { ChangeDetectionStrategy, Component, HostListener, OnInit, signal } from '@angular/core'
 import { HttpClientModule } from '@angular/common/http'
 import { AsyncPipe, CommonModule } from '@angular/common'
 import { PlatformDynamicPageModule } from '@fundamental-ngx/platform/dynamic-page'
@@ -32,10 +32,10 @@ import { PipelineType } from '@generated/graphql'
   ],
 })
 export class HomePageComponent implements OnInit {
-  pageTitle = 'CI/CD'
   pipelineType = PipelineType
   watch$: Observable<Pipeline>
   pipelineAvail = new BehaviorSubject<boolean>(false)
+  loading = signal(false)
   readonly spotConfig: SvgConfig = {
     spot: {
       file: tntSpotSecret,
@@ -51,7 +51,10 @@ export class HomePageComponent implements OnInit {
   ) {}
 
   async ngOnInit(): Promise<void> {
-    await this.initializePipeline()
+    this.loading.set(true)
+    await this.initializePipeline().finally(() => {
+      this.loading.set(false)
+    })
     this.watch$ = this.pipelineService.watchPipeline().pipe(debounceTime(50))
   }
 

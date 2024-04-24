@@ -7,7 +7,7 @@
     "
     class="list-item-border">
     <a fd-list-link>
-      <span fd-list-thumbnail>
+      <span fd-list-thumbnail class="list-item-icon">
         <ng-container *ngIf="resourceRef.status === serviceStatus.CREATED">
           <span fd-object-status class="status-icon" size="m" status="positive" glyph="status-completed"></span>
         </ng-container>
@@ -42,18 +42,18 @@
         </div>
         <div class="spacer"></div>
         <div *dxpRequiredPolicies="['projectAdmin', 'projectMember']; operator: 'or'">
-        <button
-          *ngIf="
-            localLayout === 'OneColumnStartFullScreen' &&
-            (debugModeService.debugModeEnabled() || resourceRef.status === serviceStatus.FAILING_CREATION)
-          "
-          fd-button
-          label="Retry"
-          glyph="refresh"
-          fdType="transparent"
-          ariaLabel="Retry"
-          class="retry-button"
-          (click)="retryService($event, resourceRef)"></button>
+          <button
+            *ngIf="
+              localLayout === 'OneColumnStartFullScreen' &&
+              (debugModeService.debugModeEnabled() || resourceRef.status === serviceStatus.FAILING_CREATION)
+            "
+            fd-button
+            label="Retry"
+            glyph="refresh"
+            fdType="transparent"
+            ariaLabel="Retry"
+            class="retry-button"
+            (click)="retryService($event, resourceRef)"></button>
         </div>
         <div class="details-icon">
           <fd-icon *ngIf="resourceRef.status === serviceStatus.CREATED" glyph="slim-arrow-right" class="icon"></fd-icon>
