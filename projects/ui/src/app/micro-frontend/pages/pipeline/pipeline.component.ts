@@ -12,7 +12,7 @@ import {
   MessageToastService,
 } from '@fundamental-ngx/core'
 import { GithubActionsGetPayload } from '@generated/graphql'
-import { firstValueFrom, map, Observable, Subscription } from 'rxjs'
+import { firstValueFrom, map, Observable, Subscription, tap } from 'rxjs'
 import { KindExtensionName, KindName } from '@constants'
 import { Pipeline, ResourceRef } from '@types'
 import { DeleteBuildModalComponent } from '../../components/delete-build-modal/delete-build-modal.component'
@@ -163,96 +163,102 @@ export class PipelineComponent implements OnInit, OnDestroy {
       this.githubMetadata.githubOrgName,
     )
 
-    this.pipelineSubscription = this.pipeline$.subscribe((pipeline: Pipeline) => {
-      // error reporting
-      this.errors.set([])
-      this.openPRCount.set(0)
-      this.isBuildPipelineSetup.set(false)
-      this.jenkinsPipelineError = false
-      if (pipeline?.resourceRefs) {
-        // if true then it means that the GitHub Actions is enabled from the same component
-        this.isGithubActionsEnabledInSameComponent.set(
-          pipeline.resourceRefs.some((ref) => ref.kind === Kinds.GITHUB_ACTION),
-        )
+    this.pipelineSubscription = this.pipeline$
+      .pipe(
+        // eslint-disable-next-line  @typescript-eslint/no-misused-promises
+        tap(async (pipeline) => {
+          await this.getPipelineURL(pipeline)
+          this.openPRCount.set(await this.getOpenPRCount())
+        }),
+      )
+      .subscribe((pipeline: Pipeline) => {
+        // error reporting
+        this.errors.set([])
+        this.openPRCount.set(0)
+        this.isBuildPipelineSetup.set(false)
+        this.jenkinsPipelineError = false
+        if (pipeline?.resourceRefs) {
+          // if true then it means that the GitHub Actions is enabled from the same component
+          this.isGithubActionsEnabledInSameComponent.set(
+            pipeline.resourceRefs.some((ref) => ref.kind === Kinds.GITHUB_ACTION),
+          )
 
-        for (const ref of pipeline.resourceRefs) {
-          if (!ref.error) {
-            continue
-          }
+          for (const ref of pipeline.resourceRefs) {
+            if (!ref.error) {
+              continue
+            }
 
-          if (ref.error.startsWith('PIPER-1')) {
-            continue
-          }
+            if (ref.error.startsWith('PIPER-1')) {
+              continue
+            }
 
-          if (ref.kind === Kinds.JENKINS_PIPELINE) {
-            this.jenkinsPipelineError = true
-          }
-          // Needed customized error message for GitHub Actions
-          if (ref.kind === Kinds.GITHUB_ACTION) {
+            if (ref.kind === Kinds.JENKINS_PIPELINE) {
+              this.jenkinsPipelineError = true
+            }
+            // Needed customized error message for GitHub Actions
+            if (ref.kind === Kinds.GITHUB_ACTION) {
+              this.errors.update((errors) => {
+                errors.push({
+                  title: `Configuration of ${KindName[ref.kind]} failed`,
+                  resourceName: ref.name,
+                  message: `The GitHub Actions configuration may have failed due to an expired token.<br>Please ensure that the GitHub credential stored in the vault is valid.<br><strong>Resource:</strong> ${ref.name}<br><strong>Status:</strong> ${ref.status}<br><strong>Error: </strong> ${ref.error}.`,
+                })
+                return errors
+              })
+              continue
+            }
             this.errors.update((errors) => {
               errors.push({
                 title: `Configuration of ${KindName[ref.kind]} failed`,
                 resourceName: ref.name,
-                message: `The GitHub Actions configuration may have failed due to an expired token.<br>Please ensure that the GitHub credential stored in the vault is valid.<br><strong>Resource:</strong> ${ref.name}<br><strong>Status:</strong> ${ref.status}<br><strong>Error: </strong> ${ref.error}.`,
+                message: `<strong>Resource: </strong>${ref.name}<br><strong>Status:</strong> ${ref.status}<br><strong>Error: </strong> ${ref.error}`,
               })
               return errors
             })
-            continue
+            this.localLayout = 'OneColumnStartFullScreen'
           }
-          this.errors.update((errors) => {
-            errors.push({
-              title: `Configuration of ${KindName[ref.kind]} failed`,
-              resourceName: ref.name,
-              message: `<strong>Resource: </strong>${ref.name}<br><strong>Status:</strong> ${ref.status}<br><strong>Error: </strong> ${ref.error}`,
-            })
-            return errors
+
+          // enable/disable expansion of build stage
+          const requiredKindsInBuildStage = [Kinds.GITHUB_REPOSITORY, Kinds.PIPER_CONFIG]
+          const isRequiredKindMissingInBuildStage = requiredKindsInBuildStage.some((kind) => {
+            return pipeline.resourceRefs.every((ref) => ref.kind !== kind)
           })
-          this.localLayout = 'OneColumnStartFullScreen'
-        }
 
-        // enable/disable expansion of build stage
-        const requiredKindsInBuildStage = [Kinds.GITHUB_REPOSITORY, Kinds.PIPER_CONFIG]
-        const isRequiredKindMissingInBuildStage = requiredKindsInBuildStage.some((kind) => {
-          return pipeline.resourceRefs.every((ref) => ref.kind !== kind)
-        })
+          const orchestrators = [Kinds.JENKINS_PIPELINE, Kinds.GITHUB_ACTIONS_WORKFLOW]
+          const isOrchestratorMissingInBuildStage = !pipeline.resourceRefs.find((ref) =>
+            orchestrators.find((value) => ref.kind === value),
+          )
 
-        const orchestrators = [Kinds.JENKINS_PIPELINE, Kinds.GITHUB_ACTIONS_WORKFLOW]
-        const isOrchestratorMissingInBuildStage = !pipeline.resourceRefs.find((ref) =>
-          orchestrators.find((value) => ref.kind === value),
-        )
+          if (
+            pipeline.resourceRefs.find(
+              (ref) => ref.kind === Kinds.GITHUB_ADVANCED_SECURITY || ref.kind === Kinds.CX_ONE,
+            )
+          ) {
+            this.isStaticSecurityChecksSetup.set(true)
+            this.isValidationStageOpen.set(true)
+          } else {
+            this.isStaticSecurityChecksSetup.set(false)
+          }
 
-        if (
-          pipeline.resourceRefs.find((ref) => ref.kind === Kinds.GITHUB_ADVANCED_SECURITY || ref.kind === Kinds.CX_ONE)
-        ) {
-          this.isStaticSecurityChecksSetup.set(true)
+          if (isRequiredKindMissingInBuildStage || isOrchestratorMissingInBuildStage) {
+            this.isBuildStageSetup.set(false)
+            this.isBuildStageOpen.set(false)
+            return
+          }
+
+          this.isBuildStageSetup.set(true)
+          this.isBuildStageOpen.set(true)
+
+          // is pipeline completely created?
+          if (pipeline.resourceRefs.some((ref) => ref.status !== ServiceStatus.CREATED)) {
+            return
+          }
+
+          this.isBuildPipelineSetup.set(true)
+          // if build setup is completed, the validation section should be open as per UX
           this.isValidationStageOpen.set(true)
-        } else {
-          this.isStaticSecurityChecksSetup.set(false)
         }
-
-        if (isRequiredKindMissingInBuildStage || isOrchestratorMissingInBuildStage) {
-          this.isBuildStageSetup.set(false)
-          this.isBuildStageOpen.set(false)
-          return
-        }
-
-        this.isBuildStageSetup.set(true)
-        this.isBuildStageOpen.set(true)
-
-        // is pipeline completely created?
-        if (pipeline.resourceRefs.some((ref) => ref.status !== ServiceStatus.CREATED)) {
-          return
-        }
-
-        this.isBuildPipelineSetup.set(true)
-        // if build setup is completed, the validation section should be open as per UX
-        this.isValidationStageOpen.set(true)
-        ;async () => {
-          await this.getPipelineURL(pipeline)
-          this.openPRCount.set(await this.getOpenPRCount())
-        }
-      }
-    })
+      })
   }
 
   ngOnDestroy(): void {
