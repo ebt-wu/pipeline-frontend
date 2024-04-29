@@ -119,7 +119,9 @@
       ">
       <div>
         <div *ngIf="!githubResourceExists()" class="separator"></div>
-        <div *ngIf="toolSelection.getRawValue() === validationTools.GHAS" class="message-strip-container">
+        <div
+          *ngIf="toolSelection.getRawValue() === validationTools.GHAS && !isGithubWdf()"
+          class="message-strip-container">
           <fd-message-strip type="warning" [dismissible]="false">
             After adding GHAS, since we do not have the full information of your pipeline, the
             <div class="code">config.yml</div>
@@ -133,7 +135,17 @@
             </a>
           </fd-message-strip>
         </div>
-        <div *ngIf="!githubResourceExists()">
+        <div
+          *ngIf="
+            toolSelection.getRawValue() === validationTools.GHAS ||
+            (languageSelection.getRawValue().validationTool === validationTools.GHAS && isGithubWdf())
+          "
+          class="message-strip-container">
+          <fd-message-strip type="warning" [dismissible]="false">
+            GitHub Advanced Security is currently only supported for the github.tools.sap instance.
+          </fd-message-strip>
+        </div>
+        <div *ngIf="!githubResourceExists() && !isGithubWdf()">
           <div class="credential-headline">Add your GitHub credentials</div>
           <fdp-message-popover-form-wrapper [forms]="formGenerator?.formGroup" [formFields]="formGenerator?.formFields">
             <fdp-form-generator [formItems]="ghCredentialForm"></fdp-form-generator>
@@ -156,7 +168,8 @@
         [disabled]="
           !languageSelection.value ||
           (formGenerator?.formGroup?.form && !formGenerator?.formGroup?.form?.valid) ||
-          (languageSelection.getRawValue()?.id === 'other' && !toolSelection.value)
+          (languageSelection.getRawValue()?.id === 'other' && !toolSelection.value) ||
+          isGithubWdf()
         "
         label="Add"
         fdType="emphasized"></button>
