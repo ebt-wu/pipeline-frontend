@@ -12,10 +12,14 @@ li::before {
     border-radius: var(--fdCard_Border_Radius) !important;
 }
 
-.thumbnail {
-    width: 0;
-    min-width: 0;
-    max-width: 0;
+.list-item-icon {
+    /* Need to override this to align the with the chevron and icon of the list heading*/
+    width: fit-content !important;
+    min-width: 16px !important;
+    max-width: 16px !important;
+    margin-left: 8px !important;
+    margin-right: 16px !important;
+
 }
 
 .service {
@@ -24,7 +28,6 @@ li::before {
     align-items: center;
     justify-content: space-between;
     flex-direction: row;
-    padding-left: 26px; /* align the text with the shield icon */
 
 
     .name {
