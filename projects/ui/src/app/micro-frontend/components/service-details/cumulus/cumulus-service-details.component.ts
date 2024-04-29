@@ -1,16 +1,17 @@
 import { CommonModule } from '@angular/common'
-import { Component, Input, signal } from '@angular/core'
+import { Component, Input, signal, ChangeDetectionStrategy } from '@angular/core'
 import { FundamentalNgxCoreModule } from '@fundamental-ngx/core'
 import { SecretService } from '../../../../micro-frontend/services/secret.service'
 import { GetCumulusPipelineQuery } from '@generated/graphql'
 import { AuthorizationModule } from '@dxp/ngx-core/authorization'
 
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: true,
-  selector: 'cumulus-service-details',
-  templateUrl: 'cumulus-service-details.component.html',
+  selector: 'app-cumulus-service-details',
+  templateUrl: './cumulus-service-details.component.html',
   imports: [CommonModule, FundamentalNgxCoreModule, AuthorizationModule],
-  styleUrls: ['cumulus-service-details.component.css'],
+  styleUrls: ['./cumulus-service-details.component.css'],
 })
 export class CumlusServiceDetailsComponent {
   constructor(private readonly secretService: SecretService) {}

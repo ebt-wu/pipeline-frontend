@@ -22,6 +22,16 @@ import { PipelineService } from '../../services/pipeline.service'
 import { PlatformFormGeneratorCustomInfoBoxComponent } from '../form-generator-info-box/form-generator-info-box.component'
 import { SecretData, SecretService } from '../../services/secret.service'
 
+type EntityContext = {
+  component: {
+    annotations: {
+      ['github.dxp.sap.com/acronym']: string
+      ['github.dxp.sap.com/login']: string
+      ['github.dxp.sap.com/repo-name']: string
+      ['github.dxp.sap.com/repo-url']: string
+    }
+  }
+}
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: true,
@@ -92,14 +102,19 @@ export class SetupValidationModalComponent implements OnInit, OnDestroy {
   }
 
   async recommendLanguage() {
-    const context = (await this.luigiService.getContextAsync()) as any
-    const repoUrl = context.entityContext?.component?.annotations['github.dxp.sap.com/repo-url'] ?? null
+    const context = await this.luigiService.getContextAsync()
+    const repoUrl =
+      (context.entityContext as unknown as EntityContext)?.component?.annotations['github.dxp.sap.com/repo-url'] ?? null
 
-    let gitRepoLanguages
+    let gitRepoLanguages: Record<string, number>
     try {
-      gitRepoLanguages = await this.githubService.getRepositoryLanguages(this.luigiClient, this.luigiService, repoUrl)
+      gitRepoLanguages = (await this.githubService.getRepositoryLanguages(
+        this.luigiClient,
+        this.luigiService,
+        repoUrl,
+      )) as Record<string, number>
     } catch (error) {
-      this.errorMessage.set(error)
+      this.errorMessage.set((error as Error).message)
     }
 
     const languagesMap = new Map(Object.entries(gitRepoLanguages))
@@ -118,12 +133,7 @@ export class SetupValidationModalComponent implements OnInit, OnDestroy {
   async getMetadata() {
     const refs: ResourceRef[] = (await firstValueFrom(this.watch$)).resourceRefs
     const kinds = refs.map((ref) => ref.kind)
-    let orchestrator = null
-    if (kinds.includes(Kinds.JENKINS_PIPELINE)) {
-      orchestrator = Orchestrators.Jenkins
-    } else if (kinds.includes(Kinds.GITHUB_ACTION)) {
-      orchestrator = Orchestrators.GitHubActions
-    }
+    const orchestrator = this.getOrchestrator(kinds)
 
     const githubMetadata = await this.githubService.getGithubMetadata()
 
@@ -132,6 +142,13 @@ export class SetupValidationModalComponent implements OnInit, OnDestroy {
       githubOrganization: githubMetadata.githubOrgName,
       githubRepository: githubMetadata.githubRepoName,
       codeScanJobOrchestrator: orchestrator,
+    }
+  }
+  getOrchestrator(kinds: Kinds[]) {
+    if (kinds.includes(Kinds.JENKINS_PIPELINE)) {
+      return Orchestrators.Jenkins
+    } else if (kinds.includes(Kinds.GITHUB_ACTION)) {
+      return Orchestrators.GitHubActions
     }
   }
 
@@ -145,7 +162,7 @@ export class SetupValidationModalComponent implements OnInit, OnDestroy {
     this.loading.set(true)
 
     if (!this.githubResourceExists()) {
-      const formVal = this.formGenerator.formGroup.form.value.ungrouped as ghTokenFormValue
+      const formVal = (this.formGenerator.formGroup.form.value as { ungrouped: ghTokenFormValue }).ungrouped
       await this.createGithubResource(formVal)
     }
 
@@ -172,8 +189,9 @@ export class SetupValidationModalComponent implements OnInit, OnDestroy {
       .then(() => {
         this.luigiClient.uxManager().closeCurrentModal()
       })
-      .catch((err) => {
-        this.errorMessage.set(err)
+      .catch((error) => {
+        const errorMessage = (error as Error).message
+        this.errorMessage.set(errorMessage)
       })
       .finally(() => {
         this.loading.set(false)
@@ -203,11 +221,12 @@ export class SetupValidationModalComponent implements OnInit, OnDestroy {
   }
 
   async createGithubResource(value: ghTokenFormValue): Promise<void> {
-    const context = (await this.luigiService.getContextAsync()) as any
+    const context = await this.luigiService.getContextAsync()
+    const entityContext = context.entityContext as unknown as EntityContext
 
-    const repoUrl: string = context.entityContext?.component?.annotations?.['github.dxp.sap.com/repo-url'] ?? ''
-    const login: string = context.entityContext?.component?.annotations?.['github.dxp.sap.com/login'] ?? ''
-    const repoName: string = context.entityContext?.component?.annotations?.['github.dxp.sap.com/repo-name'] ?? ''
+    const repoUrl: string = entityContext?.component?.annotations?.['github.dxp.sap.com/repo-url'] ?? ''
+    const login: string = entityContext?.component?.annotations?.['github.dxp.sap.com/login'] ?? ''
+    const repoName: string = entityContext?.component?.annotations?.['github.dxp.sap.com/repo-name'] ?? ''
 
     const githubRepoUrl = new URL(repoUrl)
 
@@ -221,7 +240,7 @@ export class SetupValidationModalComponent implements OnInit, OnDestroy {
             Authorization: `Bearer ${value.githubToken}`,
           },
         })
-        const user = (await userQueryResp.json())?.login
+        const user = ((await userQueryResp.json()) as Record<string, string>)?.login
         const secretData: SecretData[] = [
           { key: 'username', value: user },
           { key: 'scopes', value: REQUIRED_SCOPES.join(',') },
@@ -245,9 +264,10 @@ export class SetupValidationModalComponent implements OnInit, OnDestroy {
       await firstValueFrom(
         this.githubService.createGithubRepository(githubRepoUrl.origin, login, repoName, githubSecretPath, false),
       )
-    } catch (e: any) {
-      if (e.message) {
-        this.errorMessage.set(e.message)
+    } catch (error) {
+      const errorMessage = (error as Error).message
+      if (errorMessage) {
+        this.errorMessage.set(errorMessage)
       } else {
         this.errorMessage.set('Unknown error')
       }

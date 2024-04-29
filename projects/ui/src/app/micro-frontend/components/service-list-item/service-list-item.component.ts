@@ -1,11 +1,11 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core'
+import { Component, EventEmitter, Input, Output, ChangeDetectionStrategy } from '@angular/core'
 import { FundamentalNgxCoreModule, IconModule } from '@fundamental-ngx/core'
 import { CommonModule } from '@angular/common'
 import { DebugModeService } from '../../services/debug-mode.service'
 import { KindCategory, KindName } from '../../../constants'
 import { Pipeline, ResourceRef } from '../../../types'
 import { firstValueFrom } from 'rxjs'
-import { Categories, Kinds, ServiceStatus } from '../../../enums'
+import { Kinds, ServiceStatus } from '../../../enums'
 import { RouterModule } from '@angular/router'
 import { AuthorizationModule } from '@dxp/ngx-core/authorization'
 import { LuigiClient } from '@dxp/ngx-core/luigi'
@@ -18,6 +18,7 @@ export interface ServiceData {
 }
 
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-service-list-item',
   templateUrl: './service-list-item.component.html',
   styleUrls: ['./service-list-item.component.css'],

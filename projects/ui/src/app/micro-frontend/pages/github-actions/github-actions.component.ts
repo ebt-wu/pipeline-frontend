@@ -1,4 +1,4 @@
-import { Component, OnInit, signal, ViewChild } from '@angular/core'
+import { Component, OnInit, signal, ViewChild, ChangeDetectionStrategy } from '@angular/core'
 
 import {
   DynamicFormItem,
@@ -21,6 +21,7 @@ import { GithubMetadata, REQUIRED_SCOPES } from '../../services/github.service'
 import { PlatformFormGeneratorCustomInfoBoxComponent } from '../../components/form-generator-info-box/form-generator-info-box.component'
 
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: true,
   selector: 'app-github-actions',
   templateUrl: './github-actions.component.html',
@@ -64,27 +65,27 @@ export class GithubActionsComponent implements OnInit {
     this.formCreated = true
   }
 
-  async onFormSubmitted(value: DynamicFormValue): Promise<void> {
+  async onFormSubmitted(value: Record<string, string>): Promise<void> {
     this.formValue = value
     this.loading = true
     let githubActionsCredVaultPath: string
 
     try {
-      if (value.githubCredentialType === CredentialTypes.NEW) {
+      if (value.githubCredentialType === CredentialTypes.NEW.toString()) {
         const userQueryResp = await fetch(`${this.githubMetadata.githubInstance}/api/v3/user`, {
           headers: {
             Authorization: `Bearer ${value.githubToken}`,
           },
         })
-        const user: string = (await userQueryResp.json())?.login
+        const user: string = ((await userQueryResp.json()) as Record<string, string>)?.login
         const secretData: SecretData[] = [
           { key: 'username', value: user },
           { key: 'access_token', value: value.githubToken },
           { key: 'scopes', value: REQUIRED_SCOPES.join(',') },
         ]
-        githubActionsCredVaultPath = await this.getVaultPath(user)
+        githubActionsCredVaultPath = this.getVaultPath(user)
         await firstValueFrom(this.secretService.writeSecret(githubActionsCredVaultPath, secretData))
-      } else if (value.githubCredentialType === CredentialTypes.EXISTING) {
+      } else if (value.githubCredentialType === CredentialTypes.EXISTING.toString()) {
         githubActionsCredVaultPath = value.githubSelectCredential
       }
       await firstValueFrom(
@@ -96,9 +97,10 @@ export class GithubActionsComponent implements OnInit {
       )
       this.loading = false
       this.luigiClient.uxManager().closeCurrentModal()
-    } catch (e) {
-      if (e.message) {
-        this.errorMessage.set(e.message)
+    } catch (error) {
+      const errorMessage = (error as Error).message
+      if (errorMessage) {
+        this.errorMessage.set(errorMessage)
       } else {
         this.errorMessage.set('Unknown error')
       }
@@ -118,9 +120,8 @@ export class GithubActionsComponent implements OnInit {
     this.errorMessage.set('')
   }
 
-  private async getVaultPath(user: string): Promise<string> {
-    const path = `GROUP-SECRETS/${this.getGithubActionsCredentialName(user)}`
-    return path
+  private getVaultPath(user: string): string {
+    return `GROUP-SECRETS/${this.getGithubActionsCredentialName(user)}`
   }
 
   /**

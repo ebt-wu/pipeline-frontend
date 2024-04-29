@@ -1,13 +1,14 @@
 import { CommonModule } from '@angular/common'
-import { Component, Input } from '@angular/core'
+import { Component, Input, ChangeDetectionStrategy } from '@angular/core'
 import { FundamentalNgxCoreModule, MessageToastService } from '@fundamental-ngx/core'
 import { GetPiperConfigQuery } from '@generated/graphql'
 
 @Component({
-  selector: 'piper-service-details',
-  templateUrl: 'piper-service-details.component.html',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  selector: 'app-piper-service-details',
+  templateUrl: './piper-service-details.component.html',
   standalone: true,
-  styleUrls: ['piper-service-details.component.css'],
+  styleUrls: ['./piper-service-details.component.css'],
   imports: [CommonModule, FundamentalNgxCoreModule],
 })
 export class PiperServiceDetailsComponent {
@@ -15,9 +16,9 @@ export class PiperServiceDetailsComponent {
 
   constructor(public messageToastService: MessageToastService) {}
 
-  copyConfigStringToClipboard(config: string) {
+  async copyConfigStringToClipboard(config: string) {
     const cb = navigator.clipboard
-    cb.writeText(config)
+    await cb.writeText(config)
     this.messageToastService.open('config.yml copied to clipboard', {
       duration: 5000,
     })

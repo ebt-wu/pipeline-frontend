@@ -18,9 +18,9 @@ import { AuthorizationModule } from '@dxp/ngx-core/authorization'
 import { Secret, SecretService } from '../../../services/secret.service'
 
 @Component({
-  standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  selector: 'static-security-check-details',
+  standalone: true,
+  selector: 'app-static-security-check-details',
   templateUrl: './static-security-check-details.component.html',
   styleUrls: ['./static-security-check-details.component.css'],
   imports: [
@@ -64,7 +64,7 @@ export class StaticSecurityCheckDetailsComponent implements OnInit {
   async ngOnInit() {
     this.loading.set(true)
     this.watch$ = this.pipelineService.watchPipeline().pipe(debounceTime(50))
-    const cumulusRef = ((await firstValueFrom(this.watch$)) as Pipeline).resourceRefs.find(
+    const cumulusRef = (await firstValueFrom(this.watch$)).resourceRefs.find(
       (ref) => ref.kind === Kinds.CUMULUS_PIPELINE,
     )
 

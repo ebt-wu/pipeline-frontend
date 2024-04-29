@@ -1,16 +1,17 @@
 import { CommonModule } from '@angular/common'
-import { Component } from '@angular/core'
+import { Component, ChangeDetectionStrategy } from '@angular/core'
 import { LuigiClient } from '@dxp/ngx-core/luigi'
 import { FundamentalNgxCoreModule } from '@fundamental-ngx/core'
 
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: true,
-  selector: 'import-existing-pipeline-modal',
-  templateUrl: 'import-existing-pipeline.component.html',
-  styleUrls: ['import-existing-pipeline.component.scss'],
+  selector: 'app-import-existing-pipeline-modal',
+  templateUrl: './import-existing-pipeline.component.html',
+  styleUrls: ['./import-existing-pipeline.component.scss'],
   imports: [CommonModule, FundamentalNgxCoreModule],
 })
-export class ImportExistingPipelineModal {
+export class ImportExistingPipelineModalComponent {
   constructor(private luigiClient: LuigiClient) {}
 
   openFeedbackSurvey() {

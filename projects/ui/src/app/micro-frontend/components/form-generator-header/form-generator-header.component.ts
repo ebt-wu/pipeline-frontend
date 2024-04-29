@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common'
-import { Component, NO_ERRORS_SCHEMA, ChangeDetectionStrategy } from '@angular/core'
+import { Component, NO_ERRORS_SCHEMA, ChangeDetectionStrategy, OnInit } from '@angular/core'
 import {
   BaseDynamicFormGeneratorControl,
   dynamicFormFieldProvider,
@@ -17,7 +17,10 @@ import { ReactiveFormsModule } from '@angular/forms'
   schemas: [NO_ERRORS_SCHEMA],
   styleUrls: ['./form-generator-header.component.css'],
 })
-export class PlatformFormGeneratorCustomHeaderElementComponent extends BaseDynamicFormGeneratorControl {
+export class PlatformFormGeneratorCustomHeaderElementComponent
+  extends BaseDynamicFormGeneratorControl
+  implements OnInit
+{
   subheader: Promise<string>
 
   constructor() {
@@ -25,8 +28,11 @@ export class PlatformFormGeneratorCustomHeaderElementComponent extends BaseDynam
   }
 
   ngOnInit(): void {
-    if (this.formItem.guiOptions?.additionalData?.subheader) {
-      this.subheader = this.formItem.guiOptions.additionalData.subheader()
+    const additionalData = this.formItem.guiOptions?.additionalData as { subheader: () => Promise<string> }
+    const subheader = additionalData.subheader
+
+    if (subheader) {
+      this.subheader = subheader()
     }
   }
 }

@@ -252,10 +252,10 @@
                     !pendingExtensionClass() && isGithubActionsEnabledAlready$ | async as gha;
                     else loadingContent
                   ">
-                  <upgrade-banner
+                  <app-upgrade-banner
                     *ngIf="(isGithubActionsEnabledInSameComponent() || gha.isAlreadyManaged) && !isBuildStageSetup()"
                     [showBalloons]="localLayout === 'OneColumnStartFullScreen'"
-                    class="upgrade-github-actions-banner"></upgrade-banner>
+                    class="upgrade-github-actions-banner"></app-upgrade-banner>
                   <!--the below card will be shown if the GitHub Actions is enabled -->
                   <fd-card
                     *ngIf="gha.isAlreadyManaged || isGithubActionsEnabledInSameComponent(); else notEnabled"

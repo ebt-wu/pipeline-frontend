@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common'
-import { Component, NO_ERRORS_SCHEMA } from '@angular/core'
+import { Component, NO_ERRORS_SCHEMA, ChangeDetectionStrategy, OnInit } from '@angular/core'
 import { ReactiveFormsModule } from '@angular/forms'
 import {
   BaseDynamicFormGeneratorControl,
@@ -8,7 +8,8 @@ import {
 } from '@fundamental-ngx/platform'
 
 @Component({
-  selector: 'fdp-form-generator-info-box',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  selector: 'app-fdp-form-generator-info-box',
   templateUrl: './form-generator-info-box.component.html',
   viewProviders: [dynamicFormFieldProvider, dynamicFormGroupChildProvider],
   standalone: true,
@@ -16,7 +17,7 @@ import {
   schemas: [NO_ERRORS_SCHEMA],
   styleUrls: ['./form-generator-info-box.component.css'],
 })
-export class PlatformFormGeneratorCustomInfoBoxComponent extends BaseDynamicFormGeneratorControl {
+export class PlatformFormGeneratorCustomInfoBoxComponent extends BaseDynamicFormGeneratorControl implements OnInit {
   instructions: Promise<string>
 
   constructor() {
@@ -24,8 +25,11 @@ export class PlatformFormGeneratorCustomInfoBoxComponent extends BaseDynamicForm
   }
 
   ngOnInit(): void {
-    if (this.formItem.guiOptions?.additionalData?.instructions) {
-      this.instructions = this.formItem.guiOptions.additionalData.instructions()
+    const guiOptions = this.formItem.guiOptions
+    const additionalData = guiOptions?.additionalData as { instructions: () => Promise<string> }
+
+    if (additionalData?.instructions) {
+      this.instructions = additionalData.instructions()
     }
   }
 }

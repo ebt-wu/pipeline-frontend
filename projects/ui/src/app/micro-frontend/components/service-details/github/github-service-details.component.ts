@@ -1,16 +1,17 @@
 import { CommonModule } from '@angular/common'
-import { Component, Input, OnInit, signal } from '@angular/core'
+import { Component, Input, OnInit, signal, ChangeDetectionStrategy } from '@angular/core'
 import { FundamentalNgxCoreModule } from '@fundamental-ngx/core'
 import { SecretService } from '../../../../micro-frontend/services/secret.service'
 import { GetGithubRepositoryQuery } from '@generated/graphql'
 import { AuthorizationModule } from '@dxp/ngx-core/authorization'
 
 @Component({
-  selector: 'github-service-details',
-  templateUrl: 'github-service-details.component.html',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  selector: 'app-github-service-details',
+  templateUrl: './github-service-details.component.html',
   standalone: true,
   imports: [CommonModule, FundamentalNgxCoreModule, AuthorizationModule],
-  styleUrls: ['github-service-details.component.css'],
+  styleUrls: ['./github-service-details.component.css'],
 })
 export class GithubServiceDetailsComponent implements OnInit {
   constructor(private readonly secretService: SecretService) {}

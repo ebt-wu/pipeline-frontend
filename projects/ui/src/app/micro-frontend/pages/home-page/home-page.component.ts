@@ -63,7 +63,7 @@ export class HomePageComponent implements OnInit {
   }
 
   @HostListener('document:keydown.control.d', ['$event'])
-  handleCtrlDEvent(_: KeyboardEvent) {
+  handleCtrlDEvent() {
     this.debugModeService.toggleDebugMode()
   }
 

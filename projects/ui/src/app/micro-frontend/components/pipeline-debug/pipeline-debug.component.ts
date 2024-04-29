@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common'
-import { Component, signal } from '@angular/core'
+import { Component, signal, ChangeDetectionStrategy, OnInit } from '@angular/core'
 import { FormattedTextModule, FundamentalNgxCoreModule } from '@fundamental-ngx/core'
 import { PipelineService } from '../../services/pipeline.service'
 import { Observable, debounceTime, firstValueFrom } from 'rxjs'
@@ -8,13 +8,14 @@ import { LuigiClient } from '@dxp/ngx-core/luigi'
 import { AuthorizationModule } from '@dxp/ngx-core/authorization'
 
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: true,
-  selector: 'pipeline-debug',
-  templateUrl: 'pipeline-debug.component.html',
-  styleUrls: ['pipeline-debug.component.css'],
+  selector: 'app-pipeline-debug',
+  templateUrl: './pipeline-debug.component.html',
+  styleUrls: ['./pipeline-debug.component.css'],
   imports: [CommonModule, FundamentalNgxCoreModule, FormattedTextModule, AuthorizationModule],
 })
-export class PipelineDebugModal {
+export class PipelineDebugModalComponent implements OnInit {
   constructor(
     private readonly pipelineService: PipelineService,
     private luigiClient: LuigiClient,
@@ -24,17 +25,18 @@ export class PipelineDebugModal {
 
   watch$: Observable<Pipeline>
 
-  async ngOnInit(): Promise<void> {
+  ngOnInit(): void {
     this.watch$ = this.pipelineService.watchPipeline().pipe(debounceTime(50))
   }
 
-  async deletePipeline(event) {
+  async deletePipeline(event: MouseEvent) {
     if (event.shiftKey) {
       try {
         await firstValueFrom(this.pipelineService.deletePipeline())
         this.luigiClient.uxManager().closeCurrentModal()
-      } catch (e) {
-        alert(e.message)
+      } catch (error) {
+        const errorMessage = (error as Error).message
+        alert(errorMessage)
       }
     } else {
       this.shiftMessage.set(true)

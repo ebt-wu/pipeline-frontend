@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common'
-import { Component, Input, OnInit, signal } from '@angular/core'
+import { Component, Input, OnInit, signal, ChangeDetectionStrategy } from '@angular/core'
 import { FundamentalNgxCoreModule } from '@fundamental-ngx/core'
 import { SecretService } from '../../../../micro-frontend/services/secret.service'
 import { GetGithubActionsCrossNamespaceQuery } from '@generated/graphql'
@@ -8,11 +8,12 @@ import { DxpLuigiContextService, LuigiClient } from '@dxp/ngx-core/luigi'
 import { AuthorizationModule } from '@dxp/ngx-core/authorization'
 
 @Component({
-  selector: 'github-actions-service-details',
-  templateUrl: 'github-actions-service-details.component.html',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  selector: 'app-github-actions-service-details',
+  templateUrl: './github-actions-service-details.component.html',
   standalone: true,
   imports: [CommonModule, FundamentalNgxCoreModule, ErrorMessageComponent, AuthorizationModule],
-  styleUrls: ['github-actions-service-details.component.css'],
+  styleUrls: ['./github-actions-service-details.component.css'],
 })
 export class GithubActionsServiceDetailsComponent implements OnInit {
   constructor(
@@ -71,9 +72,10 @@ export class GithubActionsServiceDetailsComponent implements OnInit {
     this.pendingShowInVault.set(true)
     try {
       window.open(await this.secretService.getVaultUrlOfSecret(vaultPath), '_blank')
-    } catch (e) {
-      if (e.message) {
-        this.errorMessage.set(e.message)
+    } catch (error) {
+      const errorMessage = (error as Error).message
+      if (errorMessage) {
+        this.errorMessage.set(errorMessage)
       } else {
         this.errorMessage.set('Unknown error')
       }
@@ -86,6 +88,6 @@ export class GithubActionsServiceDetailsComponent implements OnInit {
   }
 
   async storeDismissInLocalStorage() {
-    await this.luigiClient.storageManager().setItem(`actions-get-started-warning`, `dismissed at: ${new Date()}`)
+    await this.luigiClient.storageManager().setItem(`actions-get-started-warning`, `dismissed at: ${Date.now()}`)
   }
 }

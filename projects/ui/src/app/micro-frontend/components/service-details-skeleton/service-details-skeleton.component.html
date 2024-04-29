@@ -122,30 +122,30 @@
           <!-- title="" is required to prevent the title attribute from being transferred from fd-tab to downstream elements -->
           <div title="">
             <div class="tab-margin" *ngIf="!serviceDetailsLoading()" [ngSwitch]="activeTile">
-              <cumulus-service-details
+              <app-cumulus-service-details
                 *ngSwitchCase="kinds.CUMULUS_PIPELINE"
-                [serviceDetails]="serviceDetails()"></cumulus-service-details>
-              <github-service-details
+                [serviceDetails]="serviceDetails()"></app-cumulus-service-details>
+              <app-github-service-details
                 *ngSwitchCase="kinds.GITHUB_REPOSITORY"
-                [serviceDetails]="serviceDetails()"></github-service-details>
-              <jenkins-service-details
+                [serviceDetails]="serviceDetails()"></app-github-service-details>
+              <app-jenkins-service-details
                 *ngSwitchCase="kinds.JENKINS_PIPELINE"
-                [serviceDetails]="serviceDetails()"></jenkins-service-details>
-              <piper-service-details
+                [serviceDetails]="serviceDetails()"></app-jenkins-service-details>
+              <app-piper-service-details
                 *ngSwitchCase="kinds.PIPER_CONFIG"
-                [serviceDetails]="serviceDetails()"></piper-service-details>
-              <staging-service-service-details
+                [serviceDetails]="serviceDetails()"></app-piper-service-details>
+              <app-staging-service-service-details
                 *ngSwitchCase="kinds.STAGING_SERVICE_CREDENTIAL"
-                [serviceDetails]="serviceDetails()"></staging-service-service-details>
-              <github-actions-service-details
+                [serviceDetails]="serviceDetails()"></app-staging-service-service-details>
+              <app-github-actions-service-details
                 *ngSwitchCase="kinds.GITHUB_ACTION"
-                [serviceDetails]="serviceDetails()"></github-actions-service-details>
-              <github-actions-service-details
+                [serviceDetails]="serviceDetails()"></app-github-actions-service-details>
+              <app-github-actions-service-details
                 *ngSwitchCase="kinds.GITHUB_ACTIONS_WORKFLOW"
-                [serviceDetails]="serviceDetails()"></github-actions-service-details>
-              <static-security-check-details
+                [serviceDetails]="serviceDetails()"></app-github-actions-service-details>
+              <app-static-security-check-details
                 *ngSwitchCase="kinds.GITHUB_ADVANCED_SECURITY"
-                [serviceDetails]="serviceDetails()"></static-security-check-details>
+                [serviceDetails]="serviceDetails()"></app-static-security-check-details>
             </div>
             <div class="tab-margin">
               <fd-skeleton width="350px" height="10rem" *ngIf="serviceDetailsLoading()">

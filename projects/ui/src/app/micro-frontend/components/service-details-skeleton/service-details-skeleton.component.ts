@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnInit, Output, signal } from '@angular/core'
+import { Component, EventEmitter, Input, OnInit, Output, signal, ChangeDetectionStrategy } from '@angular/core'
 import { FlexibleColumnLayout, FundamentalNgxCoreModule } from '@fundamental-ngx/core'
 import { CommonModule } from '@angular/common'
 import { KindCategory, KindExtensionName, KindName } from '@constants'
@@ -22,12 +22,15 @@ import { ErrorMessageComponent } from '../error-message/error-message.component'
 import { ErrorMessage } from '@types'
 import { StaticSecurityCheckDetailsComponent } from '../service-details/static-security-check/static-security-check-details.component'
 import { MenuComponent, MenuTriggerDirective, PlatformMenuButtonModule } from '@fundamental-ngx/platform'
+import { GithubRepository, JenkinsPipeline, PiperConfig } from '@generated/graphql'
 
-type ServiceDetails = any
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export type ServiceDetails = any
 
 const dateFormatter = new Intl.DateTimeFormat('en', { year: 'numeric', month: 'short', day: 'numeric' })
 
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-service-details-skeleton',
   templateUrl: './service-details-skeleton.component.html',
   standalone: true,
@@ -81,10 +84,12 @@ export class ServiceDetailsSkeletonComponent implements OnInit {
 
   async ngOnInit() {
     this.dxpContext$ = this.luigiService.contextObservable().pipe(map((value) => value.context))
-    const context = (await this.luigiService.getContextAsync()) as any
+    const context = await this.luigiService.getContextAsync()
     this.catalogUrl.set(context.frameBaseUrl + '/catalog')
     const extensionClasses = await firstValueFrom(this.extensionService.getExtensionClassesForScopesQuery())
     this.extensionClasses.set(extensionClasses)
+
+    // eslint-disable-next-line @typescript-eslint/no-misused-promises
     this.sharedService.selectedResourceData$.subscribe(async (resource) => {
       if (resource == null) {
         return
@@ -118,23 +123,22 @@ export class ServiceDetailsSkeletonComponent implements OnInit {
     this.serviceDetails.set({})
     this.serviceUrl.set('')
     this.serviceCreationTimestamp.set(null)
-
     try {
       switch (kind) {
         case Kinds.JENKINS_PIPELINE:
           this.serviceDetails.set(await firstValueFrom(this.api.jenkinsService.getJenkinsPipeline(name)))
-          this.serviceUrl.set(this.serviceDetails().jobUrl)
+          this.serviceUrl.set((this.serviceDetails() as JenkinsPipeline).jobUrl)
           break
         case Kinds.GITHUB_REPOSITORY:
           this.serviceDetails.set(await firstValueFrom(this.api.githubService.getGithubRepository(name)))
-          this.serviceUrl.set(this.serviceDetails().repositoryUrl)
+          this.serviceUrl.set((this.serviceDetails() as GithubRepository).repositoryUrl)
           break
         case Kinds.CUMULUS_PIPELINE:
           this.serviceDetails.set(await firstValueFrom(this.api.cumulusService.getCumulusPipeline(name)))
           break
         case Kinds.PIPER_CONFIG:
           this.serviceDetails.set(await firstValueFrom(this.api.piperService.getPiperConfig(name)))
-          this.serviceUrl.set(this.serviceDetails().pullRequestURL)
+          this.serviceUrl.set((this.serviceDetails() as PiperConfig).pullRequestURL)
           break
         case Kinds.STAGING_SERVICE_CREDENTIAL:
           this.serviceDetails.set(await firstValueFrom(this.api.stagingServiceService.getStagingServiceCredential()))
@@ -163,12 +167,15 @@ export class ServiceDetailsSkeletonComponent implements OnInit {
           break
       }
 
-      this.serviceCreationTimestamp.set(new Date(this.serviceDetails().creationTimestamp))
+      this.serviceCreationTimestamp.set(
+        new Date((this.serviceDetails() as { creationTimestamp: string }).creationTimestamp),
+      )
     } catch (err) {
+      const errorMessage = (err as Error).message
       this.errors.update((errors) => {
         errors.push({
           title: `Load service details failed for kind ${kind}`,
-          message: `${err.message}`,
+          message: `${errorMessage}`,
         })
         return errors
       })
@@ -190,8 +197,9 @@ export class ServiceDetailsSkeletonComponent implements OnInit {
         await firstValueFrom(this.api.githubAdvancedSecurityService.deleteGithubAdvancedSecurity(this.resourceName()))
       })
       .catch((err) => {
+        const errorMessage = (err as Error).message
         this.errors.update((errors) => {
-          errors.push({ title: 'Deleting Static Security Checks failed', message: err.toString() })
+          errors.push({ title: 'Deleting Static Security Checks failed', message: errorMessage })
           return errors
         })
       })
@@ -209,11 +217,11 @@ export class ServiceDetailsSkeletonComponent implements OnInit {
   }
 
   public getExtensionClass(activeTile: string): ExtensionClass {
-    const extensionName = KindExtensionName[activeTile]
+    const extensionName = KindExtensionName[activeTile] as string
     return this.extensionClasses().find((extensionClass) => extensionClass.name == extensionName)
   }
 
-  getComma(element: any, array: any[]): string {
+  getComma(element: unknown, array: unknown[]): string {
     if (array.length - 1 === array.indexOf(element)) {
       return ''
     }
@@ -256,7 +264,7 @@ Service details from LeanIX are missing for the service \`${this.kindName[kind]}
 The information might be missing in the Hyperspace portal extension backend, LeanIX or there is a misconfiguration in the CI/CD setup UI.
 
 **Project this issue was created from:** [${project}](${baseUrl}/projects/${project})
-**Timestamp:** ${new Date()}
+**Timestamp:** ${Date.now()}
 **User:** ${user}
     `,
       [GitHubIssueLabels.EXTERNAL],
