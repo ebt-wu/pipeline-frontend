@@ -54,12 +54,13 @@ export class CardProjectPromotionComponent implements OnInit, OnDestroy {
     private dialogService: DialogService,
     private githubService: GithubService,
   ) {}
-  ngOnDestroy(): void {
-    this.githubSubscription.unsubscribe()
-  }
 
   ngOnInit(): void {
     this.checkGithubConnection()
+  }
+
+  ngOnDestroy(): void {
+    this.githubSubscription.unsubscribe()
   }
 
   openGetStartedModal(e: Event): void {

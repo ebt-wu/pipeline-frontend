@@ -1,5 +1,5 @@
 import { CdkScrollable } from '@angular/cdk/scrolling'
-import { Component } from '@angular/core'
+import { Component, ChangeDetectionStrategy } from '@angular/core'
 import { CardModule, DialogModule, DialogRef, ScrollbarDirective } from '@fundamental-ngx/core'
 import { LuigiClient } from '@dxp/ngx-core/luigi'
 
@@ -10,6 +10,7 @@ interface DialogData {
 }
 
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: true,
   selector: 'app-cicd-modal-project-get-started',
   templateUrl: './modal-project-get-started.component.html',

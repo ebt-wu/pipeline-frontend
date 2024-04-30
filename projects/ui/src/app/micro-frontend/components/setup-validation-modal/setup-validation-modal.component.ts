@@ -13,7 +13,7 @@ import {
   PlatformMessagePopoverModule,
 } from '@fundamental-ngx/platform'
 import { BuildTool, Orchestrators } from '@generated/graphql'
-import { ghTokenFormValue, Pipeline, ResourceRef, ValidationLanguage } from '@types'
+import { EntityContext, ghTokenFormValue, Pipeline, ResourceRef, ValidationLanguage } from '@types'
 import { debounceTime, firstValueFrom, Observable, Subscription } from 'rxjs'
 import { ErrorMessageComponent } from '../error-message/error-message.component'
 import { GithubAdvancedSecurityService } from '../../services/github-advanced-security.service'
@@ -22,16 +22,6 @@ import { PipelineService } from '../../services/pipeline.service'
 import { PlatformFormGeneratorCustomInfoBoxComponent } from '../form-generator-info-box/form-generator-info-box.component'
 import { SecretData, SecretService } from '../../services/secret.service'
 
-type EntityContext = {
-  component: {
-    annotations: {
-      ['github.dxp.sap.com/acronym']: string
-      ['github.dxp.sap.com/login']: string
-      ['github.dxp.sap.com/repo-name']: string
-      ['github.dxp.sap.com/repo-url']: string
-    }
-  }
-}
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: true,
@@ -109,8 +99,8 @@ export class SetupValidationModalComponent implements OnInit, OnDestroy {
 
   async recommendLanguage() {
     const context = await this.luigiService.getContextAsync()
-    const repoUrl =
-      (context.entityContext as unknown as EntityContext)?.component?.annotations['github.dxp.sap.com/repo-url'] ?? null
+    const entityContext = context.entityContext as unknown as EntityContext
+    const repoUrl = entityContext?.component?.annotations['github.dxp.sap.com/repo-url'] ?? null
 
     let gitRepoLanguages: Record<string, number>
     try {

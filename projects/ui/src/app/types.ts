@@ -41,6 +41,17 @@ export type Pipeline = {
   resourceRefs?: ResourceRef[]
 }
 
+export type EntityContext = {
+  component: {
+    annotations: {
+      ['github.dxp.sap.com/acronym']: string
+      ['github.dxp.sap.com/login']: string
+      ['github.dxp.sap.com/repo-name']: string
+      ['github.dxp.sap.com/repo-url']: string
+    }
+  }
+}
+
 export type ValidationLanguage = {
   id: string
   displayName: string

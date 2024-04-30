@@ -16,6 +16,7 @@ import { CredentialTypes } from '@enums'
 import { Validators } from '@angular/forms'
 import { DynamicFormItem } from '@fundamental-ngx/platform'
 import { Secret, SecretService } from './secret.service'
+import { EntityContext, ghTokenFormValue } from '@types'
 
 export interface GithubMetadata {
   githubInstance: string
@@ -65,7 +66,7 @@ export class GithubService {
       message: 'Personal Access Token (PAT)',
       placeholder: 'Enter service user or personal user access token',
       validators: [Validators.required],
-      when: (formValue: any) => {
+      when: (formValue: ghTokenFormValue) => {
         return formValue.githubCredentialType === CredentialTypes.NEW
       },
       validate: async (value: string) => {
@@ -88,7 +89,7 @@ export class GithubService {
           if (!hasRequiredScopes) {
             return `Please provide a token with the following scopes: ${REQUIRED_SCOPES.join(', ')}`
           }
-          const user = (await repoResp.json())?.login
+          const user = ((await repoResp.json()) as Record<string, string>)?.login
 
           const response = await fetch(
             `${githubMetadata.githubInstance}/api/v3/orgs/${githubMetadata.githubOrgName}/memberships/${user}`,
@@ -98,13 +99,14 @@ export class GithubService {
               },
             },
           )
-          const userRole = (await response.json())?.role
+          const userRole = ((await response.json()) as Record<string, unknown>)?.role
 
           if (userRole !== 'admin') {
             return `The user ${user} is not an owner for the organization ${githubMetadata.githubOrgName}`
           }
-        } catch (e) {
-          return `Could not validate token: ${e.message}`
+        } catch (error) {
+          const errorMessage = (error as Error).message
+          return `Could not validate token: ${errorMessage}`
         }
         return null
       },
@@ -113,7 +115,7 @@ export class GithubService {
       type: 'info',
       name: 'patInfoBox',
       message: '',
-      when: (formValue: any) => {
+      when: (formValue: ghTokenFormValue) => {
         return formValue.githubCredentialType === CredentialTypes.NEW
       },
       guiOptions: {
@@ -163,8 +165,8 @@ export class GithubService {
         return secrets.filter((value) => this.isValidGithubSecret(value)).map((value) => value.path)
       },
       validators: [Validators.required],
-      when: (formValue: any) => {
-        return formValue.githubCredentialType === CredentialTypes.EXISTING
+      when: (formValue: { githubCredentialType: string }) => {
+        return formValue.githubCredentialType === CredentialTypes.EXISTING.toString()
       },
     },
   ]
@@ -184,13 +186,13 @@ export class GithubService {
 
   async getGithubMetadata(): Promise<GithubMetadata> {
     const context = await this.luigiService.getContextAsync()
-    const githubRepoUrl = (context.entityContext?.component as any)?.annotations['github.dxp.sap.com/repo-url'] ?? null
-    const githubRepoName =
-      (context.entityContext?.component as any)?.annotations['github.dxp.sap.com/repo-name'] ?? null
+    const entityContext = context.entityContext as unknown as EntityContext
+    const githubRepoUrl = entityContext?.component.annotations['github.dxp.sap.com/repo-url'] ?? null
+    const githubRepoName = entityContext?.component?.annotations['github.dxp.sap.com/repo-name'] ?? null
     const url = new URL(githubRepoUrl)
-    const githubOrgName = (context.entityContext?.component as any)?.annotations['github.dxp.sap.com/login'] ?? null
+    const githubOrgName = entityContext?.component?.annotations['github.dxp.sap.com/login'] ?? null
 
-    let githubTechnicalUserSelfServiceUrl
+    let githubTechnicalUserSelfServiceUrl: string
     if (url.hostname === 'github.tools.sap') {
       githubTechnicalUserSelfServiceUrl = 'https://technical-user-management.github.tools.sap/'
     } else if (url.hostname === 'github.wdf.sap.corp') {
@@ -275,7 +277,7 @@ export class GithubService {
     luigiClient: LuigiClient,
     luigiContext: DxpLuigiContextService,
     repoUrl: string,
-  ): Promise<any> {
+  ): Promise<Record<string, number>> {
     const ghToken = await firstValueFrom(
       luigiContext.contextObservable().pipe(
         map((luigiContext) => {
@@ -296,7 +298,7 @@ export class GithubService {
     }
 
     const url = new URL(repoUrl)
-    let languagesResp
+    let languagesResp: Response
     try {
       languagesResp = await fetch(`${url.origin}/api/v3/repos${url.pathname}/languages`, {
         headers: {
@@ -304,10 +306,11 @@ export class GithubService {
         },
       })
     } catch (error) {
-      throw new Error(`Error (${error.message}) when fetching the GitHub Repository languages for: ${repoUrl}`)
+      const errorMessage = (error as Error).message
+      throw new Error(`Error (${errorMessage}) when fetching the GitHub Repository languages for: ${repoUrl}`)
     }
 
-    const languages = await languagesResp.json()
+    const languages = (await languagesResp.json()) as Record<string, number>
     return languages
   }
 }

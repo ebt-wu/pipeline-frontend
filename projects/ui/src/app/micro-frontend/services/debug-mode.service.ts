@@ -19,7 +19,7 @@ export class DebugModeService implements OnInit {
   constructor(
     public messageToastService: MessageToastService,
     private readonly apiService: BaseAPIService,
-    private readonly luigiService: DxpLuigiContextService
+    private readonly luigiService: DxpLuigiContextService,
   ) {}
 
   async ngOnInit(): Promise<void> {
@@ -27,7 +27,7 @@ export class DebugModeService implements OnInit {
 
     this.tier = context.frameContext.automaticDServiceApiUrl.replace(
       /.*automaticd\.([^.]+)\.dxp\.k8s\.ondemand.com.*/,
-      '$1'
+      '$1',
     )
   }
 
@@ -56,7 +56,7 @@ export class DebugModeService implements OnInit {
             resourceName: resourceName,
           },
         })
-      })
+      }),
     )
   }
 
@@ -66,7 +66,8 @@ export class DebugModeService implements OnInit {
   }
 
   getTracesURL(namespace: string, resourceName?: string): string {
-    const env = ENV_MAPPING[this.tier]
+    const tier = this.tier as keyof typeof ENV_MAPPING
+    const env = ENV_MAPPING[tier]
 
     const tagFilter = [
       { tag: 'sf_environment', operation: 'IN', values: [`u3300_automaticd-${env}`] },

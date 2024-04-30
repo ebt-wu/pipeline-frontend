@@ -1,6 +1,6 @@
 import { gql } from 'apollo-angular'
 import { combineLatest, first, map, mergeMap, Observable } from 'rxjs'
-import { ExtensionClass, Extensions, ScopeType } from './extension.types'
+import { ExtensionClass, ScopeType } from './extension.types'
 import { ExtensionApolloClientService } from '@dxp/ngx-core/apollo'
 import { DxpIContextMessage, DxpLuigiContextService, LuigiClient } from '@dxp/ngx-core/luigi'
 import { Injectable } from '@angular/core'

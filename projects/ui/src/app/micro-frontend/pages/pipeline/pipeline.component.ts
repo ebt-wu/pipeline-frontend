@@ -152,8 +152,8 @@ export class PipelineComponent implements OnInit, OnDestroy {
     const context = await this.luigiService.getContextAsync()
 
     // Only show GHA and GHAS if their feature flags are toggled on
-    this.showGithubActions.set(this.featureFlagService.isGithubActionsEnabled(context.projectId))
-    this.showGHAS.set(this.featureFlagService.isGhasEnabled(context.projectId))
+    this.showGithubActions.set(await this.featureFlagService.isGithubActionsEnabled(context.projectId))
+    this.showGHAS.set(await this.featureFlagService.isGhasEnabled(context.projectId))
 
     this.catalogUrl.set(context.frameBaseUrl + '/catalog')
     this.projectId = context.projectId

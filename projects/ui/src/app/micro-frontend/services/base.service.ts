@@ -15,6 +15,6 @@ export class BaseAPIService extends BaseApolloClientService {
       return 'http://localhost:3000/query'
     }
     // hosted backend:
-    return luigiContext.frameContext.pipelineBackendUrl
+    return (luigiContext.frameContext as { pipelineBackendUrl: string }).pipelineBackendUrl
   }
 }

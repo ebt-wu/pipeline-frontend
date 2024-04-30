@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common'
-import { Component, OnDestroy, OnInit, signal, ViewChild } from '@angular/core'
+import { Component, OnDestroy, OnInit, signal, ViewChild, ChangeDetectionStrategy } from '@angular/core'
 import { Validators } from '@angular/forms'
 import { FormattedTextModule, FormModule, FundamentalNgxCoreModule, RadioModule } from '@fundamental-ngx/core'
 import { FundamentalNgxPlatformModule } from '@fundamental-ngx/platform'
@@ -12,8 +12,8 @@ import {
 import { DxpLuigiContextService, LuigiClient } from '@dxp/ngx-core/luigi'
 import { CredentialTypes, Languages, Orchestrators } from '@enums'
 import { SecretData, SecretService } from '../../services/secret.service'
-import { firstValueFrom, lastValueFrom, map, Subscription } from 'rxjs'
-import { SetupBuildFormValue } from '@types'
+import { firstValueFrom, lastValueFrom, Subscription } from 'rxjs'
+import { EntityContext, SetupBuildFormValue } from '@types'
 import { GithubService, REQUIRED_SCOPES } from '../../services/github.service'
 import { JenkinsService } from '../../services/jenkins.service'
 import { ErrorMessageComponent } from '../../components/error-message/error-message.component'
@@ -26,6 +26,7 @@ import { getNodeParams } from '@luigi-project/client'
 import { FeatureFlagService } from '../../services/feature-flag.service'
 
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: true,
   selector: 'app-setup-build',
   templateUrl: './setup-build.component.html',
@@ -98,14 +99,19 @@ export class SetupComponent implements OnInit, OnDestroy {
       name: 'buildTool',
       message: '',
       default: async () => {
-        const context = (await this.luigiService.getContextAsync()) as any
-        const repoUrl = context.entityContext?.component?.annotations['github.dxp.sap.com/repo-url'] ?? null
+        const context = await this.luigiService.getContextAsync()
+        const entityContext = context.entityContext as unknown as EntityContext
+        const repoUrl = entityContext?.component?.annotations['github.dxp.sap.com/repo-url'] ?? null
 
-        let languages
+        let languages: Record<string, number>
         try {
-          languages = await this.githubService.getRepositoryLanguages(this.luigiClient, this.luigiService, repoUrl)
+          languages = (await this.githubService.getRepositoryLanguages(
+            this.luigiClient,
+            this.luigiService,
+            repoUrl,
+          )) as Record<string, number>
         } catch (error) {
-          this.errorMessage.set(error.message)
+          this.errorMessage.set((error as Error).message)
         }
 
         if (!languages) {
@@ -122,7 +128,7 @@ export class SetupComponent implements OnInit, OnDestroy {
           return BuildTool.Docker
         }
 
-        for (const [key, _] of sortedLanguages) {
+        for (const [key] of sortedLanguages) {
           switch (key) {
             case Languages.JAVA:
               return BuildTool.Maven
@@ -172,7 +178,7 @@ export class SetupComponent implements OnInit, OnDestroy {
         const context = await this.luigiService.getContextAsync()
         const orchestrators = [Orchestrators.JENKINS]
 
-        if (this.featureFlagService.isGithubActionsEnabled(context.projectId)) {
+        if (await this.featureFlagService.isGithubActionsEnabled(context.projectId)) {
           orchestrators.push(Orchestrators.GITHUB_ACTIONS_WORKFLOW)
         }
 
@@ -199,7 +205,7 @@ export class SetupComponent implements OnInit, OnDestroy {
           },
         },
       },
-      when: (formValue: any) => {
+      when: (formValue: SetupBuildFormValue) => {
         return formValue.orchestrator === Orchestrators.JENKINS
       },
     },
@@ -208,7 +214,7 @@ export class SetupComponent implements OnInit, OnDestroy {
       name: 'jenkinsUrl',
       message: 'Jenkins URL',
       placeholder: 'Enter URL',
-      validate: async (value) => {
+      validate: async (value: string) => {
         // validate if the provided URL is a valid one
         const urlValidation =
           /https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)?/gi
@@ -216,7 +222,7 @@ export class SetupComponent implements OnInit, OnDestroy {
         return regex.test(value) ? null : 'Please provide a valid URL'
       },
       validators: [Validators.required],
-      when: (formValue: any) => {
+      when: (formValue: SetupBuildFormValue) => {
         return formValue.orchestrator === Orchestrators.JENKINS
       },
     },
@@ -234,7 +240,7 @@ export class SetupComponent implements OnInit, OnDestroy {
           },
         },
       },
-      when: (formValue: any) => {
+      when: (formValue: SetupBuildFormValue) => {
         return formValue.orchestrator === Orchestrators.JENKINS
       },
     },
@@ -267,7 +273,7 @@ export class SetupComponent implements OnInit, OnDestroy {
       name: 'jenkinsUserId',
       message: 'User ID',
       placeholder: 'Enter ID',
-      when: (formValue: any) => {
+      when: (formValue: SetupBuildFormValue) => {
         if (formValue.orchestrator != Orchestrators.JENKINS) {
           return false
         }
@@ -281,7 +287,7 @@ export class SetupComponent implements OnInit, OnDestroy {
       name: 'jenkinsToken',
       message: 'Token with overall (administer) permissions.',
       placeholder: 'Enter Token',
-      when: (formValue: any) => {
+      when: (formValue: SetupBuildFormValue) => {
         if (formValue.orchestrator != Orchestrators.JENKINS) {
           return false
         }
@@ -303,7 +309,7 @@ export class SetupComponent implements OnInit, OnDestroy {
         return secrets.filter((value) => value.path.includes('jenkins')).map((value) => value.path)
       },
       validators: [Validators.required],
-      when: (formValue: any) => {
+      when: (formValue: SetupBuildFormValue) => {
         if (formValue.orchestrator != Orchestrators.JENKINS) {
           return false
         }
@@ -348,12 +354,13 @@ export class SetupComponent implements OnInit, OnDestroy {
   }
 
   async onFormSubmitted(value: SetupBuildFormValue): Promise<void> {
-    const context = (await this.luigiService.getContextAsync()) as any
+    const context = await this.luigiService.getContextAsync()
+    const entityContext = context.entityContext as unknown as EntityContext
 
     // create resources - because of dependencies the order needs to be: github - jenkins - piper
-    const repoUrl = context.entityContext?.component?.annotations?.['github.dxp.sap.com/repo-url'] ?? ''
-    const login = context.entityContext?.component?.annotations?.['github.dxp.sap.com/login'] ?? ''
-    const repoName = context.entityContext?.component?.annotations?.['github.dxp.sap.com/repo-name'] ?? ''
+    const repoUrl = entityContext?.component?.annotations?.['github.dxp.sap.com/repo-url'] ?? ''
+    const login = entityContext?.component?.annotations?.['github.dxp.sap.com/login'] ?? ''
+    const repoName = entityContext?.component?.annotations?.['github.dxp.sap.com/repo-name'] ?? ''
     if (!repoUrl || !login || !repoName) {
       this.errorMessage.set(
         'Could not get GitHub metadata from Luigi context 🙄. Please reload the page and try again.',
@@ -397,7 +404,7 @@ export class SetupComponent implements OnInit, OnDestroy {
             Authorization: `Bearer ${value.githubToken}`,
           },
         })
-        const user = (await userQueryResp.json())?.login
+        const user = ((await userQueryResp.json()) as Record<string, string>)?.login
         const secretData: SecretData[] = [
           { key: 'username', value: user },
           { key: 'scopes', value: REQUIRED_SCOPES.join(',') },
@@ -447,9 +454,10 @@ export class SetupComponent implements OnInit, OnDestroy {
 
       this.loading = false
       this.luigiClient.uxManager().closeCurrentModal()
-    } catch (e) {
-      if (e.message) {
-        this.errorMessage.set(e.message)
+    } catch (error) {
+      const errorMessage = (error as Error).message
+      if (errorMessage) {
+        this.errorMessage.set(errorMessage)
       } else {
         this.errorMessage.set('Unknown error')
       }

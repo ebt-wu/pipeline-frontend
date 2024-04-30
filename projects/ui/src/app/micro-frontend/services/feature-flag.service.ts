@@ -15,18 +15,18 @@ export type FlagKeys = (typeof Flags)[keyof typeof Flags]
 export class FeatureFlagService {
   constructor(private readonly luigiService: DxpLuigiContextService) {}
 
-  isGithubActionsEnabled(projectId: string) {
-    return this.getFlagValue(Flags.GITHUB_ACTIONS_ENABLED, projectId)
+  async isGithubActionsEnabled(projectId: string) {
+    return await this.getFlagValue(Flags.GITHUB_ACTIONS_ENABLED, projectId)
   }
 
-  isGhasEnabled(projectId: string) {
-    return this.getFlagValue(Flags.GHAS_ENABLED, projectId)
+  async isGhasEnabled(projectId: string) {
+    return await this.getFlagValue(Flags.GHAS_ENABLED, projectId)
   }
 
-  private getFlagValue(flag: FlagKeys, projectId: string): boolean {
-    const featureFlags = (this.luigiService.getContext()?.featureFlags as FeatureFlags) ?? {}
+  private async getFlagValue(flag: FlagKeys, projectId: string): Promise<boolean> {
+    const featureFlags = (await this.luigiService.getContext().featureFlags) as FeatureFlags
 
-    const flagValue = featureFlags?.[flag] ?? false
+    const flagValue = featureFlags[flag] ?? false
 
     if (typeof flagValue === 'boolean') {
       return flagValue
