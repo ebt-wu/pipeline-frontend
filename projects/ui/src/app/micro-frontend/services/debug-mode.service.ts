@@ -1,4 +1,4 @@
-import { Injectable, OnInit, signal } from '@angular/core'
+import { Injectable, signal } from '@angular/core'
 import { MessageToastService } from '@fundamental-ngx/core'
 import { BaseAPIService } from './base.service'
 import { DxpLuigiContextService } from '@dxp/ngx-core/luigi'
@@ -12,8 +12,8 @@ const ENV_MAPPING = {
 }
 
 @Injectable({ providedIn: 'root' })
-export class DebugModeService implements OnInit {
-  protected tier: string = 'dev'
+export class DebugModeService {
+  protected tier?: keyof typeof ENV_MAPPING
   debugModeEnabled = signal(false)
 
   constructor(
@@ -21,15 +21,6 @@ export class DebugModeService implements OnInit {
     private readonly apiService: BaseAPIService,
     private readonly luigiService: DxpLuigiContextService,
   ) {}
-
-  async ngOnInit(): Promise<void> {
-    const context = await this.luigiService.getContextAsync()
-
-    this.tier = context.frameContext.automaticDServiceApiUrl.replace(
-      /.*automaticd\.([^.]+)\.dxp\.k8s\.ondemand.com.*/,
-      '$1',
-    )
-  }
 
   toggleDebugMode() {
     this.debugModeEnabled.set(!this.debugModeEnabled())
@@ -60,13 +51,25 @@ export class DebugModeService implements OnInit {
     )
   }
 
-  openTraces(e: Event, namespace: string, resourceName?: string) {
+  async openTraces(e: Event, namespace: string, resourceName?: string) {
     e?.stopPropagation()
-    window.open(this.getTracesURL(namespace, resourceName), '_blank')
+    window.open(await this.getTracesURL(namespace, resourceName), '_blank')
   }
 
-  getTracesURL(namespace: string, resourceName?: string): string {
-    const tier = this.tier as keyof typeof ENV_MAPPING
+  async getTier(): Promise<keyof typeof ENV_MAPPING> {
+    if (this.tier) {
+      return this.tier
+    }
+    const ctx = await this.luigiService.getContextAsync()
+    this.tier = ctx.frameContext.automaticDServiceApiUrl.replace(
+      /.*automaticd\.([^.]+)\.dxp\.k8s\.ondemand.com.*/,
+      '$1',
+    ) as keyof typeof ENV_MAPPING
+    return this.tier
+  }
+
+  async getTracesURL(namespace: string, resourceName?: string): Promise<string> {
+    const tier = await this.getTier()
     const env = ENV_MAPPING[tier]
 
     const tagFilter = [

@@ -21,7 +21,6 @@ jobs:
       test_command: 'npm run test:wc:cov'
       node-versions: '[ "20.x" ]'
       release_prefix: wc-
-      lint: false
 
   updateStack:
     needs: [buildPackages]

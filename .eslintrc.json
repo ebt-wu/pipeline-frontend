@@ -1,8 +1,31 @@
 {
-  "extends": "@dxp/eslint-config-angular",
-  "plugins": ["unused-imports"],
+  "root": true,
+  "ignorePatterns": [
+    "projects/**/*"
+  ],
+  "plugins": [
+    "unused-imports"
+  ],
+  "extends": [
+    "@dxp/eslint-config-angular"
+  ],
   "rules": {
     "unused-imports/no-unused-imports": "error",
     "unused-imports/no-unused-vars": "warn"
-  }
+  },
+  "overrides": [
+    {
+      "files": [
+        "*.ts"
+      ],
+      "parserOptions": {
+        "project": [
+          "tsconfig.json"
+        ]
+      },
+      "rules": {
+        "@typescript-eslint/unbound-method": "warn"
+      }
+    }
+  ]
 }

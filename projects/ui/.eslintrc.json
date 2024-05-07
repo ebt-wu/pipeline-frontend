@@ -1,4 +1,3 @@
 {
-  "extends": "@dxp/eslint-config-angular/app-config",
-  "ignorePatterns":  ["projects/ui/src/generated/*.ts"]
+  "extends": "../../.eslintrc.json"
 }

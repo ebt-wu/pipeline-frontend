@@ -105,11 +105,7 @@ export class SetupComponent implements OnInit, OnDestroy {
 
         let languages: Record<string, number>
         try {
-          languages = (await this.githubService.getRepositoryLanguages(
-            this.luigiClient,
-            this.luigiService,
-            repoUrl,
-          )) as Record<string, number>
+          languages = await this.githubService.getRepositoryLanguages(this.luigiClient, this.luigiService, repoUrl)
         } catch (error) {
           this.errorMessage.set((error as Error).message)
         }
@@ -199,7 +195,7 @@ export class SetupComponent implements OnInit, OnDestroy {
       guiOptions: {
         additionalData: {
           header: 'Jenkins instance',
-          subheader: async () => {
+          subheader: () => {
             return ` Don't have an instance yet?
             <a href="https://jenx.int.sap.eu2.hana.ondemand.com/#/imageOverview" target="_blank">Request one.</a>`
           },
@@ -214,7 +210,7 @@ export class SetupComponent implements OnInit, OnDestroy {
       name: 'jenkinsUrl',
       message: 'Jenkins URL',
       placeholder: 'Enter URL',
-      validate: async (value: string) => {
+      validate: (value: string) => {
         // validate if the provided URL is a valid one
         const urlValidation =
           /https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)?/gi
@@ -233,7 +229,7 @@ export class SetupComponent implements OnInit, OnDestroy {
       guiOptions: {
         additionalData: {
           header: 'Jenkins credentials',
-          subheader: async () => {
+          subheader: () => {
             return `Your credentials are stored in Vault and needed to create a pipeline
             in your Jenkins instance. Technical user is preferred, you can find out how
             to set up one in the <a href="https://pages.github.tools.sap/hyperspace/jaas-documentation/faqs_and_troubleshooting/faq/#how-can-i-get-a-service-user" target="_blank">JaaS documentation.</a>`

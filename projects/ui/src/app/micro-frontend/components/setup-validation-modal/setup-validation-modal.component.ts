@@ -104,11 +104,7 @@ export class SetupValidationModalComponent implements OnInit, OnDestroy {
 
     let gitRepoLanguages: Record<string, number>
     try {
-      gitRepoLanguages = (await this.githubService.getRepositoryLanguages(
-        this.luigiClient,
-        this.luigiService,
-        repoUrl,
-      )) as Record<string, number>
+      gitRepoLanguages = await this.githubService.getRepositoryLanguages(this.luigiClient, this.luigiService, repoUrl)
     } catch (error) {
       this.errorMessage.set((error as Error).message)
     }

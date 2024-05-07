@@ -15,7 +15,6 @@ jobs:
     secrets: inherit
     with:
       artifact: pipeline-frontend
-      lint: false
       package_manager: "npm"
       hyperspace_project: "PIPELINE-GROUP-2044"
       build_command: 'npm run build:ui'
