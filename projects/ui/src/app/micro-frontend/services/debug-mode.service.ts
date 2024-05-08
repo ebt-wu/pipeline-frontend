@@ -51,16 +51,16 @@ export class DebugModeService {
     )
   }
 
-  async openTraces(e: Event, namespace: string, resourceName?: string) {
+  openTraces(e: Event, namespace: string, resourceName?: string) {
     e?.stopPropagation()
-    window.open(await this.getTracesURL(namespace, resourceName), '_blank')
+    window.open(this.getTracesURL(namespace, resourceName), '_blank')
   }
 
-  async getTier(): Promise<keyof typeof ENV_MAPPING> {
+  getTier(): keyof typeof ENV_MAPPING {
     if (this.tier) {
       return this.tier
     }
-    const ctx = await this.luigiService.getContextAsync()
+    const ctx = this.luigiService.getContext()
     this.tier = ctx.frameContext.automaticDServiceApiUrl.replace(
       /.*automaticd\.([^.]+)\.dxp\.k8s\.ondemand.com.*/,
       '$1',
@@ -68,8 +68,8 @@ export class DebugModeService {
     return this.tier
   }
 
-  async getTracesURL(namespace: string, resourceName?: string): Promise<string> {
-    const tier = await this.getTier()
+  getTracesURL(namespace: string, resourceName?: string): string {
+    const tier = this.getTier()
     const env = ENV_MAPPING[tier]
 
     const tagFilter = [
