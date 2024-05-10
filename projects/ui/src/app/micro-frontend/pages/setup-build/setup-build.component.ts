@@ -195,10 +195,9 @@ export class SetupComponent implements OnInit, OnDestroy {
       guiOptions: {
         additionalData: {
           header: 'Jenkins instance',
-          subheader: () => {
-            return ` Don't have an instance yet?
-            <a href="https://jenx.int.sap.eu2.hana.ondemand.com/#/imageOverview" target="_blank">Request one.</a>`
-          },
+          subheader: () =>
+            Promise.resolve(`Don't have an instance yet?
+            <a href="https://jenx.int.sap.eu2.hana.ondemand.com/#/imageOverview" target="_blank">Request one.</a>`),
         },
       },
       when: (formValue: SetupBuildFormValue) => {
@@ -229,10 +228,12 @@ export class SetupComponent implements OnInit, OnDestroy {
       guiOptions: {
         additionalData: {
           header: 'Jenkins credentials',
-          subheader: () => {
-            return `Your credentials are stored in Vault and needed to create a pipeline
+          subheader: (): Promise<string> => {
+            return new Promise(
+              () => `Your credentials are stored in Vault and needed to create a pipeline
             in your Jenkins instance. Technical user is preferred, you can find out how
-            to set up one in the <a href="https://pages.github.tools.sap/hyperspace/jaas-documentation/faqs_and_troubleshooting/faq/#how-can-i-get-a-service-user" target="_blank">JaaS documentation.</a>`
+            to set up one in the <a href="https://pages.github.tools.sap/hyperspace/jaas-documentation/faqs_and_troubleshooting/faq/#how-can-i-get-a-service-user" target="_blank">JaaS documentation.</a>`,
+            )
           },
         },
       },
