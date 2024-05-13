@@ -12,11 +12,11 @@ import {
   GetGithubRepositoryQuery,
   GetGithubRepositoryQueryVariables,
 } from '@generated/graphql'
-import { CredentialTypes } from '@enums'
+import { CredentialTypes, GithubInstances } from '@enums'
 import { Validators } from '@angular/forms'
 import { DynamicFormItem } from '@fundamental-ngx/platform'
 import { Secret, SecretService } from './secret.service'
-import { EntityContext, ghTokenFormValue } from '@types'
+import { EntityContext, ghTokenFormValue, GithubTokenMessage } from '@types'
 
 export interface GithubMetadata {
   githubInstance: string
@@ -278,25 +278,10 @@ export class GithubService {
     luigiContext: DxpLuigiContextService,
     repoUrl: string,
   ): Promise<Record<string, number>> {
-    const ghToken = await firstValueFrom(
-      luigiContext.contextObservable().pipe(
-        map((luigiContext) => {
-          return luigiContext.context?.githubToolsToken
-            ? {
-                value: luigiContext.context.githubToolsToken as string,
-                domain: 'github.tools.sap',
-              }
-            : luigiClient.sendCustomMessage({
-                id: `token.request.github.tools.sap`,
-              })
-        }),
-      ),
-    )
-
+    const ghToken = await this.getGhToken(luigiContext, luigiClient, repoUrl)
     if (!repoUrl || !ghToken) {
       return undefined
     }
-
     const url = new URL(repoUrl)
     let languagesResp: Response
     try {
@@ -310,7 +295,43 @@ export class GithubService {
       throw new Error(`Error (${errorMessage}) when fetching the GitHub Repository languages for: ${repoUrl}`)
     }
 
-    const languages = (await languagesResp.json()) as Record<string, number>
-    return languages
+    return (await languagesResp.json()) as Record<string, number>
+  }
+
+  async getGhToken(luigiContext: DxpLuigiContextService, luigiClient: LuigiClient, repoUrl: string) {
+    let ghToken
+    if (repoUrl.includes(GithubInstances.WDF)) {
+      ghToken = await firstValueFrom(
+        luigiContext.contextObservable().pipe(
+          map((luigiContext) => {
+            return luigiContext.context?.githubWdfToken
+              ? {
+                  value: luigiContext.context.githubWdfToken as string,
+                  domain: GithubInstances.WDF,
+                }
+              : luigiClient.sendCustomMessage({
+                  id: `token.request.github.wdf.sap.corp`,
+                })
+          }),
+        ),
+      )
+    } else {
+      ghToken = await firstValueFrom(
+        luigiContext.contextObservable().pipe(
+          map((luigiContext) => {
+            return luigiContext.context?.githubToolsToken
+              ? {
+                  value: luigiContext.context.githubToolsToken as string,
+                  domain: GithubInstances.TOOLS,
+                }
+              : luigiClient.sendCustomMessage({
+                  id: `token.request.github.tools.sap`,
+                })
+          }),
+        ),
+      )
+    }
+
+    return ghToken as GithubTokenMessage
   }
 }

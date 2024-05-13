@@ -64,3 +64,8 @@ export enum ValidationTools {
   GHAS = 'GitHub Advanced Security',
   CX = 'CxONE',
 }
+
+export enum GithubInstances {
+  WDF = 'github.wdf.sap.corp',
+  TOOLS = 'github.tools.sap',
+}

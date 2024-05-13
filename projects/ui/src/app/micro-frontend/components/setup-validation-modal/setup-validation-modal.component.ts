@@ -52,7 +52,6 @@ export class SetupValidationModalComponent implements OnInit, OnDestroy {
   loading = signal(false)
   selectionOptions = signal([])
   recommendedLanguage = signal({} as ValidationLanguage)
-  isGithubWdf = signal(false)
   errorMessage = signal('')
 
   languageSelection = new FormControl(null as ValidationLanguage)
@@ -84,11 +83,6 @@ export class SetupValidationModalComponent implements OnInit, OnDestroy {
     const refs = (await firstValueFrom(this.watch$)).resourceRefs
     if (refs.find((ref) => ref.kind === Kinds.GITHUB_REPOSITORY)) {
       this.githubResourceExists.set(true)
-    }
-
-    const ghInstance = (await this.githubService.getGithubMetadata()).githubHostName
-    if (ghInstance === 'github.wdf.sap.corp') {
-      this.isGithubWdf.set(true)
     }
     this.loading.set(false)
   }

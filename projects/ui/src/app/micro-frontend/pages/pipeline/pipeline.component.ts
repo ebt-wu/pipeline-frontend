@@ -12,7 +12,7 @@ import {
   MessageToastService,
 } from '@fundamental-ngx/core'
 import { GithubActionsGetPayload } from '@generated/graphql'
-import { firstValueFrom, map, Observable, Subscription, tap } from 'rxjs'
+import { firstValueFrom, Observable, Subscription, tap } from 'rxjs'
 import { KindExtensionName, KindName } from '@constants'
 import { Pipeline, ResourceRef } from '@types'
 import { DeleteBuildModalComponent } from '../../components/delete-build-modal/delete-build-modal.component'
@@ -273,24 +273,11 @@ export class PipelineComponent implements OnInit, OnDestroy {
       duration: 5000,
     })
   }
-  // eslint-disable
   async getOpenPRCount(): Promise<number> {
-    const token = await firstValueFrom(
-      this.luigiService.contextObservable().pipe(
-        map((luigiContext) => {
-          if (!luigiContext.context?.githubToolsToken) {
-            this.luigiClient.sendCustomMessage({
-              id: `token.request.github.tools.sap`,
-            })
-            return {}
-          }
-
-          return {
-            value: luigiContext.context.githubToolsToken as string,
-            domain: 'github.tools.sap',
-          }
-        }),
-      ),
+    const token = await this.api.githubService.getGhToken(
+      this.luigiService,
+      this.luigiClient,
+      this.githubMetadata.githubRepoUrl,
     )
 
     if (!token?.value || !this.githubMetadata.githubRepoUrl) {
@@ -298,20 +285,26 @@ export class PipelineComponent implements OnInit, OnDestroy {
     }
 
     const url = new URL(this.githubMetadata.githubRepoUrl)
-    const pullsResp = await fetch(`${this.githubMetadata.githubInstance}/api/v3/repos${url.pathname}/pulls`, {
-      headers: {
-        Authorization: `Bearer ${token.value}`,
-      },
-    })
+    let pullsResp: Response
+    try {
+      pullsResp = await fetch(`${this.githubMetadata.githubInstance}/api/v3/repos${url.pathname}/pulls`, {
+        headers: {
+          Authorization: `Bearer ${token.value}`,
+        },
+      })
 
-    const pulls = (await pullsResp.json()) as { head: { ref: string } }[]
-    return pulls.reduce((prev, curr) => {
-      const ref = curr.head?.ref
-      if (ref === 'hyperspace-jenkinsfile' || ref === 'piper-onboarding' || ref === 'hyperspace-github-actions') {
-        return prev + 1
-      }
-      return prev
-    }, 0)
+      const pulls = (await pullsResp.json()) as { head: { ref: string } }[]
+      return pulls.reduce((prev, curr) => {
+        const ref = curr.head?.ref
+        if (ref === 'hyperspace-jenkinsfile' || ref === 'piper-onboarding' || ref === 'hyperspace-github-actions') {
+          return prev + 1
+        }
+        return prev
+      }, 0)
+    } catch (error) {
+      console.log('error was:', error)
+    }
+    return 0
   }
 
   openFeedback() {

@@ -1,5 +1,5 @@
-import { BuildTool, PipelineType } from '../generated/graphql'
-import { CredentialTypes, Kinds, Orchestrators, ServiceStatus, ValidationTools } from './enums'
+import { BuildTool, PipelineType } from '@generated/graphql'
+import { CredentialTypes, GithubInstances, Kinds, Orchestrators, ServiceStatus, ValidationTools } from '@enums'
 
 export type ghTokenFormValue = {
   githubToken?: string
@@ -59,6 +59,12 @@ export type ValidationLanguage = {
   order: number
   validationTool?: ValidationTools
 }
+
+export type GithubTokenMessage = {
+  value: string
+  domain: GithubInstances
+}
+
 export type ErrorMessage = {
   title: string
   message: string
