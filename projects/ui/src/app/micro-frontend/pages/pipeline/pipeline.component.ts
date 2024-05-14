@@ -313,9 +313,9 @@ export class PipelineComponent implements OnInit, OnDestroy {
       '_blank',
     )
   }
-  openCumulusModal(e: Event) {
+  async openCumulusModal(e: Event) {
     e.stopPropagation()
-    this.luigiClient.linkManager().fromVirtualTreeRoot().openAsModal('cumulus-info', {
+    await this.luigiClient.linkManager().fromVirtualTreeRoot().openAsModal('cumulus-info', {
       width: '30rem',
       height: '32rem',
       title: 'Cumulus Info',
@@ -339,22 +339,25 @@ export class PipelineComponent implements OnInit, OnDestroy {
     window.open('https://pages.github.tools.sap/hyperspace/cicd-setup-documentation/', '_blank')
   }
 
-  openSetupWizard(e: Event) {
+  async openSetupWizard(e: Event) {
     e.stopPropagation()
-    this.luigiClient.linkManager().fromVirtualTreeRoot().openAsModal('setup', { size: 's', title: 'Set up Build' })
+    await this.luigiClient
+      .linkManager()
+      .fromVirtualTreeRoot()
+      .openAsModal('setup', { size: 's', title: 'Set up Build' })
   }
 
-  openGithubActionWizard(e: Event) {
+  async openGithubActionWizard(e: Event) {
     e.stopPropagation()
-    this.luigiClient
+    await this.luigiClient
       .linkManager()
       .fromVirtualTreeRoot()
       .openAsModal('github-actions', { title: 'Enable GitHub Actions', width: '38rem', height: '30rem' })
   }
 
-  openPipelineDebugModal(e: Event) {
+  async openPipelineDebugModal(e: Event) {
     e.stopPropagation()
-    this.luigiClient
+    await this.luigiClient
       .linkManager()
       .fromVirtualTreeRoot()
       .openAsModal('pipeline-debug', { size: 's', title: 'Pipeline Debug' })

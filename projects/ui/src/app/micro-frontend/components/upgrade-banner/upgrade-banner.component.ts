@@ -21,7 +21,7 @@ export class UpgradeBannerComponent {
 
   openSetupWizard(e: Event) {
     e.stopPropagation()
-    this.luigiClient
+    await this.luigiClient
       .linkManager()
       .withParams({ orchestrator: Orchestrators.GITHUB_ACTIONS_WORKFLOW })
       .openAsModal('setup', { size: 's', title: 'Set up Build' })

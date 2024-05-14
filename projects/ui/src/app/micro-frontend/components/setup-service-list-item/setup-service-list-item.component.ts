@@ -48,7 +48,7 @@ export class SetupServiceListItemComponent {
     e.stopPropagation()
     switch (dialogToOpen) {
       case Categories.STATIC_SECURITY_CHECKS:
-        this.luigiClient
+        await this.luigiClient
           .linkManager()
           .fromVirtualTreeRoot()
           .openAsModal('setup-validation', { title: 'Add Static Security Checks', width: '600px', height: '780px' })

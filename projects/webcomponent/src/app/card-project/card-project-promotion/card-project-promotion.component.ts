@@ -85,8 +85,8 @@ export class CardProjectPromotionComponent implements OnInit, OnDestroy {
     })
   }
 
-  openConnectGithubModal(): void {
-    this.LuigiClient.linkManager().openAsModal(`/projects/${this.currentProjectId}/catalog/github?~type=github`, {
+  async openConnectGithubModal(): Promise<void> {
+    await this.LuigiClient.linkManager().openAsModal(`/projects/${this.currentProjectId}/catalog/github?~type=github`, {
       title: 'Connect an Account',
       size: 's',
     })
