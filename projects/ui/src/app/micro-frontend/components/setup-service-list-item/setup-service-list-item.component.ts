@@ -44,7 +44,7 @@ export class SetupServiceListItemComponent {
 
   constructor(private readonly luigiClient: LuigiClient) {}
 
-  openDialog(e: Event, dialogToOpen: Categories) {
+  async openDialog(e: Event, dialogToOpen: Categories) {
     e.stopPropagation()
     switch (dialogToOpen) {
       case Categories.STATIC_SECURITY_CHECKS:

@@ -19,7 +19,7 @@ export class UpgradeBannerComponent {
 
   constructor(private readonly luigiClient: LuigiClient) {}
 
-  openSetupWizard(e: Event) {
+  async openSetupWizard(e: Event) {
     e.stopPropagation()
     await this.luigiClient
       .linkManager()
