@@ -11,15 +11,16 @@ on:
 
 jobs:
   buildPackages:
-    uses: dxp/.github/.github/workflows/job--ng-build.yaml@main
-    secrets: inherit
-    with:
-      artifact: pipeline-frontend
-      package_manager: "npm"
-      hyperspace_project: "PIPELINE-GROUP-2044"
-      build_command: 'npm run build:ui'
-      test_command: 'npm run test:ui:cov'
-      node-versions: '[ "20.x" ]'
+    - uses: ahmadnassri/action-workflow-queue@v1
+    - uses: dxp/.github/.github/workflows/job--ng-build.yaml@main
+      secrets: inherit
+      with:
+        artifact: pipeline-frontend
+        package_manager: 'npm'
+        hyperspace_project: 'PIPELINE-GROUP-2044'
+        build_command: 'npm run build:ui'
+        test_command: 'npm run test:ui:cov'
+        node-versions: '[ "20.x" ]'
 
   updateStackDev:
     needs: [buildPackages]

@@ -11,16 +11,17 @@ on:
 
 jobs:
   buildPackages:
-    uses: dxp/.github/.github/workflows/job--ng-build.yaml@main
-    secrets: inherit
-    with:
-      artifact: pipeline-frontend-wc
-      package_manager: 'npm'
-      hyperspace_project: 'PIPELINE-GROUP-2044'
-      build_command: 'npm run build:wc'
-      test_command: 'npm run test:wc:cov'
-      node-versions: '[ "20.x" ]'
-      release_prefix: wc-
+    - uses: ahmadnassri/action-workflow-queue@v1
+    - uses: dxp/.github/.github/workflows/job--ng-build.yaml@main
+      secrets: inherit
+      with:
+        artifact: pipeline-frontend-wc
+        package_manager: 'npm'
+        hyperspace_project: 'PIPELINE-GROUP-2044'
+        build_command: 'npm run build:wc'
+        test_command: 'npm run test:wc:cov'
+        node-versions: '[ "20.x" ]'
+        release_prefix: wc-
 
   updateStack:
     needs: [buildPackages]
