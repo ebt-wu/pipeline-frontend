@@ -11,6 +11,7 @@ spec:
   displayName: Pipelines
   supportsDynamicCdmUrls: false
   multipleInstallations: false
+  {{- include "helm-dxp.ext-verification-type" . | indent 2 }}
   {{- if .Values.documentation }}
   documentation:
     url: {{ .Values.documentation.url }}

@@ -163,6 +163,8 @@ Has CDM for live:
         - Project
       multipleInstallations: false
       supportsDynamicCdmUrls: false
+      verification:
+        type: hyperspace
   2: |
     apiVersion: extensions.dxp.sap.com/v1alpha1
     kind: ExtensionInstance
@@ -355,6 +357,8 @@ Test Extension matches the snapshot:
         - Project
       multipleInstallations: false
       supportsDynamicCdmUrls: false
+      verification:
+        type: hyperspace
   2: |
     apiVersion: extensions.dxp.sap.com/v1alpha1
     kind: ExtensionInstance
@@ -547,6 +551,8 @@ githubActions feature enabled for some projects:
         - Project
       multipleInstallations: false
       supportsDynamicCdmUrls: false
+      verification:
+        type: hyperspace
   2: |
     apiVersion: extensions.dxp.sap.com/v1alpha1
     kind: ExtensionInstance
