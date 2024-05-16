@@ -14,14 +14,14 @@ import { CredentialTypes, Languages, Orchestrators } from '@enums'
 import { SecretData, SecretService } from '../../services/secret.service'
 import { firstValueFrom, lastValueFrom, Subscription } from 'rxjs'
 import { EntityContext, SetupBuildFormValue } from '@types'
-import { GithubService, REQUIRED_SCOPES } from '../../services/github.service'
+import { GithubService } from '../../services/github.service'
 import { JenkinsService } from '../../services/jenkins.service'
-import { ErrorMessageComponent } from '../../components/error-message/error-message.component'
+import { ErrorMessageComponent } from '../error-message/error-message.component'
 import { PlatformMessagePopoverModule } from '@fundamental-ngx/platform/message-popover'
 import { PiperService } from '../../services/piper.service'
-import { PlatformFormGeneratorCustomHeaderElementComponent } from '../../components/form-generator-header/form-generator-header.component'
+import { PlatformFormGeneratorCustomHeaderElementComponent } from '../form-generator-header/form-generator-header.component'
 import { BuildTool } from '@generated/graphql'
-import { PlatformFormGeneratorCustomInfoBoxComponent } from '../../components/form-generator-info-box/form-generator-info-box.component'
+import { PlatformFormGeneratorCustomInfoBoxComponent } from '../form-generator-info-box/form-generator-info-box.component'
 import { getNodeParams } from '@luigi-project/client'
 import { FeatureFlagService } from '../../services/feature-flag.service'
 
@@ -254,7 +254,7 @@ export class SetupComponent implements OnInit, OnDestroy {
       },
       choices: [CredentialTypes.EXISTING, CredentialTypes.NEW],
       when: async (formValue) => {
-        if (formValue.orchestrator != Orchestrators.JENKINS) {
+        if (formValue.orchestrator !== Orchestrators.JENKINS) {
           return false
         }
         const secrets = await lastValueFrom(this.secretService.getPipelineSecrets())
@@ -285,7 +285,7 @@ export class SetupComponent implements OnInit, OnDestroy {
       message: 'Token with overall (administer) permissions.',
       placeholder: 'Enter Token',
       when: (formValue: SetupBuildFormValue) => {
-        if (formValue.orchestrator != Orchestrators.JENKINS) {
+        if (formValue.orchestrator !== Orchestrators.JENKINS) {
           return false
         }
         return formValue.jenkinsCredentialType === CredentialTypes.NEW
@@ -307,7 +307,7 @@ export class SetupComponent implements OnInit, OnDestroy {
       },
       validators: [Validators.required],
       when: (formValue: SetupBuildFormValue) => {
-        if (formValue.orchestrator != Orchestrators.JENKINS) {
+        if (formValue.orchestrator !== Orchestrators.JENKINS) {
           return false
         }
         return formValue.jenkinsCredentialType === CredentialTypes.EXISTING
@@ -350,7 +350,7 @@ export class SetupComponent implements OnInit, OnDestroy {
     this.formCreated = true
   }
 
-  async onFormSubmitted(value: SetupBuildFormValue): Promise<void> {
+  async onFormSubmitted(buildFormValue: SetupBuildFormValue): Promise<void> {
     const context = await this.luigiService.getContextAsync()
     const entityContext = context.entityContext as unknown as EntityContext
 
@@ -367,56 +367,34 @@ export class SetupComponent implements OnInit, OnDestroy {
     }
     const githubRepoUrl = new URL(repoUrl)
 
-    this.formValue = value
+    this.formValue = buildFormValue
     this.loading = true
 
     try {
       // credentials
       let jenkinsPath: string
-      let githubPath: string
 
       // jenkins
-      if (value.jenkinsCredentialType == CredentialTypes.NEW && value.orchestrator === Orchestrators.JENKINS) {
+      if (
+        buildFormValue.jenkinsCredentialType === CredentialTypes.NEW &&
+        buildFormValue.orchestrator === Orchestrators.JENKINS
+      ) {
         const secretData: SecretData[] = [
-          { key: 'token', value: value.jenkinsToken },
-          { key: 'url', value: value.jenkinsUrl },
-          { key: 'userId', value: value.jenkinsUserId },
+          { key: 'token', value: buildFormValue.jenkinsToken },
+          { key: 'url', value: buildFormValue.jenkinsUrl },
+          { key: 'userId', value: buildFormValue.jenkinsUserId },
         ]
-        const jenkinsUrl = new URL(value.jenkinsUrl)
+        const jenkinsUrl = new URL(buildFormValue.jenkinsUrl)
         // replace the dots in the hostname with dashes to avoid issues with vault path
-        jenkinsPath = await this.storeCredential(
+        jenkinsPath = await this.secretService.storeCredential(
           `jenkins-${jenkinsUrl.hostname.replace(/\./g, '-')}`,
           secretData,
-          value.jenkinsUserId,
+          buildFormValue.jenkinsUserId,
         )
-      } else if (value.jenkinsCredentialType == CredentialTypes.EXISTING) {
-        jenkinsPath = this.getCredentialPath(value.jenkinsSelectCredential, context.componentId)
+      } else if (buildFormValue.jenkinsCredentialType === CredentialTypes.EXISTING) {
+        jenkinsPath = this.secretService.getCredentialPath(buildFormValue.jenkinsSelectCredential, context.componentId)
       }
-
-      // github
-      if (value.githubCredentialType == CredentialTypes.NEW) {
-        const { githubInstance } = await this.githubService.getGithubMetadata()
-        const userQueryResp = await fetch(`${githubInstance}/api/v3/user`, {
-          headers: {
-            Authorization: `Bearer ${value.githubToken}`,
-          },
-        })
-        const user = ((await userQueryResp.json()) as Record<string, string>)?.login
-        const secretData: SecretData[] = [
-          { key: 'username', value: user },
-          { key: 'scopes', value: REQUIRED_SCOPES.join(',') },
-          { key: 'access_token', value: value.githubToken },
-        ]
-        githubPath = await this.storeCredential(
-          // replace the dots in the hostname with dashes to avoid issues with vault path
-          `${githubRepoUrl.hostname.replace(/\./g, '-')}`,
-          secretData,
-          user,
-        )
-        await firstValueFrom(this.secretService.writeSecret(githubPath, secretData))
-      } else if (value.githubCredentialType == CredentialTypes.EXISTING) {
-        githubPath = this.getCredentialPath(value.githubSelectCredential, context.componentId)
-      }
+      const githubSecretPath = await this.githubService.storeGithubCredentials(buildFormValue, githubRepoUrl)
 
       if (!repoUrl || !login || !repoName) {
         throw new Error('Could not get GitHub repository details from frame context')
@@ -425,27 +403,31 @@ export class SetupComponent implements OnInit, OnDestroy {
       const url = new URL(repoUrl)
 
       let isGithubActions = false
-      if (value.orchestrator === Orchestrators.GITHUB_ACTIONS_WORKFLOW) {
+      if (buildFormValue.orchestrator === Orchestrators.GITHUB_ACTIONS_WORKFLOW) {
         isGithubActions = true
       }
 
       const repositoryResource = await firstValueFrom(
-        this.githubService.createGithubRepository(url.origin, login, repoName, githubPath, isGithubActions),
+        this.githubService.createGithubRepository(url.origin, login, repoName, githubSecretPath, isGithubActions),
       )
 
-      if (value.orchestrator === Orchestrators.JENKINS) {
+      if (buildFormValue.orchestrator === Orchestrators.JENKINS) {
         await firstValueFrom(
-          this.jenkinsService.createJenkinsPipeline(value.jenkinsUrl, jenkinsPath, repositoryResource),
+          this.jenkinsService.createJenkinsPipeline(buildFormValue.jenkinsUrl, jenkinsPath, repositoryResource),
         )
       }
 
       await firstValueFrom(
         this.piperService.createPiperConfig(
-          githubPath,
+          githubSecretPath,
           repositoryResource,
-          value.buildTool,
+          buildFormValue.buildTool,
           false,
-          value.buildTool === BuildTool.Docker || BuildTool.Golang || BuildTool.Gradle ? context.componentId : '',
+          buildFormValue.buildTool === BuildTool.Docker ||
+            buildFormValue.buildTool === BuildTool.Golang ||
+            buildFormValue.buildTool === BuildTool.Gradle
+            ? context.componentId
+            : '',
         ),
       )
 
@@ -460,19 +442,6 @@ export class SetupComponent implements OnInit, OnDestroy {
       }
       this.loading = false
     }
-  }
-
-  private async storeCredential(credentialPrefix: string, secretData: SecretData[], userId: string): Promise<string> {
-    const path = `GROUP-SECRETS/${credentialPrefix}-${userId}`
-    await firstValueFrom(this.secretService.writeSecret(path, secretData))
-    return path
-  }
-
-  private getCredentialPath(selectCredentialValue: string, componentId: string): string {
-    if (selectCredentialValue.includes('GROUP-SECRETS')) {
-      return selectCredentialValue
-    }
-    return `${componentId}/${selectCredentialValue}`
   }
 
   dismissErrorMessage() {

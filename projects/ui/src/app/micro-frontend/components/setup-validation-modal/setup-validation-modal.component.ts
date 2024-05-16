@@ -3,7 +3,7 @@ import { ChangeDetectionStrategy, Component, OnDestroy, OnInit, signal, ViewChil
 import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms'
 import { ValidationLanguages } from '@constants'
 import { DxpLuigiContextService, LuigiClient } from '@dxp/ngx-core/luigi'
-import { CredentialTypes, Kinds, ValidationTools } from '@enums'
+import { Kinds, ValidationTools } from '@enums'
 import { FormattedTextModule, FormModule, FundamentalNgxCoreModule, RadioModule } from '@fundamental-ngx/core'
 import {
   DynamicFormItem,
@@ -17,7 +17,7 @@ import { EntityContext, ghTokenFormValue, Pipeline, ResourceRef, ValidationLangu
 import { debounceTime, firstValueFrom, Observable, Subscription } from 'rxjs'
 import { ErrorMessageComponent } from '../error-message/error-message.component'
 import { GithubAdvancedSecurityService } from '../../services/github-advanced-security.service'
-import { GithubService, REQUIRED_SCOPES } from '../../services/github.service'
+import { GithubService } from '../../services/github.service'
 import { PipelineService } from '../../services/pipeline.service'
 import { PlatformFormGeneratorCustomInfoBoxComponent } from '../form-generator-info-box/form-generator-info-box.component'
 import { SecretData, SecretService } from '../../services/secret.service'
@@ -217,35 +217,7 @@ export class SetupValidationModalComponent implements OnInit, OnDestroy {
     const githubRepoUrl = new URL(repoUrl)
 
     try {
-      let githubSecretPath: string
-
-      if (value.githubCredentialType === CredentialTypes.NEW) {
-        const { githubInstance } = await this.githubService.getGithubMetadata()
-        const userQueryResp = await fetch(`${githubInstance}/api/v3/user`, {
-          headers: {
-            Authorization: `Bearer ${value.githubToken}`,
-          },
-        })
-        const user = ((await userQueryResp.json()) as Record<string, string>)?.login
-        const secretData: SecretData[] = [
-          { key: 'username', value: user },
-          { key: 'scopes', value: REQUIRED_SCOPES.join(',') },
-          { key: 'access_token', value: value.githubToken },
-        ]
-        githubSecretPath = await this.storeCredential(
-          // replace the dots in the hostname with dashes to avoid issues with vault path
-          `${githubRepoUrl.hostname.replace(/\./g, '-')}`,
-          secretData,
-          user,
-        )
-        await firstValueFrom(this.secretService.writeSecret(githubSecretPath, secretData))
-      } else if (value.githubCredentialType === CredentialTypes.EXISTING) {
-        githubSecretPath = this.getCredentialPath(value.githubSelectCredential, context.componentId)
-      }
-
-      if (!repoUrl || !login || !repoName) {
-        throw new Error('Could not get GitHub repository details from frame context')
-      }
+      const githubSecretPath = await this.githubService.storeGithubCredentials(value, githubRepoUrl)
 
       await firstValueFrom(
         this.githubService.createGithubRepository(githubRepoUrl.origin, login, repoName, githubSecretPath, false),

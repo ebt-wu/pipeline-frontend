@@ -302,7 +302,7 @@ export class PipelineComponent implements OnInit, OnDestroy {
         return prev
       }, 0)
     } catch (error) {
-      console.log('error was:', error)
+      console.error(error)
     }
     return 0
   }

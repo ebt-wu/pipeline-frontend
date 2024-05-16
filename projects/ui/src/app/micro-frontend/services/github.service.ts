@@ -15,8 +15,8 @@ import {
 import { CredentialTypes, GithubInstances } from '@enums'
 import { Validators } from '@angular/forms'
 import { DynamicFormItem } from '@fundamental-ngx/platform'
-import { Secret, SecretService } from './secret.service'
-import { EntityContext, ghTokenFormValue, GithubTokenMessage } from '@types'
+import { Secret, SecretData, SecretService } from './secret.service'
+import { EntityContext, ghTokenFormValue, GithubTokenMessage, SetupBuildFormValue } from '@types'
 
 export interface GithubMetadata {
   githubInstance: string
@@ -156,9 +156,24 @@ export class GithubService {
       name: 'githubSelectCredential',
       message: 'Credential',
       placeholder: 'Select Credential',
-      default: async () => {
+      default: async (): Promise<string | null> => {
         const secrets = await lastValueFrom(this.secretService.getPipelineSecrets())
-        return secrets.filter((value) => this.isValidGithubSecret(value))[0].path ?? null
+        const githubMetadata = await this.getGithubMetadata()
+        let defaultValue: string | null = null
+        if ((githubMetadata.githubHostName as GithubInstances) === GithubInstances.WDF) {
+          defaultValue =
+            secrets.find(
+              (value) =>
+                this.isValidGithubSecret(value) && value.path.includes(GithubInstances.WDF.replace(/\./g, '-')),
+            ).path ?? null
+        } else if ((githubMetadata.githubHostName as GithubInstances) === GithubInstances.TOOLS) {
+          defaultValue =
+            secrets.find(
+              (value) =>
+                this.isValidGithubSecret(value) && value.path.includes(GithubInstances.TOOLS.replace(/\./g, '-')),
+            ).path ?? null
+        }
+        return defaultValue
       },
       choices: async () => {
         const secrets = await lastValueFrom(this.secretService.getPipelineSecrets())
@@ -170,6 +185,37 @@ export class GithubService {
       },
     },
   ]
+
+  public async storeGithubCredentials(value: SetupBuildFormValue, githubRepoUrl: URL) {
+    let githubSecretPath = ''
+
+    const context = await this.luigiService.getContextAsync()
+    // github
+    if (value.githubCredentialType === CredentialTypes.NEW) {
+      const { githubInstance } = await this.getGithubMetadata()
+      const userQueryResp = await fetch(`${githubInstance}/api/v3/user`, {
+        headers: {
+          Authorization: `Bearer ${value.githubToken}`,
+        },
+      })
+      const user = ((await userQueryResp.json()) as Record<string, string>)?.login
+      const secretData: SecretData[] = [
+        { key: 'username', value: user },
+        { key: 'scopes', value: REQUIRED_SCOPES.join(',') },
+        { key: 'access_token', value: value.githubToken },
+      ]
+      githubSecretPath = await this.secretService.storeCredential(
+        // replace the dots in the hostname with dashes to avoid issues with vault path
+        `${githubRepoUrl.hostname.replace(/\./g, '-')}`,
+        secretData,
+        user,
+      )
+      await firstValueFrom(this.secretService.writeSecret(githubSecretPath, secretData))
+    } else if (value.githubCredentialType === CredentialTypes.EXISTING) {
+      githubSecretPath = this.secretService.getCredentialPath(value.githubSelectCredential, context.componentId)
+    }
+    return githubSecretPath
+  }
 
   isValidGithubSecret(secret: Secret): boolean {
     if (!secret.path.includes('github')) {
@@ -193,9 +239,9 @@ export class GithubService {
     const githubOrgName = entityContext?.component?.annotations['github.dxp.sap.com/login'] ?? null
 
     let githubTechnicalUserSelfServiceUrl: string
-    if (url.hostname === 'github.tools.sap') {
+    if ((url.hostname as GithubInstances) === GithubInstances.TOOLS) {
       githubTechnicalUserSelfServiceUrl = 'https://technical-user-management.github.tools.sap/'
-    } else if (url.hostname === 'github.wdf.sap.corp') {
+    } else if ((url.hostname as GithubInstances) === GithubInstances.WDF) {
       githubTechnicalUserSelfServiceUrl = 'https://technical-user-management.github.tools.sap.corp/'
     }
 

@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core'
 import { BaseAPIService } from './base.service'
 import { first, map, mergeMap } from 'rxjs/operators'
-import { Observable, combineLatest, lastValueFrom } from 'rxjs'
+import { Observable, combineLatest, lastValueFrom, firstValueFrom } from 'rxjs'
 import { DxpLuigiContextService } from '@dxp/ngx-core/luigi'
 import { ENSURE_VAULT_ONBOARDING, GET_PIPELINE_SECRETS, WRITE_SECRET } from './queries'
 import {
@@ -84,6 +84,18 @@ export class SecretService {
     )
   }
 
+  public async storeCredential(credentialPrefix: string, secretData: SecretData[], userId: string): Promise<string> {
+    const path = `GROUP-SECRETS/${credentialPrefix}-${userId}`
+    await firstValueFrom(this.writeSecret(path, secretData))
+    return path
+  }
+
+  public getCredentialPath(selectCredentialValue: string, componentId: string): string {
+    if (selectCredentialValue.includes('GROUP-SECRETS')) {
+      return selectCredentialValue
+    }
+    return `${componentId}/${selectCredentialValue}`
+  }
   /**
    * Only works for a path to a secret not to another path
    * @param secretPath
