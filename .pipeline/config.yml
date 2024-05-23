@@ -16,9 +16,10 @@ general:
   vaultServerUrl: https://vault.tools.sap
 stages:
   Release:
-    # gitopsUpdateDeployment: true
-    # githubPublishRelease: true
+    githubPublishRelease: true
 steps:
+  npmExecuteScripts:
+    runScripts: ['build']
   artifactPrepareVersion:
     gitHttpsCredentialVaultSecretName: GROUP-SECRETS/github-tools-sap-hyperspace-onboarding-serviceuser
   sapCallStagingService:
@@ -29,12 +30,11 @@ steps:
     sonarVaultSecretName: GROUP-SECRETS/sonar-hyperspace-@-global-sap-corp
   sapCumulusUpload:
     pipelineId: 3e3b8127-5f71-43f8-a1eb-d4c129959282
-  # gitopsUpdateDeployment:
-  #   containerImageNameTag: $PIPER_containerImageNameTag
-  #   containerRegistryUrl: $PIPER_containerRegistryUrl
-  #   filepath: $PIPER_filePath
-  # githubPublishRelease:
-  #   Aliases: $PIPER_owner
-  #   repository: 'https://github.tools.sap/hyperspace/pipeline-frontend'
-  #   version: $PIPER_version
-
+  githubPublishRelease:
+    owner: hyperspace
+    repository: pipeline-frontend
+    apiUrl: https://github.tools.sap/api/v3
+    uploadUrl: https://github.tools.sap/api/uploads
+    assetPathList:
+      - pipeline-frontend-ui.tar.gz
+      - pipeline-frontend-wc.tar.gz
