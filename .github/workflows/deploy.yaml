@@ -5,20 +5,11 @@ on:
     types: [published]
 
 jobs:
-  release-dev:
+  post-release:
     uses: dxp/.github/.github/workflows/update-stack.yaml@main
     with:
       stackRepo: hyperspace/ci-cd-setup-stack
       stackRepoBranch: dev
-      componentVersionKey: pipelineFrontend
-      version: ${{ github.event.release.tag_name }}
-    secrets:
-      GH_ACCESS_TOKEN: ${{ secrets.GH_HYPERSPACE_USER_TOKEN }}
-  release-it:
-    uses: dxp/.github/.github/workflows/update-stack.yaml@main
-    with:
-      stackRepo: hyperspace/ci-cd-setup-stack
-      stackRepoBranch: it
       componentVersionKey: pipelineFrontend
       version: ${{ github.event.release.tag_name }}
     secrets:
