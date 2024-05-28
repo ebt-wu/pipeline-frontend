@@ -19,7 +19,7 @@ stages:
     githubPublishRelease: true
 steps:
   npmExecuteScripts:
-    runScripts: ['build:ci']
+    runScripts: ['build']
   artifactPrepareVersion:
     gitHttpsCredentialVaultSecretName: GROUP-SECRETS/github-tools-sap-hyperspace-onboarding-serviceuser
   sapCallStagingService:
