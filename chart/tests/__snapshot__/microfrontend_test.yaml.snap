@@ -118,7 +118,7 @@ Has CDM for live:
                       "nodes": [
                         {
                           "entityType": "project.overview::compound",
-                          "url": "https://test-domain-wc/main.js#cicd-project-promotion-card",
+                          "url": "https://test-domain-wc/{i18n.currentLocale}/main.js#cicd-project-promotion-card",
                           "dxpOrder": 2,
                           "layoutConfig": {
                             "slot": "content"
@@ -312,7 +312,7 @@ Test Extension matches the snapshot:
                       "nodes": [
                         {
                           "entityType": "project.overview::compound",
-                          "url": "https://test-domain-wc/main.js#cicd-project-promotion-card",
+                          "url": "https://test-domain-wc/{i18n.currentLocale}/main.js#cicd-project-promotion-card",
                           "dxpOrder": 2,
                           "layoutConfig": {
                             "slot": "content"
@@ -506,7 +506,7 @@ githubActions feature enabled for some projects:
                       "nodes": [
                         {
                           "entityType": "project.overview::compound",
-                          "url": "https://test-domain-wc/main.js#cicd-project-promotion-card",
+                          "url": "https://test-domain-wc/{i18n.currentLocale}/main.js#cicd-project-promotion-card",
                           "dxpOrder": 2,
                           "layoutConfig": {
                             "slot": "content"
