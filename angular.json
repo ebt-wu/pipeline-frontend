@@ -185,10 +185,18 @@
       "root": "projects/webcomponent",
       "sourceRoot": "projects/webcomponent/src",
       "prefix": "app",
+      "i18n": {
+        "sourceLocale": "en-US",
+        "locales": {
+          "en": "projects/ui/src/locale/messages.xlf",
+          "de": "projects/ui/src/locale/messages.de.xlf"
+        }
+      },
       "architect": {
         "build": {
           "builder": "ngx-build-plus:browser",
           "options": {
+            "localize": ["en-US", "de"],
             "outputPath": "dist/wc",
             "index": "",
             "main": "projects/webcomponent/src/main.ts",
@@ -221,7 +229,14 @@
               "vendorChunk": true,
               "extractLicenses": false,
               "sourceMap": true,
-              "namedChunks": true
+              "namedChunks": true,
+              "localize": false
+            },
+            "de": {
+              "localize": ["de"]
+            },
+            "en": {
+              "localize": ["en-US"]
             }
           },
           "defaultConfiguration": "production"
@@ -234,6 +249,12 @@
             },
             "development": {
               "browserTarget": "wc:build:development"
+            },
+            "de": {
+              "browserTarget": "wc:build:de"
+            },
+            "en": {
+              "browserTarget": "wc:build:en"
             }
           },
           "defaultConfiguration": "development"
