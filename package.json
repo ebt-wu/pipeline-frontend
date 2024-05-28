@@ -11,7 +11,7 @@
     "start:wc-local": "ng serve wc --single-bundle",
     "build": "npm run build:ui && npm run build:wc",
     "build:ui": "ng build ui --configuration production --localize --output-path=dist --stats-json && tar -zcvf pipeline-frontend-ui.tar.gz dist/*",
-    "build:wc": "ng build wc --single-bundle --configuration production --localize --output-path=dist --stats-json && tar -zcvf pipeline-frontend-wc.tar.gz dist/*",
+    "build:wc": "ng build wc --single-bundle --output-hashing none --configuration production --localize --output-path=dist --stats-json && tar -zcvf pipeline-frontend-wc.tar.gz dist/*",
     "test": "npm run test:unit",
     "lint": "ng lint",
     "lint:ui": "ng lint ui",
