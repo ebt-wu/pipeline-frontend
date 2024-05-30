@@ -1,4 +1,4 @@
-<div>
+<div *ngIf="!loading()">
   <div class="flex-box">
     <h3 class="heading-margin">GitHub Repository</h3>
     <button
@@ -19,7 +19,7 @@
   <a [href]="githubInstance" target="_blank">
     {{ githubInstance }}
   </a>
-  <div *dxpRequiredPolicies="['projectAdmin', 'projectMember']; operator: 'or'">
+  <div *dxpRequiredPolicies="['owner', 'member']; operator: 'or'">
     <div class="flex-box top-margin">
       <h3>GitHub Credentials</h3>
       <button
@@ -38,11 +38,19 @@
       <b>Vault Path</b>
     </div>
     <fd-busy-indicator [loading]="pendingShowInVault()" size="s">
-      <a fd-link [disabled]="pendingShowInVault()" (click)="showInVault(serviceDetails.secretPath)">
-        {{ serviceDetails.secretPath }}
-      </a>
+      <div [fd-inline-help]="insufficientVaultPermissions" [disabled]="isUserVaultMaintainer">
+        <a
+          fd-link
+          [disabled]="pendingShowInVault() || !isUserVaultMaintainer"
+          (click)="showInVault(serviceDetails.secretPath)">
+          {{ serviceDetails.secretPath }}
+        </a>
+      </div>
     </fd-busy-indicator>
   </div>
+</div>
+<div *ngIf="loading()">
+  <fd-busy-indicator [loading]="true" ariaLabel="loading" title="Please Wait"></fd-busy-indicator>
 </div>
 
 <ng-template #credentialsHelp>
@@ -51,4 +59,10 @@
     <br />
     to access and manage your GitHub Repository.
   </div>
+</ng-template>
+
+<ng-template #insufficientVaultPermissions>
+  You need to be 'Vault Maintainer' to see credentials.
+  <br />
+  Go to the members list to contact a project owner.
 </ng-template>

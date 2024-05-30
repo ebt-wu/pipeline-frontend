@@ -7,6 +7,7 @@ import {
   FlexibleColumnLayout,
   FundamentalNgxCoreModule,
   IconModule,
+  InlineHelpModule,
   MessageBoxRef,
   MessageBoxService,
   MessageToastService,
@@ -62,6 +63,7 @@ type Error = {
     FundamentalNgxCoreModule,
     RouterModule,
     IconModule,
+    InlineHelpModule,
     ErrorMessageComponent,
     DismissibleMessageComponent,
     CumlusServiceDetailsComponent,
@@ -112,6 +114,8 @@ export class PipelineComponent implements OnInit, OnDestroy {
   showGithubActions = signal(false)
   showGHAS = signal(false)
 
+  isUserVaultMaintainer = false
+
   localLayout: FlexibleColumnLayout = 'OneColumnStartFullScreen'
   activeTile: string = ''
   githubMetadata: GithubMetadata
@@ -150,6 +154,9 @@ export class PipelineComponent implements OnInit, OnDestroy {
     this.githubMetadata = await this.api.githubService.getGithubMetadata()
 
     const context = await this.luigiService.getContextAsync()
+
+    const userPolicies = context.entityContext.project.policies
+    this.isUserVaultMaintainer = userPolicies.includes('owner') || userPolicies.includes('vault_maintainer')
 
     // Only show GHA and GHAS if their feature flags are toggled on
     this.showGithubActions.set(await this.featureFlagService.isGithubActionsEnabled(context.projectId))

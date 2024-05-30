@@ -48,7 +48,7 @@
       [closeOnOutsideClick]="true"></button>
   </div>
   <div>{{ serviceDetails.solinasCustomerID }}</div>
-  <div *dxpRequiredPolicies="['projectAdmin', 'projectMember']; operator: 'or'">
+  <div *dxpRequiredPolicies="['owner', 'member']; operator: 'or'">
     <a [href]="githubActionsRunnerGroupUrl" target="_blank">Open Runners Group</a>
     <div class="flex-box top-margin">
       <h3>GitHub Actions Credentials</h3>
@@ -57,9 +57,14 @@
       <b>Vault Path</b>
     </div>
     <fd-busy-indicator [loading]="pendingShowInVault()" size="s">
-      <a fd-link [disabled]="pendingShowInVault()" (click)="showInVault(serviceDetails.secretPath)">
-        {{ serviceDetails.secretPath }}
-      </a>
+      <div [fd-inline-help]="insufficientVaultPermissions" [disabled]="isUserVaultMaintainer">
+        <a
+          fd-link
+          [disabled]="pendingShowInVault() || !isUserVaultMaintainer"
+          (click)="showInVault(serviceDetails.secretPath)">
+          {{ serviceDetails.secretPath }}
+        </a>
+      </div>
     </fd-busy-indicator>
   </div>
   <div class="divider"></div>
@@ -106,4 +111,10 @@
 </ng-template>
 <ng-template #responsibleProjectHelp>
   <div>The project which initially enabled GitHub Actions for the GitHub organization your component lives in.</div>
+</ng-template>
+
+<ng-template #insufficientVaultPermissions>
+  You need to be 'Vault Maintainer' to see credentials.
+  <br />
+  Go to the members list to contact a project owner.
 </ng-template>

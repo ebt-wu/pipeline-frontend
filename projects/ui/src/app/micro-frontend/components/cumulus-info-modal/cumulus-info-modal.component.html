@@ -4,77 +4,66 @@
       <fd-busy-indicator [loading]="true" ariaLabel="loading" title="Please Wait"></fd-busy-indicator>
     </div>
     <div *ngIf="!cumulusInfo && !loading" class="not-found-message">
-      <img src="./assets/notFoundPage.svg" alt="Cards with a question mark" width="60%"/>
-      <figure fd-illustrated-message [noSvg]="true"  type="spot">
+      <img src="./assets/notFoundPage.svg" alt="Cards with a question mark" width="60%" />
+      <figure fd-illustrated-message [noSvg]="true" type="spot">
         <figcaption fd-illustrated-message-figcaption id="not-found-description">
-            <h3 fd-illustrated-message-title>Failed to get Cumulus data</h3>
-            <p fd-illustrated-message-text>
-              Please try again later
-            </p>
-          </figcaption>
+          <h3 fd-illustrated-message-title>Failed to get Cumulus data</h3>
+          <p fd-illustrated-message-text>Please try again later</p>
+        </figcaption>
       </figure>
     </div>
     <div *ngIf="cumulusInfo && cumulusInfo.key && cumulusInfo.id && cumulusInfo.groupId">
       <div>
-        <span class="label">
-          Cumulus Pipeline ID:
-        </span>
-        <fd-icon
-          [fd-inline-help]="pipelineIdPopover"
-          [triggers]="['click']"
-          class="icon"
-          glyph="hint"></fd-icon>
+        <span class="label">Cumulus Pipeline ID:</span>
+        <fd-icon [fd-inline-help]="pipelineIdPopover" [triggers]="['click']" class="icon" glyph="hint"></fd-icon>
         <p class="remove-top-margin">{{ cumulusInfo.id }}</p>
       </div>
 
       <div>
-        <span class="label">
-          Cumulus Pipeline Key:
-        </span>
-        <fd-icon
-          [fd-inline-help]="pipelineKeyPopover"
-          [triggers]="['click']"
-          class="icon"
-          glyph="hint"></fd-icon>
+        <span class="label">Cumulus Pipeline Key:</span>
+        <fd-icon [fd-inline-help]="pipelineKeyPopover" [triggers]="['click']" class="icon" glyph="hint"></fd-icon>
 
         <p class="remove-top-margin">{{ cumulusInfo.key }}</p>
       </div>
       <div>
-        <span class="label">
-          Cumulus Group Key:
-        </span>
-        <fd-icon
-        [fd-inline-help]="groupKeyPopover"
-        [triggers]="['click']"
-        class="icon"
-        glyph="hint"></fd-icon>
+        <span class="label">Cumulus Group Key:</span>
+        <fd-icon [fd-inline-help]="groupKeyPopover" [triggers]="['click']" class="icon" glyph="hint"></fd-icon>
         <p class="remove-top-margin">{{ cumulusInfo.groupKey }}</p>
-
       </div>
       <div class="separator"></div>
 
-      <div *dxpRequiredPolicies="['projectAdmin', 'projectMember']; operator: 'or'">
-      <span class="section-heading">Complete the setup</span>
-      <p class="remove-top-margin">Set up a fully compliant build pipeline with Cumulus to store its results</p>
-      <button (click)="openPipelineUi()" class="button-margin" fd-button fdType="emphasized"
-              label="Set up CI/CD"></button>
-
-
-      <span class="section-heading">Already have a pipeline?</span>
-      <p class="remove-top-margin">
-        Make the storage token available to your orchestrator and Piper, and use the pipeline ID in your pipeline configuration to enable the upload to Cumulus.
-      </p>
-      <div class="buttons">
-        <button (click)="showCumulusTokenInVault()" fd-button>Show Token in Vault</button>
+      <div *dxpRequiredPolicies="['owner', 'member']; operator: 'or'">
+        <span class="section-heading">Complete the setup</span>
+        <p class="remove-top-margin">Set up a fully compliant build pipeline with Cumulus to store its results</p>
         <button
-          (click)="openDocumentation()"
-          ariaLabel="Learn More"
+          (click)="openPipelineUi()"
+          class="button-margin"
           fd-button
-          fdType="transparent"
-          label="Learn More"
-          role="button"></button>
+          fdType="emphasized"
+          label="Set up CI/CD"></button>
+
+        <span class="section-heading">Already have a pipeline?</span>
+        <p class="remove-top-margin">
+          Make the storage token available to your orchestrator and Piper, and use the pipeline ID in your pipeline
+          configuration to enable the upload to Cumulus.
+        </p>
+        <div class="buttons">
+          <div [fd-inline-help]="insufficientVaultPermissions" [disabled]="isUserVaultMaintainer" placement="top">
+            <button
+              (click)="showCumulusTokenInVault()"
+              [disabled]="!isUserVaultMaintainer"
+              fd-button
+              label="Show Token in Vault"></button>
+          </div>
+          <button
+            (click)="openDocumentation()"
+            ariaLabel="Learn More"
+            fd-button
+            fdType="transparent"
+            label="Learn More"
+            role="button"></button>
+        </div>
       </div>
-    </div>
     </div>
   </div>
 </fd-dialog-body>
@@ -85,10 +74,24 @@
   </div>
 </div>
 
+<ng-template #insufficientVaultPermissions>
+  You need to be 'Vault Maintainer' to see credentials.
+  <br />
+  Go to the members list to contact a project owner.
+</ng-template>
+
 <ng-template #pipelineIdPopover>
   <div>
-    Use this ID to <a class="link" href="https://github.wdf.sap.corp/pages/ContinuousDelivery/piper-doc/steps/sapCumulusUpload/" rel="noopener noreferrer" target="_blank">upload
-    your pipeline's results</a> <br />using the sapCumulusUpload Piper step
+    Use this ID to
+    <a
+      class="link"
+      href="https://github.wdf.sap.corp/pages/ContinuousDelivery/piper-doc/steps/sapCumulusUpload/"
+      rel="noopener noreferrer"
+      target="_blank">
+      upload your pipeline's results
+    </a>
+    <br />
+    using the sapCumulusUpload Piper step
   </div>
 </ng-template>
 
@@ -105,9 +108,12 @@
 
 <ng-template #groupKeyPopover>
   <div>
-    Use this key to <br /><a class="link" href="https://wiki.one.int.sap/wiki/x/iK5Yh" rel="noopener noreferrer"
-                             target="_blank">add all the pipelines of this Project to Sirius</a><br />
+    Use this key to
+    <br />
+    <a class="link" href="https://wiki.one.int.sap/wiki/x/iK5Yh" rel="noopener noreferrer" target="_blank">
+      add all the pipelines of this Project to Sirius
+    </a>
+    <br />
     to view their compliance results
   </div>
 </ng-template>
-

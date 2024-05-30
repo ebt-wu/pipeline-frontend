@@ -1,9 +1,10 @@
 import { CommonModule } from '@angular/common'
-import { Component, Input, signal, ChangeDetectionStrategy } from '@angular/core'
-import { FundamentalNgxCoreModule } from '@fundamental-ngx/core'
+import { Component, Input, signal, ChangeDetectionStrategy, OnInit } from '@angular/core'
+import { BusyIndicatorModule, FundamentalNgxCoreModule, InlineHelpDirective } from '@fundamental-ngx/core'
 import { SecretService } from '../../../../micro-frontend/services/secret.service'
 import { GetStagingServiceCredentialQuery } from '@generated/graphql'
 import { AuthorizationModule } from '@dxp/ngx-core/authorization'
+import { DxpLuigiContextService } from '@dxp/ngx-core/luigi'
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -11,14 +12,27 @@ import { AuthorizationModule } from '@dxp/ngx-core/authorization'
   templateUrl: './staging-service-service-details.component.html',
   standalone: true,
   styleUrls: ['./staging-service-service-details.component.css'],
-  imports: [CommonModule, FundamentalNgxCoreModule, AuthorizationModule],
+  imports: [BusyIndicatorModule, CommonModule, FundamentalNgxCoreModule, AuthorizationModule, InlineHelpDirective],
 })
-export class StagingServiceServiceDetailsComponent {
-  constructor(private readonly secretService: SecretService) {}
+export class StagingServiceServiceDetailsComponent implements OnInit {
+  constructor(
+    private readonly secretService: SecretService,
+    private readonly luigiService: DxpLuigiContextService,
+  ) {}
+
+  isUserVaultMaintainer = false
 
   @Input() serviceDetails: GetStagingServiceCredentialQuery['getStagingServiceCredential']
 
+  loading = signal(false)
   pendingShowInVault = signal(false)
+
+  async ngOnInit() {
+    this.loading.set(true)
+    const userPolicies = (await this.luigiService.getContextAsync()).entityContext.project.policies
+    this.isUserVaultMaintainer = userPolicies.includes('owner') || userPolicies.includes('vault_maintainer')
+    this.loading.set(false)
+  }
 
   openDocumentation() {
     window.open(

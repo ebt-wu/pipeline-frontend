@@ -1,4 +1,4 @@
-<div>
+<div *ngIf="!loading()">
   <div class="flex-box">
     <h3>Cumulus Pipeline</h3>
     <button
@@ -32,7 +32,7 @@
       [closeOnOutsideClick]="true"></fd-icon>
   </div>
   {{ serviceDetails.key }}
-  <div *dxpRequiredPolicies="['projectAdmin', 'projectMember']; operator: 'or'">
+  <div *dxpRequiredPolicies="['owner', 'member']; operator: 'or'">
     <div class="flex-box top-margin">
       <h3>Cumulus Credentials</h3>
       <fd-icon
@@ -48,11 +48,16 @@
       <b>Vault Path</b>
     </div>
     <fd-busy-indicator [loading]="pendingShowInVault()" size="s">
-      <a fd-link [disabled]="pendingShowInVault()" (click)="showInVault(cumulusSecretPath)">
-        {{ cumulusSecretPath }}
-      </a>
+      <div [fd-inline-help]="insufficientVaultPermissions" [disabled]="isUserVaultMaintainer">
+        <a fd-link [disabled]="pendingShowInVault() || !isUserVaultMaintainer" (click)="showInVault(cumulusSecretPath)">
+          {{ cumulusSecretPath }}
+        </a>
+      </div>
     </fd-busy-indicator>
   </div>
+</div>
+<div *ngIf="loading()">
+  <fd-busy-indicator [loading]="true" ariaLabel="loading" title="Please Wait"></fd-busy-indicator>
 </div>
 
 <ng-template #idHelp>
@@ -87,4 +92,10 @@
     <br />
     upload compliance relevant data to Cumulus.
   </div>
+</ng-template>
+
+<ng-template #insufficientVaultPermissions>
+  You need to be 'Vault Maintainer' to see credentials.
+  <br />
+  Go to the members list to contact a project owner.
 </ng-template>

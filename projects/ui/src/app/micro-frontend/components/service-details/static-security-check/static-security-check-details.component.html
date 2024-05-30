@@ -60,17 +60,24 @@
         </span>
       </div>
     </div>
-    <div *ngIf="githubSecret">
-      <h3>GitHub Credentials</h3>
-      <div>
-        <strong>Vault Path</strong>
+    <ng-template [dxpRequiredPolicies]="['owner', 'member']" dxpRequiredPoliciesOperator="or">
+      <div *ngIf="githubSecret">
+        <h3>GitHub Credentials</h3>
+        <div>
+          <strong>Vault Path</strong>
+        </div>
+        <fd-busy-indicator [loading]="pendingShowInVault()" size="s">
+          <div [fd-inline-help]="insufficientVaultPermissions" [disabled]="isUserVaultMaintainer">
+            <a
+              (click)="showInVault(githubSecret.path)"
+              [disabled]="pendingShowInVault() || !isUserVaultMaintainer"
+              fd-link>
+              {{ githubSecret.path }}
+            </a>
+          </div>
+        </fd-busy-indicator>
       </div>
-      <fd-busy-indicator [loading]="pendingShowInVault()" size="s">
-        <a (click)="showInVault(githubSecret.path)" [disabled]="pendingShowInVault()" fd-link>
-          {{ githubSecret.path }}
-        </a>
-      </fd-busy-indicator>
-    </div>
+    </ng-template>
     <div class="divider"></div>
     <h3>Get started with GitHub Advanced Security</h3>
     <ul class="no-margin">
@@ -91,3 +98,9 @@
 <div *ngIf="loading()">
   <fd-busy-indicator [loading]="true" ariaLabel="loading" title="Please Wait"></fd-busy-indicator>
 </div>
+
+<ng-template #insufficientVaultPermissions>
+  You need to be 'Vault Maintainer' to see credentials.
+  <br />
+  Go to the members list to contact a project owner.
+</ng-template>

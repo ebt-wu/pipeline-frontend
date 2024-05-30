@@ -1,4 +1,4 @@
-<div>
+<div *ngIf="!loading()">
   <div class="flex-box">
     <h3>Jenkins Instance</h3>
     <button
@@ -18,30 +18,38 @@
     <b>Pipeline</b>
   </div>
   <a [href]="serviceDetails.jobUrl" target="_blank">{{ serviceDetails.name }}</a>
-  <div class="flex-box top-margin">
-    <h3>Jenkins Credentials</h3>
-    <button
-      class="left-margin"
-      role="button"
-      fdType="transparent"
-      glyph="hint"
-      fd-button
-      placement="top"
-      [fd-inline-help]="credentialsHelp"
-      [triggers]="['click']"
-      [closeOnOutsideClick]="true"></button>
-    <br />
-  </div>
-  <div *dxpRequiredPolicies="['projectAdmin', 'projectMember']; operator: 'or'">
+  <div *dxpRequiredPolicies="['owner', 'member']; operator: 'or'">
+    <div class="flex-box top-margin">
+      <h3>Jenkins Credentials</h3>
+      <button
+        class="left-margin"
+        role="button"
+        fdType="transparent"
+        glyph="hint"
+        fd-button
+        placement="top"
+        [fd-inline-help]="credentialsHelp"
+        [triggers]="['click']"
+        [closeOnOutsideClick]="true"></button>
+      <br />
+    </div>
     <div>
       <b>Vault Path</b>
     </div>
     <fd-busy-indicator [loading]="pendingShowInVault()" size="s">
-      <a fd-link [disabled]="pendingShowInVault()" (click)="showInVault(serviceDetails.secretPath)">
-        {{ serviceDetails.secretPath }}
-      </a>
+      <div [fd-inline-help]="insufficientVaultPermissions" [disabled]="isUserVaultMaintainer">
+        <a
+          fd-link
+          [disabled]="pendingShowInVault() || !isUserVaultMaintainer"
+          (click)="showInVault(serviceDetails.secretPath)">
+          {{ serviceDetails.secretPath }}
+        </a>
+      </div>
     </fd-busy-indicator>
   </div>
+</div>
+<div *ngIf="loading()">
+  <fd-busy-indicator [loading]="true" ariaLabel="loading" title="Please Wait"></fd-busy-indicator>
 </div>
 
 <ng-template #credentialsHelp>
@@ -50,4 +58,10 @@
     <br />
     and to create a job for this pipeline.
   </div>
+</ng-template>
+
+<ng-template #insufficientVaultPermissions>
+  You need to be 'Vault Maintainer' to see credentials.
+  <br />
+  Go to the members list to contact a project owner.
 </ng-template>

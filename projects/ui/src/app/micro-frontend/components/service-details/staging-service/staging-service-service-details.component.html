@@ -1,4 +1,4 @@
-<div>
+<div *ngIf="!loading()">
   <div class="flex-box">
     <h3>GitHub Repository</h3>
     <button
@@ -40,7 +40,7 @@
     <br />
   </div>
   {{ serviceDetails.profileName }}
-  <div *dxpRequiredPolicies="['projectAdmin', 'projectMember']; operator: 'or'">
+  <div *dxpRequiredPolicies="['owner', 'member']; operator: 'or'">
     <div class="flex-box top-margin">
       <h3>Staging Service Credentials</h3>
       <button
@@ -59,11 +59,19 @@
       <b>Vault Path</b>
     </div>
     <fd-busy-indicator [loading]="pendingShowInVault()" size="s">
-      <a fd-link [disabled]="pendingShowInVault()" (click)="showInVault(serviceDetails.secretPath)">
-        {{ serviceDetails.secretPath }}
-      </a>
+      <div [fd-inline-help]="insufficientVaultPermissions" [disabled]="isUserVaultMaintainer">
+        <a
+          fd-link
+          [disabled]="pendingShowInVault() || !isUserVaultMaintainer"
+          (click)="showInVault(serviceDetails.secretPath)">
+          {{ serviceDetails.secretPath }}
+        </a>
+      </div>
     </fd-busy-indicator>
   </div>
+</div>
+<div *ngIf="loading()">
+  <fd-busy-indicator [loading]="true" ariaLabel="loading" title="Please Wait"></fd-busy-indicator>
 </div>
 
 <ng-template #instanceHelp>
@@ -84,4 +92,10 @@
     <br />
     We created them for you and stored them with your other credentials in Vault.
   </div>
+</ng-template>
+
+<ng-template #insufficientVaultPermissions>
+  You need to be 'Vault Maintainer' to see credentials.
+  <br />
+  Go to the members list to contact a project owner.
 </ng-template>

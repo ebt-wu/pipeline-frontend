@@ -1,28 +1,40 @@
 import { CommonModule } from '@angular/common'
 import { Component, Input, OnInit, signal, ChangeDetectionStrategy } from '@angular/core'
-import { FundamentalNgxCoreModule } from '@fundamental-ngx/core'
+import { BusyIndicatorComponent, FundamentalNgxCoreModule, InlineHelpDirective } from '@fundamental-ngx/core'
 import { SecretService } from '../../../../micro-frontend/services/secret.service'
 import { GetGithubRepositoryQuery } from '@generated/graphql'
 import { AuthorizationModule } from '@dxp/ngx-core/authorization'
+import { DxpLuigiContextService } from '@dxp/ngx-core/luigi'
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-github-service-details',
   templateUrl: './github-service-details.component.html',
   standalone: true,
-  imports: [CommonModule, FundamentalNgxCoreModule, AuthorizationModule],
+  imports: [BusyIndicatorComponent, CommonModule, FundamentalNgxCoreModule, AuthorizationModule, InlineHelpDirective],
   styleUrls: ['./github-service-details.component.css'],
 })
 export class GithubServiceDetailsComponent implements OnInit {
-  constructor(private readonly secretService: SecretService) {}
+  constructor(
+    private readonly secretService: SecretService,
+    private readonly luigiService: DxpLuigiContextService,
+  ) {}
 
   @Input() serviceDetails: GetGithubRepositoryQuery['getGithubRepository']
 
+  isUserVaultMaintainer = false
   githubInstance = ''
 
-  ngOnInit(): void {
+  loading = signal(false)
+
+  async ngOnInit() {
+    this.loading.set(true)
+    const userPolicies = (await this.luigiService.getContextAsync()).entityContext.project.policies
+    this.isUserVaultMaintainer = userPolicies.includes('owner') || userPolicies.includes('vault_maintainer')
+
     const repoUrl = new URL(this.serviceDetails.repositoryUrl)
     this.githubInstance = repoUrl.origin
+    this.loading.set(false)
   }
 
   pendingShowInVault = signal(false)

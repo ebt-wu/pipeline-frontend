@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core'
-import { FundamentalNgxCoreModule } from '@fundamental-ngx/core'
+import { FundamentalNgxCoreModule, InlineHelpModule } from '@fundamental-ngx/core'
 import { NgIf } from '@angular/common'
 import { PipelineService } from '../../services/pipeline.service'
 import { debounceTime, firstValueFrom, Observable } from 'rxjs'
@@ -18,11 +18,12 @@ import { AuthorizationModule } from '@dxp/ngx-core/authorization'
   styleUrls: ['./cumulus-info-modal.component.css'],
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [NgIf, FundamentalNgxCoreModule, PlatformButtonModule, AuthorizationModule],
+  imports: [NgIf, FundamentalNgxCoreModule, InlineHelpModule, PlatformButtonModule, AuthorizationModule],
 })
 export class CumulusInfoModalComponent implements OnInit {
   watch$: Observable<Pipeline>
   cumulusInfo: CumulusPipeline
+  isUserVaultMaintainer = false
   loading: boolean
 
   constructor(
@@ -35,10 +36,11 @@ export class CumulusInfoModalComponent implements OnInit {
 
   async ngOnInit() {
     this.loading = true
-    // If there is no pipeline we create one on-the-fly
     const userPolicies = (await this.context.getContextAsync()).entityContext.project.policies
+    this.isUserVaultMaintainer = userPolicies.includes('owner') || userPolicies.includes('vault_maintainer')
 
-    if (userPolicies.includes('projectAdmin') || userPolicies.includes('projectMember')) {
+    // If there is no pipeline we create one on-the-fly
+    if (userPolicies.includes('owner') || userPolicies.includes('member')) {
       await firstValueFrom(this.pipelineService.createPipeline(PipelineType.FullPipeline).pipe(debounceTime(100)))
     }
     this.luigiClient.linkManager().updateModalSettings({ height: '565px', width: '420px' })

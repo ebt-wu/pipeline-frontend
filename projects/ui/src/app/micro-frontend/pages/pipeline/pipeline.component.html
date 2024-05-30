@@ -4,15 +4,19 @@
       <fdp-dynamic-page-global-actions>
         <fd-toolbar [clearBorder]="true" fdType="transparent">
           <fd-busy-indicator [loading]="pendingShowCredentials()" size="s"></fd-busy-indicator>
-          <button
-            (click)="showCredentials()"
-            *dxpRequiredPolicies="['projectAdmin', 'projectMember']; operator: 'or'"
-            [disabled]="pendingShowCredentials()"
-            ariaLabel="Show Credentials"
-            fd-button
-            fdType="transparent"
-            glyph="key"
-            label="Show Credentials"></button>
+          <div
+            [fd-inline-help]="insufficientVaultPermissions"
+            [disabled]="pendingShowCredentials() || isUserVaultMaintainer">
+            <button
+              (click)="showCredentials()"
+              *dxpRequiredPolicies="['owner', 'member']; operator: 'or'"
+              [disabled]="pendingShowCredentials() || !isUserVaultMaintainer"
+              ariaLabel="Show Credentials"
+              fd-button
+              fdType="transparent"
+              glyph="key"
+              label="Show Credentials"></button>
+          </div>
         </fd-toolbar>
       </fdp-dynamic-page-global-actions>
     </fdp-dynamic-page-title>
@@ -424,4 +428,10 @@
 
 <ng-template #loadingContent>
   <fd-busy-indicator [loading]="true" ariaLabel="loading" title="Please Wait"></fd-busy-indicator>
+</ng-template>
+
+<ng-template #insufficientVaultPermissions>
+  You need to be 'Vault Maintainer' to see credentials.
+  <br />
+  Go to the members list to contact a project owner.
 </ng-template>

@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common'
 import { Component, Input, OnInit, signal, ChangeDetectionStrategy } from '@angular/core'
-import { FundamentalNgxCoreModule } from '@fundamental-ngx/core'
+import { FundamentalNgxCoreModule, InlineHelpDirective } from '@fundamental-ngx/core'
 import { SecretService } from '../../../../micro-frontend/services/secret.service'
 import { GetGithubActionsCrossNamespaceQuery } from '@generated/graphql'
 import { ErrorMessageComponent } from '../../error-message/error-message.component'
@@ -12,7 +12,7 @@ import { AuthorizationModule } from '@dxp/ngx-core/authorization'
   selector: 'app-github-actions-service-details',
   templateUrl: './github-actions-service-details.component.html',
   standalone: true,
-  imports: [CommonModule, FundamentalNgxCoreModule, ErrorMessageComponent, AuthorizationModule],
+  imports: [CommonModule, FundamentalNgxCoreModule, ErrorMessageComponent, AuthorizationModule, InlineHelpDirective],
   styleUrls: ['./github-actions-service-details.component.css'],
 })
 export class GithubActionsServiceDetailsComponent implements OnInit {
@@ -38,6 +38,7 @@ export class GithubActionsServiceDetailsComponent implements OnInit {
   isCurrentProjectResponsible = signal(false)
   responsibleProjectUrl = signal('')
   showActionsGetStartedWarning = signal(false)
+  isUserVaultMaintainer = false
 
   async ngOnInit(): Promise<void> {
     this.githubOrganizationUrl = `${this.serviceDetails.githubInstance}/${this.serviceDetails.githubOrganization}`
@@ -53,6 +54,9 @@ export class GithubActionsServiceDetailsComponent implements OnInit {
 
     const context = await this.luigiService.getContextAsync()
     this.catalogUrl.set(context.frameBaseUrl + '/catalog')
+
+    const userPolicies = context.entityContext.project.policies
+    this.isUserVaultMaintainer = userPolicies.includes('owner') || userPolicies.includes('vault_maintainer')
 
     if (context.projectId != this.serviceDetails.responsibleProject) {
       this.responsibleProjectUrl.set(`${context.frameBaseUrl}/projects/${this.serviceDetails.responsibleProject}`)
