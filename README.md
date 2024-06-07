@@ -21,7 +21,7 @@
 
 > I am trying to visit my site on `http://localhost:4200` but it only shows a blank screen.
 
-This is intended behaviour as the Microfrontend can only work, if a Luigi-Core frame is available. So please make sure to open your local development environment from within the Portal directly as described in step 5 of the setup guide
+This is intended behaviour as the Microfrontend can only work, if a Luigi-Core frame is available. So please make sure to open your local development environment from within the Portal directly as described in step 4 of the setup guide
 
 > Hyperspace Portal dev (portal.d1.hyperspace.tools.sap) is facing issues. Can I also develop against another landscape like portal.i1.hyperspace.tools.sap?
 
