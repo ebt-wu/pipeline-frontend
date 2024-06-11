@@ -19,6 +19,7 @@ import { GithubActionsService } from '../../services/github-actions.service'
 import { APIService } from '../../services/api.service'
 import { GithubMetadata, REQUIRED_SCOPES } from '../../services/github.service'
 import { PlatformFormGeneratorCustomInfoBoxComponent } from '../../components/form-generator-info-box/form-generator-info-box.component'
+import { PlatformFormGeneratorCustomMessageStripComponent } from '../../components/form-generator-message-strip/form-generator-message-strip.component'
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -53,6 +54,7 @@ export class GithubActionsComponent implements OnInit {
   ) {
     this._formGeneratorService.addComponent(PlatformFormGeneratorCustomHeaderElementComponent, ['header'])
     this._formGeneratorService.addComponent(PlatformFormGeneratorCustomInfoBoxComponent, ['info'])
+    this._formGeneratorService.addComponent(PlatformFormGeneratorCustomMessageStripComponent, ['message-strip'])
   }
 
   async ngOnInit() {

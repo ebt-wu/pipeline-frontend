@@ -17,6 +17,7 @@ import { Validators } from '@angular/forms'
 import { DynamicFormItem } from '@fundamental-ngx/platform'
 import { Secret, SecretData, SecretService } from './secret.service'
 import { EntityContext, ghTokenFormValue, GithubTokenMessage, SetupBuildFormValue } from '@types'
+import { PolicyService } from './policy.service'
 
 export interface GithubMetadata {
   githubInstance: string
@@ -35,6 +36,7 @@ export class GithubService {
     private readonly apiService: BaseAPIService,
     private readonly luigiService: DxpLuigiContextService,
     private readonly secretService: SecretService,
+    private readonly policyService: PolicyService,
   ) {}
 
   public GITHUB_CREDENTIAL_FORM: DynamicFormItem[] = [
@@ -66,8 +68,9 @@ export class GithubService {
       message: 'Personal Access Token (PAT)',
       placeholder: 'Enter service user or personal user access token',
       validators: [Validators.required],
-      when: (formValue: ghTokenFormValue) => {
-        return formValue.githubCredentialType === CredentialTypes.NEW
+      when: async (formValue: ghTokenFormValue) => {
+        const isUserVaultMaintainer = await this.policyService.isUserVaultMaintainer()
+        return formValue.githubCredentialType === CredentialTypes.NEW && isUserVaultMaintainer
       },
       validate: async (value: string) => {
         const githubMetadata = await this.getGithubMetadata()
@@ -115,8 +118,9 @@ export class GithubService {
       type: 'info',
       name: 'patInfoBox',
       message: '',
-      when: (formValue: ghTokenFormValue) => {
-        return formValue.githubCredentialType === CredentialTypes.NEW
+      when: async (formValue: ghTokenFormValue) => {
+        const isUserVaultMaintainer = await this.policyService.isUserVaultMaintainer()
+        return formValue.githubCredentialType === CredentialTypes.NEW && isUserVaultMaintainer
       },
       guiOptions: {
         additionalData: {
@@ -147,6 +151,31 @@ export class GithubService {
               <b>repo, admin:org, admin:org_hook, admin:repo_hook, workflow</b>
             </li>
           </ol>`
+          },
+        },
+      },
+    },
+    {
+      type: 'message-strip',
+      name: 'githubVaultMaintainerErrorStrip',
+      message: '',
+      when: async (formValue: ghTokenFormValue) => {
+        const isUserVaultMaintainer = await this.policyService.isUserVaultMaintainer()
+        return formValue.githubCredentialType === CredentialTypes.NEW && !isUserVaultMaintainer
+      },
+      validate: () => "Can't finish the setup without Github Credentials",
+      guiOptions: {
+        additionalData: {
+          isValidationRequired: true,
+          type: 'error',
+          message: async () => {
+            const context = await this.luigiService.getContextAsync()
+            return `
+              You can’t add new credentials due to missing permissions.<br/>
+              You need to be „Vault Maintainer“ to maintain credentials.
+              <a href="${context.frameBaseUrl}/projects/${context.projectId}/members" target="_blank">
+                Contact a project owner
+              </a>`
           },
         },
       },

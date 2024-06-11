@@ -1,0 +1,9 @@
+<ng-container [formGroup]="form">
+  <ng-container [formGroupName]="formGroupName">
+    <fd-message-strip *ngIf="isLoaded()" [type]="type" [dismissible]="false">
+      <span [innerHTML]="message"></span>
+    </fd-message-strip>
+    <!-- input field is required for validation to work -->
+    <fdp-input *ngIf="isValidationRequired()" [name]="name" [formControlName]="name" type="text"></fdp-input>
+  </ng-container>
+</ng-container>

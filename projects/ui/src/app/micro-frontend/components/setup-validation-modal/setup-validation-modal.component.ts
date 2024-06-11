@@ -21,6 +21,7 @@ import { GithubService } from '../../services/github.service'
 import { PipelineService } from '../../services/pipeline.service'
 import { PlatformFormGeneratorCustomInfoBoxComponent } from '../form-generator-info-box/form-generator-info-box.component'
 import { SecretData, SecretService } from '../../services/secret.service'
+import { PlatformFormGeneratorCustomMessageStripComponent } from '../form-generator-message-strip/form-generator-message-strip.component'
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -69,6 +70,7 @@ export class SetupValidationModalComponent implements OnInit, OnDestroy {
     private luigiClient: LuigiClient,
   ) {
     this._formGeneratorService.addComponent(PlatformFormGeneratorCustomInfoBoxComponent, ['info'])
+    this._formGeneratorService.addComponent(PlatformFormGeneratorCustomMessageStripComponent, ['message-strip'])
   }
 
   async ngOnInit() {

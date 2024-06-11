@@ -19,11 +19,13 @@ import { JenkinsService } from '../../services/jenkins.service'
 import { ErrorMessageComponent } from '../error-message/error-message.component'
 import { PlatformMessagePopoverModule } from '@fundamental-ngx/platform/message-popover'
 import { PiperService } from '../../services/piper.service'
-import { PlatformFormGeneratorCustomHeaderElementComponent } from '../form-generator-header/form-generator-header.component'
 import { BuildTool } from '@generated/graphql'
-import { PlatformFormGeneratorCustomInfoBoxComponent } from '../form-generator-info-box/form-generator-info-box.component'
 import { getNodeParams } from '@luigi-project/client'
+import { PlatformFormGeneratorCustomHeaderElementComponent } from '../form-generator-header/form-generator-header.component'
+import { PlatformFormGeneratorCustomInfoBoxComponent } from '../form-generator-info-box/form-generator-info-box.component'
+import { PlatformFormGeneratorCustomMessageStripComponent } from '../form-generator-message-strip/form-generator-message-strip.component'
 import { FeatureFlagService } from '../../services/feature-flag.service'
+import { PolicyService } from '../../services/policy.service'
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -52,9 +54,11 @@ export class SetupComponent implements OnInit, OnDestroy {
     private readonly jenkinsService: JenkinsService,
     private readonly piperService: PiperService,
     private readonly featureFlagService: FeatureFlagService,
+    private readonly policyService: PolicyService,
   ) {
     this._formGeneratorService.addComponent(PlatformFormGeneratorCustomHeaderElementComponent, ['header'])
     this._formGeneratorService.addComponent(PlatformFormGeneratorCustomInfoBoxComponent, ['info'])
+    this._formGeneratorService.addComponent(PlatformFormGeneratorCustomMessageStripComponent, ['message-strip'])
   }
 
   private contextSubscription: Subscription
@@ -270,11 +274,12 @@ export class SetupComponent implements OnInit, OnDestroy {
       name: 'jenkinsUserId',
       message: 'User ID',
       placeholder: 'Enter ID',
-      when: (formValue: SetupBuildFormValue) => {
+      when: async (formValue: SetupBuildFormValue) => {
         if (formValue.orchestrator != Orchestrators.JENKINS) {
           return false
         }
-        return formValue.jenkinsCredentialType === CredentialTypes.NEW
+        const isUserVaultMaintainer = await this.policyService.isUserVaultMaintainer()
+        return formValue.jenkinsCredentialType === CredentialTypes.NEW && isUserVaultMaintainer
       },
       validators: [Validators.required],
     },
@@ -284,13 +289,42 @@ export class SetupComponent implements OnInit, OnDestroy {
       name: 'jenkinsToken',
       message: 'Token with overall (administer) permissions.',
       placeholder: 'Enter Token',
-      when: (formValue: SetupBuildFormValue) => {
+      when: async (formValue: SetupBuildFormValue) => {
         if (formValue.orchestrator !== Orchestrators.JENKINS) {
           return false
         }
-        return formValue.jenkinsCredentialType === CredentialTypes.NEW
+        const isUserVaultMaintainer = await this.policyService.isUserVaultMaintainer()
+        return formValue.jenkinsCredentialType === CredentialTypes.NEW && isUserVaultMaintainer
       },
       validators: [Validators.required],
+    },
+    {
+      type: 'message-strip',
+      name: 'jenkinsVaultMaintainerErrorStrip',
+      message: '',
+      validate: () => "Can't finish the setup without Jenkins Credentials",
+      when: async (formValue: SetupBuildFormValue) => {
+        if (formValue.orchestrator !== Orchestrators.JENKINS) {
+          return false
+        }
+        const isUserVaultMaintainer = await this.policyService.isUserVaultMaintainer()
+        return formValue.jenkinsCredentialType === CredentialTypes.NEW && !isUserVaultMaintainer
+      },
+      guiOptions: {
+        additionalData: {
+          isValidationRequired: true,
+          type: 'error',
+          message: async () => {
+            const context = await this.luigiService.getContextAsync()
+            return `
+              You can’t add new credentials due to missing permissions.<br/>
+              You need to be „Vault Maintainer“ to maintain credentials.
+              <a href="${context.frameBaseUrl}/projects/${context.projectId}/members" target="_blank">
+                Contact a project owner
+              </a>`
+          },
+        },
+      },
     },
     {
       type: 'list',
