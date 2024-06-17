@@ -1,6 +1,7 @@
-import { ChangeDetectionStrategy, Component, Input, OnDestroy, OnInit, ViewEncapsulation, signal } from '@angular/core'
+import { ChangeDetectionStrategy, Component, Input, OnInit, ViewEncapsulation, ChangeDetectorRef } from '@angular/core'
 import {
   ButtonComponent,
+  ButtonType,
   CardModule,
   DialogService,
   IllustratedMessageModule,
@@ -12,9 +13,11 @@ import { DxpContext } from '@dxp/ngx-core/common'
 import { AuthorizationModule } from '@dxp/ngx-core/authorization'
 import { svgRocket } from '../../../assets/ts-svg/rocket'
 import { ModalProjectGetStartedComponent } from '../modal-project-get-started/modal-project-get-started.component'
-import { GithubService } from '../../services/github.service'
 import { NgIf } from '@angular/common'
-import { Subscription } from 'rxjs'
+import { catchError, combineLatest, first, of } from 'rxjs'
+import { ExtensionService, ScopeType, UpdateExtensionInput } from '@dxp/ngx-core/extensions'
+import { CardAction, DxpActionCardModule, ImageType } from '@dxp/ngx-core/action-card'
+import { ComponentSearchService } from '@dxp/ngx-core/search'
 
 @Component({
   standalone: true,
@@ -22,10 +25,18 @@ import { Subscription } from 'rxjs'
   templateUrl: './card-project-promotion.component.html',
   styleUrls: ['./card-project-promotion.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [CardModule, IllustratedMessageModule, NgIf, MessageStripModule, AuthorizationModule, ButtonComponent],
+  imports: [
+    CardModule,
+    IllustratedMessageModule,
+    NgIf,
+    MessageStripModule,
+    AuthorizationModule,
+    ButtonComponent,
+    DxpActionCardModule,
+  ],
   encapsulation: ViewEncapsulation.ShadowDom,
 })
-export class CardProjectPromotionComponent implements OnInit, OnDestroy {
+export class CardProjectPromotionComponent implements OnInit {
   @Input()
   set context(context: DxpContext) {
     this.currentProjectId = context.projectId
@@ -37,11 +48,8 @@ export class CardProjectPromotionComponent implements OnInit, OnDestroy {
 
   @Input()
   currentProjectId: string
-
-  private githubSubscription: Subscription
-  headerText: string = 'CI/CD Setup'
-  githubConnected = signal(false)
-
+  headerText: string = 'Setup CI/CD'
+  cardButtons: CardAction[]
   readonly rocketConfig: SvgConfig = {
     spot: {
       file: svgRocket,
@@ -52,19 +60,38 @@ export class CardProjectPromotionComponent implements OnInit, OnDestroy {
   constructor(
     private dxpLuigiContextService: DxpLuigiContextService,
     private dialogService: DialogService,
-    private githubService: GithubService,
+    private componentSearchService: ComponentSearchService,
+    private extensionService: ExtensionService,
+    private changeRef: ChangeDetectorRef,
   ) {}
 
   ngOnInit(): void {
-    this.checkGithubConnection()
+    const q = `account:"${this.currentProjectId}"`
+
+    combineLatest([this.dxpLuigiContextService.contextObservable(), this.componentSearchService.search(q, 1, 1)])
+      .pipe(first())
+      .subscribe(([ctx, components]) => {
+        this.cardButtons = [
+          {
+            fdType: 'emphasized' as ButtonType,
+            clickCallback: this.openGetStartedModal,
+            disabled: components.items.length === 0,
+            tooltip: components.items.length === 0 ? 'You must first create a component' : undefined,
+            text: 'Set up',
+          },
+        ]
+        if (ctx.context.entityContext.project.policies.includes('projectAdmin')) {
+          this.cardButtons.push({
+            fdType: 'transparent' as ButtonType,
+            clickCallback: this.skipCard,
+            text: 'Skip',
+          })
+        }
+        this.changeRef.detectChanges()
+      })
   }
 
-  ngOnDestroy(): void {
-    this.githubSubscription.unsubscribe()
-  }
-
-  openGetStartedModal(e: Event): void {
-    e.stopPropagation()
+  openGetStartedModal = () => {
     this.dialogService.open(ModalProjectGetStartedComponent, {
       focusTrapped: false,
       responsivePadding: true,
@@ -79,16 +106,35 @@ export class CardProjectPromotionComponent implements OnInit, OnDestroy {
     })
   }
 
-  private checkGithubConnection(): void {
-    this.githubSubscription = this.githubService.getGithubAccounts().subscribe((accounts) => {
-      accounts.length > 0 ? this.githubConnected.set(true) : this.githubConnected.set(false)
-    })
+  skipCard = () => {
+    this.extensionService
+      .updateExtensionInstanceInProject({
+        installationData: {
+          skipOnboardingCard: 'true',
+        },
+        instanceId: 'pipeline-ui',
+        extensionClass: {
+          id: 'pipeline-ui',
+          scope: ScopeType.PROJECT,
+        },
+      } as UpdateExtensionInput)
+      .pipe(
+        first(),
+        catchError(async (error: Error) => {
+          await this.LuigiClient.uxManager().showAlert({
+            text: error.message,
+            type: 'error',
+          })
+          return of(null)
+        }),
+      )
+      .subscribe(() => {
+        window.postMessage({
+          msg: 'custom',
+          data: { id: 'general.frame-entity-changed' },
+        })
+      })
   }
 
-  async openConnectGithubModal(): Promise<void> {
-    await this.LuigiClient.linkManager().openAsModal(`/projects/${this.currentProjectId}/catalog/github?~type=github`, {
-      title: 'Connect an Account',
-      size: 's',
-    })
-  }
+  public ImageType = ImageType
 }

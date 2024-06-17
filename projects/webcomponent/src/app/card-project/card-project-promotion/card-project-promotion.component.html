@@ -1,27 +1,9 @@
-<fd-card aria-labelledby="spot-label" aria-describedby="spot-description" role="group">
-  <fd-card-header [interactive]="false">
-    <h2 fd-card-title id="spot-label">{{ headerText }}</h2>
-  </fd-card-header>
-  <fd-card-content>
-    <figure fd-illustrated-message type="spot" [svgConfig]="rocketConfig">
-      <figcaption fd-illustrated-message-figcaption id="spot-description">
-        <h3 fd-illustrated-message-title>Effortless CI/CD</h3>
-        <p fd-illustrated-message-text>Set up a pipeline or get access to single CI/CD services</p>
-      </figcaption>
-
-      <fd-illustrated-message-actions *dxpRequiredPolicies="['projectAdmin', 'projectMember']; operator: 'or'">
-        <button fd-button [disabled]="!githubConnected()" fdCompact fdType="emphasized" label="Set up CI/CD"
-          (click)="openGetStartedModal($event)"></button>
-      </fd-illustrated-message-actions>
-    </figure>
-
-    <div *ngIf="!githubConnected()" class="message-strip-container">
-      <fd-message-strip type="warning" [dismissible]="false"
-        *dxpRequiredPolicies="['projectAdmin', 'projectMember']; operator: 'or'">
-        Your GitHub organization is missing to start.
-        <a (click)="openConnectGithubModal()">Connect GitHub</a>
-      </fd-message-strip>
-    </div>
-
-  </fd-card-content>
-</fd-card>
+<dxp-action-card
+  [heading]="headerText"
+  [imageConfig]="rocketConfig"
+  helpLink="https://pages.github.tools.sap/hyperspace/cicd-setup-documentation/"
+  content="Set up a pipeline or get access to single CI/CD services."
+  width="auto"
+  height="350px"
+  [imageType]="ImageType.CENTERED"
+  [actions]="cardButtons"></dxp-action-card>

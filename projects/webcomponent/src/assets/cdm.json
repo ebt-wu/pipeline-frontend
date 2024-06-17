@@ -10,8 +10,14 @@
               "entityType": "project.overview::compound",
               "urlSuffix": "/main.js#cicd-project-promotion-card",
               "dxpOrder": 2,
+              "visibleForContext": "serviceProviderConfig.skipOnboardingCard == null  || serviceProviderConfig.skipOnboardingCard == \"false\"",
               "layoutConfig": {
                 "slot": "content"
+              },
+              "visibleForEntityContext": {
+                "project": {
+                  "policies": ["iamMember"]
+                }
               },
               "webcomponent": {
                 "selfRegistered": true
