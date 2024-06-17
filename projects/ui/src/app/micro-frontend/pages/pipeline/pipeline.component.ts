@@ -45,6 +45,7 @@ import {
   DynamicPageHeaderComponent,
   DynamicPageTitleComponent,
 } from '@fundamental-ngx/platform'
+import { PolicyService } from '../../services/policy.service'
 
 type Error = {
   title: string
@@ -142,6 +143,7 @@ export class PipelineComponent implements OnInit, OnDestroy {
     private readonly featureFlagService: FeatureFlagService,
     readonly debugModeService: DebugModeService,
     private readonly sharedResourceDataService: SharedDataService,
+    private readonly policyService: PolicyService,
   ) {}
 
   get showOpenPipelineURL(): boolean {
@@ -155,8 +157,7 @@ export class PipelineComponent implements OnInit, OnDestroy {
 
     const context = await this.luigiService.getContextAsync()
 
-    const userPolicies = context.entityContext.project.policies
-    this.isUserVaultMaintainer = userPolicies.includes('owner') || userPolicies.includes('vault_maintainer')
+    this.isUserVaultMaintainer = await this.policyService.isUserVaultMaintainer()
 
     // Only show GHA and GHAS if their feature flags are toggled on
     this.showGithubActions.set(await this.featureFlagService.isGithubActionsEnabled(context.projectId))

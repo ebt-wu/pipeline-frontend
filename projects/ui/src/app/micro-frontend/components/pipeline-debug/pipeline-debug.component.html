@@ -2,7 +2,7 @@
   <div *ngIf="watch$ | async as pipeline" class="container">
     <h3 class="watch-pipeline-header">Watch pipeline:</h3>
     <pre class="hide-scrollbar pipeline-json">{{ pipeline | json }}</pre>
-    <div *dxpRequiredPolicies="['projectAdmin', 'projectMember']; operator: 'or'">
+    <div *dxpRequiredPolicies="'member'">
       <h3 class="delete-freestyle-resource-header">Delete FreestylePipeline Resource</h3>
       <p>
         Deleting the FreestylePipeline resource may have

@@ -17,6 +17,7 @@ import { AsyncPipe, NgIf } from '@angular/common'
 import { AuthorizationModule } from '@dxp/ngx-core/authorization'
 import { Secret, SecretService } from '../../../services/secret.service'
 import { DxpLuigiContextService } from '@dxp/ngx-core/luigi'
+import { PolicyService } from '../../../services/policy.service'
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -63,12 +64,12 @@ export class StaticSecurityCheckDetailsComponent implements OnInit {
     private readonly cumulusService: CumulusService,
     private readonly secretService: SecretService,
     private readonly luigiService: DxpLuigiContextService,
+    private readonly policyService: PolicyService,
   ) {}
 
   async ngOnInit() {
     this.loading.set(true)
-    const userPolicies = (await this.luigiService.getContextAsync()).entityContext.project.policies
-    this.isUserVaultMaintainer = userPolicies.includes('owner') || userPolicies.includes('vault_maintainer')
+    this.isUserVaultMaintainer = await this.policyService.isUserVaultMaintainer()
 
     this.watch$ = this.pipelineService.watchPipeline().pipe(debounceTime(50))
     const cumulusRef = (await firstValueFrom(this.watch$)).resourceRefs.find(

@@ -11,6 +11,7 @@ import { CumulusPipeline, PipelineType } from '@generated/graphql'
 import { DxpLuigiContextService, LuigiClient } from '@dxp/ngx-core/luigi'
 import { PlatformButtonModule } from '@fundamental-ngx/platform'
 import { AuthorizationModule } from '@dxp/ngx-core/authorization'
+import { PolicyService } from '../../services/policy.service'
 
 @Component({
   selector: 'app-cumulus-info-modal',
@@ -32,15 +33,15 @@ export class CumulusInfoModalComponent implements OnInit {
     private readonly secretService: SecretService,
     private readonly luigiClient: LuigiClient,
     private readonly context: DxpLuigiContextService,
+    private readonly policyService: PolicyService,
   ) {}
 
   async ngOnInit() {
     this.loading = true
-    const userPolicies = (await this.context.getContextAsync()).entityContext.project.policies
-    this.isUserVaultMaintainer = userPolicies.includes('owner') || userPolicies.includes('vault_maintainer')
+    this.isUserVaultMaintainer = await this.policyService.isUserVaultMaintainer()
 
     // If there is no pipeline we create one on-the-fly
-    if (userPolicies.includes('owner') || userPolicies.includes('member')) {
+    if (await this.policyService.isUserProjectMember()) {
       await firstValueFrom(this.pipelineService.createPipeline(PipelineType.FullPipeline).pipe(debounceTime(100)))
     }
     this.luigiClient.linkManager().updateModalSettings({ height: '565px', width: '420px' })

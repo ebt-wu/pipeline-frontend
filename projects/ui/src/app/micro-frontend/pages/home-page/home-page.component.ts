@@ -13,6 +13,7 @@ import { tntSpotSecret } from '../../../../assets/ts-svg/tnt-spot-secret'
 import { AuthorizationModule } from '@dxp/ngx-core/authorization'
 import { DxpLuigiContextService, LuigiClient } from '@dxp/ngx-core/luigi'
 import { PipelineType } from '@generated/graphql'
+import { PolicyService } from '../../services/policy.service'
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -48,6 +49,7 @@ export class HomePageComponent implements OnInit {
     private readonly debugModeService: DebugModeService,
     private readonly luigiClient: LuigiClient,
     private readonly context: DxpLuigiContextService,
+    private readonly policyService: PolicyService,
   ) {}
 
   async ngOnInit(): Promise<void> {
@@ -68,9 +70,7 @@ export class HomePageComponent implements OnInit {
   }
 
   private async initializePipeline(): Promise<void> {
-    const userPolicies = (await this.context.getContextAsync()).entityContext.project.policies
-
-    if (userPolicies.includes('projectAdmin') || userPolicies.includes('projectMember')) {
+    if (await this.policyService.isUserProjectMember()) {
       await firstValueFrom(this.pipelineService.createPipeline(this.pipelineType.FullPipeline).pipe(debounceTime(100)))
     }
 

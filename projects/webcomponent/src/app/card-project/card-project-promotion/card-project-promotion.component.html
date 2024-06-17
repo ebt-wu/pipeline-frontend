@@ -9,19 +9,22 @@
         <p fd-illustrated-message-text>Set up a pipeline or get access to single CI/CD services</p>
       </figcaption>
 
-      <fd-illustrated-message-actions *dxpRequiredPolicies="['projectAdmin', 'projectMember']; operator: 'or'">
-        <button fd-button [disabled]="!githubConnected()" fdCompact fdType="emphasized" label="Set up CI/CD"
+      <fd-illustrated-message-actions *dxpRequiredPolicies="'member'">
+        <button
+          fd-button
+          [disabled]="!githubConnected()"
+          fdCompact
+          fdType="emphasized"
+          label="Set up CI/CD"
           (click)="openGetStartedModal($event)"></button>
       </fd-illustrated-message-actions>
     </figure>
 
     <div *ngIf="!githubConnected()" class="message-strip-container">
-      <fd-message-strip type="warning" [dismissible]="false"
-        *dxpRequiredPolicies="['projectAdmin', 'projectMember']; operator: 'or'">
+      <fd-message-strip type="warning" [dismissible]="false" *dxpRequiredPolicies="'member'">
         Your GitHub organization is missing to start.
         <a (click)="openConnectGithubModal()">Connect GitHub</a>
       </fd-message-strip>
     </div>
-
   </fd-card-content>
 </fd-card>

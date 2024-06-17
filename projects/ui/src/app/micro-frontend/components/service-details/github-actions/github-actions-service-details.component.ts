@@ -6,6 +6,7 @@ import { GetGithubActionsCrossNamespaceQuery } from '@generated/graphql'
 import { ErrorMessageComponent } from '../../error-message/error-message.component'
 import { DxpLuigiContextService, LuigiClient } from '@dxp/ngx-core/luigi'
 import { AuthorizationModule } from '@dxp/ngx-core/authorization'
+import { PolicyService } from '../../../services/policy.service'
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -20,6 +21,7 @@ export class GithubActionsServiceDetailsComponent implements OnInit {
     private readonly secretService: SecretService,
     private readonly luigiService: DxpLuigiContextService,
     private readonly luigiClient: LuigiClient,
+    private readonly policyService: PolicyService,
   ) {}
 
   @Input() serviceDetails: GetGithubActionsCrossNamespaceQuery['getGithubActionsCrossNamespace']
@@ -55,8 +57,7 @@ export class GithubActionsServiceDetailsComponent implements OnInit {
     const context = await this.luigiService.getContextAsync()
     this.catalogUrl.set(context.frameBaseUrl + '/catalog')
 
-    const userPolicies = context.entityContext.project.policies
-    this.isUserVaultMaintainer = userPolicies.includes('owner') || userPolicies.includes('vault_maintainer')
+    this.isUserVaultMaintainer = await this.policyService.isUserVaultMaintainer()
 
     if (context.projectId != this.serviceDetails.responsibleProject) {
       this.responsibleProjectUrl.set(`${context.frameBaseUrl}/projects/${this.serviceDetails.responsibleProject}`)

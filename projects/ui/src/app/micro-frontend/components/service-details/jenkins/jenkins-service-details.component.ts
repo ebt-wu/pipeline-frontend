@@ -5,6 +5,7 @@ import { SecretService } from '../../../../micro-frontend/services/secret.servic
 import { GetJenkinsPipelineQuery } from '@generated/graphql'
 import { AuthorizationModule } from '@dxp/ngx-core/authorization'
 import { DxpLuigiContextService } from '@dxp/ngx-core/luigi'
+import { PolicyService } from '../../../services/policy.service'
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -18,6 +19,7 @@ export class JenkinServiceDetailsComponent implements OnInit {
   constructor(
     private readonly secretService: SecretService,
     private readonly luigiService: DxpLuigiContextService,
+    private readonly policyService: PolicyService,
   ) {}
 
   @Input() serviceDetails: GetJenkinsPipelineQuery['getJenkinsPipeline']
@@ -31,8 +33,7 @@ export class JenkinServiceDetailsComponent implements OnInit {
 
   async ngOnInit() {
     this.loading.set(true)
-    const userPolicies = (await this.luigiService.getContextAsync()).entityContext.project.policies
-    this.isUserVaultMaintainer = userPolicies.includes('owner') || userPolicies.includes('vault_maintainer')
+    this.isUserVaultMaintainer = await this.policyService.isUserVaultMaintainer()
 
     const jobURL = new URL(this.serviceDetails.jobUrl)
     this.originURL = jobURL.origin
