@@ -16,7 +16,7 @@
       fd-button
       (click)="openDocumentation()"></button>
   </div>
-  <div *dxpRequiredPolicies="'member'">
+  <div *dxpRequiredPolicies="['projectAdmin', 'projectMember']; operator: 'or'">
     <div *ngIf="cumulusInfo && cumulusInfo.id">
       <h3>Cumulus Pipeline</h3>
       <div class="flex-box">
@@ -60,7 +60,7 @@
         </span>
       </div>
     </div>
-    <ng-template [dxpRequiredPolicies]="'member'">
+    <ng-template [dxpRequiredPolicies]="['owner', 'member']" dxpRequiredPoliciesOperator="or">
       <div *ngIf="githubSecret">
         <h3>GitHub Credentials</h3>
         <div>

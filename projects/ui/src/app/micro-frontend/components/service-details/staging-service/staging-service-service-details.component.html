@@ -40,7 +40,7 @@
     <br />
   </div>
   {{ serviceDetails.profileName }}
-  <div *dxpRequiredPolicies="'member'">
+  <div *dxpRequiredPolicies="['owner', 'member']; operator: 'or'">
     <div class="flex-box top-margin">
       <h3>Staging Service Credentials</h3>
       <button

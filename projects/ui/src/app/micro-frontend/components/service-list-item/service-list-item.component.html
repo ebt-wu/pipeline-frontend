@@ -41,7 +41,7 @@
           </code>
         </div>
         <div class="spacer"></div>
-        <div *dxpRequiredPolicies="'member'">
+        <div *dxpRequiredPolicies="['projectAdmin', 'projectMember']; operator: 'or'">
           <button
             *ngIf="
               localLayout === 'OneColumnStartFullScreen' &&

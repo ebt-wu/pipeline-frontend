@@ -18,7 +18,7 @@
     <b>Pipeline</b>
   </div>
   <a [href]="serviceDetails.jobUrl" target="_blank">{{ serviceDetails.name }}</a>
-  <div *dxpRequiredPolicies="'member'">
+  <div *dxpRequiredPolicies="['owner', 'member']; operator: 'or'">
     <div class="flex-box top-margin">
       <h3>Jenkins Credentials</h3>
       <button

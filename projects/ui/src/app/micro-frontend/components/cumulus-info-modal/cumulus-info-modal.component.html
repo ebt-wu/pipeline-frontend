@@ -32,7 +32,7 @@
       </div>
       <div class="separator"></div>
 
-      <div *dxpRequiredPolicies="'member'">
+      <div *dxpRequiredPolicies="['owner', 'member']; operator: 'or'">
         <span class="section-heading">Complete the setup</span>
         <p class="remove-top-margin">Set up a fully compliant build pipeline with Cumulus to store its results</p>
         <button

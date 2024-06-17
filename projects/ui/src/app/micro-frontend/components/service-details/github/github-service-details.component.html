@@ -19,7 +19,7 @@
   <a [href]="githubInstance" target="_blank">
     {{ githubInstance }}
   </a>
-  <div *dxpRequiredPolicies="'member'">
+  <div *dxpRequiredPolicies="['owner', 'member']; operator: 'or'">
     <div class="flex-box top-margin">
       <h3>GitHub Credentials</h3>
       <button

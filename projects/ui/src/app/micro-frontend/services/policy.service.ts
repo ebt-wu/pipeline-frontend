@@ -12,11 +12,6 @@ export class PolicyService {
 
   async isUserVaultMaintainer(): Promise<boolean> {
     const userPolicies = await this.getUserPolicies()
-    return userPolicies.includes('vault_maintainer')
-  }
-
-  async isUserProjectMember(): Promise<boolean> {
-    const userPolicies = await this.getUserPolicies()
-    return userPolicies.includes('member')
+    return userPolicies.includes('owner') || userPolicies.includes('vault_maintainer')
   }
 }

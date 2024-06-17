@@ -48,7 +48,7 @@
       [closeOnOutsideClick]="true"></button>
   </div>
   <div>{{ serviceDetails.solinasCustomerID }}</div>
-  <div *dxpRequiredPolicies="'member'">
+  <div *dxpRequiredPolicies="['owner', 'member']; operator: 'or'">
     <a [href]="githubActionsRunnerGroupUrl" target="_blank">Open Runners Group</a>
     <div class="flex-box top-margin">
       <h3>GitHub Actions Credentials</h3>
