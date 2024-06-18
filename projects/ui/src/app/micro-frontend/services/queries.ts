@@ -24,6 +24,10 @@ export const WATCH_PIPELINE = gql`
       namespace
       automaticdClientName
       automaticdClientNamespace
+      labels {
+        key
+        value
+      }
       resourceRefs {
         kind
         status

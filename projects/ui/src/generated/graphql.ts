@@ -113,6 +113,12 @@ export type JenkinsPipeline = {
   secretPath?: Maybe<Scalars['String']['output']>;
 };
 
+export type Label = {
+  __typename?: 'Label';
+  key: Scalars['String']['output'];
+  value: Scalars['String']['output'];
+};
+
 export type Mutation = {
   __typename?: 'Mutation';
   createCumulusPipeline?: Maybe<Scalars['String']['output']>;
@@ -279,6 +285,7 @@ export type Pipeline = {
   __typename?: 'Pipeline';
   automaticdClientName: Scalars['String']['output'];
   automaticdClientNamespace: Scalars['String']['output'];
+  labels: Array<Maybe<Label>>;
   name: Scalars['String']['output'];
   namespace: Scalars['String']['output'];
   pipelineType: PipelineType;
@@ -451,7 +458,7 @@ export type WatchPipelineSubscriptionVariables = Exact<{
 }>;
 
 
-export type WatchPipelineSubscription = { __typename?: 'Subscription', watchPipeline: { __typename?: 'Pipeline', name: string, pipelineType: PipelineType, namespace: string, automaticdClientName: string, automaticdClientNamespace: string, resourceRefs?: Array<{ __typename?: 'ResourceRef', kind: string, status: string, error: string, name: string }> | null } };
+export type WatchPipelineSubscription = { __typename?: 'Subscription', watchPipeline: { __typename?: 'Pipeline', name: string, pipelineType: PipelineType, namespace: string, automaticdClientName: string, automaticdClientNamespace: string, labels: Array<{ __typename?: 'Label', key: string, value: string } | null>, resourceRefs?: Array<{ __typename?: 'ResourceRef', kind: string, status: string, error: string, name: string }> | null } };
 
 export type WriteSecretMutationVariables = Exact<{
   projectId: Scalars['String']['input'];

@@ -39,6 +39,12 @@ export type Pipeline = {
   namespace?: string
   pipelineType?: PipelineType
   resourceRefs?: ResourceRef[]
+  labels?: Label[]
+}
+
+export type Label = {
+  key: string
+  value: string
 }
 
 export type EntityContext = {
