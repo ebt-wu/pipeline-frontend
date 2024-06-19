@@ -9,6 +9,8 @@ export const Flags = {
   GHAS_ENABLED: 'GHAS_ENABLED',
 } as const
 
+const TEST_TENANT_ID = '01ezesr3cgghmhgpbny04hv8qn'
+
 export type FlagKeys = (typeof Flags)[keyof typeof Flags]
 
 @Injectable({ providedIn: 'root' })
@@ -16,11 +18,15 @@ export class FeatureFlagService {
   constructor(private readonly luigiService: DxpLuigiContextService) {}
 
   async isGithubActionsEnabled(projectId: string) {
-    return await this.getFlagValue(Flags.GITHUB_ACTIONS_ENABLED, projectId)
+    return (await this.getFlagValue(Flags.GITHUB_ACTIONS_ENABLED, projectId)) || this.isTestTenant()
   }
 
   async isGhasEnabled(projectId: string) {
-    return await this.getFlagValue(Flags.GHAS_ENABLED, projectId)
+    return (await this.getFlagValue(Flags.GHAS_ENABLED, projectId)) || this.isTestTenant()
+  }
+
+  isTestTenant() {
+    return this.luigiService.getContext().tenantid === TEST_TENANT_ID
   }
 
   private async getFlagValue(flag: FlagKeys, projectId: string): Promise<boolean> {
