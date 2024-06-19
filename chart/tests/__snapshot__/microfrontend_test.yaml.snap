@@ -120,8 +120,14 @@ Has CDM for live:
                           "entityType": "project.overview::compound",
                           "url": "https://test-domain-wc/{i18n.currentLocale}/main.js#cicd-project-promotion-card",
                           "dxpOrder": 2,
+                          "visibleForContext": "serviceProviderConfig.skipOnboardingCard == null  || serviceProviderConfig.skipOnboardingCard == \"false\"",
                           "layoutConfig": {
                             "slot": "content"
+                          },
+                          "visibleForEntityContext": {
+                            "project": {
+                              "policies": ["iamMember"]
+                            }
                           },
                           "webcomponent": {
                             "selfRegistered": true
@@ -314,8 +320,14 @@ Test Extension matches the snapshot:
                           "entityType": "project.overview::compound",
                           "url": "https://test-domain-wc/{i18n.currentLocale}/main.js#cicd-project-promotion-card",
                           "dxpOrder": 2,
+                          "visibleForContext": "serviceProviderConfig.skipOnboardingCard == null  || serviceProviderConfig.skipOnboardingCard == \"false\"",
                           "layoutConfig": {
                             "slot": "content"
+                          },
+                          "visibleForEntityContext": {
+                            "project": {
+                              "policies": ["iamMember"]
+                            }
                           },
                           "webcomponent": {
                             "selfRegistered": true
@@ -508,8 +520,14 @@ githubActions feature enabled for some projects:
                           "entityType": "project.overview::compound",
                           "url": "https://test-domain-wc/{i18n.currentLocale}/main.js#cicd-project-promotion-card",
                           "dxpOrder": 2,
+                          "visibleForContext": "serviceProviderConfig.skipOnboardingCard == null  || serviceProviderConfig.skipOnboardingCard == \"false\"",
                           "layoutConfig": {
                             "slot": "content"
+                          },
+                          "visibleForEntityContext": {
+                            "project": {
+                              "policies": ["iamMember"]
+                            }
                           },
                           "webcomponent": {
                             "selfRegistered": true
