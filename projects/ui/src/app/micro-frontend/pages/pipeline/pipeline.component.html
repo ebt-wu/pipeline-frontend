@@ -6,11 +6,10 @@
           <fd-busy-indicator [loading]="pendingShowCredentials()" size="s"></fd-busy-indicator>
           <div
             [fd-inline-help]="insufficientVaultPermissions"
-            [disabled]="pendingShowCredentials() || isUserVaultMaintainer">
+            [disabled]="pendingShowCredentials() || canUserEditCredentials">
             <button
               (click)="showCredentials()"
-              *dxpRequiredPolicies="['owner', 'member']; operator: 'or'"
-              [disabled]="pendingShowCredentials() || !isUserVaultMaintainer"
+              [disabled]="pendingShowCredentials() || !canUserEditCredentials"
               ariaLabel="Show Credentials"
               fd-button
               fdType="transparent"
@@ -108,7 +107,7 @@
                       </div>
                     </div>
                     <div class="spacer"></div>
-                    <div *dxpRequiredPolicies="['projectAdmin', 'projectMember']; operator: 'or'">
+                    <div *dxpRequiredPolicies="['member', 'owner', 'vault_maintainer']; operator: 'or'">
                       <button
                         (click)="openSetupWizard($event)"
                         *ngIf="!isBuildStageSetup()"
@@ -390,7 +389,7 @@
                           </div>
                           <button
                             (click)="openGithubActionWizard($event)"
-                            *dxpRequiredPolicies="['projectAdmin', 'projectMember']; operator: 'or'"
+                            *dxpRequiredPolicies="['member', 'owner', 'vault_maintainer']; operator: 'or'"
                             class="card-content"
                             fd-button
                             fdType="standard"

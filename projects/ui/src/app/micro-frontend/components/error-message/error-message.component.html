@@ -12,7 +12,7 @@
       *ngIf="!troubleshootURL() && debugModeService.debugModeEnabled()">
       Traces
     </button>
-    <div *dxpRequiredPolicies="['projectAdmin', 'projectMember']; operator: 'or'">
+    <div *dxpRequiredPolicies="['member', 'owner', 'vault_maintainer']; operator: 'or'">
       <button fd-button fdType="transparent" class="ticket-button" (click)="reportError()" *ngIf="!troubleshootURL()">
         Create Ticket
       </button>

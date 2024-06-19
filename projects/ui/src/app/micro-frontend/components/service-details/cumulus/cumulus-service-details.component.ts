@@ -4,7 +4,7 @@ import { BusyIndicatorModule, FundamentalNgxCoreModule, InlineHelpDirective } fr
 import { SecretService } from '../../../../micro-frontend/services/secret.service'
 import { GetCumulusPipelineQuery } from '@generated/graphql'
 import { AuthorizationModule } from '@dxp/ngx-core/authorization'
-import { DxpLuigiContextService } from '@dxp/ngx-core/luigi'
+import { PolicyService } from '../../../services/policy.service'
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -17,21 +17,20 @@ import { DxpLuigiContextService } from '@dxp/ngx-core/luigi'
 export class CumlusServiceDetailsComponent implements OnInit {
   constructor(
     private readonly secretService: SecretService,
-    private readonly luigiService: DxpLuigiContextService,
+    private readonly policyService: PolicyService,
   ) {}
 
   @Input() serviceDetails: GetCumulusPipelineQuery['getCumulusPipeline']
 
   // cumulus secret path is hardcoded here: https://github.tools.sap/hyperspace/pipeline-backend/blob/937fc53e719077cc63b97c7b6277fde838c304dd/service/cumulus/service.go#L79
   cumulusSecretPath = 'GROUP-SECRETS/cumulus'
-  isUserVaultMaintainer = false
+  canUserEditCredentials = false
   loading = signal(false)
   pendingShowInVault = signal(false)
 
   async ngOnInit() {
     this.loading.set(true)
-    const userPolicies = (await this.luigiService.getContextAsync()).entityContext.project.policies
-    this.isUserVaultMaintainer = userPolicies.includes('owner') || userPolicies.includes('vault_maintainer')
+    this.canUserEditCredentials = await this.policyService.canUserEditCredentials()
     this.loading.set(false)
   }
 

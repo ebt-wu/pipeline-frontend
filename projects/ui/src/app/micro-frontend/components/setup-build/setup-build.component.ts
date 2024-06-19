@@ -278,8 +278,8 @@ export class SetupComponent implements OnInit, OnDestroy {
         if (formValue.orchestrator != Orchestrators.JENKINS) {
           return false
         }
-        const isUserVaultMaintainer = await this.policyService.isUserVaultMaintainer()
-        return formValue.jenkinsCredentialType === CredentialTypes.NEW && isUserVaultMaintainer
+        const canUserEditCredentials = await this.policyService.canUserEditCredentials()
+        return formValue.jenkinsCredentialType === CredentialTypes.NEW && canUserEditCredentials
       },
       validators: [Validators.required],
     },
@@ -293,8 +293,8 @@ export class SetupComponent implements OnInit, OnDestroy {
         if (formValue.orchestrator !== Orchestrators.JENKINS) {
           return false
         }
-        const isUserVaultMaintainer = await this.policyService.isUserVaultMaintainer()
-        return formValue.jenkinsCredentialType === CredentialTypes.NEW && isUserVaultMaintainer
+        const canUserEditCredentials = await this.policyService.canUserEditCredentials()
+        return formValue.jenkinsCredentialType === CredentialTypes.NEW && canUserEditCredentials
       },
       validators: [Validators.required],
     },
@@ -307,8 +307,8 @@ export class SetupComponent implements OnInit, OnDestroy {
         if (formValue.orchestrator !== Orchestrators.JENKINS) {
           return false
         }
-        const isUserVaultMaintainer = await this.policyService.isUserVaultMaintainer()
-        return formValue.jenkinsCredentialType === CredentialTypes.NEW && !isUserVaultMaintainer
+        const canUserEditCredentials = await this.policyService.canUserEditCredentials()
+        return formValue.jenkinsCredentialType === CredentialTypes.NEW && !canUserEditCredentials
       },
       guiOptions: {
         additionalData: {

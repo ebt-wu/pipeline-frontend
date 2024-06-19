@@ -9,7 +9,7 @@
         </div>
         <fd-info-label *ngIf="labelText" color="10" font="SAP-icons-TNT" [label]="labelText"></fd-info-label>
       </div>
-      <div *dxpRequiredPolicies="['projectAdmin', 'projectMember']; operator: 'or'">
+      <div *dxpRequiredPolicies="['member', 'owner', 'vault_maintainer']; operator: 'or'">
         <button
           (click)="openDialog($event, setupDialogType)"
           (keyup.enter)="openDialog($event, setupDialogType)"

@@ -4,7 +4,7 @@ import { BusyIndicatorComponent, FundamentalNgxCoreModule, InlineHelpDirective }
 import { SecretService } from '../../../../micro-frontend/services/secret.service'
 import { GetGithubRepositoryQuery } from '@generated/graphql'
 import { AuthorizationModule } from '@dxp/ngx-core/authorization'
-import { DxpLuigiContextService } from '@dxp/ngx-core/luigi'
+import { PolicyService } from '../../../services/policy.service'
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -17,20 +17,19 @@ import { DxpLuigiContextService } from '@dxp/ngx-core/luigi'
 export class GithubServiceDetailsComponent implements OnInit {
   constructor(
     private readonly secretService: SecretService,
-    private readonly luigiService: DxpLuigiContextService,
+    private readonly policyService: PolicyService,
   ) {}
 
   @Input() serviceDetails: GetGithubRepositoryQuery['getGithubRepository']
 
-  isUserVaultMaintainer = false
+  canUserEditCredentials = false
   githubInstance = ''
 
   loading = signal(false)
 
   async ngOnInit() {
     this.loading.set(true)
-    const userPolicies = (await this.luigiService.getContextAsync()).entityContext.project.policies
-    this.isUserVaultMaintainer = userPolicies.includes('owner') || userPolicies.includes('vault_maintainer')
+    this.canUserEditCredentials = await this.policyService.canUserEditCredentials()
 
     const repoUrl = new URL(this.serviceDetails.repositoryUrl)
     this.githubInstance = repoUrl.origin

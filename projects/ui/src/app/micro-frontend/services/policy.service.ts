@@ -10,8 +10,15 @@ export class PolicyService {
     return context.entityContext.project.policies
   }
 
-  async isUserVaultMaintainer(): Promise<boolean> {
+  async canUserEditCredentials(): Promise<boolean> {
     const userPolicies = await this.getUserPolicies()
-    return userPolicies.includes('owner') || userPolicies.includes('vault_maintainer')
+    return userPolicies.includes('vault_maintainer') || userPolicies.includes('owner')
+  }
+
+  async canUserSetUpPipeline(): Promise<boolean> {
+    const userPolicies = await this.getUserPolicies()
+    return (
+      userPolicies.includes('member') || userPolicies.includes('vault_maintainer') || userPolicies.includes('owner')
+    )
   }
 }

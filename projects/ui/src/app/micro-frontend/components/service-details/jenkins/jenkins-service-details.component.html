@@ -18,7 +18,7 @@
     <b>Pipeline</b>
   </div>
   <a [href]="serviceDetails.jobUrl" target="_blank">{{ serviceDetails.name }}</a>
-  <div *dxpRequiredPolicies="['owner', 'member']; operator: 'or'">
+  <div *dxpRequiredPolicies="['member', 'owner', 'vault_maintainer']; operator: 'or'">
     <div class="flex-box top-margin">
       <h3>Jenkins Credentials</h3>
       <button
@@ -37,10 +37,10 @@
       <b>Vault Path</b>
     </div>
     <fd-busy-indicator [loading]="pendingShowInVault()" size="s">
-      <div [fd-inline-help]="insufficientVaultPermissions" [disabled]="isUserVaultMaintainer">
+      <div [fd-inline-help]="insufficientVaultPermissions" [disabled]="canUserEditCredentials">
         <a
           fd-link
-          [disabled]="pendingShowInVault() || !isUserVaultMaintainer"
+          [disabled]="pendingShowInVault() || !canUserEditCredentials"
           (click)="showInVault(serviceDetails.secretPath)">
           {{ serviceDetails.secretPath }}
         </a>

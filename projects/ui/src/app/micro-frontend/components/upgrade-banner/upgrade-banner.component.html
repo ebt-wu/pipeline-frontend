@@ -22,7 +22,7 @@
         fd-button
         label="Use in Pipeline"
         (click)="openSetupWizard($event)"
-        *dxpRequiredPolicies="['projectAdmin', 'projectMember']; operator: 'or'"></button>
+        *dxpRequiredPolicies="['member', 'owner', 'vault_maintainer']; operator: 'or'"></button>
     </div>
   </fd-card-content>
 </fd-card>

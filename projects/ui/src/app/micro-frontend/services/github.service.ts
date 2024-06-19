@@ -69,8 +69,8 @@ export class GithubService {
       placeholder: 'Enter service user or personal user access token',
       validators: [Validators.required],
       when: async (formValue: ghTokenFormValue) => {
-        const isUserVaultMaintainer = await this.policyService.isUserVaultMaintainer()
-        return formValue.githubCredentialType === CredentialTypes.NEW && isUserVaultMaintainer
+        const canUserEditCredentials = await this.policyService.canUserEditCredentials()
+        return formValue.githubCredentialType === CredentialTypes.NEW && canUserEditCredentials
       },
       validate: async (value: string) => {
         const githubMetadata = await this.getGithubMetadata()
@@ -119,8 +119,8 @@ export class GithubService {
       name: 'patInfoBox',
       message: '',
       when: async (formValue: ghTokenFormValue) => {
-        const isUserVaultMaintainer = await this.policyService.isUserVaultMaintainer()
-        return formValue.githubCredentialType === CredentialTypes.NEW && isUserVaultMaintainer
+        const canUserEditCredentials = await this.policyService.canUserEditCredentials()
+        return formValue.githubCredentialType === CredentialTypes.NEW && canUserEditCredentials
       },
       guiOptions: {
         additionalData: {
@@ -160,8 +160,8 @@ export class GithubService {
       name: 'githubVaultMaintainerErrorStrip',
       message: '',
       when: async (formValue: ghTokenFormValue) => {
-        const isUserVaultMaintainer = await this.policyService.isUserVaultMaintainer()
-        return formValue.githubCredentialType === CredentialTypes.NEW && !isUserVaultMaintainer
+        const canUserEditCredentials = await this.policyService.canUserEditCredentials()
+        return formValue.githubCredentialType === CredentialTypes.NEW && !canUserEditCredentials
       },
       validate: () => "Can't finish the setup without Github Credentials",
       guiOptions: {

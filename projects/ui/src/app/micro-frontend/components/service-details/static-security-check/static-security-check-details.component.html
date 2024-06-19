@@ -16,7 +16,7 @@
       fd-button
       (click)="openDocumentation()"></button>
   </div>
-  <div *dxpRequiredPolicies="['projectAdmin', 'projectMember']; operator: 'or'">
+  <div *dxpRequiredPolicies="['member', 'owner', 'vault_maintainer']; operator: 'or'">
     <div *ngIf="cumulusInfo && cumulusInfo.id">
       <h3>Cumulus Pipeline</h3>
       <div class="flex-box">
@@ -60,17 +60,17 @@
         </span>
       </div>
     </div>
-    <ng-template [dxpRequiredPolicies]="['owner', 'member']" dxpRequiredPoliciesOperator="or">
+    <ng-template [dxpRequiredPolicies]="['member', 'owner', 'vault_maintainer']" [dxpRequiredPoliciesOperator]="'or'">
       <div *ngIf="githubSecret">
         <h3>GitHub Credentials</h3>
         <div>
           <strong>Vault Path</strong>
         </div>
         <fd-busy-indicator [loading]="pendingShowInVault()" size="s">
-          <div [fd-inline-help]="insufficientVaultPermissions" [disabled]="isUserVaultMaintainer">
+          <div [fd-inline-help]="insufficientVaultPermissions" [disabled]="canUserEditCredentials">
             <a
               (click)="showInVault(githubSecret.path)"
-              [disabled]="pendingShowInVault() || !isUserVaultMaintainer"
+              [disabled]="pendingShowInVault() || !canUserEditCredentials"
               fd-link>
               {{ githubSecret.path }}
             </a>

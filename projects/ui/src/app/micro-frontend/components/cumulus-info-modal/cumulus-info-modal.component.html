@@ -30,9 +30,9 @@
         <fd-icon [fd-inline-help]="groupKeyPopover" [triggers]="['click']" class="icon" glyph="hint"></fd-icon>
         <p class="remove-top-margin">{{ cumulusInfo.groupKey }}</p>
       </div>
-      <div class="separator"></div>
+      <div *dxpRequiredPolicies="['member', 'owner', 'vault_maintainer']; operator: 'or'">
+        <div class="separator"></div>
 
-      <div *dxpRequiredPolicies="['owner', 'member']; operator: 'or'">
         <span class="section-heading">Complete the setup</span>
         <p class="remove-top-margin">Set up a fully compliant build pipeline with Cumulus to store its results</p>
         <button
@@ -48,10 +48,10 @@
           configuration to enable the upload to Cumulus.
         </p>
         <div class="buttons">
-          <div [fd-inline-help]="insufficientVaultPermissions" [disabled]="isUserVaultMaintainer" placement="top">
+          <div [fd-inline-help]="insufficientVaultPermissions" [disabled]="canUserEditCredentials" placement="top">
             <button
               (click)="showCumulusTokenInVault()"
-              [disabled]="!isUserVaultMaintainer"
+              [disabled]="!canUserEditCredentials"
               fd-button
               label="Show Token in Vault"></button>
           </div>
