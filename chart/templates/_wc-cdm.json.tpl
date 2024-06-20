@@ -14,7 +14,8 @@
               "dxpOrder": 2,
               "visibleForContext": "serviceProviderConfig.skipOnboardingCard == null  || serviceProviderConfig.skipOnboardingCard == \"false\"",
               "layoutConfig": {
-                "slot": "content"
+                "slot": "recommended-actions",
+                "order": 30
               },
               "visibleForEntityContext": {
                 "project": {

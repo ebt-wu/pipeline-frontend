@@ -122,7 +122,8 @@ Has CDM for live:
                           "dxpOrder": 2,
                           "visibleForContext": "serviceProviderConfig.skipOnboardingCard == null  || serviceProviderConfig.skipOnboardingCard == \"false\"",
                           "layoutConfig": {
-                            "slot": "content"
+                            "slot": "recommended-actions",
+                            "order": 30
                           },
                           "visibleForEntityContext": {
                             "project": {
@@ -322,7 +323,8 @@ Test Extension matches the snapshot:
                           "dxpOrder": 2,
                           "visibleForContext": "serviceProviderConfig.skipOnboardingCard == null  || serviceProviderConfig.skipOnboardingCard == \"false\"",
                           "layoutConfig": {
-                            "slot": "content"
+                            "slot": "recommended-actions",
+                            "order": 30
                           },
                           "visibleForEntityContext": {
                             "project": {
@@ -522,7 +524,8 @@ githubActions feature enabled for some projects:
                           "dxpOrder": 2,
                           "visibleForContext": "serviceProviderConfig.skipOnboardingCard == null  || serviceProviderConfig.skipOnboardingCard == \"false\"",
                           "layoutConfig": {
-                            "slot": "content"
+                            "slot": "recommended-actions",
+                            "order": 30
                           },
                           "visibleForEntityContext": {
                             "project": {
