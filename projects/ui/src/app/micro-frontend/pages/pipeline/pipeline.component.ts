@@ -299,6 +299,7 @@ export class PipelineComponent implements OnInit, OnDestroy {
         headers: {
           Authorization: `Bearer ${token.value}`,
         },
+        cache: 'no-cache',
       })
 
       const pulls = (await pullsResp.json()) as { head: { ref: string } }[]
