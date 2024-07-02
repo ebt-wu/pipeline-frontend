@@ -10,6 +10,7 @@ import {
   DeleteJenkinsPipelineMutation,
   GetJenkinsPipelineQuery,
   GetJenkinsPipelineQueryVariables,
+  LabelInput,
 } from '@generated/graphql'
 
 @Injectable({ providedIn: 'root' })
@@ -19,7 +20,12 @@ export class JenkinsService {
     private readonly luigiService: DxpLuigiContextService,
   ) {}
 
-  createJenkinsPipeline(jenkinsUrl: string, secretPath: string, githubRepositoryResource: string): Observable<string> {
+  createJenkinsPipeline(
+    jenkinsUrl: string,
+    secretPath: string,
+    githubRepositoryResource: string,
+    labels: Array<LabelInput> = [],
+  ): Observable<string> {
     return combineLatest([this.apiService.apollo(), this.luigiService.contextObservable()]).pipe(
       first(),
       mergeMap(([client, ctx]) => {
@@ -32,6 +38,7 @@ export class JenkinsService {
               jenkinsUrl: jenkinsUrl,
               jenkinsSecretPath: secretPath,
               githubRepositoryResource: githubRepositoryResource,
+              labels: labels,
             },
           })
           .pipe(map((res) => res.data?.createJenkinsPipeline ?? ''))

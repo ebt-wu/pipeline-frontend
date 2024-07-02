@@ -10,6 +10,7 @@ import {
   GetGitHubAdvancedSecurityQuery,
   GetGitHubAdvancedSecurityQueryVariables,
   GitHubAdvancedSecurityGetPayload,
+  LabelInput,
   Orchestrators,
 } from '@generated/graphql'
 import {
@@ -35,12 +36,14 @@ export class GithubAdvancedSecurityService {
     githubRepository,
     codeScanJobOrchestrator,
     buildTool,
+    labels,
   }: {
     githubInstance: string
     githubOrganization: string
     githubRepository: string
     codeScanJobOrchestrator?: Orchestrators
     buildTool?: BuildTool
+    labels?: Array<LabelInput>
   }): Observable<string> {
     return combineLatest([this.apiService.apollo(), this.luigiService.contextObservable()]).pipe(
       first(),
@@ -56,6 +59,7 @@ export class GithubAdvancedSecurityService {
               githubRepository,
               codeScanJobOrchestrator,
               buildTool,
+              labels,
             },
           })
           .pipe(map((res) => res.data?.createGitHubAdvancedSecurity ?? ''))
