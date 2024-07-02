@@ -71,13 +71,7 @@ export class HomePageComponent implements OnInit {
 
   private async initializePipeline(): Promise<void> {
     if (await this.policyService.canUserSetUpPipeline()) {
-      await firstValueFrom(
-        this.pipelineService
-          .createPipeline({
-            pipelineType: this.pipelineType.FullPipeline,
-          })
-          .pipe(debounceTime(100)),
-      )
+      await firstValueFrom(this.pipelineService.createPipeline(this.pipelineType.FullPipeline).pipe(debounceTime(100)))
     }
 
     this.pipelineAvail.next(true)

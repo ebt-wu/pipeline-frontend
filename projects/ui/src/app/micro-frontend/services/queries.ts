@@ -5,8 +5,8 @@ import { gql } from 'apollo-angular'
  */
 
 export const CREATE_PIPELINE = gql`
-  mutation CreatePipeline($projectId: String!, $componentId: String!, $params: PipelineCreationRequest!) {
-    createPipeline(projectId: $projectId, componentId: $componentId, params: $params)
+  mutation CreatePipeline($projectId: String!, $componentId: String!, $pipelineType: PipelineType!) {
+    createPipeline(projectId: $projectId, componentId: $componentId, pipelineType: $pipelineType)
   }
 `
 
@@ -159,7 +159,6 @@ export const CREATE_JENKINS_PIPELINE = gql`
     $jenkinsUrl: String!
     $jenkinsSecretPath: String!
     $githubRepositoryResource: String!
-    $labels: [LabelInput!]
   ) {
     createJenkinsPipeline(
       projectId: $projectId
@@ -168,7 +167,6 @@ export const CREATE_JENKINS_PIPELINE = gql`
         jenkinsUrl: $jenkinsUrl
         jenkinsSecretPath: $jenkinsSecretPath
         githubRepositoryResource: $githubRepositoryResource
-        labels: $labels
       }
     )
   }
@@ -214,7 +212,6 @@ export const CREATE_PIPER_CONFIG = gql`
     $buildTool: BuildTool!
     $pipelineOptimization: Boolean!
     $dockerImageName: String
-    $labels: [LabelInput!]
   ) {
     createPiperConfig(
       projectId: $projectId
@@ -226,7 +223,6 @@ export const CREATE_PIPER_CONFIG = gql`
           general: { buildTool: $buildTool, pipelineOptimization: $pipelineOptimization }
           stagingService: { dockerImageName: $dockerImageName }
         }
-        labels: $labels
       }
     )
   }
@@ -320,7 +316,6 @@ export const CREATE_GITHUB_ADVANCED_SECURITY = gql`
     $githubRepository: String!
     $codeScanJobOrchestrator: Orchestrators
     $buildTool: BuildTool
-    $labels: [LabelInput!]
   ) {
     createGitHubAdvancedSecurity(
       projectId: $projectId
@@ -331,7 +326,6 @@ export const CREATE_GITHUB_ADVANCED_SECURITY = gql`
         githubRepository: $githubRepository
         codeScanJobOrchestrator: $codeScanJobOrchestrator
         buildTool: $buildTool
-        labels: $labels
       }
     )
   }

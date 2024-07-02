@@ -11,9 +11,8 @@ import {
 } from '@fundamental-ngx/platform/form'
 import { DxpLuigiContextService, LuigiClient } from '@dxp/ngx-core/luigi'
 import { CredentialTypes, Languages, Orchestrators } from '@enums'
-import { Pipeline } from '@types'
 import { SecretData, SecretService } from '../../services/secret.service'
-import { debounceTime, firstValueFrom, lastValueFrom, Subscription, Observable } from 'rxjs'
+import { firstValueFrom, lastValueFrom, Subscription } from 'rxjs'
 import { EntityContext, SetupBuildFormValue } from '@types'
 import { GithubService } from '../../services/github.service'
 import { JenkinsService } from '../../services/jenkins.service'
@@ -27,7 +26,6 @@ import { PlatformFormGeneratorCustomInfoBoxComponent } from '../form-generator-i
 import { PlatformFormGeneratorCustomMessageStripComponent } from '../form-generator-message-strip/form-generator-message-strip.component'
 import { FeatureFlagService } from '../../services/feature-flag.service'
 import { PolicyService } from '../../services/policy.service'
-import { PipelineService } from '../../services/pipeline.service'
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -54,7 +52,6 @@ export class SetupComponent implements OnInit, OnDestroy {
     private readonly secretService: SecretService,
     private readonly githubService: GithubService,
     private readonly jenkinsService: JenkinsService,
-    private readonly pipelineService: PipelineService,
     private readonly piperService: PiperService,
     private readonly featureFlagService: FeatureFlagService,
     private readonly policyService: PolicyService,
@@ -66,12 +63,9 @@ export class SetupComponent implements OnInit, OnDestroy {
 
   private contextSubscription: Subscription
 
-  watch$: Observable<Pipeline>
-
   defaultOrchestrator = Orchestrators.JENKINS
 
   ngOnInit(): void {
-    this.watch$ = this.pipelineService.watchPipeline().pipe(debounceTime(50))
     this.contextSubscription = this.luigiService.contextObservable().subscribe(() => {
       const params: { orchestrator?: Orchestrators } = getNodeParams(true)
       if (params.orchestrator) {
@@ -440,8 +434,6 @@ export class SetupComponent implements OnInit, OnDestroy {
         throw new Error('Could not get GitHub repository details from frame context')
       }
 
-      const labels = (await firstValueFrom(this.watch$)).labels
-
       const url = new URL(repoUrl)
 
       let isGithubActions = false
@@ -455,7 +447,7 @@ export class SetupComponent implements OnInit, OnDestroy {
 
       if (buildFormValue.orchestrator === Orchestrators.JENKINS) {
         await firstValueFrom(
-          this.jenkinsService.createJenkinsPipeline(buildFormValue.jenkinsUrl, jenkinsPath, repositoryResource, labels),
+          this.jenkinsService.createJenkinsPipeline(buildFormValue.jenkinsUrl, jenkinsPath, repositoryResource),
         )
       }
 
@@ -470,7 +462,6 @@ export class SetupComponent implements OnInit, OnDestroy {
             buildFormValue.buildTool === BuildTool.Gradle
             ? context.componentId
             : '',
-          labels,
         ),
       )
 

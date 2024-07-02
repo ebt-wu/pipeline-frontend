@@ -50,7 +50,6 @@ export type GitHubAdvancedSecurityCreatePayload = {
   githubInstance: Scalars['String']['input'];
   githubOrganization: Scalars['String']['input'];
   githubRepository: Scalars['String']['input'];
-  labels?: InputMaybe<Array<LabelInput>>;
 };
 
 export type GitHubAdvancedSecurityGetPayload = {
@@ -104,7 +103,6 @@ export type JenkinsCreationRequest = {
   githubRepositoryResource: Scalars['String']['input'];
   jenkinsSecretPath: Scalars['String']['input'];
   jenkinsUrl: Scalars['String']['input'];
-  labels?: InputMaybe<Array<LabelInput>>;
 };
 
 export type JenkinsPipeline = {
@@ -119,11 +117,6 @@ export type Label = {
   __typename?: 'Label';
   key: Scalars['String']['output'];
   value: Scalars['String']['output'];
-};
-
-export type LabelInput = {
-  key: Scalars['String']['input'];
-  value: Scalars['String']['input'];
 };
 
 export type Mutation = {
@@ -186,7 +179,7 @@ export type MutationCreateJenkinsPipelineArgs = {
 
 export type MutationCreatePipelineArgs = {
   componentId: Scalars['String']['input'];
-  params: PipelineCreationRequest;
+  pipelineType?: InputMaybe<PipelineType>;
   projectId: Scalars['String']['input'];
 };
 
@@ -292,16 +285,11 @@ export type Pipeline = {
   __typename?: 'Pipeline';
   automaticdClientName: Scalars['String']['output'];
   automaticdClientNamespace: Scalars['String']['output'];
-  labels: Array<Label>;
+  labels: Array<Maybe<Label>>;
   name: Scalars['String']['output'];
   namespace: Scalars['String']['output'];
   pipelineType: PipelineType;
   resourceRefs?: Maybe<Array<ResourceRef>>;
-};
-
-export type PipelineCreationRequest = {
-  labels?: InputMaybe<Array<LabelInput>>;
-  pipelineType?: InputMaybe<PipelineType>;
 };
 
 export enum PipelineType {
@@ -318,7 +306,6 @@ export type PiperConfig = {
 
 export type PiperConfigCreationRequest = {
   githubSecretRef: Scalars['String']['input'];
-  labels?: InputMaybe<Array<LabelInput>>;
   repositoryResource: Scalars['String']['input'];
   templateArgs?: InputMaybe<PiperTemplateArgs>;
 };
@@ -451,7 +438,7 @@ export type VaultOnboardingInfo = {
 export type CreatePipelineMutationVariables = Exact<{
   projectId: Scalars['String']['input'];
   componentId: Scalars['String']['input'];
-  params: PipelineCreationRequest;
+  pipelineType: PipelineType;
 }>;
 
 
@@ -471,7 +458,7 @@ export type WatchPipelineSubscriptionVariables = Exact<{
 }>;
 
 
-export type WatchPipelineSubscription = { __typename?: 'Subscription', watchPipeline: { __typename?: 'Pipeline', name: string, pipelineType: PipelineType, namespace: string, automaticdClientName: string, automaticdClientNamespace: string, labels: Array<{ __typename?: 'Label', key: string, value: string }>, resourceRefs?: Array<{ __typename?: 'ResourceRef', kind: string, status: string, error: string, name: string }> | null } };
+export type WatchPipelineSubscription = { __typename?: 'Subscription', watchPipeline: { __typename?: 'Pipeline', name: string, pipelineType: PipelineType, namespace: string, automaticdClientName: string, automaticdClientNamespace: string, labels: Array<{ __typename?: 'Label', key: string, value: string } | null>, resourceRefs?: Array<{ __typename?: 'ResourceRef', kind: string, status: string, error: string, name: string }> | null } };
 
 export type WriteSecretMutationVariables = Exact<{
   projectId: Scalars['String']['input'];
@@ -558,7 +545,6 @@ export type CreateJenkinsPipelineMutationVariables = Exact<{
   jenkinsUrl: Scalars['String']['input'];
   jenkinsSecretPath: Scalars['String']['input'];
   githubRepositoryResource: Scalars['String']['input'];
-  labels?: InputMaybe<Array<LabelInput> | LabelInput>;
 }>;
 
 
@@ -590,7 +576,6 @@ export type CreatePiperConfigMutationVariables = Exact<{
   buildTool: BuildTool;
   pipelineOptimization: Scalars['Boolean']['input'];
   dockerImageName?: InputMaybe<Scalars['String']['input']>;
-  labels?: InputMaybe<Array<LabelInput> | LabelInput>;
 }>;
 
 
@@ -667,7 +652,6 @@ export type CreateGitHubAdvancedSecurityMutationVariables = Exact<{
   githubRepository: Scalars['String']['input'];
   codeScanJobOrchestrator?: InputMaybe<Orchestrators>;
   buildTool?: InputMaybe<BuildTool>;
-  labels?: InputMaybe<Array<LabelInput> | LabelInput>;
 }>;
 
 
