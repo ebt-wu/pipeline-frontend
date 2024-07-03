@@ -69,6 +69,14 @@ export class CumulusInfoModalComponent implements OnInit {
     )
   }
 
+  async copyToClipboard(textToWrite: string) {
+    const cb = navigator.clipboard
+
+    if (textToWrite) {
+      await cb.writeText(textToWrite)
+    }
+  }
+
   openPipelineUi() {
     this.luigiClient.linkManager().fromContext('component').navigate('pipeline-ui')
   }
