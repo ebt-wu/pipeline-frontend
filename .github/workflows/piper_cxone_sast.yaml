@@ -1,0 +1,43 @@
+name: "CxOne Piper GitHub Action"
+
+on:
+  workflow_dispatch:
+
+env:
+  PIPER_vaultAppRoleID: ${{ secrets.PIPER_VAULTAPPROLEID }}
+  PIPER_vaultAppRoleSecretID: ${{ secrets.PIPER_VAULTAPPROLESECRETID }}
+  PIPER_ACTION_GITHUB_ENTERPRISE_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  PIPER_ACTION_SAP_PIPER_OWNER: project-piper
+  PIPER_ACTION_SAP_PIPER_REPOSITORY: sap-piper
+jobs:
+  sast:
+    name: SAST
+    runs-on: [ self-hosted, solinas ]
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: CheckmarxOne Piper GitHub Action
+        uses: sap/project-piper-action@main
+        with:
+          step-name: checkmarxOneExecuteScan
+          flags: "--applicationName INT_HYPERSPACE_PORTAL_CI_CD_SETUP --projectName cicd-setup-pipeline-frontend --preset SAP_Corp_JavaScript_Client --vulnerabilityThresholdEnabled false"
+
+      - name: sapCumulusUpload-1  # optional action to upload the CxOne documents to Cumulus
+        uses: sap/project-piper-action@main
+        with:
+          step-name: sapCumulusUpload
+          flags: "--filePattern **/Cx1_SASTReport_*.pdf, **/Cx1_SASTReport*.json, **/toolrun_checkmarxOne_*.json, **/checkmarxOne/*.sarif --stepResultType checkmarxOne"
+
+      - name: sapCumulusUpload-2  # optional action to upload the CxOne documents to Cumulus
+        uses: sap/project-piper-action@main
+        with:
+          step-name: sapCumulusUpload
+          flags: "--filePattern **/piper_checkmarxone_report.json --stepResultType policy-evidence/SDOL-009-SAST"
+
+      - name: Upload SARIF file # optional action to upload the CxOne scan result to GitHub
+        uses: github/codeql-action/upload-sarif@v2
+        with:
+          # Path to SARIF file relative to the root of the repository
+          sarif_file: checkmarxOne/result.sarif
