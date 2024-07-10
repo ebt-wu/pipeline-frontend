@@ -38,6 +38,7 @@ speed-measure-plugin*.json
 /connect.lock
 coverage/
 junit.xml
+TEST-frontend.xml
 /libpeerconnection.log
 npm-debug.log
 testem.log

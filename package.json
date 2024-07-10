@@ -19,7 +19,7 @@
     "lint:ui:fix": "ng lint ui --fix",
     "lint:wc": "ng lint wc",
     "lint:wc:fix": "ng lint wc --fix",
-    "test:unit": "jest --maxWorkers=40% --reporters=default --reporters=jest-junit",
+    "test:unit": "jest --maxWorkers=40%",
     "test:cov": "npm run test:unit -- --coverage",
     "test:ui": "jest --testPathPattern=\"projects/ui/\"",
     "test:wc": "jest --testPathPattern=\"projects/webcomponent/\"",
