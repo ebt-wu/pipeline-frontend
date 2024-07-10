@@ -6,7 +6,7 @@ import { CumulusService } from '../../services/cumulus.service'
 import { SecretService } from '../../services/secret.service'
 import { PolicyService } from '../../services/policy.service'
 
-describe('Cumulus Info Modal', () => {
+describe('Cumulus Info Modal HSOBRD-74', () => {
   let cumulusInfoModal: CumulusInfoModalComponent
   let mockLuigiClient: LuigiClient
   let mockPipelineService: PipelineService
