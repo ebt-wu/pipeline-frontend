@@ -17,7 +17,13 @@
         Create Ticket
       </button>
     </div>
-    <a fd-link class="ticket-button" [href]="troubleshootURL()" target="_blank" *ngIf="troubleshootURL()">
+    <a
+      fd-link
+      class="ticket-button"
+      [href]="troubleshootURL()"
+      target="_blank"
+      rel="noopener noreferrer"
+      *ngIf="troubleshootURL()">
       Troubleshoot
     </a>
   </div>

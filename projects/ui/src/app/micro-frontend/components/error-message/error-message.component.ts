@@ -82,7 +82,7 @@ ${
     `,
       [GitHubIssueLabels.BUG, GitHubIssueLabels.EXTERNAL],
     )
-    window.open(issueURL, '_blank')
+    window.open(issueURL, '_blank', 'noopoener, noreferrer')
   }
 
   private convertHtmlElementsToMarkdownElements(issueDescription: string): string {

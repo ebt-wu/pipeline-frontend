@@ -173,7 +173,7 @@ export class GithubService {
             return `
               You can’t add new credentials due to missing permissions.<br/>
               You need to be „Vault Maintainer“ to maintain credentials.
-              <a href="${context.frameBaseUrl}/projects/${context.projectId}/members" target="_blank">
+              <a href="${context.frameBaseUrl}/projects/${context.projectId}/members" target="_blank" rel="noopener noreferrer">
                 Contact a project owner
               </a>`
           },

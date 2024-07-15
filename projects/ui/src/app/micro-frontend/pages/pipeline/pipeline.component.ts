@@ -320,6 +320,7 @@ export class PipelineComponent implements OnInit, OnDestroy {
     window.open(
       'https://sapit-home-prod-004.launchpad.cfapps.eu10.hana.ondemand.com/site#feedbackservice-Display&/topic/cc5045ed-6c4e-4e7b-a18d-a0b377faf593/createFeedback',
       '_blank',
+      'noopoener, noreferrer',
     )
   }
   async openCumulusModal(e: Event) {
@@ -345,7 +346,11 @@ export class PipelineComponent implements OnInit, OnDestroy {
   }
 
   openDocumentation() {
-    window.open('https://pages.github.tools.sap/hyperspace/cicd-setup-documentation/', '_blank')
+    window.open(
+      'https://pages.github.tools.sap/hyperspace/cicd-setup-documentation/',
+      '_blank',
+      'noopoener, noreferrer',
+    )
   }
 
   async openSetupWizard(e: Event) {
@@ -408,7 +413,7 @@ export class PipelineComponent implements OnInit, OnDestroy {
       if (!jenkinsPipeline.jobUrl) {
         throw new Error('Jenkins jobUrl not found')
       }
-      window.open(jenkinsPipeline.jobUrl, '_blank')
+      window.open(jenkinsPipeline.jobUrl, '_blank', 'noopoener, noreferrer')
       this.pendingOpenPipeline.set(false)
     } catch (e) {
       const errorMessage = (e as Error).message
@@ -491,7 +496,7 @@ export class PipelineComponent implements OnInit, OnDestroy {
     try {
       this.pendingShowCredentials.set(true)
       const vaultInfo = await firstValueFrom(this.api.secretService.ensureVaultOnboarding())
-      window.open(vaultInfo.vaultUrl, '_blank')
+      window.open(vaultInfo.vaultUrl, '_blank', 'noopoener, noreferrer')
     } catch (e) {
       const errorMessage = (e as Error).message
       this.errors.update((errors) => {

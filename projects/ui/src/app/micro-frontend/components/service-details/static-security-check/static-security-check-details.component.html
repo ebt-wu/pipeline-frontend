@@ -2,7 +2,7 @@
   <div class="flex-box">
     <div>
       <h3>Enabled for GitHub Repository</h3>
-      <a [href]="serviceDetails.repoUrl" fd-link rel="noopener noreferrer" target="_blank">
+      <a [href]="serviceDetails.repoUrl" fd-link rel="noopener noreferrer" target="_blank" rel="noopener noreferrer">
         {{ serviceDetails.githubOrganization }}/{{ serviceDetails.githubRepoName }}
       </a>
     </div>
@@ -35,7 +35,8 @@
               class="link"
               href="https://github.wdf.sap.corp/pages/ContinuousDelivery/piper-doc/steps/sapCumulusUpload/"
               rel="noopener noreferrer"
-              target="_blank">
+              target="_blank"
+              rel="noopener noreferrer">
               upload your pipeline's results
             </a>
             <br />
@@ -53,7 +54,8 @@
               href="https://pages.github.tools.sap/hyperspace/cicd-setup-documentation/connected-tools/validate/ghas.html#enabling-github-advanced-security-without-a-build-pipeline"
               fd-link
               rel="noopener noreferrer"
-              target="_blank">
+              target="_blank"
+              rel="noopener noreferrer">
               See how to choose the right Pipeline ID
             </a>
           </em>
@@ -82,14 +84,14 @@
     <h3>Get started with GitHub Advanced Security</h3>
     <ul class="no-margin">
       <li>
-        <a [href]="AUDIT_FINDINGS_DOCU_LINK" target="_blank">Learn which findings to audit</a>
+        <a [href]="AUDIT_FINDINGS_DOCU_LINK" target="_blank" rel="noopener noreferrer">Learn which findings to audit</a>
       </li>
       <li>
-        <a [href]="ADD_SCAN_PROJECT_SIRIUS_DOCU_LINK" target="_blank">Add your results</a>
+        <a [href]="ADD_SCAN_PROJECT_SIRIUS_DOCU_LINK" target="_blank" rel="noopener noreferrer">Add your results</a>
         as a Scan Project in Sirius
       </li>
       <li>
-        <a [href]="GITHUB_ACTIONS_DOCU_LINK" target="_blank">Use GitHub Advanced Security</a>
+        <a [href]="GITHUB_ACTIONS_DOCU_LINK" target="_blank" rel="noopener noreferrer">Use GitHub Advanced Security</a>
         with GitHub Actions
       </li>
     </ul>

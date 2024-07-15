@@ -10,13 +10,13 @@
       (click)="openDocumentation()"
       fd-button></button>
   </div>
-  <a [href]="serviceDetails.repositoryUrl" target="_blank">
+  <a [href]="serviceDetails.repositoryUrl" target="_blank" rel="noopener noreferrer">
     {{ serviceDetails.organization }}/{{ serviceDetails.repository }}
   </a>
   <div class="flex-box top-margin">
     <h3 class="heading-margin">GitHub Instance</h3>
   </div>
-  <a [href]="githubInstance" target="_blank">
+  <a [href]="githubInstance" target="_blank" rel="noopener noreferrer">
     {{ githubInstance }}
   </a>
   <div *dxpRequiredPolicies="['member', 'owner', 'vault_maintainer']; operator: 'or'">

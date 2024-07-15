@@ -84,7 +84,8 @@
                   *ngIf="this.githubMetadata.githubRepoUrl"
                   [href]="this.githubMetadata.githubRepoUrl + '/pulls'"
                   fd-link
-                  target="_blank">
+                  target="_blank"
+                  rel="noopener noreferrer">
                   Open GitHub
                 </a>
               </fd-message-strip>
@@ -128,7 +129,8 @@
                         [href]="pipelineURL()"
                         [style.pointer-events]="showOpenPipelineURL && pipelineURL() ? '' : 'none'"
                         fd-link
-                        target="_blank">
+                        target="_blank"
+                        rel="noopener noreferrer">
                         Open Pipeline
                       </a>
                     </fd-busy-indicator>

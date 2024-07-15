@@ -42,12 +42,13 @@ export class JenkinServiceDetailsComponent implements OnInit {
     window.open(
       'https://pages.github.tools.sap/hyperspace/cicd-setup-documentation/connected-tools/build/jenkins.html',
       '_blank',
+      'noopoener, noreferrer',
     )
   }
 
   async showInVault(vaultPath: string) {
     this.pendingShowInVault.set(true)
-    window.open(await this.secretService.getVaultUrlOfSecret(vaultPath), '_blank')
+    window.open(await this.secretService.getVaultUrlOfSecret(vaultPath), '_blank', 'noopoener, noreferrer')
     this.pendingShowInVault.set(false)
   }
 }

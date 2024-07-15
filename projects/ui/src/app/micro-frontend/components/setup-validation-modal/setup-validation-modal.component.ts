@@ -191,7 +191,11 @@ export class SetupValidationModalComponent implements OnInit, OnDestroy {
   }
 
   onButtonClickInstallManually() {
-    window.open('https://github.wdf.sap.corp/pages/Security-Testing/doc/cxone/Getting_Started/', '_blank')
+    window.open(
+      'https://github.wdf.sap.corp/pages/Security-Testing/doc/cxone/Getting_Started/',
+      '_blank',
+      'noopoener, noreferrer',
+    )
   }
 
   onButtonLearnMore(tool: ValidationTools) {
@@ -199,11 +203,13 @@ export class SetupValidationModalComponent implements OnInit, OnDestroy {
       window.open(
         'https://pages.github.tools.sap/hyperspace/cicd-setup-documentation/connected-tools/validate/ghas.html',
         '_blank',
+        'noopoener, noreferrer',
       )
     } else if (tool === ValidationTools.CX) {
       window.open(
         'https://pages.github.tools.sap/hyperspace/cicd-setup-documentation/connected-tools/validate/cxone.html',
         '_blank',
+        'noopoener, noreferrer',
       )
     }
   }

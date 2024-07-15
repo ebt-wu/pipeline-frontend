@@ -28,6 +28,7 @@ export class PiperServiceDetailsComponent {
     window.open(
       'https://pages.github.tools.sap/hyperspace/cicd-setup-documentation/connected-tools/build/piper.html',
       '_blank',
+      'noopoener, noreferrer',
     )
   }
 }

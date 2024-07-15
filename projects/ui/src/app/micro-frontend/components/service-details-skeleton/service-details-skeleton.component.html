@@ -175,7 +175,8 @@
                   *ngIf="extension.documentation?.url"
                   fd-link
                   href="{{ extension.documentation?.url }}"
-                  target="_blank">
+                  target="_blank"
+                  rel="noopener noreferrer">
                   Documentation
                 </a>
               </div>
@@ -186,7 +187,12 @@
                     <span class="option-name">Channels:</span>
                     {{ ' ' }}
                     <span *ngFor="let channel of extension.preferredSupportChannels">
-                      <a *ngIf="channel.URL && channel.displayName" fd-link href="{{ channel.URL }}" target="_blank">
+                      <a
+                        *ngIf="channel.URL && channel.displayName"
+                        fd-link
+                        href="{{ channel.URL }}"
+                        target="_blank"
+                        rel="noopener noreferrer">
                         {{ channel.displayName + getComma(channel, extension.preferredSupportChannels) }}
                       </a>
                     </span>
@@ -227,11 +233,12 @@
                       )
                     "
                     target="_blank"
+                    rel="noopener noreferrer"
                     fd-link>
                     creating a ticket.
                   </a>
                   For now, you can try searching the
-                  <a [href]="catalogUrl()" target="_blank" fd-link>Hyperspace Catalog.</a>
+                  <a [href]="catalogUrl()" target="_blank" rel="noopener noreferrer" fd-link>Hyperspace Catalog.</a>
                   You may find more information on the {{ kindName[activeTile] }} service there.
                 </span>
               </div>

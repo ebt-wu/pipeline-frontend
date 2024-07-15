@@ -1,5 +1,5 @@
 <div *ngIf="!loading()" class="home-page-content">
-  <div *ngIf="pipelineAvail | async; else errorMessage">
+  <div *ngIf="(pipelineAvail | async) as pipeline; else errorMessage">
     <ng-container>
       <app-pipeline [pipeline$]="watch$"></app-pipeline>
     </ng-container>

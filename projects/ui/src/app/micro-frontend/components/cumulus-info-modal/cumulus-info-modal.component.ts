@@ -59,13 +59,14 @@ export class CumulusInfoModalComponent implements OnInit {
   async showCumulusTokenInVault() {
     // cumulus secret path is hardcoded here: https://github.tools.sap/hyperspace/pipeline-backend/blob/937fc53e719077cc63b97c7b6277fde838c304dd/service/cumulus/service.go#L79
     const cumulusSecretPath = 'GROUP-SECRETS/cumulus'
-    window.open(await this.secretService.getVaultUrlOfSecret(cumulusSecretPath), '_blank')
+    window.open(await this.secretService.getVaultUrlOfSecret(cumulusSecretPath), '_blank', 'noopoener, noreferrer')
   }
 
   openDocumentation() {
     window.open(
       'https://pages.github.tools.sap/hyperspace/cicd-setup-documentation/how-tos/store-compliance-artifacts.html#using-cumulus-to-store-compliance-results-for-an-existing-pipeline',
       '_blank',
+      'noopoener, noreferrer',
     )
   }
 

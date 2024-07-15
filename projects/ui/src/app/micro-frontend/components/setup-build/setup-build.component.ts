@@ -201,7 +201,7 @@ export class SetupComponent implements OnInit, OnDestroy {
           header: 'Jenkins instance',
           subheader: () =>
             Promise.resolve(`Don't have an instance yet?
-            <a href="https://jenx.int.sap.eu2.hana.ondemand.com/#/imageOverview" target="_blank">Request one.</a>`),
+            <a href="https://jenx.int.sap.eu2.hana.ondemand.com/#/imageOverview" target="_blank" rel="noopener noreferrer">Request one.</a>`),
         },
       },
       when: (formValue: SetupBuildFormValue) => {
@@ -236,7 +236,7 @@ export class SetupComponent implements OnInit, OnDestroy {
             return new Promise(
               () => `Your credentials are stored in Vault and needed to create a pipeline
             in your Jenkins instance. Technical user is preferred, you can find out how
-            to set up one in the <a href="https://pages.github.tools.sap/hyperspace/jaas-documentation/faqs_and_troubleshooting/faq/#how-can-i-get-a-service-user" target="_blank">JaaS documentation.</a>`,
+            to set up one in the <a href="https://pages.github.tools.sap/hyperspace/jaas-documentation/faqs_and_troubleshooting/faq/#how-can-i-get-a-service-user" target="_blank" rel="noopener noreferrer">JaaS documentation.</a>`,
             )
           },
         },
@@ -319,7 +319,7 @@ export class SetupComponent implements OnInit, OnDestroy {
             return `
               You can’t add new credentials due to missing permissions.<br/>
               You need to be „Vault Maintainer“ to maintain credentials.
-              <a href="${context.frameBaseUrl}/projects/${context.projectId}/members" target="_blank">
+              <a href="${context.frameBaseUrl}/projects/${context.projectId}/members" target="_blank" rel="noopener noreferrer">
                 Contact a project owner
               </a>`
           },
@@ -356,7 +356,7 @@ export class SetupComponent implements OnInit, OnDestroy {
           header: 'GitHub credentials',
           subheader: async () => {
             const { githubRepoUrl, githubOrgName, githubRepoName } = await this.githubService.getGithubMetadata()
-            return `Needed to configure your pipeline in the <a href="${githubRepoUrl}" target="_blank">${githubOrgName}/${githubRepoName}</a> repository.`
+            return `Needed to configure your pipeline in the <a href="${githubRepoUrl}" target="_blank" rel="noopener noreferrer">${githubOrgName}/${githubRepoName}</a> repository.`
           },
         },
       },
@@ -371,7 +371,7 @@ export class SetupComponent implements OnInit, OnDestroy {
           header: 'GitHub credentials',
           subheader: async () => {
             const { githubRepoUrl, githubOrgName, githubRepoName } = await this.githubService.getGithubMetadata()
-            return `To set up and manage your CI/CD services, it is necessary for us to have access to the GitHub organization that the <a href="${githubRepoUrl}" target="_blank">${githubOrgName}/${githubRepoName}</a> GitHub repository belongs to.`
+            return `To set up and manage your CI/CD services, it is necessary for us to have access to the GitHub organization that the <a href="${githubRepoUrl}" target="_blank" rel="noopener noreferrer">${githubOrgName}/${githubRepoName}</a> GitHub repository belongs to.`
           },
         },
       },

@@ -25,7 +25,7 @@
     <div>
       <b>Pull Request</b>
     </div>
-    <a [href]="serviceDetails.pullRequestURL" target="_blank">Open in GitHub</a>
+    <a [href]="serviceDetails.pullRequestURL" target="_blank" rel="noopener noreferrer">Open in GitHub</a>
   </div>
   <div [ngClass]="serviceDetails.pullRequestURL ? 'top-margin' : ''">
     <b>config.yml</b>
@@ -48,12 +48,18 @@
 <ng-template #nativeBuildHelp>
   <div>
     We have configured a
-    <a href="https://github.wdf.sap.corp/pages/ContinuousDelivery/piper-doc/stages/gpp/overview/" target="_blank">
+    <a
+      href="https://github.wdf.sap.corp/pages/ContinuousDelivery/piper-doc/stages/gpp/overview/"
+      target="_blank"
+      rel="noopener noreferrer">
       Piper General Purpose Pipeline (GPP)
     </a>
     based on the
     <br />
-    <a href="https://github.wdf.sap.corp/pages/ContinuousDelivery/piper-doc/build/native/" target="_blank">
+    <a
+      href="https://github.wdf.sap.corp/pages/ContinuousDelivery/piper-doc/build/native/"
+      target="_blank"
+      rel="noopener noreferrer">
       Piper Native Build
     </a>
     for you and added it via pull request to your

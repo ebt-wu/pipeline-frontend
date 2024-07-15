@@ -26,7 +26,7 @@ jobs:
         uses: sap/project-piper-action@main
         with:
           step-name: checkmarxOneExecuteScan
-          flags: "--applicationName INT_HYPERSPACE_PORTAL_CI_CD_SETUP --projectName cicd-setup-pipeline-frontend --preset SAP_Corp_JavaScript_Client --gitBranch=${{ github.head_ref || github.event.repository.default_branch }} --vulnerabilityThresholdEnabled false --repository=${{ github.event.repository }}"
+          flags: "--applicationName INT_HYPERSPACE_PORTAL_CI_CD_SETUP --projectName cicd-setup-pipeline-frontend --preset SAP_Corp_JavaScript_Client --vulnerabilityThresholdEnabled false --gitBranch=${{ github.head_ref || github.event.repository.default_branch }} --repository=${{ github.event.repository }} --generatePdfReport true"
 
       - name: sapCumulusUpload-1  # optional action to upload the CxOne documents to Cumulus
         uses: sap/project-piper-action@main

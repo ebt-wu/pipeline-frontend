@@ -15,7 +15,7 @@
       (click)="openDocumentation()"
       fd-button></button>
   </div>
-  <a [href]="githubOrganizationUrl" target="_blank">
+  <a [href]="githubOrganizationUrl" target="_blank" rel="noopener noreferrer">
     {{ serviceDetails.githubOrganization }}
   </a>
   <ng-container *ngIf="responsibleProjectUrl()">
@@ -32,7 +32,9 @@
         [triggers]="['click']"
         [closeOnOutsideClick]="true"></button>
     </div>
-    <a [href]="responsibleProjectUrl()" target="_blank">{{ serviceDetails.responsibleProject }}</a>
+    <a [href]="responsibleProjectUrl()" target="_blank" rel="noopener noreferrer">
+      {{ serviceDetails.responsibleProject }}
+    </a>
   </ng-container>
   <div class="flex-box top-margin">
     <h3 class="heading-margin">SUGAR Customer ID</h3>
@@ -49,7 +51,7 @@
   </div>
   <div>{{ serviceDetails.solinasCustomerID }}</div>
   <div *dxpRequiredPolicies="['member', 'owner', 'vault_maintainer']; operator: 'or'">
-    <a [href]="githubActionsRunnerGroupUrl" target="_blank">Open Runners Group</a>
+    <a [href]="githubActionsRunnerGroupUrl" target="_blank" rel="noopener noreferrer">Open Runners Group</a>
     <div class="flex-box top-margin">
       <h3>GitHub Actions Credentials</h3>
     </div>
@@ -75,29 +77,31 @@
     *ngIf="showActionsGetStartedWarning()"
     (onDismiss)="storeDismissInLocalStorage()">
     Be sure to
-    <a [href]="ACTIONS_GET_STARTED_URL" target="_blank">
+    <a [href]="ACTIONS_GET_STARTED_URL" target="_blank" rel="noopener noreferrer">
       <b>read our get started guide</b>
     </a>
     and
-    <a [href]="ACTIONS_SECURITY_HARDENING_URL" target="_blank">
+    <a [href]="ACTIONS_SECURITY_HARDENING_URL" target="_blank" rel="noopener noreferrer">
       <b>check the security hardening guidelines.</b>
     </a>
   </fd-message-strip>
   <ul class="get-started-list">
     <li>
-      <a [href]="ACTIONS_GET_STARTED_URL" target="_blank">Read our get started guide</a>
+      <a [href]="ACTIONS_GET_STARTED_URL" target="_blank" rel="noopener noreferrer">Read our get started guide</a>
       to get the best out of GitHub Actions
     </li>
     <li>
-      <a [href]="ACTIONS_SECURITY_HARDENING_URL" target="_blank">Check security hardening guidelines</a>
+      <a [href]="ACTIONS_SECURITY_HARDENING_URL" target="_blank" rel="noopener noreferrer">
+        Check security hardening guidelines
+      </a>
       to ensure compliant use of GitHub Actions
     </li>
     <li>
-      <a [href]="ACTIONS_CATALOG_URL" target="_blank">Open catalog</a>
+      <a [href]="ACTIONS_CATALOG_URL" target="_blank" rel="noopener noreferrer">Open catalog</a>
       to find all allowed Actions at SAP
     </li>
     <li>
-      <a [href]="SUGAR_DOCU_URL" target="_blank">Learn about SUGAR</a>
+      <a [href]="SUGAR_DOCU_URL" target="_blank" rel="noopener noreferrer">Learn about SUGAR</a>
       to understand our GitHub Actions runners provider
     </li>
   </ul>
@@ -105,7 +109,7 @@
 <ng-template #sugarServiceHelp>
   <div>
     The
-    <a [href]="SUGAR_DOCU_URL" target="_blank">SUGAR</a>
+    <a [href]="SUGAR_DOCU_URL" target="_blank" rel="noopener noreferrer">SUGAR</a>
     service creates a GitHub Actions Runner Group in your GitHub Organization.
   </div>
 </ng-template>
