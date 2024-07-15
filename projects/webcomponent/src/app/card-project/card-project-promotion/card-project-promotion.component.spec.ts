@@ -60,7 +60,7 @@ describe('CardProjectPromotionComponent', () => {
       clickCallback: component.openGetStartedModal,
       disabled: true,
       tooltip: 'You must first create a component',
-      text: 'Set up',
+      text: 'Set Up',
     })
   })
 

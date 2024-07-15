@@ -16,7 +16,7 @@ import { ModalProjectGetStartedComponent } from '../modal-project-get-started/mo
 import { NgIf } from '@angular/common'
 import { catchError, combineLatest, first, of } from 'rxjs'
 import { ExtensionService, ScopeType, UpdateExtensionInput } from '@dxp/ngx-core/extensions'
-import { CardAction, DxpActionCardModule, ImageType } from '@dxp/ngx-core/action-card'
+import { CardAction, DxpActionCardModule, ImageType, HelpLink } from '@dxp/ngx-core/action-card'
 import { ComponentSearchService } from '@dxp/ngx-core/search'
 
 @Component({
@@ -48,13 +48,17 @@ export class CardProjectPromotionComponent implements OnInit {
 
   @Input()
   currentProjectId: string
-  headerText: string = 'Setup CI/CD'
+  headerText: string = 'Set Up CI/CD'
   cardButtons: CardAction[]
   readonly rocketConfig: SvgConfig = {
     spot: {
       file: svgRocket,
       id: 'rocket',
     },
+  }
+  readonly helpLink: HelpLink = {
+    link: 'https://pages.github.tools.sap/hyperspace/cicd-setup-documentation/',
+    tooltip: 'Go to documentation',
   }
 
   constructor(
@@ -77,7 +81,7 @@ export class CardProjectPromotionComponent implements OnInit {
             clickCallback: this.openGetStartedModal,
             disabled: components.items.length === 0,
             tooltip: components.items.length === 0 ? 'You must first create a component' : undefined,
-            text: 'Set up',
+            text: 'Set Up',
           },
         ]
         if (ctx.context.entityContext.project.policies.includes('projectAdmin')) {
@@ -100,7 +104,7 @@ export class CardProjectPromotionComponent implements OnInit {
       data: {
         luigiClient: this.LuigiClient,
         currentProjectId: this.currentProjectId,
-        title: 'Set up CI/CD',
+        title: 'Set Up CI/CD',
       },
       position: { top: 'auto', left: 'auto' },
     })
