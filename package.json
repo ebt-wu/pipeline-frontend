@@ -42,7 +42,7 @@
     "@angular/platform-browser": "16.2.12",
     "@angular/platform-browser-dynamic": "16.2.12",
     "@angular/router": "16.2.12",
-    "@apollo/client": "3.10.5",
+    "@apollo/client": "3.10.8",
     "@dxp/ngx-core": "0.20.94",
     "@fundamental-ngx/cdk": "0.47.0",
     "@fundamental-ngx/core": "0.47.0",
