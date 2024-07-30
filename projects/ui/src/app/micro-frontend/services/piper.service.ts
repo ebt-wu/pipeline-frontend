@@ -11,6 +11,7 @@ import {
   DeletePiperConfigMutationVariables,
   GetPiperConfigQuery,
   GetPiperConfigQueryVariables,
+  LabelInput,
 } from '@generated/graphql'
 
 @Injectable({ providedIn: 'root' })
@@ -26,6 +27,7 @@ export class PiperService {
     buildTool: BuildTool,
     pipelineOptimization: boolean,
     dockerImageName: string,
+    labels: Array<LabelInput> = [],
   ): Observable<string> {
     return combineLatest([this.apiService.apollo(), this.luigiService.contextObservable()]).pipe(
       first(),
@@ -41,6 +43,7 @@ export class PiperService {
               buildTool: buildTool,
               pipelineOptimization: pipelineOptimization,
               dockerImageName: dockerImageName,
+              labels,
             },
           })
           .pipe(map((res) => res.data?.createPiperConfig ?? ''))

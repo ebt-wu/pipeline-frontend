@@ -10,7 +10,7 @@ import {
   CreatePipelineMutationVariables,
   DeletePipelineMutation,
   DeletePipelineMutationVariables,
-  PipelineType,
+  PipelineCreationRequest,
   WatchPipelineSubscription,
   WatchPipelineSubscriptionVariables,
 } from '@generated/graphql'
@@ -22,7 +22,7 @@ export class PipelineService {
     private readonly luigiService: DxpLuigiContextService,
   ) {}
 
-  createPipeline(pipelineType: PipelineType): Observable<string> {
+  createPipeline(params: PipelineCreationRequest): Observable<string> {
     return combineLatest([this.apiService.apollo(), this.luigiService.contextObservable()]).pipe(
       first(),
       mergeMap(([client, ctx]) => {
@@ -32,7 +32,7 @@ export class PipelineService {
             variables: {
               projectId: ctx.context.projectId,
               componentId: ctx.context.componentId,
-              pipelineType: pipelineType,
+              params: params,
             },
           })
           .pipe(map((res) => res.data?.createPipeline ?? ''))

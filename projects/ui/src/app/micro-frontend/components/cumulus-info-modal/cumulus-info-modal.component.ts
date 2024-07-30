@@ -41,7 +41,13 @@ export class CumulusInfoModalComponent implements OnInit {
 
     // If there is no pipeline we create one on-the-fly
     if (await this.policyService.canUserSetUpPipeline()) {
-      await firstValueFrom(this.pipelineService.createPipeline(PipelineType.FullPipeline).pipe(debounceTime(100)))
+      await firstValueFrom(
+        this.pipelineService
+          .createPipeline({
+            pipelineType: PipelineType.FullPipeline,
+          })
+          .pipe(debounceTime(100)),
+      )
     }
     this.luigiClient.linkManager().updateModalSettings({ height: '565px', width: '420px' })
 

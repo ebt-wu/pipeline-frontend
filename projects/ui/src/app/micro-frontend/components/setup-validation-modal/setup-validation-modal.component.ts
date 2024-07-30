@@ -165,6 +165,9 @@ export class SetupValidationModalComponent implements OnInit, OnDestroy {
       default:
         assumedBuildTool = null
     }
+
+    const labels = (await firstValueFrom(this.watch$)).labels
+
     await firstValueFrom(
       this.githubAdvancedSecurityService.createGithubAdvancedSecurity({
         githubInstance: metadata.githubInstance,
@@ -172,6 +175,7 @@ export class SetupValidationModalComponent implements OnInit, OnDestroy {
         githubRepository: metadata.githubRepository,
         codeScanJobOrchestrator: metadata.codeScanJobOrchestrator,
         buildTool: assumedBuildTool,
+        labels: labels,
       }),
     )
       .then(() => {
