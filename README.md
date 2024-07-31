@@ -32,7 +32,7 @@ localStorage.setItem(
   'dxp-dev-mode-settings',
   JSON.stringify({
     isActive: true,
-    cdm: [{ url: 'http://localhost:4201/assets/cdm.json' }],
+    cdm: [{ url: 'http://localhost:4200/assets/cdm.json' }],
   }),
 )
 ```
