@@ -75,8 +75,8 @@ export class OpenSourceComplianceDetailsComponent implements OnInit {
   openDocumentation() {
     window.open(
       'https://pages.github.tools.sap/hyperspace/cicd-setup-documentation/use-cases/validate-your-code-OSCS.html',
-      '_blank',
-      'noopoener, noreferrer',
+      'hyperspace-portal-cicd-oscs',
+      'noopener,noreferrer',
     )
   }
 }

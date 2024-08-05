@@ -1,7 +1,7 @@
 <div *ngIf="!loading()">
   <div class="issuetracker-info-container">
     <div class="issuetracker-info">
-      <span class="subtitle">Show issues in</span>
+      <h3>Issues reported at</h3>
       <a [href]="issuetrackerProjectUrl" fd-link rel="noopener noreferrer" target="_blank" rel="noopener noreferrer">
         {{ issuetrackerProjectName }}
       </a>
@@ -17,7 +17,8 @@
   <div>
     <h3>Track compliance</h3>
     <div *ngIf="ppmsScv">
-      <span class="subtitle">PPMS Software Component Version:</span>
+      <span class="subtitle">PPMS Software Component Version</span>
+      <br />
       {{ ppmsScv }}
     </div>
     <div *ngIf="!ppmsScv">

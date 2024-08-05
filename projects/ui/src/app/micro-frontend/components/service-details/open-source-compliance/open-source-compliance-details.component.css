@@ -11,9 +11,10 @@
 }
 
 .subtitle {
-  color: var(--sapContent_LabelColor);
+  color: var(--sapTextColor);
   font-size: 14px;
-  font-family: '72';
+  font-family: var(--sapFontFamily);
+  font-weight: bold;
 }
 
 .auto-left-margin {
