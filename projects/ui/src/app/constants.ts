@@ -12,6 +12,7 @@ export const KindName = {
   [Kinds.GITHUB_ACTIONS_WORKFLOW]: 'GitHub Actions',
   [Kinds.GITHUB_ADVANCED_SECURITY]: 'GitHub Advanced Security',
   [Kinds.CX_ONE]: 'CxONE',
+  [Kinds.OPEN_SOURCE_COMPLIANCE]: 'Open Source Checks',
 }
 
 export const KindCategory = {
@@ -24,6 +25,7 @@ export const KindCategory = {
   [Kinds.GITHUB_ACTIONS_WORKFLOW]: Categories.ORCHESTRATION,
   [Kinds.GITHUB_ADVANCED_SECURITY]: Categories.STATIC_SECURITY_CHECKS,
   [Kinds.CX_ONE]: Categories.STATIC_SECURITY_CHECKS,
+  [Kinds.OPEN_SOURCE_COMPLIANCE]: Categories.OPEN_SOURCE_CHECKS,
 }
 
 export const KindExtensionName = {
@@ -35,6 +37,7 @@ export const KindExtensionName = {
   [Kinds.JENKINS_PIPELINE]: Extensions.JAAS,
   [Kinds.GITHUB_ACTIONS_WORKFLOW]: Extensions.GITHUB_ACTIONS_TOOLS_SAP,
   [Kinds.GITHUB_ADVANCED_SECURITY]: Extensions.GITHUB_ADVANCED_SECURITY,
+  [Kinds.OPEN_SOURCE_COMPLIANCE]: Extensions.OPEN_SOURCE_COMPLIANCE,
 }
 
 export const KindStage = {
@@ -45,6 +48,7 @@ export const KindStage = {
   [Kinds.JENKINS_PIPELINE]: Stages.BUILD,
   [Kinds.GITHUB_ACTIONS_WORKFLOW]: Stages.BUILD,
   [Kinds.GITHUB_ADVANCED_SECURITY]: Stages.VALIDATE,
+  [Kinds.OPEN_SOURCE_COMPLIANCE]: Stages.VALIDATE,
 }
 
 export const ValidationLanguages: ValidationLanguage[] = [

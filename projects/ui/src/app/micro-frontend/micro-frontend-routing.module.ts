@@ -7,6 +7,7 @@ import { PipelineDebugModalComponent } from './components/pipeline-debug/pipelin
 import { ImportExistingPipelineModalComponent } from './components/import-existing-pipeline-modal/import-existing-pipeline.component'
 import { GithubActionsComponent } from './pages/github-actions/github-actions.component'
 import { SetupValidationModalComponent } from './components/setup-validation-modal/setup-validation-modal.component'
+import { SetupOSCModalComponent } from './components/setup-osc-modal/setup-osc-modal.component'
 import { CumulusInfoModalComponent } from './components/cumulus-info-modal/cumulus-info-modal.component'
 
 const routes: Routes = [
@@ -25,6 +26,10 @@ const routes: Routes = [
       {
         path: 'setup-validation',
         component: SetupValidationModalComponent,
+      },
+      {
+        path: 'setup-osc',
+        component: SetupOSCModalComponent,
       },
       {
         path: 'github-actions',

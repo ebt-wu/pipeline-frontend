@@ -82,7 +82,7 @@ export type GithubCreationRequest = {
   isGithubActionsGPP?: InputMaybe<Scalars['Boolean']['input']>;
   org: Scalars['String']['input'];
   repo: Scalars['String']['input'];
-  secretPath: Scalars['String']['input'];
+  secretPath?: InputMaybe<Scalars['String']['input']>;
 };
 
 export type GithubRepository = {
@@ -115,6 +115,13 @@ export type JenkinsPipeline = {
   secretPath?: Maybe<Scalars['String']['output']>;
 };
 
+export type JiraProject = {
+  __typename?: 'JiraProject';
+  jiraInstanceUrl?: Maybe<Scalars['String']['output']>;
+  projectKey?: Maybe<Scalars['String']['output']>;
+  resourceName?: Maybe<Scalars['String']['output']>;
+};
+
 export type Label = {
   __typename?: 'Label';
   key: Scalars['String']['output'];
@@ -133,6 +140,7 @@ export type Mutation = {
   createGithubActions?: Maybe<Scalars['String']['output']>;
   createGithubRepository?: Maybe<Scalars['String']['output']>;
   createJenkinsPipeline?: Maybe<Scalars['String']['output']>;
+  createOscRegistration?: Maybe<Scalars['String']['output']>;
   createPipeline: Scalars['String']['output'];
   createPiperConfig?: Maybe<Scalars['String']['output']>;
   deleteCumulusPipeline?: Maybe<Scalars['String']['output']>;
@@ -140,6 +148,7 @@ export type Mutation = {
   deleteGithubActions?: Maybe<Scalars['String']['output']>;
   deleteGithubRepository?: Maybe<Scalars['String']['output']>;
   deleteJenkinsPipeline?: Maybe<Scalars['String']['output']>;
+  deleteOscRegistration?: Maybe<Scalars['String']['output']>;
   deletePipeline?: Maybe<Scalars['String']['output']>;
   deletePiperConfig?: Maybe<Scalars['String']['output']>;
   ensureVaultOnboarding: VaultOnboardingInfo;
@@ -180,6 +189,13 @@ export type MutationCreateGithubRepositoryArgs = {
 export type MutationCreateJenkinsPipelineArgs = {
   componentId: Scalars['String']['input'];
   params: JenkinsCreationRequest;
+  projectId: Scalars['String']['input'];
+};
+
+
+export type MutationCreateOscRegistrationArgs = {
+  componentId: Scalars['String']['input'];
+  params?: InputMaybe<OpenSourceComplianceCreatePayload>;
   projectId: Scalars['String']['input'];
 };
 
@@ -237,6 +253,12 @@ export type MutationDeleteJenkinsPipelineArgs = {
 };
 
 
+export type MutationDeleteOscRegistrationArgs = {
+  componentId: Scalars['String']['input'];
+  projectId: Scalars['String']['input'];
+};
+
+
 export type MutationDeletePipelineArgs = {
   componentId: Scalars['String']['input'];
   projectId: Scalars['String']['input'];
@@ -280,6 +302,24 @@ export type MutationWriteSecretArgs = {
   data: Array<SecretData>;
   projectId: Scalars['String']['input'];
   vaultPath: Scalars['String']['input'];
+};
+
+export type OpenSourceComplianceCreatePayload = {
+  githubInfo?: InputMaybe<GithubCreationRequest>;
+  jira?: InputMaybe<Scalars['String']['input']>;
+  ppmsScv?: InputMaybe<Scalars['String']['input']>;
+};
+
+export type OpenSourceComplianceGetResponse = {
+  __typename?: 'OpenSourceComplianceGetResponse';
+  creationTimestamp?: Maybe<Scalars['String']['output']>;
+  cumulusPipelineId: Scalars['String']['output'];
+  ghRepoRef?: Maybe<Scalars['String']['output']>;
+  isActive?: Maybe<Scalars['Boolean']['output']>;
+  jiraRef?: Maybe<Scalars['String']['output']>;
+  oscResourceName: Scalars['String']['output'];
+  ppmsScv?: Maybe<Scalars['String']['output']>;
+  productiveBranch?: Maybe<Scalars['String']['output']>;
 };
 
 export enum Orchestrators {
@@ -344,6 +384,8 @@ export type Query = {
   getGithubActionsCrossNamespace?: Maybe<GithubActionsGetPayload>;
   getGithubRepository?: Maybe<GithubRepository>;
   getJenkinsPipeline?: Maybe<JenkinsPipeline>;
+  getJiraProjects?: Maybe<Array<Maybe<JiraProject>>>;
+  getOscRegistration?: Maybe<OpenSourceComplianceGetResponse>;
   getPipelineSecrets?: Maybe<Array<Secret>>;
   getPiperConfig: PiperConfig;
   getStagingServiceCredential?: Maybe<StagingServiceCredential>;
@@ -379,6 +421,17 @@ export type QueryGetGithubRepositoryArgs = {
 export type QueryGetJenkinsPipelineArgs = {
   projectId: Scalars['String']['input'];
   resourceName: Scalars['String']['input'];
+};
+
+
+export type QueryGetJiraProjectsArgs = {
+  projectId: Scalars['String']['input'];
+};
+
+
+export type QueryGetOscRegistrationArgs = {
+  componentId: Scalars['String']['input'];
+  projectId: Scalars['String']['input'];
 };
 
 
@@ -688,3 +741,34 @@ export type DeleteGitHubAdvancedSecurityMutationVariables = Exact<{
 
 
 export type DeleteGitHubAdvancedSecurityMutation = { __typename?: 'Mutation', deleteGitHubAdvancedSecurity?: string | null };
+
+export type CreateOscRegistrationMutationVariables = Exact<{
+  projectId: Scalars['String']['input'];
+  componentId: Scalars['String']['input'];
+  jira?: InputMaybe<Scalars['String']['input']>;
+  ppmsScv?: InputMaybe<Scalars['String']['input']>;
+  githubBaseUrl: Scalars['String']['input'];
+  githubOrg: Scalars['String']['input'];
+  githubRepo: Scalars['String']['input'];
+  githubSecretPath: Scalars['String']['input'];
+  isGithubActionsGPP: Scalars['Boolean']['input'];
+}>;
+
+
+export type CreateOscRegistrationMutation = { __typename?: 'Mutation', createOscRegistration?: string | null };
+
+export type GetOscRegistrationQueryVariables = Exact<{
+  projectId: Scalars['String']['input'];
+  componentId: Scalars['String']['input'];
+}>;
+
+
+export type GetOscRegistrationQuery = { __typename?: 'Query', getOscRegistration?: { __typename?: 'OpenSourceComplianceGetResponse', oscResourceName: string, cumulusPipelineId: string, isActive?: boolean | null, ghRepoRef?: string | null, productiveBranch?: string | null, ppmsScv?: string | null, jiraRef?: string | null, creationTimestamp?: string | null } | null };
+
+export type DeleteOscRegistrationMutationVariables = Exact<{
+  projectId: Scalars['String']['input'];
+  componentId: Scalars['String']['input'];
+}>;
+
+
+export type DeleteOscRegistrationMutation = { __typename?: 'Mutation', deleteOscRegistration?: string | null };

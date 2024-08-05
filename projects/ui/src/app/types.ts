@@ -1,5 +1,14 @@
 import { BuildTool, PipelineType } from '@generated/graphql'
-import { CredentialTypes, GithubInstances, Kinds, Orchestrators, ServiceStatus, ValidationTools } from '@enums'
+import {
+  CredentialTypes,
+  GithubInstances,
+  JiraProjectTypes,
+  Kinds,
+  Orchestrators,
+  OSCPlatforms,
+  ServiceStatus,
+  ValidationTools,
+} from '@enums'
 
 export type ghTokenFormValue = {
   githubToken?: string
@@ -25,6 +34,12 @@ export type SetupBuildFormValue = {
   orchestrator?: Orchestrators
   orchestratorHeader?: void
   patInfoBox?: void
+}
+
+export type SetupOSCFormValue = {
+  platform?: OSCPlatforms
+  ppmsSoftwareComponentVersion?: string
+  jiraProjectType?: JiraProjectTypes
 }
 
 export type ResourceRef = {

@@ -19,9 +19,9 @@ import { ErrorMessageComponent } from '../error-message/error-message.component'
 import { GithubAdvancedSecurityService } from '../../services/github-advanced-security.service'
 import { GithubService } from '../../services/github.service'
 import { PipelineService } from '../../services/pipeline.service'
-import { PlatformFormGeneratorCustomInfoBoxComponent } from '../form-generator-info-box/form-generator-info-box.component'
+import { PlatformFormGeneratorCustomInfoBoxComponent } from '../form-generator/form-generator-info-box/form-generator-info-box.component'
 import { SecretData, SecretService } from '../../services/secret.service'
-import { PlatformFormGeneratorCustomMessageStripComponent } from '../form-generator-message-strip/form-generator-message-strip.component'
+import { PlatformFormGeneratorCustomMessageStripComponent } from '../form-generator/form-generator-message-strip/form-generator-message-strip.component'
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,

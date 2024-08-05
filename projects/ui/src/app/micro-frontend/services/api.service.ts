@@ -7,6 +7,7 @@ import { StagingServiceService } from './staging-service.service'
 import { SecretService } from './secret.service'
 import { GithubActionsService } from './github-actions.service'
 import { GithubAdvancedSecurityService } from './github-advanced-security.service'
+import { OpenSourceComplianceService } from './open-source-compliance.service'
 
 @Injectable({ providedIn: 'root' })
 export class APIService {
@@ -19,5 +20,6 @@ export class APIService {
     public readonly secretService: SecretService,
     public readonly stagingServiceService: StagingServiceService,
     public readonly githubAdvancedSecurityService: GithubAdvancedSecurityService,
+    public readonly openSourceComplianceService: OpenSourceComplianceService,
   ) {}
 }

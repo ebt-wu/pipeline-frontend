@@ -7,6 +7,7 @@ type FeatureFlags = {
 export const Flags = {
   GITHUB_ACTIONS_ENABLED: 'GITHUB_ACTIONS_ENABLED',
   GHAS_ENABLED: 'GHAS_ENABLED',
+  OSC_ENABLED: 'OSC_ENABLED',
 } as const
 
 const TEST_TENANT_ID = '01ezesr3cgghmhgpbny04hv8qn'
@@ -23,6 +24,10 @@ export class FeatureFlagService {
 
   async isGhasEnabled(projectId: string) {
     return (await this.getFlagValue(Flags.GHAS_ENABLED, projectId)) || this.isTestTenant()
+  }
+
+  async isOscEnabled(projectId: string) {
+    return (await this.getFlagValue(Flags.OSC_ENABLED, projectId)) || this.isTestTenant()
   }
 
   isTestTenant() {

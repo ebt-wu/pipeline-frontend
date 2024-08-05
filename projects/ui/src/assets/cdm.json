@@ -25,7 +25,8 @@
               "context": {
                 "featureFlags": {
                   "GITHUB_ACTIONS_ENABLED": true,
-                  "GHAS_ENABLED": true
+                  "GHAS_ENABLED": true,
+                  "OSC_ENABLED": true
                 }
               },
               "children": [

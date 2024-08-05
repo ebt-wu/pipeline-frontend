@@ -19,6 +19,7 @@ export enum Extensions {
   PIPER = 'piper',
   JAAS = 'jaas',
   GITHUB_ADVANCED_SECURITY = 'github-advanced-security-github-tools-sap',
+  OPEN_SOURCE_COMPLIANCE = 'hyperspace-open-source-compliance-management',
 }
 
 export interface ExtensionClass {

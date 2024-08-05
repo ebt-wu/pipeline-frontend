@@ -11,6 +11,7 @@ import { JenkinServiceDetailsComponent } from '../service-details/jenkins/jenkin
 import { PiperServiceDetailsComponent } from '../service-details/piper/piper-service-details.component'
 import { StagingServiceServiceDetailsComponent } from '../service-details/staging-service/staging-service-service-details.component'
 import { GithubActionsServiceDetailsComponent } from '../service-details/github-actions/github-actions-service-details.component'
+import { OpenSourceComplianceDetailsComponent } from '../service-details/open-source-compliance/open-source-compliance-details.component'
 import { ExtensionClass, ServiceLevel } from '../../services/extension.types'
 import { GitHubIssueLabels, GitHubIssueLinkService } from '../../services/github-issue-link.service'
 import { ExtensionService } from '../../services/extension.service'
@@ -44,6 +45,7 @@ const dateFormatter = new Intl.DateTimeFormat('en', { year: 'numeric', month: 's
     PiperServiceDetailsComponent,
     StagingServiceServiceDetailsComponent,
     GithubActionsServiceDetailsComponent,
+    OpenSourceComplianceDetailsComponent,
     ErrorMessageComponent,
     StaticSecurityCheckDetailsComponent,
     PlatformMenuButtonModule,
@@ -164,6 +166,11 @@ export class ServiceDetailsSkeletonComponent implements OnInit {
             repoUrl: this.serviceUrl(),
             githubRepoName,
           })
+          break
+        case Kinds.OPEN_SOURCE_COMPLIANCE:
+          this.serviceDetails.set(
+            await firstValueFrom(this.api.openSourceComplianceService.getOpenSourceComplianceRegistration()),
+          )
           break
       }
 

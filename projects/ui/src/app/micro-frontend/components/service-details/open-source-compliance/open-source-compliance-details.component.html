@@ -1,0 +1,36 @@
+<div *ngIf="!loading()">
+  <div class="issuetracker-info-container">
+    <div class="issuetracker-info">
+      <span class="subtitle">Show issues in</span>
+      <a [href]="issuetrackerProjectUrl" fd-link rel="noopener noreferrer" target="_blank" rel="noopener noreferrer">
+        {{ issuetrackerProjectName }}
+      </a>
+    </div>
+    <button
+      role="button"
+      glyph="question-mark"
+      label="Learn More"
+      fdType="transparent"
+      fd-button
+      (click)="openDocumentation()"></button>
+  </div>
+  <div>
+    <h3>Track compliance</h3>
+    <div *ngIf="ppmsScv">
+      <span class="subtitle">PPMS Software Component Version:</span>
+      {{ ppmsScv }}
+    </div>
+    <div *ngIf="!ppmsScv">
+      <button role="button" label="Add SCV" fd-button (click)="openDocumentation()"></button>
+    </div>
+  </div>
+  <div class="divider"></div>
+  <div>
+    <h3>What's next</h3>
+    <a [href]="OSC_STACKOVERFLOW_LINK" target="_blank" rel="noopener noreferrer">Ask at Stack&#64;SAP</a>
+    <span>&#160;if you do not receive any issues in the backlog management tool you provided.</span>
+  </div>
+</div>
+<div *ngIf="loading()">
+  <fd-busy-indicator [loading]="true" ariaLabel="loading" title="Please Wait"></fd-busy-indicator>
+</div>

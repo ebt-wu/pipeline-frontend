@@ -146,6 +146,9 @@
               <app-static-security-check-details
                 *ngSwitchCase="kinds.GITHUB_ADVANCED_SECURITY"
                 [serviceDetails]="serviceDetails()"></app-static-security-check-details>
+              <app-open-source-compliance-details
+                *ngSwitchCase="kinds.OPEN_SOURCE_COMPLIANCE"
+                [serviceDetails]="serviceDetails()"></app-open-source-compliance-details>
             </div>
             <div class="tab-margin">
               <fd-skeleton width="350px" height="10rem" *ngIf="serviceDetailsLoading()">

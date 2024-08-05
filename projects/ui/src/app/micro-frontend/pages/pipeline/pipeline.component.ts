@@ -114,6 +114,7 @@ export class PipelineComponent implements OnInit, OnDestroy {
   // Feature flags
   showGithubActions = signal(false)
   showGHAS = signal(false)
+  showOSC = signal(false)
 
   canUserEditCredentials = false
 
@@ -162,6 +163,7 @@ export class PipelineComponent implements OnInit, OnDestroy {
     // Only show GHA and GHAS if their feature flags are toggled on
     this.showGithubActions.set(await this.featureFlagService.isGithubActionsEnabled(context.projectId))
     this.showGHAS.set(await this.featureFlagService.isGhasEnabled(context.projectId))
+    this.showOSC.set(await this.featureFlagService.isOscEnabled(context.projectId))
 
     this.catalogUrl.set(context.frameBaseUrl + '/catalog')
     this.projectId = context.projectId
@@ -246,6 +248,13 @@ export class PipelineComponent implements OnInit, OnDestroy {
             this.isValidationStageOpen.set(true)
           } else {
             this.isStaticSecurityChecksSetup.set(false)
+          }
+
+          if (pipeline.resourceRefs.find((ref) => ref.kind === Kinds.OPEN_SOURCE_COMPLIANCE)) {
+            this.isOpenSourceChecksSetup.set(true)
+            this.isValidationStageOpen.set(true)
+          } else {
+            this.isOpenSourceChecksSetup.set(false)
           }
 
           if (isRequiredKindMissingInBuildStage || isOrchestratorMissingInBuildStage) {

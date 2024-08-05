@@ -1,0 +1,80 @@
+<div>
+  <div class="setup-osc-margin">
+    <app-error-message
+      title="OSC setup could not be completed"
+      [message]="errorMessage()"
+      (byDismiss)="dismissErrorMessage()"
+      *ngIf="errorMessage()"></app-error-message>
+    <div class="busy-indicator" *ngIf="loading()">
+      <fd-busy-indicator [loading]="true" ariaLabel="loading" title="Please Wait"></fd-busy-indicator>
+    </div>
+    <div *ngIf="oscExtensionClass.name" class="extension-info-container">
+      <div class="extension-info">
+        <fd-avatar
+          size="xs"
+          image="{{ getIcon() }}"
+          [label]="oscExtensionClass.displayName"
+          [colorAccent]="10"></fd-avatar>
+        <span class="extension-name">
+          {{ oscExtensionClass.displayName }}
+        </span>
+      </div>
+      <fd-icon
+        class="extension-info-icon"
+        glyph="hint"
+        placement="top"
+        color="information"
+        [fd-inline-help]="extensionInfoPopover"
+        [triggers]="['click']"
+        [closeOnOutsideClick]="true"></fd-icon>
+      <ng-template #extensionInfoPopover>
+        <div>
+          replaces Mend and BlackDuck.
+          <br />
+          <a
+            class="link"
+            href="https://pages.github.tools.sap/hyperspace/academy/services/osc/"
+            rel="noopener noreferrer"
+            target="_blank"
+            rel="noopener noreferrer">
+            Learn more
+          </a>
+        </div>
+      </ng-template>
+    </div>
+    <div class="form-margins">
+      <fdp-message-popover-form-wrapper
+        #formGeneratorWrapper
+        [forms]="formGenerator?.formGroup"
+        [formFields]="formGenerator?.formFields">
+        <fdp-form-generator
+          *ngIf="!loading()"
+          [formItems]="questions"
+          (formSubmitted)="onFormSubmitted($event)"
+          (formCreated)="onFormCreated()"></fdp-form-generator>
+      </fdp-message-popover-form-wrapper>
+    </div>
+  </div>
+  <div fd-bar barDesign="footer" class="actions-footer">
+    <div fd-bar-left>
+      <fdp-message-popover id="message-popover" [wrapper]="formGeneratorWrapper"></fdp-message-popover>
+    </div>
+    <div fd-bar-right class="footer-buttons-gap">
+      <button
+        fd-button
+        *ngIf="formCreated"
+        (click)="submitForm()"
+        [disabled]="loading()"
+        type="submit"
+        fdType="emphasized"
+        label="Set up OSC"></button>
+      <button
+        fd-button
+        *ngIf="formCreated"
+        fdType="transparent"
+        [disabled]="loading()"
+        label="Cancel"
+        (click)="cancel()"></button>
+    </div>
+  </div>
+</div>

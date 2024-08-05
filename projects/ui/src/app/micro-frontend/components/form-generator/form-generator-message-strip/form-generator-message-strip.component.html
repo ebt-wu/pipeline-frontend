@@ -1,6 +1,10 @@
 <ng-container [formGroup]="form">
   <ng-container [formGroupName]="formGroupName">
-    <fd-message-strip *ngIf="isLoaded()" [type]="type" [dismissible]="false">
+    <fd-message-strip
+      *ngIf="isLoaded()"
+      [type]="type"
+      [dismissible]="false"
+      [ngClass]="formItem.guiOptions?.additionalData?.addMargins ? 'margins' : ''">
       <span [innerHTML]="message"></span>
     </fd-message-strip>
     <!-- input field is required for validation to work -->

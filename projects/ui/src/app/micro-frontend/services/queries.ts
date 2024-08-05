@@ -297,6 +297,10 @@ export const DELETE_GITHUB_ACTIONS = gql`
   }
 `
 
+/**
+ * GITHUB ADVANCED SECURITY QUERIES
+ */
+
 export const GET_GITHUB_ACTIONS_CROSS_NAMESPACE = gql`
   query GetGithubActionsCrossNamespace($projectId: String!, $githubOrg: String!, $githubInstance: String!) {
     getGithubActionsCrossNamespace(projectId: $projectId, githubOrg: $githubOrg, githubInstance: $githubInstance) {
@@ -350,5 +354,60 @@ export const GET_GITHUB_ADVANCED_SECURITY = gql`
 export const DELETE_GITHUB_ADVANCED_SECURITY = gql`
   mutation deleteGitHubAdvancedSecurity($projectId: String!, $resourceName: String!) {
     deleteGitHubAdvancedSecurity(projectId: $projectId, resourceName: $resourceName)
+  }
+`
+
+/**
+ * OPEN SOURCE COMPLIANCE QUERIES
+ */
+
+export const CREATE_OPEN_SOURCE_COMPLIANCE = gql`
+  mutation CreateOscRegistration(
+    $projectId: String!
+    $componentId: String!
+    $jira: String
+    $ppmsScv: String
+    $githubBaseUrl: String!
+    $githubOrg: String!
+    $githubRepo: String!
+    $githubSecretPath: String!
+    $isGithubActionsGPP: Boolean!
+  ) {
+    createOscRegistration(
+      projectId: $projectId
+      componentId: $componentId
+      params: {
+        jira: $jira
+        ppmsScv: $ppmsScv
+        githubInfo: {
+          baseUrl: $githubBaseUrl
+          org: $githubOrg
+          repo: $githubRepo
+          secretPath: $githubSecretPath
+          isGithubActionsGPP: $isGithubActionsGPP
+        }
+      }
+    )
+  }
+`
+
+export const GET_OPEN_SOURCE_COMPLIANCE = gql`
+  query GetOscRegistration($projectId: String!, $componentId: String!) {
+    getOscRegistration(projectId: $projectId, componentId: $componentId) {
+      oscResourceName
+      cumulusPipelineId
+      isActive
+      ghRepoRef
+      productiveBranch
+      ppmsScv
+      jiraRef
+      creationTimestamp
+    }
+  }
+`
+
+export const DELETE_OPEN_SOURCE_COMPLIANCE = gql`
+  mutation DeleteOscRegistration($projectId: String!, $componentId: String!) {
+    deleteOscRegistration(projectId: $projectId, componentId: $componentId)
   }
 `

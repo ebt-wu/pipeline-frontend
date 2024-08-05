@@ -9,6 +9,7 @@ export enum Kinds {
   GITHUB_ACTIONS_WORKFLOW = 'GithubActionsWorkflow',
   GITHUB_ADVANCED_SECURITY = 'GitHubAdvancedSecurity',
   CX_ONE = 'CxOne',
+  OPEN_SOURCE_COMPLIANCE = 'ActRegistration',
 }
 
 export enum Categories {
@@ -68,4 +69,14 @@ export enum ValidationTools {
 export enum GithubInstances {
   WDF = 'github.wdf.sap.corp',
   TOOLS = 'github.tools.sap',
+}
+
+export enum OSCPlatforms {
+  GITHUB = 'GITHUB',
+  JIRA = 'JIRA',
+}
+
+export enum JiraProjectTypes {
+  EXISTING = 'Use Existing',
+  NEW = 'Enter New',
 }

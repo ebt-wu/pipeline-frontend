@@ -12,14 +12,14 @@ import { firstValueFrom } from 'rxjs'
 import { CredentialTypes } from '@enums'
 import { LuigiClient } from '@dxp/ngx-core/luigi'
 import { SecretData, SecretService } from '../../services/secret.service'
-import { PlatformFormGeneratorCustomHeaderElementComponent } from '../../components/form-generator-header/form-generator-header.component'
+import { PlatformFormGeneratorCustomHeaderElementComponent } from '../../components/form-generator/form-generator-header/form-generator-header.component'
 import { BarModule, FundamentalNgxCoreModule } from '@fundamental-ngx/core'
 import { ErrorMessageComponent } from '../../components/error-message/error-message.component'
 import { GithubActionsService } from '../../services/github-actions.service'
 import { APIService } from '../../services/api.service'
 import { GithubMetadata, REQUIRED_SCOPES } from '../../services/github.service'
-import { PlatformFormGeneratorCustomInfoBoxComponent } from '../../components/form-generator-info-box/form-generator-info-box.component'
-import { PlatformFormGeneratorCustomMessageStripComponent } from '../../components/form-generator-message-strip/form-generator-message-strip.component'
+import { PlatformFormGeneratorCustomInfoBoxComponent } from '../../components/form-generator/form-generator-info-box/form-generator-info-box.component'
+import { PlatformFormGeneratorCustomMessageStripComponent } from '../../components/form-generator/form-generator-message-strip/form-generator-message-strip.component'
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,

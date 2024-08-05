@@ -53,6 +53,11 @@ export class SetupServiceListItemComponent {
           .fromVirtualTreeRoot()
           .openAsModal('setup-validation', { title: 'Add Static Security Checks', width: '600px', height: '780px' })
         break
+      case Categories.OPEN_SOURCE_CHECKS:
+        await this.luigiClient
+          .linkManager()
+          .fromVirtualTreeRoot()
+          .openAsModal('setup-osc', { title: 'Add Open Source Checks', width: '600px', height: '780px' })
     }
   }
 }
