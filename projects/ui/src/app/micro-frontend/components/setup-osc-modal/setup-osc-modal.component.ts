@@ -73,9 +73,9 @@ export class SetupOSCModalComponent implements OnInit {
             const linkToCompoent = `${context.frameBaseUrl}/projects/${context.projectId}/components/${context.componentId}`
             const buildModalUrlParam = `%2Fprojects%2F${context.projectId}%2Fcomponents%2F${context.componentId}%2Fpipeline-ui%2Fsetup&modalParams={&quot;size&quot;%3A&quot;s&quot;%2C&quot;title&quot;%3A&quot;Set up Build&quot;}`
             return `
-              For the Open Source Compliance Service to be correctly enabled,<br/>
+              For the Open-Source Compliance Service to be correctly enabled,<br/>
                please make sure you have fulfilled the necessary <a href="${this.OSC_PREREQUISITES_LINK}" target="_blank" rel="noopener noreferrer">prerequisites</a>.<br/><br/>
-              Alternatively, you can simply set up a <a href="${linkToCompoent}/pipeline-ui?modal=${buildModalUrlParam}" target="_blank" rel="noopener noreferrer">Build Pipeline</a>.`
+              Alternatively, you can simply <a href="${linkToCompoent}/pipeline-ui?modal=${buildModalUrlParam}" target="_blank" rel="noopener noreferrer">set up a Build Pipeline</a> for this component.`
           },
         },
       },
@@ -86,7 +86,7 @@ export class SetupOSCModalComponent implements OnInit {
       message: '',
       guiOptions: {
         additionalData: {
-          header: 'Select where to show issues',
+          header: 'Select where to report issues',
         },
       },
     },
@@ -253,7 +253,7 @@ export class SetupOSCModalComponent implements OnInit {
           type: 'information',
           addMargins: true,
           message: () => {
-            return `Fill the PPMS info if you release this component to customers or are planning to do so`
+            return `Fill this PPMS info if you release this component to customers or are planning to do so.`
           },
         },
       },
