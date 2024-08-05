@@ -9,7 +9,7 @@ export enum Kinds {
   GITHUB_ACTIONS_WORKFLOW = 'GithubActionsWorkflow',
   GITHUB_ADVANCED_SECURITY = 'GitHubAdvancedSecurity',
   CX_ONE = 'CxOne',
-  OPEN_SOURCE_COMPLIANCE = 'ActRegistration',
+  OPEN_SOURCE_COMPLIANCE = 'OscRegistration',
 }
 
 export enum Categories {
