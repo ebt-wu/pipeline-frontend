@@ -1,3 +1,5 @@
+::ng-deep .fd-dynamic-page__title-area { display: none !important; }
+
 .background {
   background-color: var(--fdCard_Background_Color);
 }
