@@ -11,9 +11,9 @@ import {
   FundamentalNgxPlatformModule,
 } from '@fundamental-ngx/platform'
 import { PlatformMessagePopoverModule } from '@fundamental-ngx/platform/message-popover'
-import { EntityContext, SetupOSCFormValue } from '@types'
+import { EntityContext, SetupOSCFormValue, Pipeline } from '@types'
 import { JiraProjectTypes, Kinds, OSCPlatforms } from '@enums'
-import { firstValueFrom } from 'rxjs'
+import { debounceTime, firstValueFrom, Observable } from 'rxjs'
 import { ErrorMessageComponent } from '../error-message/error-message.component'
 import { PlatformFormGeneratorCustomHeaderElementComponent } from '../form-generator/form-generator-header/form-generator-header.component'
 import { PlatformFormGeneratorCustomMessageStripComponent } from '../form-generator/form-generator-message-strip/form-generator-message-strip.component'
@@ -23,6 +23,7 @@ import { GithubService } from '../../services/github.service'
 import { ExtensionService } from '../../services/extension.service'
 import { KindExtensionName } from '@constants'
 import { ExtensionClass } from '../../services/extension.types'
+import { PipelineService } from '../../services/pipeline.service'
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -43,8 +44,9 @@ import { ExtensionClass } from '../../services/extension.types'
 })
 export class SetupOSCModalComponent implements OnInit {
   @ViewChild(FormGeneratorComponent) formGenerator: FormGeneratorComponent
+  watch$: Observable<Pipeline>
 
-  loading = signal(false)
+  loading = signal(true)
   errorMessage = signal('')
 
   formCreated = false
@@ -52,6 +54,7 @@ export class SetupOSCModalComponent implements OnInit {
 
   isJiraIntanceConnected = true
   jiraProjects = []
+  isBuildPipelineSetupAndCreated = false
 
   oscExtensionClass: ExtensionClass = {
     name: '',
@@ -65,6 +68,7 @@ export class SetupOSCModalComponent implements OnInit {
       type: 'message-strip',
       name: 'oscPrerequisitesWarning',
       message: '',
+      when: () => !this.isBuildPipelineSetupAndCreated,
       guiOptions: {
         additionalData: {
           type: 'information',
@@ -84,6 +88,19 @@ export class SetupOSCModalComponent implements OnInit {
       type: 'header',
       name: 'platformSelectionHeader',
       message: '',
+      when: () => this.isBuildPipelineSetupAndCreated,
+      guiOptions: {
+        additionalData: {
+          header: 'Select where to report issues',
+          ignoreTopMargin: true,
+        },
+      },
+    },
+    {
+      type: 'header',
+      name: 'platformSelectionHeaderWithTopMargin',
+      message: '',
+      when: () => !this.isBuildPipelineSetupAndCreated,
       guiOptions: {
         additionalData: {
           header: 'Select where to report issues',
@@ -264,6 +281,7 @@ export class SetupOSCModalComponent implements OnInit {
     private readonly luigiService: DxpLuigiContextService,
     private readonly _formGeneratorService: FormGeneratorService,
     private readonly extensionService: ExtensionService,
+    private readonly pipelineService: PipelineService,
     private readonly githubService: GithubService,
     private readonly openSourceComplianceService: OpenSourceComplianceService,
     private luigiClient: LuigiClient,
@@ -274,10 +292,17 @@ export class SetupOSCModalComponent implements OnInit {
   }
 
   async ngOnInit() {
+    this.watch$ = this.pipelineService.watchPipeline().pipe(debounceTime(50))
+
+    const resourceRefs = (await firstValueFrom(this.watch$)).resourceRefs
+    this.isBuildPipelineSetupAndCreated = this.pipelineService.isBuildPipelineSetupAndCreated(resourceRefs)
+
     const extensionClasses = await firstValueFrom(this.extensionService.getExtensionClassesForScopesQuery())
     this.oscExtensionClass = extensionClasses.find(
       (extensionClass) => extensionClass.name == (KindExtensionName[Kinds.OPEN_SOURCE_COMPLIANCE] as string),
     )
+
+    this.loading.set(false)
   }
 
   onFormCreated(): void {

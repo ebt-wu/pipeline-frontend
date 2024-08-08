@@ -4,7 +4,7 @@ import { catchError, first, map, mergeMap } from 'rxjs/operators'
 import { Observable, combineLatest, of } from 'rxjs'
 import { DxpLuigiContextService } from '@dxp/ngx-core/luigi'
 import { CREATE_PIPELINE, DELETE_PIPELINE, WATCH_PIPELINE } from './queries'
-import { Pipeline } from '@types'
+import { Pipeline, ResourceRef } from '@types'
 import {
   CreatePipelineMutation,
   CreatePipelineMutationVariables,
@@ -14,6 +14,7 @@ import {
   WatchPipelineSubscription,
   WatchPipelineSubscriptionVariables,
 } from '@generated/graphql'
+import { Kinds, ServiceStatus } from '@enums'
 
 @Injectable({ providedIn: 'root' })
 export class PipelineService {
@@ -75,5 +76,47 @@ export class PipelineService {
           )
       }),
     )
+  }
+
+  isBuildPipelineSetupAndCreated(resourceRefs: ResourceRef[]): boolean {
+    return this.isBuildPipelineSetup(resourceRefs) && this.areResourcesCompletelyCreated(resourceRefs)
+  }
+
+  isBuildPipelineSetup(resourceRefs: ResourceRef[]): boolean {
+    let isGithubRepositoryPresent = false
+    let isPiperConfigPresent = false
+    let isJenkinsPipelinePresent = false
+    let isGithubActionsWorkflowPresent = false
+
+    for (const ref of resourceRefs) {
+      switch (ref.kind) {
+        case Kinds.GITHUB_REPOSITORY: {
+          isGithubRepositoryPresent = true
+          break
+        }
+        case Kinds.PIPER_CONFIG: {
+          isPiperConfigPresent = true
+          break
+        }
+        case Kinds.JENKINS_PIPELINE: {
+          isJenkinsPipelinePresent = true
+          break
+        }
+        case Kinds.GITHUB_ACTIONS_WORKFLOW: {
+          isGithubActionsWorkflowPresent = true
+          break
+        }
+      }
+    }
+
+    const areRequiredResourcesPresent = isGithubRepositoryPresent && isPiperConfigPresent
+    const isOrchestratorPresent = isJenkinsPipelinePresent || isGithubActionsWorkflowPresent
+
+    return areRequiredResourcesPresent && isOrchestratorPresent
+  }
+
+  areResourcesCompletelyCreated(resourceRefs: ResourceRef[]): boolean {
+    const isThereNotCreatedResource = resourceRefs.some((ref) => ref.status !== ServiceStatus.CREATED)
+    return !isThereNotCreatedResource
   }
 }

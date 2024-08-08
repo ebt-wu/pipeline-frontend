@@ -24,7 +24,6 @@ export class PlatformFormGeneratorCustomMessageStripComponent
 {
   type: MessageStripType = 'information'
   message = ''
-  addPaddings = signal(false)
   isValidationRequired = signal(false)
   isLoaded = signal(false)
 
@@ -38,7 +37,7 @@ export class PlatformFormGeneratorCustomMessageStripComponent
       message: () => Promise<string>
       type: MessageStripType
       isValidationRequired: boolean
-      addMargins: boolean
+      addMargins: boolean // used directly in html
     }
 
     if (additionalData?.type) {
@@ -51,10 +50,6 @@ export class PlatformFormGeneratorCustomMessageStripComponent
 
     if (additionalData?.isValidationRequired) {
       this.isValidationRequired.set(additionalData.isValidationRequired)
-    }
-
-    if (additionalData?.addMargins) {
-      this.addPaddings.set(additionalData.addMargins)
     }
 
     this.isLoaded.set(true)

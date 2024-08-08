@@ -46,6 +46,7 @@ import {
   DynamicPageTitleComponent,
 } from '@fundamental-ngx/platform'
 import { PolicyService } from '../../services/policy.service'
+import { PipelineService } from '../../services/pipeline.service'
 
 type Error = {
   title: string
@@ -93,7 +94,7 @@ export class PipelineComponent implements OnInit, OnDestroy {
 
   isBuildStageOpen = signal(false)
   isBuildStageSetup = signal(false)
-  isBuildPipelineSetup = signal(false)
+  isBuildPipelineSetupAndCreated = signal(false)
 
   isStaticSecurityChecksSetup = signal(false)
   isStaticCodeChecksSetup = signal(false)
@@ -145,6 +146,7 @@ export class PipelineComponent implements OnInit, OnDestroy {
     readonly debugModeService: DebugModeService,
     private readonly sharedResourceDataService: SharedDataService,
     private readonly policyService: PolicyService,
+    private readonly pipelineService: PipelineService,
   ) {}
 
   get showOpenPipelineURL(): boolean {
@@ -185,16 +187,29 @@ export class PipelineComponent implements OnInit, OnDestroy {
         // error reporting
         this.errors.set([])
         this.openPRCount.set(0)
-        this.isBuildPipelineSetup.set(false)
+        this.isBuildPipelineSetupAndCreated.set(false)
         this.jenkinsPipelineError = false
         if (pipeline?.resourceRefs) {
-          // if true then it means that the GitHub Actions is enabled from the same component
-          this.isGithubActionsEnabledInSameComponent.set(
-            pipeline.resourceRefs.some((ref) => ref.kind === Kinds.GITHUB_ACTION),
-          )
-
           for (const ref of pipeline.resourceRefs) {
+            if (ref.kind === Kinds.GITHUB_ACTION) {
+              // GitHub Actions is enabled from the same component
+              this.isGithubActionsEnabledInSameComponent.set(true)
+            }
+
+            // Handle validation stage
+            if (ref.kind === Kinds.GITHUB_ADVANCED_SECURITY || ref.kind === Kinds.CX_ONE) {
+              this.isStaticSecurityChecksSetup.set(true)
+              this.isValidationStageOpen.set(true)
+            }
+
+            if (ref.kind === Kinds.OPEN_SOURCE_COMPLIANCE) {
+              this.isOpenSourceChecksSetup.set(true)
+              this.isValidationStageOpen.set(true)
+            }
+
+            // Handle errors
             if (!ref.error) {
+              // There is no error => skip
               continue
             }
 
@@ -205,6 +220,7 @@ export class PipelineComponent implements OnInit, OnDestroy {
             if (ref.kind === Kinds.JENKINS_PIPELINE) {
               this.jenkinsPipelineError = true
             }
+
             // Needed customized error message for GitHub Actions
             if (ref.kind === Kinds.GITHUB_ACTION) {
               this.errors.update((errors) => {
@@ -228,36 +244,7 @@ export class PipelineComponent implements OnInit, OnDestroy {
             this.localLayout = 'OneColumnStartFullScreen'
           }
 
-          // enable/disable expansion of build stage
-          const requiredKindsInBuildStage = [Kinds.GITHUB_REPOSITORY, Kinds.PIPER_CONFIG]
-          const isRequiredKindMissingInBuildStage = requiredKindsInBuildStage.some((kind) => {
-            return pipeline.resourceRefs.every((ref) => ref.kind !== kind)
-          })
-
-          const orchestrators = [Kinds.JENKINS_PIPELINE, Kinds.GITHUB_ACTIONS_WORKFLOW]
-          const isOrchestratorMissingInBuildStage = !pipeline.resourceRefs.find((ref) =>
-            orchestrators.find((value) => ref.kind === value),
-          )
-
-          if (
-            pipeline.resourceRefs.find(
-              (ref) => ref.kind === Kinds.GITHUB_ADVANCED_SECURITY || ref.kind === Kinds.CX_ONE,
-            )
-          ) {
-            this.isStaticSecurityChecksSetup.set(true)
-            this.isValidationStageOpen.set(true)
-          } else {
-            this.isStaticSecurityChecksSetup.set(false)
-          }
-
-          if (pipeline.resourceRefs.find((ref) => ref.kind === Kinds.OPEN_SOURCE_COMPLIANCE)) {
-            this.isOpenSourceChecksSetup.set(true)
-            this.isValidationStageOpen.set(true)
-          } else {
-            this.isOpenSourceChecksSetup.set(false)
-          }
-
-          if (isRequiredKindMissingInBuildStage || isOrchestratorMissingInBuildStage) {
+          if (!this.pipelineService.isBuildPipelineSetup(pipeline.resourceRefs)) {
             this.isBuildStageSetup.set(false)
             this.isBuildStageOpen.set(false)
             return
@@ -266,12 +253,12 @@ export class PipelineComponent implements OnInit, OnDestroy {
           this.isBuildStageSetup.set(true)
           this.isBuildStageOpen.set(true)
 
-          // is pipeline completely created?
-          if (pipeline.resourceRefs.some((ref) => ref.status !== ServiceStatus.CREATED)) {
+          if (!this.pipelineService.areResourcesCompletelyCreated(pipeline.resourceRefs)) {
+            // some resources are not in `created` stage
             return
           }
 
-          this.isBuildPipelineSetup.set(true)
+          this.isBuildPipelineSetupAndCreated.set(true)
           // if build setup is completed, the validation section should be open as per UX
           this.isValidationStageOpen.set(true)
         }
@@ -474,11 +461,9 @@ export class PipelineComponent implements OnInit, OnDestroy {
     }, 3000)
 
     try {
-      const githubRef = pipeline.resourceRefs.find((ref) => ref.kind == Kinds.GITHUB_REPOSITORY)
       const piperRef = pipeline.resourceRefs.find((ref) => ref.kind == Kinds.PIPER_CONFIG)
 
       await firstValueFrom(this.api.piperService.deletePiperConfig(piperRef.name))
-      await firstValueFrom(this.api.githubService.deleteGithubRepository(githubRef.name))
 
       if (orchestratorKind === Kinds.JENKINS_PIPELINE) {
         let jenkinsDeletionPolicy = DeletionPolicy.ORPHAN

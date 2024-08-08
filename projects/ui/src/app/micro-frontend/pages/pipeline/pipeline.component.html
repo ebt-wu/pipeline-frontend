@@ -71,7 +71,7 @@
                   [tracesUrl]="debugModeService.getTracesURL(pipeline.namespace)"></app-error-message>
               </div>
               <app-dismissible-message
-                *ngIf="isBuildPipelineSetup()"
+                *ngIf="isBuildPipelineSetupAndCreated()"
                 [displayLink]="true"
                 [href]="pipelineURL()"
                 [showOnlyOnce]="true"
