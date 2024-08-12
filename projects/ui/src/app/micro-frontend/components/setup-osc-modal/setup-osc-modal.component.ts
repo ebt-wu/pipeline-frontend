@@ -270,7 +270,7 @@ export class SetupOSCModalComponent implements OnInit {
           type: 'information',
           addMargins: true,
           message: () => {
-            return `To be compliant, fill this PPMS info if you already release this component to customers or are planning to do so.`
+            return `Fill this PPMS info to be compliant. This is needed if you've released or plan to release this component to customers.`
           },
         },
       },
