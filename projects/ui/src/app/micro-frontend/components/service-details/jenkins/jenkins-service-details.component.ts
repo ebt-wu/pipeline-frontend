@@ -11,7 +11,7 @@ import { PolicyService } from '../../../services/policy.service'
   selector: 'app-jenkins-service-details',
   templateUrl: './jenkins-service-details.component.html',
   standalone: true,
-  styleUrls: ['./jenkins-service-details.component.css'],
+  styleUrl: './jenkins-service-details.component.css',
   imports: [BusyIndicatorModule, CommonModule, FundamentalNgxCoreModule, AuthorizationModule, InlineHelpDirective],
 })
 export class JenkinServiceDetailsComponent implements OnInit {

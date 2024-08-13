@@ -23,7 +23,7 @@ import { ComponentSearchService } from '@dxp/ngx-core/search'
   standalone: true,
   selector: 'app-cicd-card-project-promotion',
   templateUrl: './card-project-promotion.component.html',
-  styleUrls: ['./card-project-promotion.component.css'],
+  styleUrl: './card-project-promotion.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     CardModule,

@@ -12,7 +12,7 @@ import { PolicyService } from '../../../services/policy.service'
   selector: 'app-cumulus-service-details',
   templateUrl: './cumulus-service-details.component.html',
   imports: [BusyIndicatorModule, CommonModule, FundamentalNgxCoreModule, AuthorizationModule, InlineHelpDirective],
-  styleUrls: ['./cumulus-service-details.component.css'],
+  styleUrl: './cumulus-service-details.component.css',
 })
 export class CumlusServiceDetailsComponent implements OnInit {
   constructor(

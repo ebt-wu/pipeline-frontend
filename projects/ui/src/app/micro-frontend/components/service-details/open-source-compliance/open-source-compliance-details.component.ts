@@ -19,7 +19,7 @@ import { GithubService } from '../../../services/github.service'
   standalone: true,
   selector: 'app-open-source-compliance-details',
   templateUrl: './open-source-compliance-details.component.html',
-  styleUrls: ['./open-source-compliance-details.component.css'],
+  styleUrl: './open-source-compliance-details.component.css',
   imports: [
     BusyIndicatorModule,
     FacetModule,

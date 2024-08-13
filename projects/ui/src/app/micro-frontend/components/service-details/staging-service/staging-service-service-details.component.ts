@@ -11,7 +11,7 @@ import { PolicyService } from '../../../services/policy.service'
   selector: 'app-staging-service-service-details',
   templateUrl: './staging-service-service-details.component.html',
   standalone: true,
-  styleUrls: ['./staging-service-service-details.component.css'],
+  styleUrl: './staging-service-service-details.component.css',
   imports: [BusyIndicatorModule, CommonModule, FundamentalNgxCoreModule, AuthorizationModule, InlineHelpDirective],
 })
 export class StagingServiceServiceDetailsComponent implements OnInit {

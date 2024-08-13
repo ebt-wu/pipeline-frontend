@@ -20,7 +20,7 @@ import { NgIf } from '@angular/common'
 @Component({
   selector: 'app-setup-service-list-item',
   templateUrl: './setup-service-list-item.component.html',
-  styleUrls: ['./setup-service-list-item.component.css'],
+  styleUrl: './setup-service-list-item.component.css',
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [

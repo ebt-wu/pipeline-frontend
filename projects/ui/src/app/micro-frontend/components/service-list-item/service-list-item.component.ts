@@ -21,7 +21,7 @@ export interface ServiceData {
   changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-service-list-item',
   templateUrl: './service-list-item.component.html',
-  styleUrls: ['./service-list-item.component.css'],
+  styleUrl: './service-list-item.component.css',
   standalone: true,
   imports: [CommonModule, FundamentalNgxCoreModule, RouterModule, IconModule, AuthorizationModule],
 })
@@ -34,7 +34,7 @@ export class ServiceListItemComponent {
   kindName = KindName
   kindCategory = KindCategory
   serviceStatus = ServiceStatus
-  @Output() openDetailsEvent = new EventEmitter<ServiceData>()
+  @Output() readonly openDetailsEvent = new EventEmitter<ServiceData>()
 
   constructor(
     readonly debugModeService: DebugModeService,

@@ -19,7 +19,7 @@ import { PolicyService } from '../../services/policy.service'
   changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-home-page',
   templateUrl: './home-page.component.html',
-  styleUrls: ['./home-page.component.css'],
+  styleUrl: './home-page.component.css',
   standalone: true,
   imports: [
     AuthorizationModule,
@@ -52,7 +52,7 @@ export class HomePageComponent implements OnInit {
     private readonly policyService: PolicyService,
   ) {}
 
-  async ngOnInit(): Promise<void> {
+  async ngOnInit() {
     this.loading.set(true)
     await this.initializePipeline().finally(() => {
       this.loading.set(false)

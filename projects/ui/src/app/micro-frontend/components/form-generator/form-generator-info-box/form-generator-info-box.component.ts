@@ -15,7 +15,7 @@ import {
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule],
   schemas: [NO_ERRORS_SCHEMA],
-  styleUrls: ['./form-generator-info-box.component.css'],
+  styleUrl: './form-generator-info-box.component.css',
 })
 export class PlatformFormGeneratorCustomInfoBoxComponent extends BaseDynamicFormGeneratorControl implements OnInit {
   instructions: Promise<string>

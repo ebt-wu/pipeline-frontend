@@ -35,7 +35,7 @@ const dateFormatter = new Intl.DateTimeFormat('en', { year: 'numeric', month: 's
   selector: 'app-service-details-skeleton',
   templateUrl: './service-details-skeleton.component.html',
   standalone: true,
-  styleUrls: ['./service-details-skeleton.component.css'],
+  styleUrl: './service-details-skeleton.component.css',
   imports: [
     CommonModule,
     FundamentalNgxCoreModule,
@@ -56,7 +56,7 @@ const dateFormatter = new Intl.DateTimeFormat('en', { year: 'numeric', month: 's
 export class ServiceDetailsSkeletonComponent implements OnInit {
   @Input() activeTile: string
   @Input() localLayout: FlexibleColumnLayout
-  @Output() localLayoutEvent: EventEmitter<FlexibleColumnLayout> = new EventEmitter<FlexibleColumnLayout>()
+  @Output() readonly localLayoutEvent: EventEmitter<FlexibleColumnLayout> = new EventEmitter<FlexibleColumnLayout>()
 
   // maps
   kindName = KindName

@@ -12,7 +12,7 @@ import { PolicyService } from '../../../services/policy.service'
   templateUrl: './github-service-details.component.html',
   standalone: true,
   imports: [BusyIndicatorComponent, CommonModule, FundamentalNgxCoreModule, AuthorizationModule, InlineHelpDirective],
-  styleUrls: ['./github-service-details.component.css'],
+  styleUrl: './github-service-details.component.css',
 })
 export class GithubServiceDetailsComponent implements OnInit {
   constructor(

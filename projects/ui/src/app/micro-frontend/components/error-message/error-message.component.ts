@@ -11,7 +11,7 @@ import { AuthorizationModule } from '@dxp/ngx-core/authorization'
   standalone: true,
   selector: 'app-error-message',
   templateUrl: './error-message.component.html',
-  styleUrls: ['./error-message.component.css'],
+  styleUrl: './error-message.component.css',
   imports: [CommonModule, FundamentalNgxCoreModule, AuthorizationModule],
 })
 export class ErrorMessageComponent implements OnInit {
@@ -30,7 +30,7 @@ export class ErrorMessageComponent implements OnInit {
 
   troubleshootURL = signal('')
 
-  @Output() byDismiss = new EventEmitter()
+  @Output() readonly byDismiss = new EventEmitter()
 
   ngOnInit() {
     // check messages for error codes to link to troubleshooting instructions instead of offering the option to create a ticket

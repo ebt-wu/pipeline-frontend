@@ -9,7 +9,7 @@ import { FormModule, FundamentalNgxCoreModule, MessageBoxRef } from '@fundamenta
   standalone: true,
   selector: 'app-delete-build-modal',
   templateUrl: './delete-build-modal.component.html',
-  styleUrls: ['./delete-build-modal.component.css'],
+  styleUrl: './delete-build-modal.component.css',
   imports: [CommonModule, FundamentalNgxCoreModule, FormModule, FormsModule],
 })
 export class DeleteBuildModalComponent {

@@ -59,7 +59,7 @@ type Error = {
   selector: 'app-pipeline',
   templateUrl: './pipeline.component.html',
   standalone: true,
-  styleUrls: ['./pipeline.component.css'],
+  styleUrl: './pipeline.component.css',
   imports: [
     CommonModule,
     FundamentalNgxCoreModule,
@@ -153,7 +153,7 @@ export class PipelineComponent implements OnInit, OnDestroy {
     return this.isBuildStageSetup() && !this.pendingDeletion() && !this.jenkinsPipelineError
   }
 
-  async ngOnInit(): Promise<void> {
+  async ngOnInit() {
     await this.getExtensionClasses()
 
     this.githubMetadata = await this.api.githubService.getGithubMetadata()

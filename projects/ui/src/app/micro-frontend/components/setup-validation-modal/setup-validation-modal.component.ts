@@ -28,7 +28,7 @@ import { PlatformFormGeneratorCustomMessageStripComponent } from '../form-genera
   standalone: true,
   selector: 'app-setup-validation',
   templateUrl: './setup-validation-modal.component.html',
-  styleUrls: ['./setup-validation-modal.component.css'],
+  styleUrl: './setup-validation-modal.component.css',
   imports: [
     CommonModule,
     FundamentalNgxCoreModule,

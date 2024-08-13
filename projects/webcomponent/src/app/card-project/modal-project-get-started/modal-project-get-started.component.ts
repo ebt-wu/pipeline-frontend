@@ -14,7 +14,7 @@ interface DialogData {
   standalone: true,
   selector: 'app-cicd-modal-project-get-started',
   templateUrl: './modal-project-get-started.component.html',
-  styleUrls: ['./modal-project-get-started.component.css'],
+  styleUrl: './modal-project-get-started.component.css',
   imports: [CardModule, DialogModule, CdkScrollable, ScrollbarDirective],
 })
 export class ModalProjectGetStartedComponent {

@@ -30,7 +30,7 @@ import { PipelineService } from '../../services/pipeline.service'
   standalone: true,
   selector: 'app-setup-osc',
   templateUrl: './setup-osc-modal.component.html',
-  styleUrls: ['./setup-osc-modal.component.css'],
+  styleUrl: './setup-osc-modal.component.css',
   imports: [
     CommonModule,
     FundamentalNgxCoreModule,

@@ -9,7 +9,7 @@ import { AuthorizationModule } from '@dxp/ngx-core/authorization'
   changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-upgrade-banner',
   templateUrl: './upgrade-banner.component.html',
-  styleUrls: ['./upgrade-banner.component.css'],
+  styleUrl: './upgrade-banner.component.css',
   standalone: true,
   imports: [CommonModule, FundamentalNgxCoreModule, AuthorizationModule],
 })

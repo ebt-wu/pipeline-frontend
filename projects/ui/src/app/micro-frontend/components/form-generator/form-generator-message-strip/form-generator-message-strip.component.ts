@@ -16,7 +16,7 @@ import {
   viewProviders: [dynamicFormFieldProvider, dynamicFormGroupChildProvider],
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule, MessageStripModule, InputComponent],
-  styleUrls: ['./form-generator-message-strip.component.css'],
+  styleUrl: './form-generator-message-strip.component.css',
 })
 export class PlatformFormGeneratorCustomMessageStripComponent
   extends BaseDynamicFormGeneratorControl

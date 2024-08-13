@@ -12,7 +12,7 @@ import { AuthorizationModule } from '@dxp/ngx-core/authorization'
   standalone: true,
   selector: 'app-pipeline-debug',
   templateUrl: './pipeline-debug.component.html',
-  styleUrls: ['./pipeline-debug.component.css'],
+  styleUrl: './pipeline-debug.component.css',
   imports: [CommonModule, FundamentalNgxCoreModule, FormattedTextModule, AuthorizationModule],
 })
 export class PipelineDebugModalComponent implements OnInit {

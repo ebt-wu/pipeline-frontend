@@ -14,7 +14,7 @@ import { PolicyService } from '../../../services/policy.service'
   templateUrl: './github-actions-service-details.component.html',
   standalone: true,
   imports: [CommonModule, FundamentalNgxCoreModule, ErrorMessageComponent, AuthorizationModule, InlineHelpDirective],
-  styleUrls: ['./github-actions-service-details.component.css'],
+  styleUrl: './github-actions-service-details.component.css',
 })
 export class GithubActionsServiceDetailsComponent implements OnInit {
   constructor(
@@ -42,7 +42,7 @@ export class GithubActionsServiceDetailsComponent implements OnInit {
   showActionsGetStartedWarning = signal(false)
   canUserEditCredentials = false
 
-  async ngOnInit(): Promise<void> {
+  async ngOnInit() {
     this.githubOrganizationUrl = `${this.serviceDetails.githubInstance}/${this.serviceDetails.githubOrganization}`
     this.githubActionsRunnerGroupUrl = `${this.serviceDetails.githubInstance}/organizations/${this.serviceDetails.githubOrganization}/settings/actions/runner-groups`
 

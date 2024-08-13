@@ -13,7 +13,7 @@ import { DxpContext } from '@dxp/ngx-core/common'
   standalone: true,
   selector: 'app-dismissible-message',
   templateUrl: './dismissible-message.component.html',
-  styleUrls: ['./dismissible-message.component.css'],
+  styleUrl: './dismissible-message.component.css',
   imports: [CommonModule, FundamentalNgxCoreModule, LinkModule],
 })
 export class DismissibleMessageComponent implements OnInit {
@@ -29,7 +29,7 @@ export class DismissibleMessageComponent implements OnInit {
   @Input() linkText? = ''
   @Input() href? = ''
 
-  @Output() byDismiss = new EventEmitter()
+  @Output() readonly byDismiss = new EventEmitter()
 
   displayMessage = signal(false)
 

@@ -34,7 +34,7 @@ import { PipelineService } from '../../services/pipeline.service'
   standalone: true,
   selector: 'app-setup-build',
   templateUrl: './setup-build.component.html',
-  styleUrls: ['./setup-build.component.css'],
+  styleUrl: './setup-build.component.css',
   imports: [
     CommonModule,
     FundamentalNgxCoreModule,

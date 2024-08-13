@@ -8,7 +8,7 @@ import { GetPiperConfigQuery } from '@generated/graphql'
   selector: 'app-piper-service-details',
   templateUrl: './piper-service-details.component.html',
   standalone: true,
-  styleUrls: ['./piper-service-details.component.css'],
+  styleUrl: './piper-service-details.component.css',
   imports: [CommonModule, FundamentalNgxCoreModule],
 })
 export class PiperServiceDetailsComponent {

@@ -23,7 +23,7 @@ import { PolicyService } from '../../../services/policy.service'
   standalone: true,
   selector: 'app-static-security-check-details',
   templateUrl: './static-security-check-details.component.html',
-  styleUrls: ['./static-security-check-details.component.css'],
+  styleUrl: './static-security-check-details.component.css',
   imports: [
     BusyIndicatorModule,
     FacetModule,

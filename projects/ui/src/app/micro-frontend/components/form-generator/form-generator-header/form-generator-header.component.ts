@@ -15,7 +15,7 @@ import { ReactiveFormsModule } from '@angular/forms'
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule],
   schemas: [NO_ERRORS_SCHEMA],
-  styleUrls: ['./form-generator-header.component.css'],
+  styleUrl: './form-generator-header.component.css',
 })
 export class PlatformFormGeneratorCustomHeaderElementComponent
   extends BaseDynamicFormGeneratorControl

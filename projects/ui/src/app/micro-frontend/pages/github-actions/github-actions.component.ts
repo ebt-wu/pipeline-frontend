@@ -26,7 +26,7 @@ import { PlatformFormGeneratorCustomMessageStripComponent } from '../../componen
   standalone: true,
   selector: 'app-github-actions',
   templateUrl: './github-actions.component.html',
-  styleUrls: ['./github-actions.component.css'],
+  styleUrl: './github-actions.component.css',
   imports: [
     FormGeneratorComponent,
     NgIf,

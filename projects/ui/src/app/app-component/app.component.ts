@@ -8,7 +8,7 @@ import { RouterOutlet } from '@angular/router'
   changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-root',
   templateUrl: './app.component.html',
-  styleUrls: ['./app.component.css'],
+  styleUrl: './app.component.css',
   standalone: true,
   imports: [RouterOutlet],
 })

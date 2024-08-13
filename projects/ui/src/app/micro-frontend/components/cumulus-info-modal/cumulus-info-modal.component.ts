@@ -16,7 +16,7 @@ import { PolicyService } from '../../services/policy.service'
 @Component({
   selector: 'app-cumulus-info-modal',
   templateUrl: './cumulus-info-modal.component.html',
-  styleUrls: ['./cumulus-info-modal.component.css'],
+  styleUrl: './cumulus-info-modal.component.css',
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [NgIf, FundamentalNgxCoreModule, InlineHelpModule, PlatformButtonModule, AuthorizationModule],
