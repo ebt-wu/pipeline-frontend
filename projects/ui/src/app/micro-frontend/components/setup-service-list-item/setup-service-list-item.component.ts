@@ -57,7 +57,7 @@ export class SetupServiceListItemComponent {
         await this.luigiClient
           .linkManager()
           .fromVirtualTreeRoot()
-          .openAsModal('setup-osc', { title: 'Add Open Source Checks', width: '600px', height: '780px' })
+          .openAsModal('setup-osc', { title: 'Add Open Source Checks', width: '600px', height: '410px' })
     }
   }
 }

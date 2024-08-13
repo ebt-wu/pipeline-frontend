@@ -31,6 +31,17 @@ enum OSCSetupSteps {
   OSC_PLATFORM_FORM = 'OSC_PLATFORM_FORM',
 }
 
+const ModalSettingsBySetupStep = {
+  [OSCSetupSteps.PREREQUISITES_INFO]: {
+    height: '410px',
+    width: '600px',
+  },
+  [OSCSetupSteps.OSC_PLATFORM_FORM]: {
+    height: '780px',
+    width: '600px',
+  },
+}
+
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: true,
@@ -279,7 +290,7 @@ export class SetupOSCModalComponent implements OnInit {
     const isBuildPipelineSetup = this.pipelineService.isBuildPipelineSetup(resourceRefs)
 
     if (isBuildPipelineSetup) {
-      this.formStep = OSCSetupSteps.OSC_PLATFORM_FORM
+      this.moveToOscPlatformFormStep()
     }
 
     const extensionClasses = await firstValueFrom(this.extensionService.getExtensionClassesForScopesQuery())
@@ -364,6 +375,7 @@ export class SetupOSCModalComponent implements OnInit {
 
   moveToOscPlatformFormStep() {
     this.formStep = OSCSetupSteps.OSC_PLATFORM_FORM
+    this.luigiClient.linkManager().updateModalSettings(ModalSettingsBySetupStep[OSCSetupSteps.OSC_PLATFORM_FORM])
   }
 
   async openSetupBuildModal() {
