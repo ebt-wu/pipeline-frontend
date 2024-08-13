@@ -2,7 +2,7 @@ import { CommonModule } from '@angular/common'
 import { ChangeDetectionStrategy, Component, OnInit, signal, ViewChild } from '@angular/core'
 import { FormsModule, ReactiveFormsModule, Validators } from '@angular/forms'
 import { DxpLuigiContextService, LuigiClient } from '@dxp/ngx-core/luigi'
-import { FormModule, FundamentalNgxCoreModule } from '@fundamental-ngx/core'
+import { FormModule, FundamentalNgxCoreModule, IllustratedMessageModule, SvgConfig } from '@fundamental-ngx/core'
 import {
   DynamicFormItem,
   DynamicFormValue,
@@ -24,6 +24,12 @@ import { ExtensionService } from '../../services/extension.service'
 import { KindExtensionName } from '@constants'
 import { ExtensionClass } from '../../services/extension.types'
 import { PipelineService } from '../../services/pipeline.service'
+import { toolsSvg } from 'projects/ui/src/assets/ts-svg/tools'
+
+enum OSCSetupSteps {
+  PREREQUISITES_INFO = 'PREREQUISITES_INFO',
+  OSC_PLATFORM_FORM = 'OSC_PLATFORM_FORM',
+}
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -40,6 +46,7 @@ import { PipelineService } from '../../services/pipeline.service'
     FundamentalNgxPlatformModule,
     ErrorMessageComponent,
     PlatformMessagePopoverModule,
+    IllustratedMessageModule,
   ],
 })
 export class SetupOSCModalComponent implements OnInit {
@@ -51,10 +58,17 @@ export class SetupOSCModalComponent implements OnInit {
 
   formCreated = false
   formValue: DynamicFormValue
+  formStep: OSCSetupSteps = OSCSetupSteps.PREREQUISITES_INFO
 
   isJiraIntanceConnected = true
   jiraProjects = []
-  isBuildPipelineSetupAndCreated = false
+
+  prerequisitesStepIconConfig: SvgConfig = {
+    spot: {
+      file: toolsSvg,
+      id: 'tools',
+    },
+  }
 
   oscExtensionClass: ExtensionClass = {
     name: '',
@@ -65,42 +79,9 @@ export class SetupOSCModalComponent implements OnInit {
 
   questions: DynamicFormItem[] = [
     {
-      type: 'message-strip',
-      name: 'oscPrerequisitesWarning',
-      message: '',
-      when: () => !this.isBuildPipelineSetupAndCreated,
-      guiOptions: {
-        additionalData: {
-          type: 'information',
-          message: async () => {
-            const context = await this.luigiService.getContextAsync()
-            const linkToCompoent = `${context.frameBaseUrl}/projects/${context.projectId}/components/${context.componentId}`
-            const buildModalUrlParam = `%2Fprojects%2F${context.projectId}%2Fcomponents%2F${context.componentId}%2Fpipeline-ui%2Fsetup&modalParams={&quot;size&quot;%3A&quot;s&quot;%2C&quot;title&quot;%3A&quot;Set up Build&quot;}`
-            return `
-              For the Open-Source Compliance Service to be correctly enabled,<br/>
-               please make sure you have fulfilled the necessary <a href="${this.OSC_PREREQUISITES_LINK}" target="_blank" rel="noopener noreferrer">prerequisites</a>.<br/><br/>
-              Alternatively, you can simply <a href="${linkToCompoent}/pipeline-ui?modal=${buildModalUrlParam}" target="_blank" rel="noopener noreferrer">set up a Build Pipeline</a> for this component.`
-          },
-        },
-      },
-    },
-    {
       type: 'header',
       name: 'platformSelectionHeader',
       message: '',
-      when: () => this.isBuildPipelineSetupAndCreated,
-      guiOptions: {
-        additionalData: {
-          header: 'Select where to report issues',
-          ignoreTopMargin: true,
-        },
-      },
-    },
-    {
-      type: 'header',
-      name: 'platformSelectionHeaderWithTopMargin',
-      message: '',
-      when: () => !this.isBuildPipelineSetupAndCreated,
       guiOptions: {
         additionalData: {
           header: 'Select where to report issues',
@@ -295,7 +276,11 @@ export class SetupOSCModalComponent implements OnInit {
     this.watch$ = this.pipelineService.watchPipeline().pipe(debounceTime(50))
 
     const resourceRefs = (await firstValueFrom(this.watch$)).resourceRefs
-    this.isBuildPipelineSetupAndCreated = this.pipelineService.isBuildPipelineSetupAndCreated(resourceRefs)
+    const isBuildPipelineSetup = this.pipelineService.isBuildPipelineSetup(resourceRefs)
+
+    if (isBuildPipelineSetup) {
+      this.formStep = OSCSetupSteps.OSC_PLATFORM_FORM
+    }
 
     const extensionClasses = await firstValueFrom(this.extensionService.getExtensionClassesForScopesQuery())
     this.oscExtensionClass = extensionClasses.find(
@@ -367,5 +352,25 @@ export class SetupOSCModalComponent implements OnInit {
       return this.extensionService.getIcon(this.oscExtensionClass)
     }
     return ''
+  }
+
+  isPrerequisitesInfoStep(): boolean {
+    return this.formStep === OSCSetupSteps.PREREQUISITES_INFO
+  }
+
+  isOscPlatformFormStep(): boolean {
+    return this.formStep === OSCSetupSteps.OSC_PLATFORM_FORM
+  }
+
+  moveToOscPlatformFormStep() {
+    this.formStep = OSCSetupSteps.OSC_PLATFORM_FORM
+  }
+
+  async openSetupBuildModal() {
+    const context = await this.luigiService.getContextAsync()
+    const linkToCompoent = `${context.frameBaseUrl}/projects/${context.projectId}/components/${context.componentId}`
+    const buildModalUrlParam = `%2Fprojects%2F${context.projectId}%2Fcomponents%2F${context.componentId}%2Fpipeline-ui%2Fsetup&modalParams={"size":"s","title":"Set up Build"}`
+    const setupBuildModalLink = `${linkToCompoent}/pipeline-ui?modal=${buildModalUrlParam}`
+    window.open(setupBuildModalLink, '_blank', 'noopoener, noreferrer')
   }
 }

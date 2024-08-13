@@ -2,6 +2,23 @@
   margin: 1rem 2rem;
 }
 
+.osc-prerequisites {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.prerequisites-subtext {
+  display: flex;
+  flex-direction: row;
+}
+
+/* Override default svg width (128px) to avoid cropping */
+::ng-deep .prerequisites-svg > svg {
+  width: 151px;
+}
+
 .extension-info-container {
   margin: 0 1rem;
   padding: 1rem;

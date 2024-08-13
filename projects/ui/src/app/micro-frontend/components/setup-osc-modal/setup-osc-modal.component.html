@@ -1,13 +1,40 @@
 <div *ngIf="!loading()">
-  <div class="setup-osc-margin">
+  <!-- Display errors -->
+  <div class="setup-osc-margin" *ngIf="errorMessage()">
     <app-error-message
       title="OSC setup could not be completed"
       [message]="errorMessage()"
       (byDismiss)="dismissErrorMessage()"
       *ngIf="errorMessage()"></app-error-message>
-    <div class="busy-indicator" *ngIf="loading()">
-      <fd-busy-indicator [loading]="true" ariaLabel="loading" title="Please Wait"></fd-busy-indicator>
+  </div>
+  <!-- Prerequisites info step -->
+  <div class="setup-osc-margin osc-prerequisites" *ngIf="isPrerequisitesInfoStep()">
+    <figure class="prerequisites-svg" fd-illustrated-message type="spot" [svgConfig]="prerequisitesStepIconConfig">
+      <figcaption fd-illustrated-message-figcaption id="spot-description">
+        <h3 fd-illustrated-message-title>Have a build pipeline?</h3>
+        <p fd-illustrated-message-text>
+          To add Open Source Checks, you need a build pipeline.
+          <br />
+          Set up one first if you don’t have one.
+        </p>
+      </figcaption>
+      <fd-illustrated-message-actions>
+        <button fd-button label="Set Up Build" (click)="openSetupBuildModal()"></button>
+      </fd-illustrated-message-actions>
+    </figure>
+    <div class="prerequisites-subtext">
+      <fd-text text="Own build pipeline? " [whitespaces]="true"></fd-text>
+      <a
+        fd-link
+        href="https://pages.github.tools.sap/hyperspace/academy/services/osc/prerequisites/"
+        target="_blank"
+        rel="noopener noreferrer">
+        Check the pre-requisites
+      </a>
     </div>
+  </div>
+  <!-- OSC platform form step -->
+  <div class="setup-osc-margin" *ngIf="isOscPlatformFormStep()">
     <div *ngIf="oscExtensionClass.name" class="extension-info-container">
       <div class="extension-info">
         <fd-avatar
@@ -43,10 +70,7 @@
       </ng-template>
     </div>
     <div class="form-margins">
-      <fdp-message-popover-form-wrapper
-        #formGeneratorWrapper
-        [forms]="formGenerator?.formGroup"
-        [formFields]="formGenerator?.formFields">
+      <fdp-message-popover-form-wrapper [forms]="formGenerator?.formGroup" [formFields]="formGenerator?.formFields">
         <fdp-form-generator
           *ngIf="!loading()"
           [formItems]="questions"
@@ -56,25 +80,29 @@
     </div>
   </div>
   <div fd-bar barDesign="footer" class="actions-footer">
-    <div fd-bar-left>
-      <fdp-message-popover id="message-popover" [wrapper]="formGeneratorWrapper"></fdp-message-popover>
-    </div>
     <div fd-bar-right class="footer-buttons-gap">
+      <!-- "Continue" button, rendered on prerequisites info step -->
       <button
         fd-button
-        *ngIf="formCreated"
+        *ngIf="isPrerequisitesInfoStep()"
+        (click)="moveToOscPlatformFormStep()"
+        [disabled]="loading()"
+        type="submit"
+        fdType="emphasized"
+        label="Continue"></button>
+      <!-- "Submit" button, rendered on osc platform form step -->
+      <button
+        fd-button
+        *ngIf="formCreated && isOscPlatformFormStep()"
         (click)="submitForm()"
         [disabled]="loading()"
         type="submit"
         fdType="emphasized"
         label="Add"></button>
-      <button
-        fd-button
-        *ngIf="formCreated"
-        fdType="transparent"
-        [disabled]="loading()"
-        label="Cancel"
-        (click)="cancel()"></button>
+      <button fd-button fdType="transparent" [disabled]="loading()" label="Cancel" (click)="cancel()"></button>
     </div>
   </div>
+</div>
+<div class="busy-indicator" *ngIf="loading()">
+  <fd-busy-indicator [loading]="true" ariaLabel="loading" title="Please Wait"></fd-busy-indicator>
 </div>
