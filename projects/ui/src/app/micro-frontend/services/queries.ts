@@ -398,7 +398,6 @@ export const GET_OPEN_SOURCE_COMPLIANCE = gql`
       cumulusPipelineId
       isActive
       ghRepoRef
-      productiveBranch
       ppmsScv
       jiraRef
       creationTimestamp

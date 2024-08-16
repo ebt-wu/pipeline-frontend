@@ -319,7 +319,6 @@ export type OpenSourceComplianceGetResponse = {
   jiraRef?: Maybe<Scalars['String']['output']>;
   oscResourceName: Scalars['String']['output'];
   ppmsScv?: Maybe<Scalars['String']['output']>;
-  productiveBranch?: Maybe<Scalars['String']['output']>;
 };
 
 export enum Orchestrators {
@@ -763,7 +762,7 @@ export type GetOscRegistrationQueryVariables = Exact<{
 }>;
 
 
-export type GetOscRegistrationQuery = { __typename?: 'Query', getOscRegistration?: { __typename?: 'OpenSourceComplianceGetResponse', oscResourceName: string, cumulusPipelineId: string, isActive?: boolean | null, ghRepoRef?: string | null, productiveBranch?: string | null, ppmsScv?: string | null, jiraRef?: string | null, creationTimestamp?: string | null } | null };
+export type GetOscRegistrationQuery = { __typename?: 'Query', getOscRegistration?: { __typename?: 'OpenSourceComplianceGetResponse', oscResourceName: string, cumulusPipelineId: string, isActive?: boolean | null, ghRepoRef?: string | null, ppmsScv?: string | null, jiraRef?: string | null, creationTimestamp?: string | null } | null };
 
 export type DeleteOscRegistrationMutationVariables = Exact<{
   projectId: Scalars['String']['input'];
