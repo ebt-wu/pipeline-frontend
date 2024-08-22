@@ -1,5 +1,5 @@
 .setup-osc-margin {
-  margin: 1rem 2rem;
+  margin: 1rem 0;
 }
 
 .osc-prerequisites {
@@ -50,11 +50,6 @@
 .busy-indicator {
   text-align: center;
   margin-top: 5rem;
-}
-
-.form-margins {
-  margin-bottom: 4rem;
-  max-width: 40rem;
 }
 
 .actions-footer {

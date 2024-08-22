@@ -2,12 +2,12 @@ import { ChangeDetectionStrategy, Component, Input } from '@angular/core'
 import { AuthorizationModule } from '@dxp/ngx-core/authorization'
 import {
   BusyIndicatorModule,
-  ButtonModule,
+  ButtonComponent,
   IconModule,
   InfoLabelModule,
   InlineHelpModule,
   ListModule,
-  ObjectStatusModule,
+  ObjectStatusComponent,
 } from '@fundamental-ngx/core'
 import { Categories } from '@enums'
 import { LuigiClient } from '@dxp/ngx-core/luigi'
@@ -27,9 +27,9 @@ import { NgIf } from '@angular/common'
     AuthorizationModule,
     BusyIndicatorModule,
     ListModule,
-    ButtonModule,
+    ButtonComponent,
     NgIf,
-    ObjectStatusModule,
+    ObjectStatusComponent,
     InfoLabelModule,
     IconModule,
     InlineHelpModule,

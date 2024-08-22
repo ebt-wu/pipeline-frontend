@@ -116,6 +116,19 @@ export class SetupOSCModalComponent implements OnInit {
       ],
       validators: [Validators.required],
     },
+    {
+      // a hacky way of adding a padding to 'platform' radio-buttons above
+      type: 'header',
+      name: 'platformBottomPadding',
+      message: '',
+      guiOptions: {
+        additionalData: {
+          // 'header' component has top and bottom margins, 1rem (16px) each.
+          // Ignore the top maring to set height at 1rem (16px)
+          ignoreTopMargin: true,
+        },
+      },
+    },
     // Jira - Instance
     {
       type: 'header',
@@ -244,7 +257,6 @@ export class SetupOSCModalComponent implements OnInit {
       guiOptions: {
         additionalData: {
           header: 'Track compliance',
-          ignoreTopMargin: false,
         },
       },
     },
@@ -252,6 +264,7 @@ export class SetupOSCModalComponent implements OnInit {
       type: 'input',
       name: 'ppmsSoftwareComponentVersion',
       message: 'PPMS Software Component Version',
+      placeholder: ' ',
     },
     {
       type: 'message-strip',
