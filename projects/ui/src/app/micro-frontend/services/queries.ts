@@ -410,3 +410,13 @@ export const DELETE_OPEN_SOURCE_COMPLIANCE = gql`
     deleteOscRegistration(projectId: $projectId, componentId: $componentId)
   }
 `
+
+export const GET_JIRA_PROJECTS = gql`
+  query GetJiraProjects($projectId: String!) {
+    getJiraProjects(projectId: $projectId) {
+      projectKey
+      jiraInstanceUrl
+      resourceName
+    }
+  }
+`

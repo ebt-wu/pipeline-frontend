@@ -78,5 +78,5 @@ export enum OSCPlatforms {
 
 export enum JiraProjectTypes {
   EXISTING = 'Use Existing',
-  NEW = 'Enter New',
+  NEW = 'Add New',
 }

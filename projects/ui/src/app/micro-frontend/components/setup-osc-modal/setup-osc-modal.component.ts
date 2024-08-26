@@ -11,7 +11,7 @@ import {
   FundamentalNgxPlatformModule,
 } from '@fundamental-ngx/platform'
 import { PlatformMessagePopoverModule } from '@fundamental-ngx/platform/message-popover'
-import { EntityContext, SetupOSCFormValue, Pipeline } from '@types'
+import { EntityContext, Pipeline, SetupOSCFormValue } from '@types'
 import { JiraProjectTypes, Kinds, OSCPlatforms } from '@enums'
 import { debounceTime, firstValueFrom, Observable } from 'rxjs'
 import { ErrorMessageComponent } from '../error-message/error-message.component'
@@ -25,6 +25,8 @@ import { KindExtensionName } from '@constants'
 import { ExtensionClass } from '../../services/extension.types'
 import { PipelineService } from '../../services/pipeline.service'
 import { toolsSvg } from 'projects/ui/src/assets/ts-svg/tools'
+import { JiraService } from '../../services/jira.service'
+import { PlatformFormGeneratorCustomInfoBoxComponent } from '../form-generator/form-generator-info-box/form-generator-info-box.component'
 
 enum OSCSetupSteps {
   PREREQUISITES_INFO = 'PREREQUISITES_INFO',
@@ -71,8 +73,7 @@ export class SetupOSCModalComponent implements OnInit {
   formValue: DynamicFormValue
   formStep: OSCSetupSteps = OSCSetupSteps.PREREQUISITES_INFO
 
-  isJiraIntanceConnected = true
-  jiraProjects = []
+  isJiraInstanceConnected = true
 
   prerequisitesStepIconConfig: SvgConfig = {
     spot: {
@@ -103,7 +104,7 @@ export class SetupOSCModalComponent implements OnInit {
       type: 'radio',
       name: 'platform',
       message: '',
-      default: OSCPlatforms.GITHUB,
+      default: OSCPlatforms.JIRA,
       choices: [
         {
           label: 'Jira (recommended)',
@@ -141,7 +142,7 @@ export class SetupOSCModalComponent implements OnInit {
         },
       },
       when: (formValue: SetupOSCFormValue) => {
-        return formValue.platform === OSCPlatforms.JIRA && !this.isJiraIntanceConnected
+        return formValue.platform === OSCPlatforms.JIRA && !this.isJiraInstanceConnected
       },
     },
     {
@@ -150,7 +151,7 @@ export class SetupOSCModalComponent implements OnInit {
       message: 'Instance',
       default: () => '',
       when: (formValue: SetupOSCFormValue) => {
-        return formValue.platform === OSCPlatforms.JIRA && !this.isJiraIntanceConnected
+        return formValue.platform === OSCPlatforms.JIRA && !this.isJiraInstanceConnected
       },
       validators: [Validators.required],
     },
@@ -160,7 +161,7 @@ export class SetupOSCModalComponent implements OnInit {
       message: 'Project Key',
       default: () => '',
       when: (formValue: SetupOSCFormValue) => {
-        return formValue.platform === OSCPlatforms.JIRA && !this.isJiraIntanceConnected
+        return formValue.platform === OSCPlatforms.JIRA && !this.isJiraInstanceConnected
       },
       validators: [Validators.required],
     },
@@ -176,7 +177,7 @@ export class SetupOSCModalComponent implements OnInit {
         },
       },
       when: (formValue: SetupOSCFormValue) => {
-        return formValue.platform === OSCPlatforms.JIRA && this.isJiraIntanceConnected
+        return formValue.platform === OSCPlatforms.JIRA && this.isJiraInstanceConnected
       },
     },
     {
@@ -188,7 +189,7 @@ export class SetupOSCModalComponent implements OnInit {
       },
       choices: [JiraProjectTypes.EXISTING, JiraProjectTypes.NEW],
       when: (formValue: SetupOSCFormValue) => {
-        return formValue.platform === OSCPlatforms.JIRA && this.isJiraIntanceConnected && this.jiraProjects.length > 0
+        return formValue.platform === OSCPlatforms.JIRA && this.isJiraInstanceConnected
       },
       guiOptions: {
         inline: true,
@@ -196,42 +197,49 @@ export class SetupOSCModalComponent implements OnInit {
       validators: [Validators.required],
     },
     {
-      type: 'select',
-      name: 'jiraExistingProjectKey',
-      message: 'Project Key',
-      default: 1,
-      choices: [
-        {
-          label: 'Project #1',
-          value: 1,
-        },
-        {
-          label: 'Project #2',
-          value: 2,
-        },
-      ],
+      type: 'info',
+      name: 'jiraAddNewProjectInstructions',
+      message: '',
       when: (formValue: SetupOSCFormValue) => {
-        return (
-          formValue.platform === OSCPlatforms.JIRA &&
-          this.isJiraIntanceConnected &&
-          formValue.jiraProjectType == JiraProjectTypes.EXISTING
-        )
+        return formValue.platform === OSCPlatforms.JIRA && formValue.jiraProjectType === JiraProjectTypes.NEW
       },
-      validators: [Validators.required],
+      guiOptions: {
+        additionalData: {
+          header: 'Instructions',
+          instructions: async () => {
+            const context = await this.luigiService.getContextAsync()
+            return `<ol>   
+         
+              <li>Install the Hyperspace Portal Jira extension from the              
+              <a href='https://portal.d1.hyperspace.tools.sap/projects/${context.projectId}/catalog?modal=%2Fprojects%2F${context.projectId}%2Finstall-extensions&modalParams=%7B%22title%22%3A%22Install%20Extensions%22%2C%22size%22%3A%22fullscreen%22%7D', target="_blank"> 
+                catalog.</a>
+              </li>
+              
+              <li><a href='https://portal.d1.hyperspace.tools.sap/projects/jenkins-tests-ghas/catalog?~extClassName=jira&~layout=TwoColumnsMidExpanded&modal=%2Fprojects%2Fjenkins-tests-ghas%2Fcatalog%2Fcreate-res%2Fglobal%2Fjira%2Faccount%2Fjira-tools%3F~type%3Djira-tools&modalParams=%7B%22title%22%3A%22Create%20an%20account%22%2C%22size%22%3A%22s%22%7D', target="_blank"> 
+                 Create an account
+              </a> and fill in your Jira project configuration details.
+              </li>
+
+             <li> Choose <i>Use Existing</i> and select your project key.</li>
+          </ol>`
+          },
+        },
+      },
     },
     {
-      type: 'input',
-      name: 'jiraNewProjectKey',
-      message: 'Project Key',
-      default: () => '',
+      type: 'select',
+      name: 'jiraExistingProjectKey',
+      message: 'Select project key',
+      choices: async () => {
+        return (await firstValueFrom(this.jiraService.getJiraItems())).map((jiraProject) => jiraProject.projectKey)
+      },
       when: (formValue: SetupOSCFormValue) => {
         return (
           formValue.platform === OSCPlatforms.JIRA &&
-          this.isJiraIntanceConnected &&
-          formValue.jiraProjectType == JiraProjectTypes.NEW
+          this.isJiraInstanceConnected &&
+          formValue.jiraProjectType === JiraProjectTypes.EXISTING
         )
       },
-      disable: true,
       validators: [Validators.required],
     },
     // Github
@@ -289,11 +297,13 @@ export class SetupOSCModalComponent implements OnInit {
     private readonly pipelineService: PipelineService,
     private readonly githubService: GithubService,
     private readonly openSourceComplianceService: OpenSourceComplianceService,
+    private readonly jiraService: JiraService,
     private luigiClient: LuigiClient,
   ) {
     this._formGeneratorService.addComponent(PlatformFormGeneratorCustomHeaderElementComponent, ['header'])
     this._formGeneratorService.addComponent(PlatformFormGeneratorCustomMessageStripComponent, ['message-strip'])
     this._formGeneratorService.addComponent(PlatformFormGeneratorCustomReadOnlyInputComponent, ['read-only-input'])
+    this._formGeneratorService.addComponent(PlatformFormGeneratorCustomInfoBoxComponent, ['info'])
   }
 
   async ngOnInit() {

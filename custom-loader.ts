@@ -2,9 +2,11 @@ const { buildClientSchema, getIntrospectionQuery } = require('graphql')
 const { Issuer, generators } = require('openid-client')
 const http = require('http')
 
-const API_URL = 'https://api.portal.d1.hyperspace.tools.sap/pipeline/query'
+let API_URL
+// eslint-disable-next-line prefer-const
+API_URL = 'https://api.portal.d1.hyperspace.tools.sap/pipeline/query'
 // Uncomment the below line to use a local backend for generating the schema
-//const API_URL = 'http://localhost:3000/query'
+// API_URL = 'http://localhost:3000/query'
 
 module.exports = async () => {
   const issuer = await Issuer.discover('https://hyperspacedev.accounts.ondemand.com')

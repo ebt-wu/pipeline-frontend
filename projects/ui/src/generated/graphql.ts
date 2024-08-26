@@ -771,3 +771,10 @@ export type DeleteOscRegistrationMutationVariables = Exact<{
 
 
 export type DeleteOscRegistrationMutation = { __typename?: 'Mutation', deleteOscRegistration?: string | null };
+
+export type GetJiraProjectsQueryVariables = Exact<{
+  projectId: Scalars['String']['input'];
+}>;
+
+
+export type GetJiraProjectsQuery = { __typename?: 'Query', getJiraProjects?: Array<{ __typename?: 'JiraProject', projectKey?: string | null, jiraInstanceUrl?: string | null, resourceName?: string | null } | null> | null };
