@@ -13,7 +13,7 @@ import {
   MessageToastService,
 } from '@fundamental-ngx/core'
 import { GithubActionsGetPayload } from '@generated/graphql'
-import { firstValueFrom, Observable, Subscription, tap } from 'rxjs'
+import { debounceTime, firstValueFrom, Observable, Subscription, tap } from 'rxjs'
 import { KindExtensionName, KindName } from '@constants'
 import { Pipeline, ResourceRef } from '@types'
 import { DeleteBuildModalComponent } from '../../components/delete-build-modal/delete-build-modal.component'
@@ -177,6 +177,7 @@ export class PipelineComponent implements OnInit, OnDestroy {
 
     this.pipelineSubscription = this.pipeline$
       .pipe(
+        debounceTime(100),
         // eslint-disable-next-line  @typescript-eslint/no-misused-promises
         tap(async (pipeline) => {
           await this.getPipelineURL(pipeline)

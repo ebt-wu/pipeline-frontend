@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core'
 import { BaseAPIService } from './base.service'
 import { first, map, mergeMap } from 'rxjs/operators'
-import { combineLatest, firstValueFrom, lastValueFrom, Observable } from 'rxjs'
+import { combineLatest, debounceTime, firstValueFrom, lastValueFrom, Observable } from 'rxjs'
 import { DxpLuigiContextService, LuigiClient } from '@dxp/ngx-core/luigi'
 import { CREATE_GITHUB_REPOSITORY, DELETE_GITHUB_REPOSITORY, GET_GITHUB_REPOSITORY } from './queries'
 import {
@@ -378,6 +378,7 @@ export class GithubService {
     if (repoUrl.includes(GithubInstances.WDF)) {
       ghToken = await firstValueFrom(
         luigiContext.contextObservable().pipe(
+          debounceTime(100),
           map((luigiContext) => {
             return luigiContext.context?.githubWdfToken
               ? {
@@ -393,6 +394,7 @@ export class GithubService {
     } else {
       ghToken = await firstValueFrom(
         luigiContext.contextObservable().pipe(
+          debounceTime(100),
           map((luigiContext) => {
             return luigiContext.context?.githubToolsToken
               ? {
