@@ -233,6 +233,9 @@ export class SetupOSCModalComponent implements OnInit {
       choices: async () => {
         return (await firstValueFrom(this.jiraService.getJiraItems())).map((jiraProject) => jiraProject.projectKey)
       },
+      guiOptions: {
+        inline: false,
+      },
       when: (formValue: SetupOSCFormValue) => {
         return (
           formValue.platform === OSCPlatforms.JIRA &&
