@@ -419,12 +419,12 @@ export class SetupComponent implements OnInit, OnDestroy {
         buildFormValue.jenkinsCredentialType === CredentialTypes.NEW &&
         buildFormValue.orchestrator === Orchestrators.JENKINS
       ) {
+        const jenkinsUrl = new URL(buildFormValue.jenkinsUrl)
         const secretData: SecretData[] = [
           { key: 'token', value: buildFormValue.jenkinsToken },
-          { key: 'url', value: buildFormValue.jenkinsUrl },
+          { key: 'url', value: jenkinsUrl.href },
           { key: 'userId', value: buildFormValue.jenkinsUserId },
         ]
-        const jenkinsUrl = new URL(buildFormValue.jenkinsUrl)
         // replace the dots in the hostname with dashes to avoid issues with vault path
         jenkinsPath = await this.secretService.storeCredential(
           `jenkins-${jenkinsUrl.hostname.replace(/\./g, '-')}`,
@@ -455,7 +455,12 @@ export class SetupComponent implements OnInit, OnDestroy {
 
       if (buildFormValue.orchestrator === Orchestrators.JENKINS) {
         await firstValueFrom(
-          this.jenkinsService.createJenkinsPipeline(buildFormValue.jenkinsUrl, jenkinsPath, repositoryResource, labels),
+          this.jenkinsService.createJenkinsPipeline(
+            buildFormValue.jenkinsUrl.trim(),
+            jenkinsPath,
+            repositoryResource,
+            labels,
+          ),
         )
       }
 
