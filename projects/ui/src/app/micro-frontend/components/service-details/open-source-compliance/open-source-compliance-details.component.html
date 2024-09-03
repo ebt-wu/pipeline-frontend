@@ -1,4 +1,8 @@
 <div *ngIf="!loading()">
+  <fd-message-strip *ngIf="!ppmsScv" class="scv-missing-message" type="warning">
+    Missing PPMS info. You can’t release this component to customers.
+    <a [href]="addScvLink" fd-link target="_blank" rel="noopener noreferrer">Add SCV manually</a>
+  </fd-message-strip>
   <div class="issuetracker-info-container">
     <div class="issuetracker-info">
       <h3>Issues reported at</h3>

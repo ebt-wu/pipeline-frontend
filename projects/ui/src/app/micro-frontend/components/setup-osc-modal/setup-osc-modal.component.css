@@ -1,5 +1,8 @@
 .setup-osc-margin {
-  margin: 1rem 0;
+  margin: 1rem 2rem;
+  font-family: var(--sapFontFamily);
+  font-size: var(--sapFontSize);
+  color: var(--sapField_TextColor);
 }
 
 .osc-prerequisites {
@@ -7,6 +10,18 @@
   flex-direction: column;
   justify-content: center;
   align-items: center;
+}
+
+.message-prompt-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  margin: 4rem 0;
+}
+
+.with-bottom-margin{
+  margin-bottom: 20px;
 }
 
 .prerequisites-subtext {
@@ -17,6 +32,13 @@
 /* Override default svg width (128px) to avoid cropping */
 ::ng-deep .prerequisites-svg > svg {
   width: 151px;
+}
+
+.headline {
+  font-size: 18px;
+  font-style: normal;
+  font-weight: 700;
+  margin-bottom: 16px;
 }
 
 .extension-info-container {
@@ -66,4 +88,16 @@
   --sapButton_TextColor: var(--sapButton_Negative_TextColor);
   --sapButton_BorderColor: var(--sapButton_Negative_Background);
   --sapButton_Background: var(--sapButton_Negative_BorderColor);
+}
+
+.validation-message {
+  animation: shake 0.3s ease-in-out;
+}
+
+@keyframes shake {
+  0% { transform: translateX(0); }
+  25% { transform: translateX(-5px); }
+  50% { transform: translateX(5px); }
+  75% { transform: translateX(-5px); }
+  100% { transform: translateX(0); }
 }

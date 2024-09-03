@@ -1,3 +1,8 @@
+<app-error-message
+  title="Component error"
+  [message]="errorMessage()"
+  (byDismiss)="dismissErrorMessage()"
+  *ngIf="errorMessage()"></app-error-message>
 <ul fd-list [byline]="true" [noBorder]="true">
   <li
     fd-list-item
@@ -9,7 +14,12 @@
     <a fd-list-link>
       <span fd-list-thumbnail class="list-item-icon">
         <ng-container *ngIf="resourceRef.status === serviceStatus.CREATED">
-          <span fd-object-status class="status-icon" size="m" status="positive" glyph="status-completed"></span>
+          <span
+            fd-object-status
+            class="status-icon"
+            size="m"
+            [status]="isCompliant ? 'positive' : 'critical'"
+            [glyph]="isCompliant ? 'status-completed' : 'status-in-progress'"></span>
         </ng-container>
         <fd-busy-indicator
           [loading]="true"
@@ -31,7 +41,15 @@
       </span>
       <div class="service">
         <div class="name">
-          <b class="category">{{ kindCategory[resourceRef.kind] }}</b>
+          <div style="display: inline-flex">
+            <b class="category">{{ kindCategory[resourceRef.kind] }}</b>
+            <fd-info-label
+              class="not-compliant-info-label"
+              *ngIf="!isCompliant"
+              label="not compliant"
+              [color]="1"
+              data-testid="not-compliant-info-label"></fd-info-label>
+          </div>
           <span class="name-details">
             {{ kindName[resourceRef.kind] }}
             <code *ngIf="debugModeService.debugModeEnabled()">- {{ resourceRef.kind }}</code>

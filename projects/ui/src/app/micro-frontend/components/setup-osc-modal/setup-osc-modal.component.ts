@@ -1,8 +1,14 @@
 import { CommonModule } from '@angular/common'
 import { ChangeDetectionStrategy, Component, OnInit, signal, ViewChild } from '@angular/core'
-import { FormsModule, ReactiveFormsModule, Validators } from '@angular/forms'
+import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms'
 import { DxpLuigiContextService, LuigiClient } from '@dxp/ngx-core/luigi'
-import { FormModule, FundamentalNgxCoreModule, IllustratedMessageModule, SvgConfig } from '@fundamental-ngx/core'
+import {
+  FormModule,
+  FundamentalNgxCoreModule,
+  IllustratedMessageModule,
+  SvgConfig,
+  MessageStripModule,
+} from '@fundamental-ngx/core'
 import {
   DynamicFormItem,
   DynamicFormValue,
@@ -27,15 +33,22 @@ import { PipelineService } from '../../services/pipeline.service'
 import { toolsSvg } from 'projects/ui/src/assets/ts-svg/tools'
 import { JiraService } from '../../services/jira.service'
 import { PlatformFormGeneratorCustomInfoBoxComponent } from '../form-generator/form-generator-info-box/form-generator-info-box.component'
+import { ValidationLanguages } from '@constants'
+import { ValidationLanguage } from '@types'
 
 enum OSCSetupSteps {
   PREREQUISITES_INFO = 'PREREQUISITES_INFO',
+  PREREQUISITES_SETUP = 'PREREQUISITES_SETUP',
   OSC_PLATFORM_FORM = 'OSC_PLATFORM_FORM',
 }
 
 const ModalSettingsBySetupStep = {
   [OSCSetupSteps.PREREQUISITES_INFO]: {
     height: '410px',
+    width: '600px',
+  },
+  [OSCSetupSteps.PREREQUISITES_SETUP]: {
+    height: '780px',
     width: '600px',
   },
   [OSCSetupSteps.OSC_PLATFORM_FORM]: {
@@ -60,15 +73,24 @@ const ModalSettingsBySetupStep = {
     ErrorMessageComponent,
     PlatformMessagePopoverModule,
     IllustratedMessageModule,
+    MessageStripModule,
   ],
 })
 export class SetupOSCModalComponent implements OnInit {
-  @ViewChild(FormGeneratorComponent) formGenerator: FormGeneratorComponent
+  @ViewChild('formGenerator') formGenerator: FormGeneratorComponent
   watch$: Observable<Pipeline>
+
+  prerequisitesRecommendedLanguage = signal({} as ValidationLanguage)
+  prerequisitesAvailableLanguages = signal([])
+  prerequisitesXmakeChoices = signal(['Yes', 'No'])
+
+  setupPrerequisitesFormGroup = new FormGroup({
+    languageSelection: new FormControl(null as ValidationLanguage, Validators.required),
+    xMakeOption: new FormControl(null, Validators.required),
+  })
 
   loading = signal(true)
   errorMessage = signal('')
-
   formCreated = false
   formValue: DynamicFormValue
   formStep: OSCSetupSteps = OSCSetupSteps.PREREQUISITES_INFO
@@ -86,8 +108,6 @@ export class SetupOSCModalComponent implements OnInit {
     name: '',
     displayName: '',
   }
-
-  OSC_PREREQUISITES_LINK = 'https://pages.github.tools.sap/hyperspace/academy/services/osc/prerequisites/'
 
   questions: DynamicFormItem[] = [
     {
@@ -311,12 +331,14 @@ export class SetupOSCModalComponent implements OnInit {
 
   async ngOnInit() {
     this.watch$ = this.pipelineService.watchPipeline().pipe(debounceTime(50))
-
     const resourceRefs = (await firstValueFrom(this.watch$)).resourceRefs
     const isBuildPipelineSetup = this.pipelineService.isBuildPipelineSetup(resourceRefs)
 
+    await this.fetchLanguages()
+    this.setupPrerequisitesFormGroup.controls.languageSelection.patchValue(this.prerequisitesRecommendedLanguage())
+
     if (isBuildPipelineSetup) {
-      this.moveToOscPlatformFormStep()
+      this.moveToOscPrerequisitesSetupStep()
     }
 
     const extensionClasses = await firstValueFrom(this.extensionService.getExtensionClassesForScopesQuery())
@@ -325,6 +347,36 @@ export class SetupOSCModalComponent implements OnInit {
     )
 
     this.loading.set(false)
+  }
+
+  async fetchLanguages() {
+    const context = await this.luigiService.getContextAsync()
+    const entityContext = context.entityContext as unknown as EntityContext
+    const repoUrl = entityContext?.component?.annotations['github.dxp.sap.com/repo-url'] ?? null
+
+    let gitRepoLanguages: Record<string, number>
+    try {
+      gitRepoLanguages = await this.githubService.getRepositoryLanguages(this.luigiClient, this.luigiService, repoUrl)
+    } catch (error) {
+      this.errorMessage.set((error as Error).message)
+    }
+
+    const languagesMap = new Map(Object.entries(gitRepoLanguages))
+    // convert map into array of pairs : [ [key, value] , ... ] and take whatever key is found the most so [0]
+    const foundLanguage = Array.from(languagesMap.entries()).reduce(
+      (prevEntry, nextEntry) => (prevEntry[1] > nextEntry[1] ? prevEntry : nextEntry),
+      0,
+    )[0] as string
+
+    // If there is no language found in the GH repo, use "other". Otherwise use whatever we find in GH.
+    this.prerequisitesRecommendedLanguage.set(ValidationLanguages.find((lang) => lang.id === 'other'))
+    ValidationLanguages.forEach((language) => {
+      if (language.githubLinguistName === foundLanguage) {
+        this.prerequisitesRecommendedLanguage.set(language)
+      }
+    })
+
+    this.prerequisitesAvailableLanguages.set(ValidationLanguages)
   }
 
   onFormCreated(): void {
@@ -380,6 +432,10 @@ export class SetupOSCModalComponent implements OnInit {
     this.luigiClient.uxManager().closeCurrentModal()
   }
 
+  submitPrerequisitesForm(): void {
+    this.moveToOscPlatformFormStep()
+  }
+
   submitForm(): void {
     this.formGenerator.submit()
   }
@@ -395,8 +451,26 @@ export class SetupOSCModalComponent implements OnInit {
     return this.formStep === OSCSetupSteps.PREREQUISITES_INFO
   }
 
+  isPrerequisitesSetupStep(): boolean {
+    return this.formStep === OSCSetupSteps.PREREQUISITES_SETUP
+  }
+
   isOscPlatformFormStep(): boolean {
     return this.formStep === OSCSetupSteps.OSC_PLATFORM_FORM
+  }
+
+  isXmakeSelected(): boolean {
+    return this.setupPrerequisitesFormGroup.controls.xMakeOption.value == 'Yes'
+  }
+
+  isLanguageUnsupported(): boolean {
+    const languageSelected = this.setupPrerequisitesFormGroup.controls.languageSelection.value.id
+    return languageSelected == 'python' || languageSelected == 'golang'
+  }
+
+  moveToOscPrerequisitesSetupStep() {
+    this.formStep = OSCSetupSteps.PREREQUISITES_SETUP
+    this.luigiClient.linkManager().updateModalSettings(ModalSettingsBySetupStep[OSCSetupSteps.PREREQUISITES_SETUP])
   }
 
   moveToOscPlatformFormStep() {
@@ -410,5 +484,10 @@ export class SetupOSCModalComponent implements OnInit {
     const buildModalUrlParam = `%2Fprojects%2F${context.projectId}%2Fcomponents%2F${context.componentId}%2Fpipeline-ui%2Fsetup&modalParams={"size":"s","title":"Set up Build"}`
     const setupBuildModalLink = `${linkToCompoent}/pipeline-ui?modal=${buildModalUrlParam}`
     window.open(setupBuildModalLink, '_blank', 'noopoener, noreferrer')
+  }
+
+  openBlackDuck() {
+    const url = 'https://wiki.one.int.sap/wiki/x/wg7adw'
+    window.open(url, '_blank')
   }
 }

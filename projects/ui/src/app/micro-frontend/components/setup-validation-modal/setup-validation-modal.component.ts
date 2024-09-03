@@ -106,11 +106,16 @@ export class SetupValidationModalComponent implements OnInit, OnDestroy {
     }
 
     const languagesMap = new Map(Object.entries(gitRepoLanguages))
+    // convert map into array of pairs : [ [key, value] , ... ] and take whatever key is found the most so [0]
+    const foundLanguage = Array.from(languagesMap.entries()).reduce(
+      (prevEntry, nextEntry) => (prevEntry[1] > nextEntry[1] ? prevEntry : nextEntry),
+      0,
+    )[0] as string
 
     // If there is no language found in the GH repo, use "other". Otherwise use whatever we find in GH.
     this.recommendedLanguage.set(ValidationLanguages.find((lang) => lang.id === 'other'))
     ValidationLanguages.forEach((language) => {
-      if (languagesMap.has(language.githubLinguistName)) {
+      if (language.githubLinguistName === foundLanguage) {
         this.recommendedLanguage.set(language)
       }
     })

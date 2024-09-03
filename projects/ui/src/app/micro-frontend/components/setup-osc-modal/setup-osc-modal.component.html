@@ -19,7 +19,11 @@
         </p>
       </figcaption>
       <fd-illustrated-message-actions>
-        <button fd-button label="Set Up Build" (click)="openSetupBuildModal()"></button>
+        <button
+          fd-button
+          label="Set Up Build"
+          (click)="openSetupBuildModal()"
+          data-testid="setupBuildModalButton"></button>
       </fd-illustrated-message-actions>
     </figure>
     <div class="prerequisites-subtext">
@@ -28,10 +32,98 @@
         fd-link
         href="https://pages.github.tools.sap/hyperspace/academy/services/osc/prerequisites/"
         target="_blank"
-        rel="noopener noreferrer">
+        rel="noopener noreferrer"
+        data-testid="checkThePrerequisitesLink">
         Check the pre-requisites
       </a>
     </div>
+  </div>
+  <!-- Prerequisites Setup step -->
+  <div class="setup-osc-margin" *ngIf="isPrerequisitesSetupStep()">
+    <form [formGroup]="setupPrerequisitesFormGroup">
+      <div class="validation-xmake-content with-bottom-margin">
+        <div class="headline">Are you using xMake?</div>
+        <fd-message-strip
+          type="error"
+          *ngIf="isXmakeSelected()"
+          class="validation-message with-bottom-margin"
+          data-testid="xMakeNotSupportedPrompt">
+          xMake is not supported
+        </fd-message-strip>
+        <fd-message-strip
+          type="warning"
+          *ngIf="
+            isLanguageUnsupported() && !setupPrerequisitesFormGroup.controls.xMakeOption.invalid && !isXmakeSelected()
+          "
+          class="validation-message with-bottom-margin"
+          data-testid="languageNotSupportedPrompt">
+          You will not be compliant due to the language you have selected
+        </fd-message-strip>
+        <fd-message-strip
+          type="information"
+          *ngIf="setupPrerequisitesFormGroup.controls.xMakeOption.invalid"
+          class="validation-message with-bottom-margin"
+          data-testid="xMakeNoSelectionPrompt">
+          Please select an option
+        </fd-message-strip>
+        <div *ngFor="let choice of prerequisitesXmakeChoices()" [attr.data-testid]="'xMakeButton' + choice">
+          <fd-radio-button
+            [name]="choice"
+            [formControl]="setupPrerequisitesFormGroup.controls.xMakeOption"
+            [selectedValue]="setupPrerequisitesFormGroup.controls.xMakeOption.value"
+            [value]="choice">
+            {{ choice }}
+          </fd-radio-button>
+        </div>
+      </div>
+      <div class="validation-language-content">
+        <div class="headline">Select your programming language</div>
+        <fd-select
+          [formControl]="setupPrerequisitesFormGroup.controls.languageSelection"
+          class="select-box with-bottom-margin"
+          data-testid="selectedLanguage">
+          <li
+            fd-option
+            *ngFor="let language of prerequisitesAvailableLanguages()"
+            [value]="language"
+            [attr.data-testid]="'selectLanguage' + language.displayName">
+            <span *ngIf="prerequisitesRecommendedLanguage().id === language.id">
+              {{ language.displayName }} (found in your repository)
+            </span>
+            <span *ngIf="prerequisitesRecommendedLanguage().id !== language.id">{{ language.displayName }}</span>
+          </li>
+        </fd-select>
+      </div>
+      <div class="message-prompt-container" *ngIf="isXmakeSelected() || isLanguageUnsupported()">
+        <img src="../../../../assets/tent.svg" alt="Cards with a question mark" />
+        <figure fd-illustrated-message [noSvg]="true" type="spot">
+          <figcaption *ngIf="isXmakeSelected()" fd-illustrated-message-figcaption id="spot-description">
+            <h3 fd-illustrated-message-title>xMake is not supported</h3>
+            <p fd-illustrated-message-text>If you need Open Source Checks, you need to install BlackDuck</p>
+          </figcaption>
+          <figcaption
+            *ngIf="isLanguageUnsupported() && !isXmakeSelected()"
+            fd-illustrated-message-figcaption
+            id="spot-description">
+            <h3 fd-illustrated-message-title>
+              {{ this.setupPrerequisitesFormGroup.controls.languageSelection.value.displayName }} is not yet supported.
+            </h3>
+            <p fd-illustrated-message-text>
+              However, you can set up Open Source Checks to try them out. You will not be compliant.
+              <br />
+              To release this component to customers, install BlackDuck instead.
+            </p>
+          </figcaption>
+          <fd-illustrated-message-actions>
+            <button
+              data-testid="blackDuckButton"
+              fd-button
+              label="Install BlackDuck"
+              (click)="openBlackDuck()"></button>
+          </fd-illustrated-message-actions>
+        </figure>
+      </div>
+    </form>
   </div>
   <!-- OSC platform form step -->
   <div class="setup-osc-margin" *ngIf="isOscPlatformFormStep()">
@@ -72,6 +164,7 @@
     <div>
       <fdp-message-popover-form-wrapper [forms]="formGenerator?.formGroup" [formFields]="formGenerator?.formFields">
         <fdp-form-generator
+          #formGenerator
           *ngIf="!loading()"
           [formItems]="questions"
           (formSubmitted)="onFormSubmitted($event)"
@@ -85,10 +178,21 @@
       <button
         fd-button
         *ngIf="isPrerequisitesInfoStep()"
-        (click)="moveToOscPlatformFormStep()"
+        (click)="moveToOscPrerequisitesSetupStep()"
         [disabled]="loading()"
         type="submit"
         fdType="emphasized"
+        data-testid="continueToPrerequisitesSetupButton"
+        label="Continue"></button>
+      <!-- "Continue" button, rendered on prerequisites setup step -->
+      <button
+        fd-button
+        *ngIf="isPrerequisitesSetupStep() && !isXmakeSelected()"
+        (click)="submitPrerequisitesForm()"
+        [disabled]="setupPrerequisitesFormGroup.invalid"
+        type="submit"
+        fdType="emphasized"
+        data-testid="continueToOscSetupButton"
         label="Continue"></button>
       <!-- "Submit" button, rendered on osc platform form step -->
       <button
@@ -98,8 +202,16 @@
         [disabled]="loading()"
         type="submit"
         fdType="emphasized"
+        data-testid="submitOscButton"
         label="Add"></button>
-      <button fd-button fdType="transparent" [disabled]="loading()" label="Cancel" (click)="cancel()"></button>
+      <button
+        fd-button
+        fdType="transparent"
+        data-testid="CancelOSCSetupButton"
+        [disabled]="loading()"
+        (click)="cancel()">
+        {{ isPrerequisitesSetupStep() && isXmakeSelected() ? 'Close' : 'Cancel' }}
+      </button>
     </div>
   </div>
 </div>

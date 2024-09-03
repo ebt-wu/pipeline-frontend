@@ -10,7 +10,7 @@
     <div>
       <div class="validation-language-content">
         <div class="headline">Select your programming language</div>
-        <fd-select [formControl]="languageSelection" class="select-box" style="margin-bottom: 40px">
+        <fd-select [formControl]="languageSelection" class="select-box with-bottom-margin">
           <li fd-option *ngFor="let language of selectionOptions()" [value]="language">
             <span *ngIf="recommendedLanguage().id === language.id">
               {{ language.displayName }} (found in your repository)

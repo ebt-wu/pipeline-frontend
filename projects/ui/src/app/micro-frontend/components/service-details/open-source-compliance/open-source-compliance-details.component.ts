@@ -7,6 +7,7 @@ import {
   InlineHelpDirective,
   LinkModule,
 } from '@fundamental-ngx/core'
+import { MessageStripModule } from '@fundamental-ngx/core'
 import { GetOscRegistrationQuery } from '@generated/graphql'
 import { firstValueFrom } from 'rxjs'
 import { AsyncPipe, NgIf } from '@angular/common'
@@ -30,6 +31,7 @@ import { GithubService } from '../../../services/github.service'
     ButtonComponent,
     IconComponent,
     InlineHelpDirective,
+    MessageStripModule,
   ],
 })
 export class OpenSourceComplianceDetailsComponent implements OnInit {
@@ -39,7 +41,8 @@ export class OpenSourceComplianceDetailsComponent implements OnInit {
   issuetrackerProjectName: string
   issuetrackerProjectUrl: string
   ppmsScv: string
-
+  addScvLink =
+    'https://pages.github.tools.sap/hyperspace/cicd-setup-documentation/use-cases/validate-your-code-OSCS.html'
   canUserEditCredentials = false
 
   loading = signal(false)
@@ -73,10 +76,6 @@ export class OpenSourceComplianceDetailsComponent implements OnInit {
   }
 
   openDocumentation() {
-    window.open(
-      'https://pages.github.tools.sap/hyperspace/cicd-setup-documentation/use-cases/validate-your-code-OSCS.html',
-      'hyperspace-portal-cicd-oscs',
-      'noopener,noreferrer',
-    )
+    window.open(this.addScvLink, 'hyperspace-portal-cicd-oscs', 'noopener,noreferrer')
   }
 }
