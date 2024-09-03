@@ -53,7 +53,7 @@ export class DebugModeService {
 
   openTraces(e: Event, namespace: string, resourceName?: string) {
     e?.stopPropagation()
-    window.open(this.getTracesURL(namespace, resourceName), '_blank', 'noopoener, noreferrer')
+    window.open(this.getTracesURL(namespace, resourceName), '_blank', 'noopener, noreferrer')
   }
 
   getTier(): keyof typeof ENV_MAPPING {

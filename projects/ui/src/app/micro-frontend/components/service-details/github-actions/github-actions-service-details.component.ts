@@ -70,14 +70,14 @@ export class GithubActionsServiceDetailsComponent implements OnInit {
     window.open(
       'https://pages.github.tools.sap/hyperspace/cicd-setup-documentation/connected-tools/build/github-actions.html',
       '_blank',
-      'noopoener, noreferrer',
+      'noopener, noreferrer',
     )
   }
 
   async showInVault(vaultPath: string) {
     this.pendingShowInVault.set(true)
     try {
-      window.open(await this.secretService.getVaultUrlOfSecret(vaultPath), '_blank', 'noopoener, noreferrer')
+      window.open(await this.secretService.getVaultUrlOfSecret(vaultPath), '_blank', 'noopener, noreferrer')
     } catch (error) {
       const errorMessage = (error as Error).message
       if (errorMessage) {

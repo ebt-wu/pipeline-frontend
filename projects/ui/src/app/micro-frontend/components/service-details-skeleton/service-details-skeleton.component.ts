@@ -213,7 +213,7 @@ export class ServiceDetailsSkeletonComponent implements OnInit {
   }
 
   openService() {
-    window.open(this.serviceUrl(), '_blank', 'noopoener, noreferrer')
+    window.open(this.serviceUrl(), '_blank', 'noopener, noreferrer')
   }
 
   public getIcon(extension: ExtensionClass): string {
@@ -283,9 +283,9 @@ The information might be missing in the Hyperspace portal extension backend, Lea
   }
 
   openGHASScannnerResults() {
-    window.open(this.serviceUrl() + '/security/code-scanning', '_blank', 'noopoener, noreferrer')
+    window.open(this.serviceUrl() + '/security/code-scanning', '_blank', 'noopener, noreferrer')
   }
   openGHASSettings() {
-    window.open(this.serviceUrl() + '/settings/security_analysis/', '_blank', 'noopoener, noreferrer')
+    window.open(this.serviceUrl() + '/settings/security_analysis/', '_blank', 'noopener, noreferrer')
   }
 }

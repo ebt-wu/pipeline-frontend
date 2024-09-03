@@ -483,7 +483,7 @@ export class SetupOSCModalComponent implements OnInit {
     const linkToCompoent = `${context.frameBaseUrl}/projects/${context.projectId}/components/${context.componentId}`
     const buildModalUrlParam = `%2Fprojects%2F${context.projectId}%2Fcomponents%2F${context.componentId}%2Fpipeline-ui%2Fsetup&modalParams={"size":"s","title":"Set up Build"}`
     const setupBuildModalLink = `${linkToCompoent}/pipeline-ui?modal=${buildModalUrlParam}`
-    window.open(setupBuildModalLink, '_blank', 'noopoener, noreferrer')
+    window.open(setupBuildModalLink, '_blank', 'noopener, noreferrer')
   }
 
   openBlackDuck() {

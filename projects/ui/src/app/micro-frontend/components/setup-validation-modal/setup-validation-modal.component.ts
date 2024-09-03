@@ -203,7 +203,7 @@ export class SetupValidationModalComponent implements OnInit, OnDestroy {
     window.open(
       'https://github.wdf.sap.corp/pages/Security-Testing/doc/cxone/Getting_Started/',
       '_blank',
-      'noopoener, noreferrer',
+      'noopener, noreferrer',
     )
   }
 
@@ -212,13 +212,13 @@ export class SetupValidationModalComponent implements OnInit, OnDestroy {
       window.open(
         'https://pages.github.tools.sap/hyperspace/cicd-setup-documentation/connected-tools/validate/ghas.html',
         '_blank',
-        'noopoener, noreferrer',
+        'noopener, noreferrer',
       )
     } else if (tool === ValidationTools.CX) {
       window.open(
         'https://pages.github.tools.sap/hyperspace/cicd-setup-documentation/connected-tools/validate/cxone.html',
         '_blank',
-        'noopoener, noreferrer',
+        'noopener, noreferrer',
       )
     }
   }

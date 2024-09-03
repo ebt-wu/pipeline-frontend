@@ -37,13 +37,13 @@ export class StagingServiceServiceDetailsComponent implements OnInit {
     window.open(
       'https://pages.github.tools.sap/hyperspace/cicd-setup-documentation/connected-tools/build/staging-service.html',
       '_blank',
-      'noopoener, noreferrer',
+      'noopener, noreferrer',
     )
   }
 
   async showInVault(vaultPath: string) {
     this.pendingShowInVault.set(true)
-    window.open(await this.secretService.getVaultUrlOfSecret(vaultPath), '_blank', 'noopoener, noreferrer')
+    window.open(await this.secretService.getVaultUrlOfSecret(vaultPath), '_blank', 'noopener, noreferrer')
     this.pendingShowInVault.set(false)
   }
 }

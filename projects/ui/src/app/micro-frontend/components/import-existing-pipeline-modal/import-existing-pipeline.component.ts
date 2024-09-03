@@ -15,7 +15,7 @@ export class ImportExistingPipelineModalComponent {
   constructor(private luigiClient: LuigiClient) {}
 
   openFeedbackSurvey() {
-    window.open('https://s.userzoom.com/m/MSBDODgzUzgyODcg', '_blank', 'noopoener, noreferrer')
+    window.open('https://s.userzoom.com/m/MSBDODgzUzgyODcg', '_blank', 'noopener, noreferrer')
     this.luigiClient.uxManager().closeCurrentModal()
   }
 
