@@ -6,8 +6,8 @@ import {
   FormModule,
   FundamentalNgxCoreModule,
   IllustratedMessageModule,
-  SvgConfig,
   MessageStripModule,
+  SvgConfig,
 } from '@fundamental-ngx/core'
 import {
   DynamicFormItem,
@@ -17,7 +17,7 @@ import {
   FundamentalNgxPlatformModule,
 } from '@fundamental-ngx/platform'
 import { PlatformMessagePopoverModule } from '@fundamental-ngx/platform/message-popover'
-import { EntityContext, Pipeline, SetupOSCFormValue } from '@types'
+import { EntityContext, Pipeline, SetupOSCFormValue, ValidationLanguage } from '@types'
 import { JiraProjectTypes, Kinds, OSCPlatforms } from '@enums'
 import { debounceTime, firstValueFrom, Observable } from 'rxjs'
 import { ErrorMessageComponent } from '../error-message/error-message.component'
@@ -27,14 +27,13 @@ import { OpenSourceComplianceService } from '../../services/open-source-complian
 import { PlatformFormGeneratorCustomReadOnlyInputComponent } from '../form-generator/form-generator-read-only-input/form-generator-read-only-input.component'
 import { GithubService } from '../../services/github.service'
 import { ExtensionService } from '../../services/extension.service'
-import { KindExtensionName } from '@constants'
+import { KindExtensionName, ValidationLanguages } from '@constants'
 import { ExtensionClass } from '../../services/extension.types'
 import { PipelineService } from '../../services/pipeline.service'
 import { toolsSvg } from 'projects/ui/src/assets/ts-svg/tools'
 import { JiraService } from '../../services/jira.service'
 import { PlatformFormGeneratorCustomInfoBoxComponent } from '../form-generator/form-generator-info-box/form-generator-info-box.component'
-import { ValidationLanguages } from '@constants'
-import { ValidationLanguage } from '@types'
+import { DxpContext } from '@dxp/ngx-core/common'
 
 enum OSCSetupSteps {
   PREREQUISITES_INFO = 'PREREQUISITES_INFO',
@@ -80,9 +79,11 @@ export class SetupOSCModalComponent implements OnInit {
   @ViewChild('formGenerator') formGenerator: FormGeneratorComponent
   watch$: Observable<Pipeline>
 
+  jiraItems = signal([''])
   prerequisitesRecommendedLanguage = signal({} as ValidationLanguage)
   prerequisitesAvailableLanguages = signal([])
   prerequisitesXmakeChoices = signal(['Yes', 'No'])
+  context = signal({} as DxpContext)
   isBuildPipelineSetup = signal(false)
 
   setupPrerequisitesFormGroup = new FormGroup({
@@ -197,21 +198,17 @@ export class SetupOSCModalComponent implements OnInit {
           ignoreTopMargin: true,
         },
       },
-      when: (formValue: SetupOSCFormValue) => {
-        return formValue.platform === OSCPlatforms.JIRA && this.isJiraInstanceConnected
-      },
+      when: (formValue: SetupOSCFormValue) =>
+        formValue.platform === OSCPlatforms.JIRA && this.isJiraInstanceConnected && this.jiraItems().length > 0,
     },
     {
       type: 'radio',
       name: 'jiraProjectType',
       message: '',
-      default: () => {
-        return JiraProjectTypes.NEW
-      },
+      default: () => (this.jiraItems().length > 0 ? JiraProjectTypes.EXISTING : JiraProjectTypes.NEW),
       choices: [JiraProjectTypes.EXISTING, JiraProjectTypes.NEW],
-      when: (formValue: SetupOSCFormValue) => {
-        return formValue.platform === OSCPlatforms.JIRA && this.isJiraInstanceConnected
-      },
+      when: (formValue: SetupOSCFormValue) =>
+        formValue.platform === OSCPlatforms.JIRA && this.isJiraInstanceConnected && this.jiraItems().length > 0,
       guiOptions: {
         inline: true,
       },
@@ -226,34 +223,54 @@ export class SetupOSCModalComponent implements OnInit {
       },
       guiOptions: {
         additionalData: {
-          header: 'Instructions',
+          header: 'Add Jira project',
+          callBeforeRefresh: async () => await this.createMoveToOSCPlatformForm(),
+          showRefreshButton: true,
+          // eslint-disable-next-line @typescript-eslint/require-await
           instructions: async () => {
-            const context = await this.luigiService.getContextAsync()
             return `<ol>   
-         
               <li>Install the Hyperspace Portal Jira extension from the              
-              <a href='https://portal.d1.hyperspace.tools.sap/projects/${context.projectId}/catalog?modal=%2Fprojects%2F${context.projectId}%2Finstall-extensions&modalParams=%7B%22title%22%3A%22Install%20Extensions%22%2C%22size%22%3A%22fullscreen%22%7D', target="_blank"> 
+              <a href='https://portal.d1.hyperspace.tools.sap/projects/${this.context().projectId}/catalog?modal=%2Fprojects%2F${this.context().projectId}%2Finstall-extensions&modalParams=%7B%22title%22%3A%22Install%20Extensions%22%2C%22size%22%3A%22fullscreen%22%7D', target="_blank"> 
                 catalog.</a>
               </li>
               
-              <li><a href='https://portal.d1.hyperspace.tools.sap/projects/jenkins-tests-ghas/catalog?~extClassName=jira&~layout=TwoColumnsMidExpanded&modal=%2Fprojects%2Fjenkins-tests-ghas%2Fcatalog%2Fcreate-res%2Fglobal%2Fjira%2Faccount%2Fjira-tools%3F~type%3Djira-tools&modalParams=%7B%22title%22%3A%22Create%20an%20account%22%2C%22size%22%3A%22s%22%7D', target="_blank"> 
+              <li><a href='https://portal.d1.hyperspace.tools.sap/projects/${this.context().projectId}/catalog?~extClassName=jira&~layout=TwoColumnsMidExpanded&modal=%2Fprojects%2F${this.context().projectId}%2Fcatalog%2Fcreate-res%2Fglobal%2Fjira%2Faccount%2Fjira-tools%3F~type%3Djira-tools&modalParams=%7B%22title%22%3A%22Create%20an%20account%22%2C%22size%22%3A%22s%22%7D', target="_blank"> 
                  Create an account
               </a> and fill in your Jira project configuration details.
               </li>
 
-             <li> Choose <i>Use Existing</i> and select your project key.</li>
+             <li> Click the <i>Refresh</i> button below.</li>
           </ol>`
           },
         },
       },
     },
     {
+      type: 'header',
+      name: 'padding-before-jiraExistingProjectKey',
+      message: '',
+      guiOptions: {
+        additionalData: {
+          // 'header' component has top and bottom margins, 1rem (16px) each.
+          // Ignore the top maring to set height at 1rem (16px)
+          ignoreTopMargin: true,
+        },
+      },
+      when: (formValue: SetupOSCFormValue) => {
+        return (
+          formValue.platform === OSCPlatforms.JIRA &&
+          this.isJiraInstanceConnected &&
+          formValue.jiraProjectType === JiraProjectTypes.EXISTING
+        )
+      },
+    },
+    {
       type: 'select',
       name: 'jiraExistingProjectKey',
-      message: 'Select project key',
-      choices: async () => {
-        return (await firstValueFrom(this.jiraService.getJiraItems())).map((jiraProject) => jiraProject.projectKey)
-      },
+      placeholder: 'Select',
+      default: () => (this.jiraItems().length === 1 ? this.jiraItems()[0] : undefined),
+      message: 'Project Key',
+      choices: () => this.jiraItems(),
       guiOptions: {
         inline: false,
       },
@@ -266,13 +283,40 @@ export class SetupOSCModalComponent implements OnInit {
       },
       validators: [Validators.required],
     },
+    {
+      type: 'header',
+      name: 'padding-after-jiraExistingProjectKey',
+      message: '',
+      guiOptions: {
+        additionalData: {
+          ignoreTopMargin: true,
+        },
+      },
+      when: (formValue: SetupOSCFormValue) => {
+        return (
+          formValue.platform === OSCPlatforms.JIRA &&
+          this.isJiraInstanceConnected &&
+          formValue.jiraProjectType === JiraProjectTypes.EXISTING
+        )
+      },
+    },
+    {
+      type: 'header',
+      name: 'padding-after-Jira-Section',
+      message: '',
+      guiOptions: {
+        additionalData: {
+          ignoreTopMargin: true,
+        },
+      },
+    },
     // Github
     {
       type: 'read-only-input',
       name: 'githubRepository',
       message: 'Repository',
-      default: async () => {
-        const entityContext = (await this.luigiService.getContextAsync()).entityContext as unknown as EntityContext
+      default: () => {
+        const entityContext = this.context().entityContext as unknown as EntityContext
         const githubRepoName = entityContext.component?.annotations?.['github.dxp.sap.com/repo-name'] ?? ''
         return `${githubRepoName} (component repository)`
       },
@@ -334,13 +378,17 @@ export class SetupOSCModalComponent implements OnInit {
     this.watch$ = this.pipelineService.watchPipeline().pipe(debounceTime(50))
     const resourceRefs = (await firstValueFrom(this.watch$)).resourceRefs
     this.isBuildPipelineSetup.set(this.pipelineService.isBuildPipelineSetup(resourceRefs))
+    this.jiraItems.set(
+      (await firstValueFrom(this.jiraService.getJiraItems())).map((jiraProject) => jiraProject.projectKey),
+    )
+    this.context.set(await this.luigiService.getContextAsync())
+    const isRefreshPress = (await this.luigiClient
+      .storageManager()
+      .getItem(`${this.context().projectId}-${this.context().componentId}-move-to-OSC_PLATFORM_FORM`)) as boolean
+
     await this.fetchLanguages()
     this.setupPrerequisitesFormGroup.controls.languageSelection.patchValue(this.prerequisitesRecommendedLanguage())
-
-    if (this.isBuildPipelineSetup()) {
-      this.moveToOscPrerequisitesSetupStep()
-      this.setupPrerequisitesFormGroup.removeControl('xMakeOption')
-    }
+    await this.moveTo(isRefreshPress, this.isBuildPipelineSetup())
 
     const extensionClasses = await firstValueFrom(this.extensionService.getExtensionClassesForScopesQuery())
     this.oscExtensionClass = extensionClasses.find(
@@ -350,9 +398,20 @@ export class SetupOSCModalComponent implements OnInit {
     this.loading.set(false)
   }
 
+  private async moveTo(isRefreshPress: boolean, isBuildPipelineSetup: boolean) {
+    if (isRefreshPress) {
+      await this.luigiClient
+        .storageManager()
+        .removeItem(`${this.context().projectId}-${this.context().componentId}-move-to-OSC_PLATFORM_FORM`)
+      this.moveToOscPlatformFormStep()
+    } else if (isBuildPipelineSetup) {
+      this.moveToOscPrerequisitesSetupStep()
+      this.setupPrerequisitesFormGroup.removeControl('xMakeOption')
+    }
+  }
+
   async fetchLanguages() {
-    const context = await this.luigiService.getContextAsync()
-    const entityContext = context.entityContext as unknown as EntityContext
+    const entityContext = this.context().entityContext as unknown as EntityContext
     const repoUrl = entityContext?.component?.annotations['github.dxp.sap.com/repo-url'] ?? null
 
     let gitRepoLanguages: Record<string, number>
@@ -425,6 +484,22 @@ export class SetupOSCModalComponent implements OnInit {
       })
   }
 
+  isSubmitButtonDisabled() {
+    const projectKeySelectedValue = this.formGenerator.formFields.find((field) => field.id === 'jiraExistingProjectKey')
+    const jiraProjectTypeChosenType = this.formGenerator.formFields.find((field) => field.id === 'jiraProjectType')
+      ?.value as JiraProjectTypes
+
+    if (projectKeySelectedValue === undefined) {
+      return true
+    }
+
+    if (jiraProjectTypeChosenType !== JiraProjectTypes.EXISTING) {
+      return true
+    }
+
+    return false
+  }
+
   dismissErrorMessage() {
     this.errorMessage.set('')
   }
@@ -437,7 +512,7 @@ export class SetupOSCModalComponent implements OnInit {
     this.moveToOscPlatformFormStep()
   }
 
-  submitForm(): void {
+  submitForm() {
     this.formGenerator.submit()
   }
 
@@ -479,10 +554,9 @@ export class SetupOSCModalComponent implements OnInit {
     this.luigiClient.linkManager().updateModalSettings(ModalSettingsBySetupStep[OSCSetupSteps.OSC_PLATFORM_FORM])
   }
 
-  async openSetupBuildModal() {
-    const context = await this.luigiService.getContextAsync()
-    const linkToCompoent = `${context.frameBaseUrl}/projects/${context.projectId}/components/${context.componentId}`
-    const buildModalUrlParam = `%2Fprojects%2F${context.projectId}%2Fcomponents%2F${context.componentId}%2Fpipeline-ui%2Fsetup&modalParams={"size":"s","title":"Set up Build"}`
+  openSetupBuildModal() {
+    const linkToCompoent = `${this.context().frameBaseUrl}/projects/${this.context().projectId}/components/${this.context().componentId}`
+    const buildModalUrlParam = `%2Fprojects%2F${this.context().projectId}%2Fcomponents%2F${this.context().componentId}%2Fpipeline-ui%2Fsetup&modalParams={"size":"s","title":"Set up Build"}`
     const setupBuildModalLink = `${linkToCompoent}/pipeline-ui?modal=${buildModalUrlParam}`
     window.open(setupBuildModalLink, '_blank', 'noopener, noreferrer')
   }
@@ -490,5 +564,11 @@ export class SetupOSCModalComponent implements OnInit {
   openBlackDuck() {
     const url = 'https://wiki.one.int.sap/wiki/x/wg7adw'
     window.open(url, '_blank')
+  }
+
+  async createMoveToOSCPlatformForm() {
+    await this.luigiClient
+      .storageManager()
+      .setItem(`${this.context().projectId}-${this.context().componentId}-move-to-OSC_PLATFORM_FORM`, true)
   }
 }

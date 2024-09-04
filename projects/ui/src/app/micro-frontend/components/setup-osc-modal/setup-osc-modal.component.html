@@ -152,7 +152,10 @@
       </ng-template>
     </div>
     <div>
-      <fdp-message-popover-form-wrapper [forms]="formGenerator?.formGroup" [formFields]="formGenerator?.formFields">
+      <fdp-message-popover-form-wrapper
+        #formGeneratorWrapper
+        [forms]="formGenerator?.formGroup"
+        [formFields]="formGenerator?.formFields">
         <fdp-form-generator
           #formGenerator
           *ngIf="!loading()"
@@ -189,7 +192,7 @@
         fd-button
         *ngIf="formCreated && isOscPlatformFormStep()"
         (click)="submitForm()"
-        [disabled]="loading()"
+        [disabled]="loading() || isSubmitButtonDisabled()"
         type="submit"
         fdType="emphasized"
         data-testid="submitOscButton"

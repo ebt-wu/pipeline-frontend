@@ -3,6 +3,13 @@
     <div class="info-box">
       <h3 class="headline">💡 {{ formItem.guiOptions?.additionalData?.header }}</h3>
       <p class="instructions" *ngIf="instructions" class="instructions" [innerHTML]="instructions | async"></p>
+      <button
+        fd-button
+        glyph="refresh"
+        (click)="refresh()"
+        label="Refresh"
+        class="refresh-button"
+        *ngIf="showRefreshButton"></button>
     </div>
   </ng-container>
 </ng-container>
