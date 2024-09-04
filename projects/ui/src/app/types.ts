@@ -76,7 +76,7 @@ export type EntityContext = {
 export type ValidationLanguage = {
   id: string
   displayName: string
-  githubLinguistName: string
+  githubLinguistNames: string[]
   order: number
   validationTool?: ValidationTools
 }

@@ -192,14 +192,14 @@
                     </div>
                     <div *ngIf="!isOpenSourceChecksSetup() && !showOSC()">
                       <app-setup-service-list-item
-                        infoPopoverText="Configure the new Open Source Compliance Service"
+                        infoPopoverText="Configure the new Open-Source Compliance Service"
                         labelText="coming soon"
                         serviceName="Open Source Checks"></app-setup-service-list-item>
                     </div>
                     <div *ngIf="!isOpenSourceChecksSetup() && showOSC()">
                       <app-setup-service-list-item
                         [setupDialogType]="categories.OPEN_SOURCE_CHECKS"
-                        infoPopoverText="Configure the new Open Source Compliance Service"
+                        infoPopoverText="Configure the new Open-Source Compliance Service"
                         serviceName="Open Source Checks"></app-setup-service-list-item>
                     </div>
                     <div *ngIf="!isStaticCodeChecksSetup()">

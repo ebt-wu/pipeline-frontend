@@ -83,6 +83,7 @@ export class SetupOSCModalComponent implements OnInit {
   prerequisitesRecommendedLanguage = signal({} as ValidationLanguage)
   prerequisitesAvailableLanguages = signal([])
   prerequisitesXmakeChoices = signal(['Yes', 'No'])
+  isBuildPipelineSetup = signal(false)
 
   setupPrerequisitesFormGroup = new FormGroup({
     languageSelection: new FormControl(null as ValidationLanguage, Validators.required),
@@ -332,13 +333,13 @@ export class SetupOSCModalComponent implements OnInit {
   async ngOnInit() {
     this.watch$ = this.pipelineService.watchPipeline().pipe(debounceTime(50))
     const resourceRefs = (await firstValueFrom(this.watch$)).resourceRefs
-    const isBuildPipelineSetup = this.pipelineService.isBuildPipelineSetup(resourceRefs)
-
+    this.isBuildPipelineSetup.set(this.pipelineService.isBuildPipelineSetup(resourceRefs))
     await this.fetchLanguages()
     this.setupPrerequisitesFormGroup.controls.languageSelection.patchValue(this.prerequisitesRecommendedLanguage())
 
-    if (isBuildPipelineSetup) {
+    if (this.isBuildPipelineSetup()) {
       this.moveToOscPrerequisitesSetupStep()
+      this.setupPrerequisitesFormGroup.removeControl('xMakeOption')
     }
 
     const extensionClasses = await firstValueFrom(this.extensionService.getExtensionClassesForScopesQuery())
@@ -371,7 +372,7 @@ export class SetupOSCModalComponent implements OnInit {
     // If there is no language found in the GH repo, use "other". Otherwise use whatever we find in GH.
     this.prerequisitesRecommendedLanguage.set(ValidationLanguages.find((lang) => lang.id === 'other'))
     ValidationLanguages.forEach((language) => {
-      if (language.githubLinguistName === foundLanguage) {
+      if (language.githubLinguistNames.includes(foundLanguage)) {
         this.prerequisitesRecommendedLanguage.set(language)
       }
     })
@@ -460,7 +461,7 @@ export class SetupOSCModalComponent implements OnInit {
   }
 
   isXmakeSelected(): boolean {
-    return this.setupPrerequisitesFormGroup.controls.xMakeOption.value == 'Yes'
+    return this.setupPrerequisitesFormGroup.controls.xMakeOption?.value == 'Yes'
   }
 
   isLanguageUnsupported(): boolean {

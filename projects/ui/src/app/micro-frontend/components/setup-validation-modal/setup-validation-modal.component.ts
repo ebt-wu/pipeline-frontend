@@ -115,7 +115,7 @@ export class SetupValidationModalComponent implements OnInit, OnDestroy {
     // If there is no language found in the GH repo, use "other". Otherwise use whatever we find in GH.
     this.recommendedLanguage.set(ValidationLanguages.find((lang) => lang.id === 'other'))
     ValidationLanguages.forEach((language) => {
-      if (language.githubLinguistName === foundLanguage) {
+      if (language.githubLinguistNames.includes(foundLanguage)) {
         this.recommendedLanguage.set(language)
       }
     })
