@@ -1,17 +1,6 @@
 <div *ngIf="!loading()">
   <div class="flex-box">
-    <h3>GitHub Repository</h3>
-    <button
-      class="auto-left-margin"
-      role="button"
-      glyph="question-mark"
-      label="Learn More"
-      fdType="transparent"
-      (click)="openDocumentation()"
-      fd-button></button>
-  </div>
-  <div class="flex-box">
-    <b>Instance</b>
+    <h3 class="heading-margin">Instance</h3>
     <button
       class="left-margin"
       role="button"
@@ -22,11 +11,18 @@
       [fd-inline-help]="instanceHelp"
       [triggers]="['click']"
       [closeOnOutsideClick]="true"></button>
-    <br />
+    <button
+      class="auto-left-margin"
+      role="button"
+      glyph="question-mark"
+      label="Learn More"
+      fdType="transparent"
+      (click)="openDocumentation()"
+      fd-button></button>
   </div>
   {{ serviceDetails.url }}
   <div class="flex-box top-margin">
-    <b>Profile Name</b>
+    <h3 class="heading-margin">Profile Name</h3>
     <button
       class="left-margin"
       role="button"

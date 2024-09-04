@@ -23,3 +23,8 @@ a {
 .vault-button-padding {
   padding: 0;
 }
+
+.heading-margin {
+  margin-top: 0.5rem;
+  margin-bottom: 0.5rem;
+}
