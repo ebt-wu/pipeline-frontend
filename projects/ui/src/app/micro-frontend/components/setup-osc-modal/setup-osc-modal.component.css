@@ -20,7 +20,7 @@
   margin: 4rem 0;
 }
 
-.with-bottom-margin{
+.with-bottom-margin {
   margin-bottom: 20px;
 }
 
@@ -39,6 +39,25 @@
   font-style: normal;
   font-weight: 700;
   margin-bottom: 16px;
+}
+
+.margin-bottom-zero {
+  margin-bottom: 0;
+}
+
+.headline-flex-box {
+  display: flex;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.left-margin {
+  margin-left: 0.4rem;
+}
+
+.icon {
+  color: var(--sapNeutralColor);
+  cursor: pointer;
 }
 
 .extension-info-container {
@@ -95,9 +114,19 @@
 }
 
 @keyframes shake {
-  0% { transform: translateX(0); }
-  25% { transform: translateX(-5px); }
-  50% { transform: translateX(5px); }
-  75% { transform: translateX(-5px); }
-  100% { transform: translateX(0); }
+  0% {
+    transform: translateX(0);
+  }
+  25% {
+    transform: translateX(-5px);
+  }
+  50% {
+    transform: translateX(5px);
+  }
+  75% {
+    transform: translateX(-5px);
+  }
+  100% {
+    transform: translateX(0);
+  }
 }

@@ -42,7 +42,16 @@
   <div class="setup-osc-margin" *ngIf="isPrerequisitesSetupStep()">
     <form [formGroup]="setupPrerequisitesFormGroup">
       <div class="validation-xmake-content with-bottom-margin" *ngIf="!isBuildPipelineSetup()">
-        <div class="headline">Are you using xMake?</div>
+        <div class="headline-flex-box">
+          <div class="headline margin-bottom-zero">Are you using xMake?</div>
+          <fd-icon
+            class="left-margin icon"
+            glyph="hint"
+            placement="bottom"
+            [fd-inline-help]="xMakeHelp"
+            [triggers]="['click']"
+            [closeOnOutsideClick]="true"></fd-icon>
+        </div>
         <fd-message-strip
           type="error"
           *ngIf="isXmakeSelected()"
@@ -211,3 +220,16 @@
 <div class="busy-indicator" *ngIf="loading()">
   <fd-busy-indicator [loading]="true" ariaLabel="loading" title="Please Wait"></fd-busy-indicator>
 </div>
+<ng-template #xMakeHelp>
+  <div>
+    <a
+      href="https://pages.github.tools.sap/hyperspace/academy/tools/decisionhelp/BuildTool/?h=#option-a-xmake"
+      target="_blank"
+      rel="noopener noreferrer">
+      xMake
+    </a>
+    is a central build service,
+    <br />
+    still in use by multiple established projects.
+  </div>
+</ng-template>
