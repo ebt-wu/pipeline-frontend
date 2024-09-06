@@ -34,6 +34,7 @@ import { toolsSvg } from 'projects/ui/src/assets/ts-svg/tools'
 import { JiraService } from '../../services/jira.service'
 import { PlatformFormGeneratorCustomInfoBoxComponent } from '../form-generator/form-generator-info-box/form-generator-info-box.component'
 import { DxpContext } from '@dxp/ngx-core/common'
+import { JiraProject } from '@generated/graphql'
 
 enum OSCSetupSteps {
   PREREQUISITES_INFO = 'PREREQUISITES_INFO',
@@ -79,7 +80,7 @@ export class SetupOSCModalComponent implements OnInit {
   @ViewChild('formGenerator') formGenerator: FormGeneratorComponent
   watch$: Observable<Pipeline>
 
-  jiraItems = signal([''])
+  jiraProjects = signal<JiraProject[]>([])
   prerequisitesRecommendedLanguage = signal({} as ValidationLanguage)
   prerequisitesAvailableLanguages = signal([])
   prerequisitesXmakeChoices = signal(['Yes', 'No'])
@@ -199,16 +200,16 @@ export class SetupOSCModalComponent implements OnInit {
         },
       },
       when: (formValue: SetupOSCFormValue) =>
-        formValue.platform === OSCPlatforms.JIRA && this.isJiraInstanceConnected && this.jiraItems().length > 0,
+        formValue.platform === OSCPlatforms.JIRA && this.isJiraInstanceConnected && this.jiraProjects().length > 0,
     },
     {
       type: 'radio',
       name: 'jiraProjectType',
       message: '',
-      default: () => (this.jiraItems().length > 0 ? JiraProjectTypes.EXISTING : JiraProjectTypes.NEW),
+      default: () => (this.jiraProjects().length > 0 ? JiraProjectTypes.EXISTING : JiraProjectTypes.NEW),
       choices: [JiraProjectTypes.EXISTING, JiraProjectTypes.NEW],
       when: (formValue: SetupOSCFormValue) =>
-        formValue.platform === OSCPlatforms.JIRA && this.isJiraInstanceConnected && this.jiraItems().length > 0,
+        formValue.platform === OSCPlatforms.JIRA && this.isJiraInstanceConnected && this.jiraProjects().length > 0,
       guiOptions: {
         inline: true,
       },
@@ -268,9 +269,9 @@ export class SetupOSCModalComponent implements OnInit {
       type: 'select',
       name: 'jiraExistingProjectKey',
       placeholder: 'Select',
-      default: () => (this.jiraItems().length === 1 ? this.jiraItems()[0] : undefined),
+      default: () => (this.jiraProjects().length === 1 ? this.jiraProjects()[0].projectKey : undefined),
       message: 'Project Key',
-      choices: () => this.jiraItems(),
+      choices: () => this.jiraProjects().map((project) => project.projectKey),
       guiOptions: {
         inline: false,
       },
@@ -378,9 +379,8 @@ export class SetupOSCModalComponent implements OnInit {
     this.watch$ = this.pipelineService.watchPipeline().pipe(debounceTime(50))
     const resourceRefs = (await firstValueFrom(this.watch$)).resourceRefs
     this.isBuildPipelineSetup.set(this.pipelineService.isBuildPipelineSetup(resourceRefs))
-    this.jiraItems.set(
-      (await firstValueFrom(this.jiraService.getJiraItems())).map((jiraProject) => jiraProject.projectKey),
-    )
+    this.jiraProjects.set(await firstValueFrom(this.jiraService.getJiraItems()))
+
     this.context.set(await this.luigiService.getContextAsync())
     const isRefreshPress = (await this.luigiClient
       .storageManager()
@@ -444,21 +444,24 @@ export class SetupOSCModalComponent implements OnInit {
   }
 
   async onFormSubmitted(formData: SetupOSCFormValue): Promise<void> {
-    if (formData.platform === OSCPlatforms.JIRA) {
-      return
-    }
-    return await this.createGithubOsc(formData)
-  }
-
-  async createGithubOsc(formData: SetupOSCFormValue): Promise<void> {
     this.loading.set(true)
+    let jiraProject: JiraProject = null
+
+    if (formData.platform === OSCPlatforms.JIRA) {
+      jiraProject = this.jiraProjects().find((project) => project.projectKey === formData.jiraExistingProjectKey)
+
+      if (!jiraProject?.resourceName) {
+        this.errorMessage.set('Resource name of selected Jira project not found')
+        return
+      }
+    }
 
     const githubMetadata = await this.githubService.getGithubMetadata()
 
     const createOpenSourceComplianceRegistrationArgs: Parameters<
       typeof this.openSourceComplianceService.createOpenSourceComplianceRegistration
     >[0] = {
-      jira: undefined,
+      jira: jiraProject ? jiraProject.resourceName : undefined,
       ppmsScv: formData.ppmsSoftwareComponentVersion,
       githubBaseUrl: githubMetadata.githubInstance,
       githubOrg: githubMetadata.githubOrgName,

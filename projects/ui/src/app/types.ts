@@ -40,6 +40,7 @@ export type SetupOSCFormValue = {
   platform?: OSCPlatforms
   ppmsSoftwareComponentVersion?: string
   jiraProjectType?: JiraProjectTypes
+  jiraExistingProjectKey?: string
 }
 
 export type ResourceRef = {

@@ -13,7 +13,7 @@ import { firstValueFrom } from 'rxjs'
 import { AsyncPipe, NgIf } from '@angular/common'
 import { AuthorizationModule } from '@dxp/ngx-core/authorization'
 import { PolicyService } from '../../../services/policy.service'
-import { GithubService } from '../../../services/github.service'
+import { APIService } from '../../../services/api.service'
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -51,7 +51,7 @@ export class OpenSourceComplianceDetailsComponent implements OnInit {
   OSC_STACKOVERFLOW_LINK = 'https://sap.stackenterprise.co/questions/ask?tags=hyperspace;osc'
 
   constructor(
-    private readonly githubService: GithubService,
+    private readonly apiService: APIService,
     private readonly policyService: PolicyService,
   ) {}
 
@@ -63,9 +63,25 @@ export class OpenSourceComplianceDetailsComponent implements OnInit {
     this.isOscRegistrationActive = this.serviceDetails.isActive
 
     if (this.serviceDetails.jiraRef) {
-      // TODO: Add Jira info retrieval
+      const jiraProjects = await firstValueFrom(this.apiService.jiraService.getJiraItems())
+      const jiraProject = jiraProjects.find((project) => project.resourceName === this.serviceDetails.jiraRef)
+
+      if (jiraProject) {
+        this.issuetrackerProjectName = jiraProject.projectKey
+
+        try {
+          this.issuetrackerProjectUrl = new URL(
+            `/projects/${jiraProject.projectKey}`,
+            `https://${jiraProject.jiraInstanceUrl}`,
+          ).href
+        } catch (e) {
+          this.error = 'failed to construct Jira project URL'
+        }
+      }
     } else {
-      const githubInfo = await firstValueFrom(this.githubService.getGithubRepository(this.serviceDetails.ghRepoRef))
+      const githubInfo = await firstValueFrom(
+        this.apiService.githubService.getGithubRepository(this.serviceDetails.ghRepoRef),
+      )
       this.issuetrackerProjectName = githubInfo.repository
       this.issuetrackerProjectUrl = githubInfo.repositoryUrl
     }
