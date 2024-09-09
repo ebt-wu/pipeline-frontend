@@ -63,14 +63,13 @@
           <h1 class="headline">
             <strong>{{ kindName[activeTile] }}</strong>
           </h1>
-          <span class="subheader">{{ kindCategory[activeTile] }}</span>
         </div>
         <button
           *ngIf="serviceUrl() && activeTile !== kinds.GITHUB_ADVANCED_SECURITY"
           class="open-service-button"
           fd-button
           fdType="emphasized"
-          label="Open Service"
+          label="Open"
           (click)="openService()"
           ariaLabel="Close Details"></button>
         <button

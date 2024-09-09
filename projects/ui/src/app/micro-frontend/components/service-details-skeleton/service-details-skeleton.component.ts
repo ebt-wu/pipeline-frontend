@@ -24,6 +24,7 @@ import { ErrorMessage } from '@types'
 import { StaticSecurityCheckDetailsComponent } from '../service-details/static-security-check/static-security-check-details.component'
 import { MenuComponent, MenuTriggerDirective, PlatformMenuButtonModule } from '@fundamental-ngx/platform'
 import { GithubRepository, JenkinsPipeline, PiperConfig } from '@generated/graphql'
+import { JiraService } from '../../services/jira.service'
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export type ServiceDetails = any
@@ -81,6 +82,7 @@ export class ServiceDetailsSkeletonComponent implements OnInit {
     private readonly luigiClient: LuigiClient,
     private readonly githubIssueLinkService: GitHubIssueLinkService,
     private readonly sharedService: SharedDataService,
+    private readonly jiraService: JiraService,
     readonly debugModeService: DebugModeService,
   ) {}
 
@@ -168,9 +170,18 @@ export class ServiceDetailsSkeletonComponent implements OnInit {
           })
           break
         case Kinds.OPEN_SOURCE_COMPLIANCE:
-          this.serviceDetails.set(
-            await firstValueFrom(this.api.openSourceComplianceService.getOpenSourceComplianceRegistration()),
+          const oscRegistration = await firstValueFrom(
+            this.api.openSourceComplianceService.getOpenSourceComplianceRegistration(),
           )
+          if (oscRegistration.jiraRef === '') {
+            this.serviceUrl.set(githubRepoUrl)
+          } else {
+            const jiraItems = await firstValueFrom(this.jiraService.getJiraItems())
+            const jiraItem = jiraItems.find((item) => item.resourceName === oscRegistration.jiraRef)
+            this.serviceUrl.set(jiraItem.jiraInstanceUrl)
+          }
+
+          this.serviceDetails.set(oscRegistration)
           break
       }
 

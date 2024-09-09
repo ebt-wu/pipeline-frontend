@@ -12,7 +12,7 @@ export const KindName = {
   [Kinds.GITHUB_ACTIONS_WORKFLOW]: 'GitHub Actions',
   [Kinds.GITHUB_ADVANCED_SECURITY]: 'GitHub Advanced Security',
   [Kinds.CX_ONE]: 'CxONE',
-  [Kinds.OPEN_SOURCE_COMPLIANCE]: 'Open Source Checks',
+  [Kinds.OPEN_SOURCE_COMPLIANCE]: 'Hyperspace Open-Source Compliance Service',
 }
 
 export const KindCategory = {
