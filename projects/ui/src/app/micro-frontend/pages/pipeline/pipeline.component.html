@@ -157,8 +157,7 @@
                   </ng-container>
                 </fd-card-content>
               </fd-card>
-              <!-- TODO: remove feature flag for GHAS when GHAS is live -->
-              <fd-card *ngIf="showGHAS()" cardType="linkList" class="stage-card">
+              <fd-card cardType="linkList" class="stage-card">
                 <fd-card-content class="card-content-padding">
                   <div (click)="openValidationStage()" class="card-content stage-headline-padding">
                     <div class="icons">
@@ -209,27 +208,6 @@
                         serviceName="Static Code Checks"></app-setup-service-list-item>
                     </div>
                   </ng-container>
-                </fd-card-content>
-              </fd-card>
-              <fd-card *ngIf="!showGHAS()" cardType="linkList" class="stage-card disabled">
-                <fd-card-content>
-                  <div class="coming-soon-stage">
-                    <div class="card-content stage-headline-padding">
-                      <div class="icons">
-                        <div class="placeholder"></div>
-                        <fd-avatar [colorAccent]="10" glyph="shield" size="xs"></fd-avatar>
-                      </div>
-                      <div class="card-description">
-                        <div class="card-description-stage-headline">
-                          <h1 class="disabled-headline">Validate Code</h1>
-                          <p *ngIf="localLayout === 'OneColumnStartFullScreen'">
-                            Add checks to evaluate the compliance of your code
-                          </p>
-                        </div>
-                      </div>
-                    </div>
-                    <fd-info-label color="10" fdCozy label="Coming soon" title="Coming soon"></fd-info-label>
-                  </div>
                 </fd-card-content>
               </fd-card>
               <fd-card cardType="linkList" class="stage-card disabled">

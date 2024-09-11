@@ -22,10 +22,6 @@ export class FeatureFlagService {
     return (await this.getFlagValue(Flags.GITHUB_ACTIONS_ENABLED, projectId)) || this.isTestTenant()
   }
 
-  async isGhasEnabled(projectId: string) {
-    return (await this.getFlagValue(Flags.GHAS_ENABLED, projectId)) || this.isTestTenant()
-  }
-
   async isOscEnabled(projectId: string) {
     return (await this.getFlagValue(Flags.OSC_ENABLED, projectId)) || this.isTestTenant()
   }

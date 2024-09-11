@@ -164,7 +164,6 @@ export class PipelineComponent implements OnInit, OnDestroy {
 
     // Only show GHA and GHAS if their feature flags are toggled on
     this.showGithubActions.set(await this.featureFlagService.isGithubActionsEnabled(context.projectId))
-    this.showGHAS.set(await this.featureFlagService.isGhasEnabled(context.projectId))
     this.showOSC.set(await this.featureFlagService.isOscEnabled(context.projectId))
 
     this.catalogUrl.set(context.frameBaseUrl + '/catalog')
