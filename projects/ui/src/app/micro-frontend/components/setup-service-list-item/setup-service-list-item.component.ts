@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, Input } from '@angular/core'
+import { ChangeDetectionStrategy, Component, Input, OnInit, signal } from '@angular/core'
 import { AuthorizationModule } from '@dxp/ngx-core/authorization'
 import {
   BusyIndicatorModule,
@@ -35,14 +35,18 @@ import { NgIf } from '@angular/common'
     InlineHelpModule,
   ],
 })
-export class SetupServiceListItemComponent {
+export class SetupServiceListItemComponent implements OnInit {
   @Input() serviceName: string
   @Input() setupDialogType?: Categories
   @Input() labelText?: string
   @Input() infoPopoverText?: string
   @Input() isSetupButtonDisabled?: boolean = false
 
+  testId = signal('')
   constructor(private readonly luigiClient: LuigiClient) {}
+  ngOnInit() {
+    this.testId.set(this.setupDialogType.toLowerCase().replace(/ /g, '-'))
+  }
 
   async openDialog(e: Event, dialogToOpen: Categories) {
     e.stopPropagation()

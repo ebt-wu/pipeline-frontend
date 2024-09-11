@@ -5,7 +5,8 @@
       title="OSC setup could not be completed"
       [message]="errorMessage()"
       (byDismiss)="dismissErrorMessage()"
-      *ngIf="errorMessage()"></app-error-message>
+      *ngIf="errorMessage()"
+      data-testid="setup-osc-dialog-error-banner"></app-error-message>
   </div>
   <!-- Prerequisites info step -->
   <div class="setup-osc-margin osc-prerequisites" *ngIf="isPrerequisitesInfoStep()">

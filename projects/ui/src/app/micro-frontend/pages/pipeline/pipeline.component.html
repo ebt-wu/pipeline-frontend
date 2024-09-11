@@ -68,7 +68,8 @@
                   [automaticdResourceName]="error.resourceName"
                   [message]="error.message"
                   [title]="error.title"
-                  [tracesUrl]="debugModeService.getTracesURL(pipeline.namespace)"></app-error-message>
+                  [tracesUrl]="debugModeService.getTracesURL(pipeline.namespace)"
+                  [attr.data-testid]="'pipeline-screen-error-banner'"></app-error-message>
               </div>
               <app-dismissible-message
                 *ngIf="isBuildPipelineSetupAndCreated()"
@@ -78,7 +79,11 @@
                 linkText="See It in Action"
                 message="YAY! Your build pipeline is set up."
                 type="success"></app-dismissible-message>
-              <fd-message-strip *ngIf="this.openPRCount()" class="pull-requests-message" type="warning">
+              <fd-message-strip
+                *ngIf="this.openPRCount()"
+                class="pull-requests-message"
+                type="warning"
+                data-testid="pipeline-screen-pull-request-banner">
                 Merge {{ this.openPRCount() }} open pull requests.
                 <a
                   *ngIf="this.githubMetadata.githubRepoUrl"
@@ -91,7 +96,10 @@
               </fd-message-strip>
               <fd-card cardType="linkList" class="stage-card">
                 <fd-card-content class="card-content-padding">
-                  <div (click)="openBuildStage()" class="card-content stage-headline-padding">
+                  <div
+                    (click)="openBuildStage()"
+                    class="card-content stage-headline-padding"
+                    data-testid="build-stage-arrow">
                     <div class="icons">
                       <fd-icon
                         *ngIf="!isBuildStageOpen() && isBuildStageSetup()"
@@ -112,11 +120,13 @@
                       <button
                         (click)="openSetupWizard($event)"
                         *ngIf="!isBuildStageSetup()"
+                        data-testid="build-pipeline-set-up-button"
                         fd-button
                         fdType="emphasized"
                         label="Set Up"></button>
                       <button
                         (click)="deletePipeline($event, pipeline)"
+                        data-testid="build-pipeline-delete-button"
                         *ngIf="isBuildStageSetup() && !pendingDeletion()"
                         fd-button
                         glyph="delete"
@@ -152,14 +162,18 @@
                         (openDetailsEvent)="openDetails($event)"
                         [activeTile]="activeTile"
                         [localLayout]="localLayout"
-                        [resourceRef]="resourceRef"></app-service-list-item>
+                        [resourceRef]="resourceRef"
+                        [attr.data-testid]="'setup-build-step-' + resourceRef.kind"></app-service-list-item>
                     </div>
                   </ng-container>
                 </fd-card-content>
               </fd-card>
               <fd-card cardType="linkList" class="stage-card">
                 <fd-card-content class="card-content-padding">
-                  <div (click)="openValidationStage()" class="card-content stage-headline-padding">
+                  <div
+                    (click)="openValidationStage()"
+                    class="card-content stage-headline-padding"
+                    data-testid="validation-stage-arrow">
                     <div class="icons">
                       <fd-icon *ngIf="!isValidationStageOpen()" class="icon" glyph="slim-arrow-right"></fd-icon>
                       <fd-icon *ngIf="isValidationStageOpen()" class="icon" glyph="slim-arrow-down"></fd-icon>
@@ -180,7 +194,8 @@
                         (openDetailsEvent)="openDetails($event)"
                         [activeTile]="activeTile"
                         [localLayout]="localLayout"
-                        [resourceRef]="resourceRef"></app-service-list-item>
+                        [resourceRef]="resourceRef"
+                        [attr.data-testid]="'setup-validation-step-' + resourceRef.kind"></app-service-list-item>
                     </div>
                     <!--If there are no pipeline refs for the items we use dummy items to allow them to be set up-->
                     <div *ngIf="!isStaticSecurityChecksSetup()">

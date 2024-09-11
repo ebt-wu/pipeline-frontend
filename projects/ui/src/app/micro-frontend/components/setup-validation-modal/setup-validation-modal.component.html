@@ -4,14 +4,19 @@
       title="Setup validation could not be completed"
       [message]="errorMessage()"
       (byDismiss)="dismissErrorMessage()"
-      *ngIf="errorMessage()"></app-error-message>
+      *ngIf="errorMessage()"
+      data-testid="setup-validation-dialog-error-banner"></app-error-message>
   </div>
   <div class="setup-validation-margin">
     <div>
       <div class="validation-language-content">
         <div class="headline">Select your programming language</div>
         <fd-select [formControl]="languageSelection" class="select-box with-bottom-margin">
-          <li fd-option *ngFor="let language of selectionOptions()" [value]="language">
+          <li
+            fd-option
+            *ngFor="let language of selectionOptions()"
+            [value]="language"
+            [attr.data-testid]="'select-language-' + language.id">
             <span *ngIf="recommendedLanguage().id === language.id">
               {{ language.displayName }} (found in your repository)
             </span>
@@ -23,7 +28,8 @@
         </div>
         <div
           *ngIf="languageSelection.getRawValue()?.validationTool === validationTools.GHAS"
-          class="recommendation-item">
+          class="recommendation-item"
+          data-testid="recommended-service-ghas">
           <img src="./assets/ghas-logo.svg" alt="GitHub Logo" />
           GitHub Advanced Security
           <fd-icon
@@ -36,7 +42,10 @@
         <ng-template #learnMoreGHAS>
           <a fd-link (click)="onButtonLearnMore(validationTools.GHAS)">Learn more</a>
         </ng-template>
-        <div *ngIf="languageSelection.getRawValue()?.validationTool === validationTools.CX" class="recommendation-item">
+        <div
+          *ngIf="languageSelection.getRawValue()?.validationTool === validationTools.CX"
+          class="recommendation-item"
+          data-testid="recommended-service-cx-one">
           <img alt="CxONE Logo" src="./assets/cx-one-logo.svg" />
           CxONE (coming soon)
           <fd-icon
@@ -78,7 +87,8 @@
                   [id]="validationTool"
                   [name]="validationTool"
                   [selectedValue]="toolSelection.value"
-                  [value]="validationTools[validationTool]">
+                  [value]="validationTools[validationTool]"
+                  [attr.data-testid]="'radio-button-' + validationTool">
                   {{ validationTools[validationTool] }}
                 </fd-radio-button>
               </div>
@@ -160,7 +170,8 @@
           (languageSelection.getRawValue()?.id === 'other' && !toolSelection.value)
         "
         label="Add"
-        fdType="emphasized"></button>
+        fdType="emphasized"
+        data-testid="setup-validation-dialog-submit-button"></button>
       <button
         (click)="cancel()"
         [label]="
@@ -170,7 +181,8 @@
             : 'Close'
         "
         fd-button
-        fdType="transparent"></button>
+        fdType="transparent"
+        data-testid="setup-validation-dialog-cancel-button"></button>
     </div>
   </div>
 </div>
