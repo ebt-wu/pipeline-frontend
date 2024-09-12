@@ -359,18 +359,20 @@ export class GithubService {
     }
     const url = new URL(repoUrl)
     let languagesResp: Response
+    let foundLanguages: Record<string, number>
     try {
       languagesResp = await fetch(`${url.origin}/api/v3/repos${url.pathname}/languages`, {
         headers: {
           Authorization: `Bearer ${ghToken.value}`,
         },
       })
+      foundLanguages = (await languagesResp.json()) as Record<string, number>
     } catch (error) {
       const errorMessage = (error as Error).message
       throw new Error(`Error (${errorMessage}) when fetching the GitHub Repository languages for: ${repoUrl}`)
     }
 
-    return (await languagesResp.json()) as Record<string, number>
+    return foundLanguages
   }
 
   async getGhToken(luigiContext: DxpLuigiContextService, luigiClient: LuigiClient, repoUrl: string) {
