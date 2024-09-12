@@ -9,12 +9,12 @@
 ### Setup
 
 1. Clone the repository
-2. Run `npm` in the project folder to install the dependencies
+2. Run `npm run` in the project folder to install the dependencies
 3. Run one of the following commands in the project folder
-   - `npm start:ui` to start the application
-   - `npm start:ui-local` to start the application with the local pipeline-backend
-   - `npm start:wc` to start the webcomponents (cards, dialogs on component and pipeline landing pages)
-   - `npm start:wc-local` to start the webcomponents (cards, dialogs on component and pipeline landing pages) with the local pipeline backend
+   - `npm run start:ui` to start the application
+   - `npm run start:ui-local` to start the application with the local pipeline-backend
+   - `npm run start:wc` to start the webcomponents (cards, dialogs on component and pipeline landing pages)
+   - `npm run start:wc-local` to start the webcomponents (cards, dialogs on component and pipeline landing pages) with the local pipeline backend
 4. Visit https://portal.d1.hyperspace.tools.sap navigate to a component and the CI/CD tab to view the MFE within DXP
 
 ### FAQ
