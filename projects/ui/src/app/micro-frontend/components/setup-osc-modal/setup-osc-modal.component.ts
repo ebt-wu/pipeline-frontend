@@ -488,20 +488,24 @@ export class SetupOSCModalComponent implements OnInit {
   }
 
   isSubmitButtonDisabled() {
-    const selectedOSCPlatform = this.formGenerator.formFields.find((field) => field.id === 'platform')
-      .value as OSCPlatforms
+    if (!this.formGenerator || !this.formGenerator.formFields) {
+      return false
+    }
+
+    const formFields = this.formGenerator.formFields
+
+    const selectedOSCPlatform = formFields.find((field) => field.id === 'platform')?.value as OSCPlatforms
     if (selectedOSCPlatform === OSCPlatforms.GITHUB) {
       return false
     }
 
-    const projectKeySelectedValue = this.formGenerator.formFields.find((field) => field.id === 'jiraExistingProjectKey')
-    const jiraProjectTypeChosenType = this.formGenerator.formFields.find((field) => field.id === 'jiraProjectType')
-      ?.value as JiraProjectTypes
-
-    if (projectKeySelectedValue === undefined) {
+    const projectKeySelectedValue = formFields.find((field) => field.id === 'jiraExistingProjectKey')
+    if (!projectKeySelectedValue) {
       return true
     }
 
+    const jiraProjectTypeChosenType = formFields.find((field) => field.id === 'jiraProjectType')
+      ?.value as JiraProjectTypes
     if (jiraProjectTypeChosenType !== JiraProjectTypes.EXISTING) {
       return true
     }

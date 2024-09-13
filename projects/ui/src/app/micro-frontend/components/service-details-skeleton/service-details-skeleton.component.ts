@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnInit, Output, signal, ChangeDetectionStrategy } from '@angular/core'
+import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, Output, signal } from '@angular/core'
 import { FlexibleColumnLayout, FundamentalNgxCoreModule } from '@fundamental-ngx/core'
 import { CommonModule } from '@angular/common'
 import { KindCategory, KindExtensionName, KindName } from '@constants'
@@ -178,7 +178,7 @@ export class ServiceDetailsSkeletonComponent implements OnInit {
           } else {
             const jiraItems = await firstValueFrom(this.jiraService.getJiraItems())
             const jiraItem = jiraItems.find((item) => item.resourceName === oscRegistration.jiraRef)
-            this.serviceUrl.set(jiraItem.jiraInstanceUrl)
+            this.serviceUrl.set('https://' + jiraItem.jiraInstanceUrl + '/projects/' + jiraItem.projectKey)
           }
 
           this.serviceDetails.set(oscRegistration)
