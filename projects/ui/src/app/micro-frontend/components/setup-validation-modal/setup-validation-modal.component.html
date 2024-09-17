@@ -7,100 +7,106 @@
       *ngIf="errorMessage()"
       data-testid="setup-validation-dialog-error-banner"></app-error-message>
   </div>
-  <div class="setup-validation-margin">
+  <div class="setup-validation-margin-top">
     <div>
       <div class="validation-language-content">
-        <div class="headline">Select your programming language</div>
-        <fd-select [formControl]="languageSelection" class="select-box with-bottom-margin">
-          <li
-            fd-option
-            *ngFor="let language of selectionOptions()"
-            [value]="language"
-            [attr.data-testid]="'select-language-' + language.id">
-            <span *ngIf="recommendedLanguage().id === language.id">
-              {{ language.displayName }} (found in your repository)
-            </span>
-            <span *ngIf="recommendedLanguage().id !== language.id">{{ language.displayName }}</span>
-          </li>
-        </fd-select>
-        <div *ngIf="languageSelection.getRawValue()?.id !== 'other'" class="headline">
-          Because you use {{ languageSelection.getRawValue()?.displayName }}
-        </div>
-        <div
-          *ngIf="languageSelection.getRawValue()?.validationTool === validationTools.GHAS"
-          class="recommendation-item"
-          data-testid="recommended-service-ghas">
-          <img src="./assets/ghas-logo.svg" alt="GitHub Logo" />
-          GitHub Advanced Security
-          <fd-icon
-            class="info-icon"
-            glyph="hint"
-            [fd-inline-help]="learnMoreGHAS"
-            [triggers]="['click']"
-            [closeOnOutsideClick]="true"></fd-icon>
-        </div>
-        <ng-template #learnMoreGHAS>
-          <a fd-link (click)="onButtonLearnMore(validationTools.GHAS)">Learn more</a>
-        </ng-template>
-        <div
-          *ngIf="languageSelection.getRawValue()?.validationTool === validationTools.CX"
-          class="recommendation-item"
-          data-testid="recommended-service-cx-one">
-          <img alt="CxONE Logo" src="./assets/cx-one-logo.svg" />
-          CxONE (coming soon)
-          <fd-icon
-            class="info-icon"
-            glyph="hint"
-            [fd-inline-help]="learnMoreCxONE"
-            [triggers]="['click']"
-            [closeOnOutsideClick]="true"></fd-icon>
-          <ng-template #learnMoreCxONE>
-            <a fd-link (click)="onButtonLearnMore(validationTools.CX)">Learn more</a>
-          </ng-template>
-        </div>
-
-        <div *ngIf="!languageSelection.getRawValue()?.validationTool" class="select-a-service-box">
-          <div class="flexbox">
-            <div class="service-headline">Select a Service</div>
+        <section class="section-margin-bottom setup-validation-margin-sides">
+          <div class="headline">Select your programming language</div>
+          <fd-select [formControl]="languageSelection" class="select-box">
+            <li
+              fd-option
+              *ngFor="let language of selectionOptions()"
+              [value]="language"
+              [attr.data-testid]="'select-language-' + language.id">
+              <span *ngIf="recommendedLanguage().id === language.id">
+                {{ language.displayName }} (found in your repository)
+              </span>
+              <span *ngIf="recommendedLanguage().id !== language.id">{{ language.displayName }}</span>
+            </li>
+          </fd-select>
+        </section>
+        <section class="setup-validation-margin-sides">
+          <div *ngIf="languageSelection.getRawValue()?.id !== 'other'" class="headline">
+            Because you use {{ languageSelection.getRawValue()?.displayName }}
+          </div>
+          <div
+            *ngIf="languageSelection.getRawValue()?.validationTool === validationTools.GHAS"
+            class="recommendation-item"
+            data-testid="recommended-service-ghas">
+            <img src="./assets/ghas-logo.svg" alt="GitHub Logo" />
+            GitHub Advanced Security
             <fd-icon
-              glyph="hint"
               class="info-icon"
-              placement="top"
-              [fd-inline-help]="showServiceInfo"
+              glyph="hint"
+              [fd-inline-help]="learnMoreGHAS"
               [triggers]="['click']"
               [closeOnOutsideClick]="true"></fd-icon>
+            <ng-template #learnMoreGHAS>
+              <a fd-link (click)="onButtonLearnMore(validationTools.GHAS)">Learn more</a>
+            </ng-template>
           </div>
-          <ng-template #showServiceInfo>
-            <a
-              fd-link
-              href="https://github.wdf.sap.corp/pages/Security-Testing/doc/security%20testing/tools/#sast-tools"
-              target="_blank"
-              rel="noopener noreferrer">
-              See recommendations
-            </a>
-          </ng-template>
-          <fieldset fd-fieldset>
-            <fd-form-group>
-              <div *ngFor="let validationTool of validationToolsArray" fd-form-item>
-                <fd-radio-button
-                  [formControl]="toolSelection"
-                  [id]="validationTool"
-                  [name]="validationTool"
-                  [selectedValue]="toolSelection.value"
-                  [value]="validationTools[validationTool]"
-                  [attr.data-testid]="'radio-button-' + validationTool">
-                  {{ validationTools[validationTool] }}
-                </fd-radio-button>
-              </div>
-            </fd-form-group>
-          </fieldset>
-        </div>
+          <div
+            *ngIf="languageSelection.getRawValue()?.validationTool === validationTools.CX"
+            class="recommendation-item"
+            data-testid="recommended-service-cx-one">
+            <img alt="CxONE Logo" src="./assets/cx-one-logo.svg" />
+            CxONE (coming soon)
+            <fd-icon
+              class="info-icon"
+              glyph="hint"
+              [fd-inline-help]="learnMoreCxONE"
+              [triggers]="['click']"
+              [closeOnOutsideClick]="true"></fd-icon>
+            <ng-template #learnMoreCxONE>
+              <a fd-link (click)="onButtonLearnMore(validationTools.CX)">Learn more</a>
+            </ng-template>
+          </div>
+        </section>
+
+        <section class="setup-validation-margin-sides">
+          <div *ngIf="!languageSelection.getRawValue()?.validationTool" class="select-a-service-box">
+            <div class="flexbox">
+              <div class="service-headline">Select a Service</div>
+              <fd-icon
+                glyph="hint"
+                class="info-icon"
+                placement="top"
+                [fd-inline-help]="showServiceInfo"
+                [triggers]="['click']"
+                [closeOnOutsideClick]="true"></fd-icon>
+            </div>
+            <ng-template #showServiceInfo>
+              <a
+                fd-link
+                href="https://github.wdf.sap.corp/pages/Security-Testing/doc/security%20testing/tools/#sast-tools"
+                target="_blank"
+                rel="noopener noreferrer">
+                See recommendations
+              </a>
+            </ng-template>
+            <fieldset fd-fieldset>
+              <fd-form-group>
+                <div *ngFor="let validationTool of validationToolsArray" fd-form-item>
+                  <fd-radio-button
+                    [formControl]="toolSelection"
+                    [id]="validationTool"
+                    [name]="validationTool"
+                    [selectedValue]="toolSelection.value"
+                    [value]="validationTools[validationTool]"
+                    [attr.data-testid]="'radio-button-' + validationTool">
+                    {{ validationTools[validationTool] }}
+                  </fd-radio-button>
+                </div>
+              </fd-form-group>
+            </fieldset>
+          </div>
+        </section>
         <div
           *ngIf="
             languageSelection.getRawValue()?.validationTool === validationTools.CX ||
             toolSelection.getRawValue() === validationTools.CX
           ">
-          <div class="separator"></div>
+          <div class="separator setup-validation-margin-sides"></div>
           <div class="cx-one-not-available-message">
             <img alt="Illustration of a tent" src="./assets/tent.svg" />
             <figure [noSvg]="true" fd-illustrated-message type="spot">
@@ -129,7 +135,7 @@
         toolSelection.getRawValue() === validationTools.GHAS
       ">
       <div>
-        <div *ngIf="!githubResourceExists()" class="separator"></div>
+        <div *ngIf="!githubResourceExists()" class="separator setup-validation-margin-sides"></div>
         <div *ngIf="toolSelection.getRawValue() === validationTools.GHAS" class="message-strip-container">
           <fd-message-strip type="warning" [dismissible]="false">
             After adding GHAS, since we do not have the full information of your pipeline, the
@@ -145,7 +151,7 @@
           </fd-message-strip>
         </div>
         <div *ngIf="!githubResourceExists()">
-          <div class="credential-headline">Add your GitHub credentials</div>
+          <div class="credential-headline setup-validation-margin-sides">Add your GitHub credentials</div>
           <fdp-message-popover-form-wrapper [forms]="formGenerator?.formGroup" [formFields]="formGenerator?.formFields">
             <fdp-form-generator [formItems]="ghCredentialForm"></fdp-form-generator>
           </fdp-message-popover-form-wrapper>
