@@ -1,8 +1,8 @@
 import { CommonModule } from '@angular/common'
-import { Component, EventEmitter, Input, OnInit, Output, signal, ChangeDetectionStrategy } from '@angular/core'
+import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, Output, signal } from '@angular/core'
 import { DxpLuigiContextService } from '@dxp/ngx-core/luigi'
 import { FundamentalNgxCoreModule } from '@fundamental-ngx/core'
-import { GitHubIssueLabels, GitHubIssueLinkService } from '../../services/github-issue-link.service'
+import { GitHubIssueLinkService } from '../../services/github-issue-link.service'
 import { DebugModeService } from '../../services/debug-mode.service'
 import { AuthorizationModule } from '@dxp/ngx-core/authorization'
 
@@ -51,36 +51,20 @@ export class ErrorMessageComponent implements OnInit {
 
   async reportError() {
     const context = await this.luigiService.getContextAsync()
-    const githubUrl = 'https://github.tools.sap'
+
     let issueDescription = this.message
 
     // Create a regular expression to match <br> tags
     issueDescription = this.convertHtmlElementsToMarkdownElements(issueDescription)
 
-    const issueURL = this.githubIssueLinkService.getIssueLink(
+    const issueURL = this.githubIssueLinkService.createIssueWithContext(
+      context,
       `${this.title} for ${context.projectId}/${context.componentId}`,
-      `
-<!-- Thank you for taking the time to report this error.
-To help us debug, please describe what you tried to do and when the error occurred below.
--->
-    
-### Debugging Information (automatically generated)
-**Error Message:** 
-\`\`\`
-${issueDescription.trim()}
-\`\`\`
-**Project and component:** [\`${context.projectId}/${context.componentId}\`](${context.frameBaseUrl}/projects/${
-        context.projectId
-      }/components/${context.componentId}/pipeline-ui)
-${
-  this.tracesUrl && this.automaticdNamespace
-    ? `**Automaticd namespace traces:** [\`${this.automaticdNamespace}\`](${this.tracesUrl})`
-    : ''
-}
-**Timestamp:** ${Date.now()}
-**User ID:** [\`${context.userid}\`](${githubUrl}/${context.userid})
-    `,
-      [GitHubIssueLabels.BUG, GitHubIssueLabels.EXTERNAL],
+      issueDescription.trim(),
+      {
+        traces: this.tracesUrl,
+        automaticdNamespace: this.automaticdNamespace,
+      },
     )
     window.open(issueURL, '_blank', 'noopener, noreferrer')
   }

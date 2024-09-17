@@ -226,14 +226,7 @@
                 <span *ngIf="dxpContext$ | async as context">
                   We weren't able to load more details about this service. Please let us know by
                   <a
-                    [href]="
-                      missingServiceDetailsTicketUrl(
-                        activeTile,
-                        context.projectId,
-                        context.frameBaseUrl,
-                        context.userid
-                      )
-                    "
+                    [href]="missingServiceDetailsTicketUrl(activeTile, context)"
                     target="_blank"
                     rel="noopener noreferrer"
                     fd-link>

@@ -13,7 +13,7 @@ import { StagingServiceServiceDetailsComponent } from '../service-details/stagin
 import { GithubActionsServiceDetailsComponent } from '../service-details/github-actions/github-actions-service-details.component'
 import { OpenSourceComplianceDetailsComponent } from '../service-details/open-source-compliance/open-source-compliance-details.component'
 import { ExtensionClass, ServiceLevel } from '../../services/extension.types'
-import { GitHubIssueLabels, GitHubIssueLinkService } from '../../services/github-issue-link.service'
+import { GitHubIssueLinkService } from '../../services/github-issue-link.service'
 import { ExtensionService } from '../../services/extension.service'
 import { DebugModeService } from '../../services/debug-mode.service'
 import { DxpLuigiContextService, LuigiClient } from '@dxp/ngx-core/luigi'
@@ -267,25 +267,14 @@ export class ServiceDetailsSkeletonComponent implements OnInit {
     }
   }
 
-  missingServiceDetailsTicketUrl(kind: string, project: string, baseUrl: string, user: string): string {
-    return this.githubIssueLinkService.getIssueLink(
+  missingServiceDetailsTicketUrl(kind: string, context: DxpContext): string {
+    return this.githubIssueLinkService.createIssueWithContext(
+      context,
       `Service info for service ${this.kindName[kind]} missing`,
       `
-<!-- Thank you for taking the time to report this issue.
-To help us debug, please describe where you encountered it below.
--->
-
-
-### Debugging Information (automatically generated)
-Service details from LeanIX are missing for the service \`${this.kindName[kind]}\`. 
-
+Service details from LeanIX are missing for the service \`${this.kindName[kind]}\
 The information might be missing in the Hyperspace portal extension backend, LeanIX or there is a misconfiguration in the CI/CD setup UI.
-
-**Project this issue was created from:** [${project}](${baseUrl}/projects/${project})
-**Timestamp:** ${Date.now()}
-**User:** ${user}
-    `,
-      [GitHubIssueLabels.EXTERNAL],
+      `,
     )
   }
 
@@ -296,6 +285,7 @@ The information might be missing in the Hyperspace portal extension backend, Lea
   openGHASScannnerResults() {
     window.open(this.serviceUrl() + '/security/code-scanning', '_blank', 'noopener, noreferrer')
   }
+
   openGHASSettings() {
     window.open(this.serviceUrl() + '/settings/security_analysis/', '_blank', 'noopener, noreferrer')
   }
