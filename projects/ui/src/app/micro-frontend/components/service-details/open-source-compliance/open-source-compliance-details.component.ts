@@ -83,7 +83,7 @@ export class OpenSourceComplianceDetailsComponent implements OnInit {
         this.apiService.githubService.getGithubRepository(this.serviceDetails.ghRepoRef),
       )
       this.issuetrackerProjectName = githubInfo.repository
-      this.issuetrackerProjectUrl = githubInfo.repositoryUrl
+      this.issuetrackerProjectUrl = githubInfo.repositoryUrl + '/issues'
     }
 
     this.ppmsScv = this.serviceDetails.ppmsScv

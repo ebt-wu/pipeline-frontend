@@ -174,7 +174,7 @@ export class ServiceDetailsSkeletonComponent implements OnInit {
             this.api.openSourceComplianceService.getOpenSourceComplianceRegistration(),
           )
           if (oscRegistration.jiraRef === '') {
-            this.serviceUrl.set(githubRepoUrl)
+            this.serviceUrl.set(githubRepoUrl + '/issues')
           } else {
             const jiraItems = await firstValueFrom(this.jiraService.getJiraItems())
             const jiraItem = jiraItems.find((item) => item.resourceName === oscRegistration.jiraRef)
