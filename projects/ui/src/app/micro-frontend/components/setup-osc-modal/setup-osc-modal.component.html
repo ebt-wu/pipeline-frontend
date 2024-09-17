@@ -53,22 +53,6 @@
             [triggers]="['click']"
             [closeOnOutsideClick]="true"></fd-icon>
         </div>
-        <fd-message-strip
-          type="error"
-          *ngIf="isXmakeSelected()"
-          class="validation-message with-bottom-margin"
-          data-testid="xMakeNotSupportedPrompt">
-          xMake is not supported by the Open-Source Compliance Service
-        </fd-message-strip>
-        <fd-message-strip
-          type="warning"
-          *ngIf="
-            isLanguageUnsupported() && !setupPrerequisitesFormGroup.controls.xMakeOption.invalid && !isXmakeSelected()
-          "
-          class="validation-message with-bottom-margin"
-          data-testid="languageNotSupportedPrompt">
-          You will not be compliant due to the language you have selected
-        </fd-message-strip>
         <div *ngFor="let choice of prerequisitesXmakeChoices()" [attr.data-testid]="'xMakeButton' + choice">
           <fd-radio-button
             [name]="choice"

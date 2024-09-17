@@ -1,19 +1,19 @@
 .list-item-selected {
-  background-color: var(--sapList_SelectionBackgroundColor);
+    background-color: var(--sapList_SelectionBackgroundColor);
 }
 
 .list-item-border {
-  border-top: 1px !important;
-  border-color: var(--sapList_BorderColor) !important;
-  border-style: solid !important;
+    border-top: 1px !important;
+    border-color: var(--sapList_BorderColor) !important;
+    border-style: solid !important;
 }
 
 .list-item-border:hover {
-  background: var(--sapList_Hover_Background);
+    background: var(--sapList_Hover_Background);
 }
 
 .list-item-icon {
-  /* Need to override this to align the with the chevron and icon of the list heading*/
+    /* Need to override this to align the with the chevron and icon of the list heading*/
     width: fit-content !important;
     min-width: 16px !important;
     max-width: 16px !important;
@@ -23,66 +23,66 @@
 
 
 .status-icon {
-  font-size: 16px;
+    font-size: 16px;
 }
 
 li::before {
-  border-radius: var(--fdCard_Border_Radius) !important;
+    border-radius: var(--fdCard_Border_Radius) !important;
 }
 
 .service {
-  display: flex;
-  width: 100%;
-  align-items: center;
-  flex-direction: row;
-
-  .name {
     display: flex;
-    flex-direction: column;
+    width: 100%;
+    align-items: center;
+    flex-direction: row;
 
-    .category {
-      font-size: 16px;
+    .name {
+        display: flex;
+        flex-direction: column;
+
+        .category {
+            font-size: 16px;
+        }
+
+        .not-compliant-info-label {
+            margin-left: 0.5rem;
+            margin-top: -0.1rem;
+        }
+
+        .name-details {
+            font-size: 14px;
+            color: var(--sapNeutralColor);
+        }
+
+        .debug-details {
+            font-size: 13px;
+            color: var(--sapNeutralColor);
+        }
     }
 
-    .not-compliant-info-label{
-      margin-left: 0.5rem;
-      margin-top: -0.1rem;
+    .spacer {
+        flex-grow: 1;
     }
 
-    .name-details {
-      font-size: 14px;
-      color: var(--sapNeutralColor);
+    .retry-button {
+        margin-right: 0.5rem;
     }
 
-    .debug-details {
-      font-size: 13px;
-      color: var(--sapNeutralColor);
+    .details-icon {
+        .icon {
+            margin-right: 1rem;
+            font-size: 20px;
+            color: var(--sapNeutralColor);
+        }
     }
-  }
-
-  .spacer {
-    flex-grow: 1;
-  }
-
-  .retry-button {
-    margin-right: 0.5rem;
-  }
-
-  .details-icon {
-    .icon {
-      margin-right: 1rem;
-      font-size: 20px;
-      color: var(--sapNeutralColor);
-    }
-  }
 }
 
 .spacer {
-  flex-grow: 1;
+    flex-grow: 1;
 }
 
 @media only screen and (max-width: 960px) {
-  .hide-on-small-screen {
-    display: none;
-  }
+    .hide-on-small-screen {
+        display: none;
+    }
 }

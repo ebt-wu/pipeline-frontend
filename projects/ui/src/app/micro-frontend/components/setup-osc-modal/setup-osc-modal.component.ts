@@ -567,11 +567,11 @@ export class SetupOSCModalComponent implements OnInit {
     this.luigiClient.linkManager().updateModalSettings(ModalSettingsBySetupStep[OSCSetupSteps.OSC_PLATFORM_FORM])
   }
 
-  openSetupBuildModal() {
-    const linkToCompoent = `${this.context().frameBaseUrl}/projects/${this.context().projectId}/components/${this.context().componentId}`
-    const buildModalUrlParam = `%2Fprojects%2F${this.context().projectId}%2Fcomponents%2F${this.context().componentId}%2Fpipeline-ui%2Fsetup&modalParams={"size":"s","title":"Set up Build"}`
-    const setupBuildModalLink = `${linkToCompoent}/pipeline-ui?modal=${buildModalUrlParam}`
-    window.open(setupBuildModalLink, '_blank', 'noopener, noreferrer')
+  async openSetupBuildModal() {
+    await this.luigiClient.linkManager().fromVirtualTreeRoot().openAsModal('setup', {
+      title: 'Set Up Build',
+      size: 's',
+    })
   }
 
   openBlackDuck() {

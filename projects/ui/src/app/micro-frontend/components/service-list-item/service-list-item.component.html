@@ -48,7 +48,10 @@
               *ngIf="!isCompliant"
               label="not compliant"
               [color]="1"
-              data-testid="not-compliant-info-label"></fd-info-label>
+              data-testid="not-compliant-info-label"
+              [fd-inline-help]="
+                'Missing PPMS info. You shouldn\'t release this component to customers.'
+              "></fd-info-label>
           </div>
           <span class="name-details">
             {{ kindName[resourceRef.kind] }}
