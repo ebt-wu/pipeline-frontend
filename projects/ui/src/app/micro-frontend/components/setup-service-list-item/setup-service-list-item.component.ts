@@ -45,7 +45,9 @@ export class SetupServiceListItemComponent implements OnInit {
   testId = signal('')
   constructor(private readonly luigiClient: LuigiClient) {}
   ngOnInit() {
-    this.testId.set(this.setupDialogType.toLowerCase().replace(/ /g, '-'))
+    if (this.setupDialogType) {
+      this.testId.set(this.setupDialogType.toLowerCase().replace(/ /g, '-'))
+    }
   }
 
   async openDialog(e: Event, dialogToOpen: Categories) {

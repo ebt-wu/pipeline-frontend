@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common'
-import { Component, Input, OnDestroy, OnInit, signal, ChangeDetectionStrategy } from '@angular/core'
+import { ChangeDetectionStrategy, Component, Input, OnDestroy, OnInit, signal } from '@angular/core'
 import { RouterModule } from '@angular/router'
 import { DxpLuigiContextService, LuigiClient, LuigiDialogUtil } from '@dxp/ngx-core/luigi'
 import { Categories, DeletionPolicy, Kinds, ServiceStatus, Stages } from '@enums'
@@ -277,37 +277,25 @@ export class PipelineComponent implements OnInit, OnDestroy {
       duration: 5000,
     })
   }
+
   async getOpenPRCount(): Promise<number> {
-    const token = await this.api.githubService.getGhToken(
-      this.luigiService,
-      this.luigiClient,
-      this.githubMetadata.githubRepoUrl,
-    )
+    const pulls = await firstValueFrom(this.api.githubService.getPullRequestInfo())
 
-    if (!token?.value || !this.githubMetadata.githubRepoUrl) {
-      return 0
-    }
-
-    const url = new URL(this.githubMetadata.githubRepoUrl)
-    let pullsResp: Response
-    try {
-      pullsResp = await fetch(`${this.githubMetadata.githubInstance}/api/v3/repos${url.pathname}/pulls`, {
-        headers: {
-          Authorization: `Bearer ${token.value}`,
-        },
-        cache: 'no-cache',
-      })
-
-      const pulls = (await pullsResp.json()) as { head: { ref: string } }[]
+    if (pulls && pulls.length > 0) {
       return pulls.reduce((prev, curr) => {
-        const ref = curr.head?.ref
-        if (ref === 'hyperspace-jenkinsfile' || ref === 'piper-onboarding' || ref === 'hyperspace-github-actions') {
+        const title = curr.title
+        if (
+          title.includes('Add the piper config to your repository') ||
+          title.includes('check-in config Jenkinsfile of automation step') ||
+          title.includes('Hyperspace Portal: Adding GitHub Actions piper GPP workflow file') ||
+          title.includes('[Hyperspace CI/CD Setup] Add GitHub Actions piper.yaml') ||
+          title.includes('[Hyperspace CI/CD Setup] Add Jenkinsfile') ||
+          title.includes('[Hyperspace CI/CD Setup] Add Piper config.yml')
+        ) {
           return prev + 1
         }
         return prev
       }, 0)
-    } catch (error) {
-      console.error(error)
     }
     return 0
   }

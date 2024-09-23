@@ -94,35 +94,9 @@ export class SetupValidationModalComponent implements OnInit, OnDestroy {
   }
 
   async recommendLanguage() {
-    const context = await this.luigiService.getContextAsync()
-    const entityContext = context.entityContext as unknown as EntityContext
-    const repoUrl = entityContext?.component?.annotations['github.dxp.sap.com/repo-url'] ?? null
-
-    let gitRepoLanguages: Record<string, number>
-    try {
-      gitRepoLanguages = await this.githubService.getRepositoryLanguages(this.luigiClient, this.luigiService, repoUrl)
-    } catch (error) {
-      this.errorMessage.set((error as Error).message)
-    }
-    if (!gitRepoLanguages) {
-      this.recommendedLanguage.set(ValidationLanguages.find((lang) => lang.id === 'other'))
-    } else {
-      const languagesMap = new Map(Object.entries(gitRepoLanguages))
-      // convert map into array of pairs : [ [key, value] , ... ] and take whatever key is found the most so [0]
-      const foundLanguage = Array.from(languagesMap.entries()).reduce(
-        (prevEntry, nextEntry) => (prevEntry[1] > nextEntry[1] ? prevEntry : nextEntry),
-        0,
-      )[0] as string
-
-      // If there is no language found in the GH repo, use "other". Otherwise use whatever we find in GH.
-      this.recommendedLanguage.set(ValidationLanguages.find((lang) => lang.id === 'other'))
-      ValidationLanguages.forEach((language) => {
-        if (language.githubLinguistNames.includes(foundLanguage)) {
-          this.recommendedLanguage.set(language)
-        }
-      })
-    }
-
+    const githubLanguages = await firstValueFrom(this.githubService.getRepositoryLanguages())
+    const recommendedLanguage = this.githubService.getMostUsedLanguage(githubLanguages, ValidationLanguages)
+    this.recommendedLanguage.set(recommendedLanguage)
     this.selectionOptions.set(ValidationLanguages)
   }
 

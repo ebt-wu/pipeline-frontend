@@ -386,7 +386,7 @@ export class SetupOSCModalComponent implements OnInit {
       .storageManager()
       .getItem(`${this.context().projectId}-${this.context().componentId}-move-to-OSC_PLATFORM_FORM`)) as boolean
 
-    await this.fetchLanguages()
+    await this.recommendLanguage()
     this.setupPrerequisitesFormGroup.controls.languageSelection.patchValue(this.prerequisitesRecommendedLanguage())
     await this.moveTo(isRefreshPress, this.isBuildPipelineSetup())
 
@@ -410,32 +410,10 @@ export class SetupOSCModalComponent implements OnInit {
     }
   }
 
-  async fetchLanguages() {
-    const entityContext = this.context().entityContext as unknown as EntityContext
-    const repoUrl = entityContext?.component?.annotations['github.dxp.sap.com/repo-url'] ?? null
-
-    let gitRepoLanguages: Record<string, number>
-    try {
-      gitRepoLanguages = await this.githubService.getRepositoryLanguages(this.luigiClient, this.luigiService, repoUrl)
-    } catch (error) {
-      this.errorMessage.set((error as Error).message)
-    }
-
-    const languagesMap = new Map(Object.entries(gitRepoLanguages))
-    // convert map into array of pairs : [ [key, value] , ... ] and take whatever key is found the most so [0]
-    const foundLanguage = Array.from(languagesMap.entries()).reduce(
-      (prevEntry, nextEntry) => (prevEntry[1] > nextEntry[1] ? prevEntry : nextEntry),
-      0,
-    )[0] as string
-
-    // If there is no language found in the GH repo, use "other". Otherwise use whatever we find in GH.
-    this.prerequisitesRecommendedLanguage.set(ValidationLanguages.find((lang) => lang.id === 'other'))
-    ValidationLanguages.forEach((language) => {
-      if (language.githubLinguistNames.includes(foundLanguage)) {
-        this.prerequisitesRecommendedLanguage.set(language)
-      }
-    })
-
+  async recommendLanguage() {
+    const githubLanguages = await firstValueFrom(this.githubService.getRepositoryLanguages())
+    const recommendedLanguage = this.githubService.getMostUsedLanguage(githubLanguages, ValidationLanguages)
+    this.prerequisitesRecommendedLanguage.set(recommendedLanguage)
     this.prerequisitesAvailableLanguages.set(ValidationLanguages)
   }
 

@@ -1,9 +1,15 @@
 import { Injectable } from '@angular/core'
 import { BaseAPIService } from './base.service'
 import { first, map, mergeMap } from 'rxjs/operators'
-import { combineLatest, debounceTime, firstValueFrom, lastValueFrom, Observable } from 'rxjs'
-import { DxpLuigiContextService, LuigiClient } from '@dxp/ngx-core/luigi'
-import { CREATE_GITHUB_REPOSITORY, DELETE_GITHUB_REPOSITORY, GET_GITHUB_REPOSITORY } from './queries'
+import { combineLatest, firstValueFrom, lastValueFrom, Observable } from 'rxjs'
+import { DxpLuigiContextService } from '@dxp/ngx-core/luigi'
+import {
+  CREATE_GITHUB_REPOSITORY,
+  DELETE_GITHUB_REPOSITORY,
+  GET_GITHUB_REPOSITORY,
+  GET_REPO_LANGUAGES,
+  GET_REPO_PULLS,
+} from './queries'
 import {
   CreateGithubRepositoryMutation,
   CreateGithubRepositoryMutationVariables,
@@ -16,8 +22,10 @@ import { CredentialTypes, GithubInstances } from '@enums'
 import { Validators } from '@angular/forms'
 import { DynamicFormItem } from '@fundamental-ngx/platform'
 import { Secret, SecretData, SecretService } from './secret.service'
-import { EntityContext, ghTokenFormValue, GithubTokenMessage, SetupBuildFormValue } from '@types'
+import { EntityContext, ghTokenFormValue, SetupBuildFormValue, ValidationLanguage } from '@types'
 import { PolicyService } from './policy.service'
+import { MetadataApolloClientService } from '@dxp/ngx-core/apollo'
+import { ApolloQueryResult } from '@apollo/client/core'
 
 export interface GithubMetadata {
   githubInstance: string
@@ -26,6 +34,27 @@ export interface GithubMetadata {
   githubRepoUrl: string
   githubOrgName: string
   githubTechnicalUserSelfServiceUrl: string
+}
+export type LanguageQueryResult = {
+  component: {
+    extensions: {
+      languages: {
+        Languages: { Name: string; Bytes: number }[]
+      }
+    }
+  }
+}
+
+export type PullRequestQueryResult = {
+  component: {
+    extensions: {
+      repository: {
+        openPullRequests: {
+          title: string
+        }[]
+      }
+    }
+  }
 }
 
 export const REQUIRED_SCOPES = ['repo', 'admin:org', 'admin:org_hook', 'admin:repo_hook', 'workflow']
@@ -37,6 +66,7 @@ export class GithubService {
     private readonly luigiService: DxpLuigiContextService,
     private readonly secretService: SecretService,
     private readonly policyService: PolicyService,
+    private readonly metadataService: MetadataApolloClientService,
   ) {}
 
   public GITHUB_CREDENTIAL_FORM: DynamicFormItem[] = [
@@ -347,70 +377,75 @@ export class GithubService {
       }),
     )
   }
-
-  async getRepositoryLanguages(
-    luigiClient: LuigiClient,
-    luigiContext: DxpLuigiContextService,
-    repoUrl: string,
-  ): Promise<Record<string, number>> {
-    const ghToken = await this.getGhToken(luigiContext, luigiClient, repoUrl)
-    if (!repoUrl || !ghToken) {
-      return undefined
-    }
-    const url = new URL(repoUrl)
-    let languagesResp: Response
-    let foundLanguages: Record<string, number>
-    try {
-      languagesResp = await fetch(`${url.origin}/api/v3/repos${url.pathname}/languages`, {
-        headers: {
-          Authorization: `Bearer ${ghToken.value}`,
-        },
-      })
-      foundLanguages = (await languagesResp.json()) as Record<string, number>
-    } catch (error) {
-      const errorMessage = (error as Error).message
-      throw new Error(`Error (${errorMessage}) when fetching the GitHub Repository languages for: ${repoUrl}`)
-    }
-
-    return foundLanguages
+  getRepositoryLanguages() {
+    // see metadata schema here: https://github.tools.sap/dxp/metadata-registry-service/blob/main/graph/schema.graphql
+    return combineLatest([this.metadataService.apollo(), this.luigiService.contextObservable()]).pipe(
+      first(),
+      mergeMap(([apollo, ctx]) => {
+        return apollo
+          .query({
+            query: GET_REPO_LANGUAGES,
+            variables: {
+              projectId: ctx.context.projectId,
+              componentId: ctx.context.componentId,
+              tenantId: ctx.context.tenantid,
+            },
+          })
+          .pipe(
+            map(
+              (res: ApolloQueryResult<LanguageQueryResult>) =>
+                res.data.component?.extensions?.languages?.Languages ?? undefined,
+            ),
+          )
+      }),
+    )
   }
 
-  async getGhToken(luigiContext: DxpLuigiContextService, luigiClient: LuigiClient, repoUrl: string) {
-    let ghToken
-    if (repoUrl.includes(GithubInstances.WDF)) {
-      ghToken = await firstValueFrom(
-        luigiContext.contextObservable().pipe(
-          debounceTime(100),
-          map((luigiContext) => {
-            return luigiContext.context?.githubWdfToken
-              ? {
-                  value: luigiContext.context.githubWdfToken as string,
-                  domain: GithubInstances.WDF,
-                }
-              : luigiClient.sendCustomMessage({
-                  id: `token.request.github.wdf.sap.corp`,
-                })
-          }),
-        ),
-      )
-    } else {
-      ghToken = await firstValueFrom(
-        luigiContext.contextObservable().pipe(
-          debounceTime(100),
-          map((luigiContext) => {
-            return luigiContext.context?.githubToolsToken
-              ? {
-                  value: luigiContext.context.githubToolsToken as string,
-                  domain: GithubInstances.TOOLS,
-                }
-              : luigiClient.sendCustomMessage({
-                  id: `token.request.github.tools.sap`,
-                })
-          }),
-        ),
-      )
+  /**
+   * Gets the most used language from the languages found in the repo
+   * returns either the language or 'other' if none of the languages is in the allowedLanguages
+   */
+  getMostUsedLanguage(
+    languages: { Name: string; Bytes: number }[],
+    allowedLanguages: ValidationLanguage[],
+  ): ValidationLanguage {
+    if (!languages) {
+      return allowedLanguages.find((lang) => lang.id === 'other')
     }
 
-    return ghToken as GithubTokenMessage
+    let mostUsedLanguage = { Name: 'other', Bytes: 0 }
+    for (const language of languages) {
+      if (language.Bytes > mostUsedLanguage.Bytes) {
+        mostUsedLanguage = language
+      }
+    }
+    return (
+      allowedLanguages.find((lang) => lang.id === mostUsedLanguage.Name.toLowerCase()) ??
+      allowedLanguages.find((lang) => lang.id === 'other')
+    )
+  }
+
+  getPullRequestInfo() {
+    // see metadata schema here: https://github.tools.sap/dxp/metadata-registry-service/blob/main/graph/schema.graphql
+    return combineLatest([this.metadataService.apollo(), this.luigiService.contextObservable()]).pipe(
+      first(),
+      mergeMap(([apollo, ctx]) => {
+        return apollo
+          .query({
+            query: GET_REPO_PULLS,
+            variables: {
+              projectId: ctx.context.projectId,
+              componentId: ctx.context.componentId,
+              tenantId: ctx.context.tenantid,
+            },
+          })
+          .pipe(
+            map(
+              (res: ApolloQueryResult<PullRequestQueryResult>) =>
+                res.data.component?.extensions.repository.openPullRequests ?? undefined,
+            ),
+          )
+      }),
+    )
   }
 }

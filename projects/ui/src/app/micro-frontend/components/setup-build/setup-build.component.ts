@@ -10,8 +10,8 @@ import {
   FormGeneratorService,
 } from '@fundamental-ngx/platform/form'
 import { DxpLuigiContextService, LuigiClient } from '@dxp/ngx-core/luigi'
-import { CredentialTypes, Languages, Orchestrators } from '@enums'
-import { Pipeline } from '@types'
+import { CredentialTypes, Orchestrators } from '@enums'
+import { Pipeline, ValidationLanguage } from '@types'
 import { SecretData, SecretService } from '../../services/secret.service'
 import { debounceTime, firstValueFrom, lastValueFrom, Subscription, Observable } from 'rxjs'
 import { EntityContext, SetupBuildFormValue } from '@types'
@@ -28,6 +28,7 @@ import { PlatformFormGeneratorCustomMessageStripComponent } from '../form-genera
 import { FeatureFlagService } from '../../services/feature-flag.service'
 import { PolicyService } from '../../services/policy.service'
 import { PipelineService } from '../../services/pipeline.service'
+import { ValidationLanguages } from '@constants'
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -109,45 +110,31 @@ export class SetupComponent implements OnInit, OnDestroy {
       name: 'buildTool',
       message: '',
       default: async () => {
-        const context = await this.luigiService.getContextAsync()
-        const entityContext = context.entityContext as unknown as EntityContext
-        const repoUrl = entityContext?.component?.annotations['github.dxp.sap.com/repo-url'] ?? null
-
-        let languages: Record<string, number>
+        let languages: { Name: string; Bytes: number }[]
+        let mostUsedLanguage: ValidationLanguage
         try {
-          languages = await this.githubService.getRepositoryLanguages(this.luigiClient, this.luigiService, repoUrl)
+          languages = await firstValueFrom(this.githubService.getRepositoryLanguages())
+          mostUsedLanguage = this.githubService.getMostUsedLanguage(languages, ValidationLanguages)
         } catch (error) {
           this.errorMessage.set((error as Error).message)
         }
 
-        if (!languages) {
+        if (!languages || !mostUsedLanguage || !mostUsedLanguage.displayName) {
           return BuildTool.Docker
         }
-
-        const languagesMap = new Map()
-        for (const [key, value] of Object.entries(languages)) {
-          languagesMap.set(key, value)
+        switch (mostUsedLanguage.displayName) {
+          case 'Java':
+            return BuildTool.Maven
+          case 'Golang':
+            return BuildTool.Golang
+          case 'Javascript/Typescript':
+            return BuildTool.Npm
+          case 'Python':
+            return BuildTool.Python
+          case 'Other':
+          default:
+            return BuildTool.Docker
         }
-        const sortedLanguages = new Map([...languagesMap].sort((a, b) => b[1] - a[1]))
-
-        if (sortedLanguages.has(Languages.DOCKERFILE)) {
-          return BuildTool.Docker
-        }
-
-        for (const [key] of sortedLanguages) {
-          switch (key) {
-            case Languages.JAVA:
-              return BuildTool.Maven
-            case Languages.GO:
-              return BuildTool.Golang
-            case Languages.TYPESCRIPT:
-            case Languages.JAVASCRIPT:
-              return BuildTool.Npm
-            case Languages.PYTHON:
-              return BuildTool.Python
-          }
-        }
-        return BuildTool.Docker
       },
       guiOptions: {
         inline: true,

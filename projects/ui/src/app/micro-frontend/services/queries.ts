@@ -87,6 +87,34 @@ export const CREATE_GITHUB_REPOSITORY = gql`
   }
 `
 
+export const GET_REPO_LANGUAGES = gql`
+  query GetRepoLanguages($tenantId: String!, $projectId: String!, $componentId: String!) {
+    component(tenantId: $tenantId, projectId: $projectId, componentId: $componentId) {
+      extensions {
+        languages {
+          Languages {
+            Name
+            Bytes
+          }
+        }
+      }
+    }
+  }
+`
+export const GET_REPO_PULLS = gql`
+  query GetRepoPulls($tenantId: String!, $projectId: String!, $componentId: String!) {
+    component(tenantId: $tenantId, projectId: $projectId, componentId: $componentId) {
+      extensions {
+        repository {
+          openPullRequests {
+            title
+          }
+        }
+      }
+    }
+  }
+`
+
 export const DELETE_GITHUB_REPOSITORY = gql`
   mutation DeleteGithubRepository($projectId: String!, $componentId: String!, $resourceName: String!) {
     deleteGithubRepository(projectId: $projectId, componentId: $componentId, resourceName: $resourceName)
