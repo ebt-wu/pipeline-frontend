@@ -120,6 +120,7 @@ export class SetupOSCModalComponent implements OnInit {
       guiOptions: {
         additionalData: {
           header: 'Select where to report issues',
+          ignoreTopMargin: true,
         },
       },
     },
@@ -139,19 +140,6 @@ export class SetupOSCModalComponent implements OnInit {
         },
       ],
       validators: [Validators.required],
-    },
-    {
-      // a hacky way of adding a padding to 'platform' radio-buttons above
-      type: 'header',
-      name: 'platformBottomPadding',
-      message: '',
-      guiOptions: {
-        additionalData: {
-          // 'header' component has top and bottom margins, 1rem (16px) each.
-          // Ignore the top maring to set height at 1rem (16px)
-          ignoreTopMargin: true,
-        },
-      },
     },
     // Jira - Instance
     {
@@ -247,25 +235,6 @@ export class SetupOSCModalComponent implements OnInit {
       },
     },
     {
-      type: 'header',
-      name: 'padding-before-jiraExistingProjectKey',
-      message: '',
-      guiOptions: {
-        additionalData: {
-          // 'header' component has top and bottom margins, 1rem (16px) each.
-          // Ignore the top maring to set height at 1rem (16px)
-          ignoreTopMargin: true,
-        },
-      },
-      when: (formValue: SetupOSCFormValue) => {
-        return (
-          formValue.platform === OSCPlatforms.JIRA &&
-          this.isJiraInstanceConnected &&
-          formValue.jiraProjectType === JiraProjectTypes.EXISTING
-        )
-      },
-    },
-    {
       type: 'select',
       name: 'jiraExistingProjectKey',
       placeholder: 'Select',
@@ -283,33 +252,6 @@ export class SetupOSCModalComponent implements OnInit {
         )
       },
       validators: [Validators.required],
-    },
-    {
-      type: 'header',
-      name: 'padding-after-jiraExistingProjectKey',
-      message: '',
-      guiOptions: {
-        additionalData: {
-          ignoreTopMargin: true,
-        },
-      },
-      when: (formValue: SetupOSCFormValue) => {
-        return (
-          formValue.platform === OSCPlatforms.JIRA &&
-          this.isJiraInstanceConnected &&
-          formValue.jiraProjectType === JiraProjectTypes.EXISTING
-        )
-      },
-    },
-    {
-      type: 'header',
-      name: 'padding-after-Jira-Section',
-      message: '',
-      guiOptions: {
-        additionalData: {
-          ignoreTopMargin: true,
-        },
-      },
     },
     // Github
     {
@@ -334,6 +276,7 @@ export class SetupOSCModalComponent implements OnInit {
       guiOptions: {
         additionalData: {
           header: 'Track compliance',
+          doubleTopMargin: true,
         },
       },
     },

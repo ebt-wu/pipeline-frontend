@@ -1,6 +1,8 @@
 <ng-container [formGroup]="form">
   <ng-container [formGroupName]="formGroupName">
-    <div class="bottom-margin">
+    <div
+      class="bottom-margin"
+      [ngClass]="formItem.guiOptions?.additionalData?.doubleTopMargin ? 'double-top-margin' : ''">
       <h2 class="header" [ngClass]="formItem.guiOptions?.additionalData?.ignoreTopMargin ? '' : 'top-margin'">
         {{ formItem.guiOptions?.additionalData?.header }}
       </h2>

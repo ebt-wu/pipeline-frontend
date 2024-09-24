@@ -1,5 +1,12 @@
 .setup-osc-margin {
-  margin: 1rem 2rem;
+  margin: 1rem 0 1rem 0;
+  font-family: var(--sapFontFamily);
+  font-size: var(--sapFontSize);
+  color: var(--sapField_TextColor);
+}
+
+.setup-osc-margin-all-sides {
+  margin: 1rem 1rem;
   font-family: var(--sapFontFamily);
   font-size: var(--sapFontSize);
   color: var(--sapField_TextColor);
@@ -85,6 +92,10 @@
 
 .extension-info-icon:hover {
   cursor: pointer;
+}
+
+.select-box {
+  width: 30rem;
 }
 
 .busy-indicator {
