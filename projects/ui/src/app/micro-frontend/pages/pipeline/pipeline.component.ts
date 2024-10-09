@@ -288,9 +288,7 @@ export class PipelineComponent implements OnInit, OnDestroy {
           title.includes('Add the piper config to your repository') ||
           title.includes('check-in config Jenkinsfile of automation step') ||
           title.includes('Hyperspace Portal: Adding GitHub Actions piper GPP workflow file') ||
-          title.includes('[Hyperspace CI/CD Setup] Add GitHub Actions piper.yaml') ||
-          title.includes('[Hyperspace CI/CD Setup] Add Jenkinsfile') ||
-          title.includes('[Hyperspace CI/CD Setup] Add Piper config.yml')
+          title.includes('[Hyperspace CI/CD Setup]')
         ) {
           return prev + 1
         }
