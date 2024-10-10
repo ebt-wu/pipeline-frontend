@@ -41,14 +41,16 @@ export class OpenSourceComplianceDetailsComponent implements OnInit {
   issuetrackerProjectName: string
   issuetrackerProjectUrl: string
   ppmsScv: string
-  addScvLink =
-    'https://pages.github.tools.sap/hyperspace/cicd-setup-documentation/use-cases/validate-your-code-OSCS.html'
+
   canUserEditCredentials = false
 
   loading = signal(false)
   error: string
 
-  OSC_STACKOVERFLOW_LINK = 'https://sap.stackenterprise.co/questions/ask?tags=hyperspace;osc'
+  OSC_SNOW_LINK =
+    'https://itsm.services.sap/sp?id=sc_cat_item&sys_id=703f22d51b3b441020c8fddacd4bcbe2&service_offering=67bb88e2eb3c129095cdf897cad0cd93'
+  OSC_ADD_SCV_IN_PIPER_LINK =
+    'https://pages.github.tools.sap/hyperspace/academy/services/osc/gettingStarted/#adapt-piper-configuration'
 
   constructor(
     private readonly apiService: APIService,
@@ -92,6 +94,14 @@ export class OpenSourceComplianceDetailsComponent implements OnInit {
   }
 
   openDocumentation() {
-    window.open(this.addScvLink, 'hyperspace-portal-cicd-oscs', 'noopener,noreferrer')
+    window.open(
+      'https://pages.github.tools.sap/hyperspace/cicd-setup-documentation/connected-tools/validate/osc.html',
+      '_blank',
+      'noopener, noreferrer',
+    )
+  }
+
+  openSnow() {
+    window.open(this.OSC_SNOW_LINK, '_blank', 'noopener, noreferrer')
   }
 }

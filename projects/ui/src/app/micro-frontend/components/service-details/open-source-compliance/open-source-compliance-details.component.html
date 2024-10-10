@@ -1,7 +1,7 @@
 <div *ngIf="!loading()">
   <fd-message-strip *ngIf="!ppmsScv" class="scv-missing-message" type="warning">
     Missing PPMS info. You can’t release this component to customers.
-    <a [href]="addScvLink" fd-link target="_blank" rel="noopener noreferrer">Add SCV manually</a>
+    <a [href]="OSC_SNOW_LINK" fd-link target="_blank" rel="noopener noreferrer">Add SCV manually</a>
   </fd-message-strip>
   <div class="issuetracker-info-container">
     <div class="issuetracker-info">
@@ -26,13 +26,23 @@
       {{ ppmsScv }}
     </div>
     <div *ngIf="!ppmsScv">
-      <button role="button" label="Add SCV" fd-button (click)="openDocumentation()"></button>
+      <button role="button" label="Add SCV" fd-button (click)="openSnow()"></button>
     </div>
   </div>
   <div class="divider"></div>
   <div>
     <h3>Get started with Open-Source Compliance Service</h3>
-    <a [href]="OSC_STACKOVERFLOW_LINK" target="_blank" rel="noopener noreferrer">Ask at Stack&#64;SAP</a>
+    <ul class="no-margin">
+      <li>
+        <a [href]="OSC_ADD_SCV_IN_PIPER_LINK" target="_blank" rel="noopener noreferrer">Maintain an SCV</a>
+        in your Piper configuration.
+      </li>
+      <li>
+        <a [href]="OSC_SNOW_LINK" target="_blank" rel="noopener noreferrer">Open a SNOW issue</a>
+        if you want to stop receiving issues in your backlog management tool.
+        as a Scan Project in Sirius
+      </li>
+    </ul>
     <span>&#160;if you do not receive any issues in the backlog management tool you provided.</span>
   </div>
 </div>
