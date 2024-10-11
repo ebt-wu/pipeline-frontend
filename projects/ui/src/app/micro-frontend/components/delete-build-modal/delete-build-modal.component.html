@@ -28,7 +28,7 @@
       class="not-undone-message"
       [ngClass]="messageBoxRef.data.orchestratorKind === Kinds.JENKINS_PIPELINE ? '' : 'remove-top-margin'">
       Please type the name of your component
-      <b>{{ messageBoxRef.data.componentId }}</b>
+      <b (click)="typedComponentId = messageBoxRef.data.componentId">{{ messageBoxRef.data.componentId }}</b>
       to confirm. This action
       <b>cannot be undone.</b>
     </p>
