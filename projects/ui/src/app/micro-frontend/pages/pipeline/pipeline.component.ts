@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common'
-import { ChangeDetectionStrategy, Component, Input, OnDestroy, OnInit, signal } from '@angular/core'
+import { ChangeDetectionStrategy, Component, Input, OnDestroy, OnInit, Signal, signal } from '@angular/core'
 import { RouterModule } from '@angular/router'
 import { DxpLuigiContextService, LuigiClient, LuigiDialogUtil } from '@dxp/ngx-core/luigi'
 import { Categories, DeletionPolicy, Kinds, ServiceStatus, Stages } from '@enums'
@@ -13,7 +13,7 @@ import {
   MessageToastService,
 } from '@fundamental-ngx/core'
 import { GithubActionsGetPayload } from '@generated/graphql'
-import { debounceTime, firstValueFrom, Observable, Subscription, tap } from 'rxjs'
+import { debounceTime, firstValueFrom, interval, Observable, startWith, Subscription, tap } from 'rxjs'
 import { KindExtensionName, KindName } from '@constants'
 import { Pipeline, ResourceRef } from '@types'
 import { DeleteBuildModalComponent } from '../../components/delete-build-modal/delete-build-modal.component'
@@ -47,6 +47,8 @@ import {
 } from '@fundamental-ngx/platform'
 import { PolicyService } from '../../services/policy.service'
 import { PipelineService } from '../../services/pipeline.service'
+import { toSignal } from '@angular/core/rxjs-interop'
+import { mergeMap } from 'rxjs/operators'
 
 type Error = {
   title: string
@@ -110,7 +112,7 @@ export class PipelineComponent implements OnInit, OnDestroy {
   catalogUrl = signal('')
   errors = signal<Error[]>([])
   extensionClasses = signal<ExtensionClass[]>([])
-  openPRCount = signal(0)
+  openPRCount: Signal<number> = signal(0)
 
   // Feature flags
   showGithubActions = signal(false)
@@ -147,7 +149,16 @@ export class PipelineComponent implements OnInit, OnDestroy {
     private readonly sharedResourceDataService: SharedDataService,
     private readonly policyService: PolicyService,
     private readonly pipelineService: PipelineService,
-  ) {}
+  ) {
+    this.openPRCount = toSignal(
+      interval(30 * 1000).pipe(
+        startWith(0),
+        mergeMap(async () => {
+          return await this.getOpenPRCount()
+        }),
+      ),
+    )
+  }
 
   get showOpenPipelineURL(): boolean {
     return this.isBuildStageSetup() && !this.pendingDeletion() && !this.jenkinsPipelineError
@@ -180,13 +191,11 @@ export class PipelineComponent implements OnInit, OnDestroy {
         // eslint-disable-next-line  @typescript-eslint/no-misused-promises
         tap(async (pipeline) => {
           await this.getPipelineURL(pipeline)
-          this.openPRCount.set(await this.getOpenPRCount())
         }),
       )
       .subscribe((pipeline: Pipeline) => {
         // error reporting
         this.errors.set([])
-        this.openPRCount.set(0)
         this.isBuildPipelineSetupAndCreated.set(false)
         this.jenkinsPipelineError = false
         if (pipeline?.resourceRefs) {

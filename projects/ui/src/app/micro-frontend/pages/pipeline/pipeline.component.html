@@ -86,7 +86,7 @@
                 data-testid="pipeline-screen-pull-request-banner">
                 Merge {{ this.openPRCount() }} open pull requests.
                 <a
-                  *ngIf="this.githubMetadata.githubRepoUrl"
+                  *ngIf="this.githubMetadata && this.githubMetadata.githubRepoUrl"
                   [href]="this.githubMetadata.githubRepoUrl + '/pulls'"
                   fd-link
                   target="_blank"

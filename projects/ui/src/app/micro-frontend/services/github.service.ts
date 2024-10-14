@@ -433,6 +433,7 @@ export class GithubService {
         return apollo
           .query({
             query: GET_REPO_PULLS,
+            fetchPolicy: 'no-cache',
             variables: {
               projectId: ctx.context.projectId,
               componentId: ctx.context.componentId,
