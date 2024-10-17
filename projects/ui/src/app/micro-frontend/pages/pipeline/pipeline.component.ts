@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common'
-import { ChangeDetectionStrategy, Component, Input, OnDestroy, OnInit, Signal, signal } from '@angular/core'
+import { ChangeDetectionStrategy, Component, Input, OnDestroy, OnInit, signal } from '@angular/core'
 import { RouterModule } from '@angular/router'
 import { DxpLuigiContextService, LuigiClient, LuigiDialogUtil } from '@dxp/ngx-core/luigi'
 import { Categories, DeletionPolicy, Kinds, ServiceStatus, Stages } from '@enums'
@@ -13,7 +13,7 @@ import {
   MessageToastService,
 } from '@fundamental-ngx/core'
 import { GithubActionsGetPayload } from '@generated/graphql'
-import { debounceTime, firstValueFrom, interval, Observable, startWith, Subscription, tap } from 'rxjs'
+import { debounceTime, firstValueFrom, Observable, Subscription, tap } from 'rxjs'
 import { KindExtensionName, KindName } from '@constants'
 import { Pipeline, ResourceRef } from '@types'
 import { DeleteBuildModalComponent } from '../../components/delete-build-modal/delete-build-modal.component'
@@ -47,8 +47,7 @@ import {
 } from '@fundamental-ngx/platform'
 import { PolicyService } from '../../services/policy.service'
 import { PipelineService } from '../../services/pipeline.service'
-import { toSignal } from '@angular/core/rxjs-interop'
-import { mergeMap } from 'rxjs/operators'
+import { map } from 'rxjs/operators'
 
 type Error = {
   title: string
@@ -112,7 +111,6 @@ export class PipelineComponent implements OnInit, OnDestroy {
   catalogUrl = signal('')
   errors = signal<Error[]>([])
   extensionClasses = signal<ExtensionClass[]>([])
-  openPRCount: Signal<number> = signal(0)
 
   // Feature flags
   showGithubActions = signal(false)
@@ -131,6 +129,7 @@ export class PipelineComponent implements OnInit, OnDestroy {
   serviceStatus = ServiceStatus
   categories = Categories
   stages = Stages
+  openPrCount$: Observable<number>
   pipelineURL = signal('')
   private pipelineSubscription: Subscription
   private githubActionsSubscription: Subscription
@@ -149,16 +148,7 @@ export class PipelineComponent implements OnInit, OnDestroy {
     private readonly sharedResourceDataService: SharedDataService,
     private readonly policyService: PolicyService,
     private readonly pipelineService: PipelineService,
-  ) {
-    this.openPRCount = toSignal(
-      interval(30 * 1000).pipe(
-        startWith(0),
-        mergeMap(async () => {
-          return await this.getOpenPRCount()
-        }),
-      ),
-    )
-  }
+  ) {}
 
   get showOpenPipelineURL(): boolean {
     return this.isBuildStageSetup() && !this.pendingDeletion() && !this.jenkinsPipelineError
@@ -183,6 +173,11 @@ export class PipelineComponent implements OnInit, OnDestroy {
     this.isGithubActionsEnabledAlready$ = this.api.githubActionsService.getGithubActionsCrossNamespace(
       this.githubMetadata.githubInstance,
       this.githubMetadata.githubOrgName,
+    )
+    this.openPrCount$ = this.api.githubService.getPullRequestInfo().pipe(
+      map((prInfo) => {
+        return this.calculateOpenPRCount(prInfo)
+      }),
     )
 
     this.pipelineSubscription = this.pipeline$
@@ -287,11 +282,9 @@ export class PipelineComponent implements OnInit, OnDestroy {
     })
   }
 
-  async getOpenPRCount(): Promise<number> {
-    const pulls = await firstValueFrom(this.api.githubService.getPullRequestInfo())
-
-    if (pulls && pulls.length > 0) {
-      return pulls.reduce((prev, curr) => {
+  calculateOpenPRCount(prInfo: { title: string }[]): number {
+    if (prInfo && prInfo.length > 0) {
+      return prInfo.reduce((prev, curr) => {
         const title = curr.title
         if (
           title.includes('Add the piper config to your repository') ||

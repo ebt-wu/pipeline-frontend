@@ -46,7 +46,7 @@ export type LanguageQueryResult = {
 }
 
 export type PullRequestQueryResult = {
-  component: {
+  watchComponent: {
     extensions: {
       repository: {
         openPullRequests: {
@@ -431,9 +431,8 @@ export class GithubService {
       first(),
       mergeMap(([apollo, ctx]) => {
         return apollo
-          .query({
+          .subscribe({
             query: GET_REPO_PULLS,
-            fetchPolicy: 'no-cache',
             variables: {
               projectId: ctx.context.projectId,
               componentId: ctx.context.componentId,
@@ -441,10 +440,11 @@ export class GithubService {
             },
           })
           .pipe(
-            map(
-              (res: ApolloQueryResult<PullRequestQueryResult>) =>
-                res.data.component?.extensions.repository.openPullRequests ?? undefined,
-            ),
+            map((res: ApolloQueryResult<PullRequestQueryResult>) => {
+              return (
+                (res.data.watchComponent.extensions?.repository?.openPullRequests as { title: string }[]) ?? undefined
+              )
+            }),
           )
       }),
     )

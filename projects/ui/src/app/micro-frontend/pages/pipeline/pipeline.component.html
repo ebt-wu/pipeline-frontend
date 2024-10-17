@@ -80,11 +80,11 @@
                 message="YAY! Your build pipeline is set up."
                 type="success"></app-dismissible-message>
               <fd-message-strip
-                *ngIf="this.openPRCount()"
+                *ngIf="openPrCount$ | async as openPrCount"
                 class="pull-requests-message"
                 type="warning"
                 data-testid="pipeline-screen-pull-request-banner">
-                Merge {{ this.openPRCount() }} open pull requests.
+                Merge {{ openPrCount }} open pull requests.
                 <a
                   *ngIf="this.githubMetadata && this.githubMetadata.githubRepoUrl"
                   [href]="this.githubMetadata.githubRepoUrl + '/pulls'"

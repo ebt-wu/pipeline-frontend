@@ -102,8 +102,8 @@ export const GET_REPO_LANGUAGES = gql`
   }
 `
 export const GET_REPO_PULLS = gql`
-  query GetRepoPulls($tenantId: String!, $projectId: String!, $componentId: String!) {
-    component(tenantId: $tenantId, projectId: $projectId, componentId: $componentId) {
+  subscription GetRepoPulls($tenantId: String!, $projectId: String!, $componentId: String!) {
+    watchComponent(tenantId: $tenantId, projectId: $projectId, componentId: $componentId) {
       extensions {
         repository {
           openPullRequests {
