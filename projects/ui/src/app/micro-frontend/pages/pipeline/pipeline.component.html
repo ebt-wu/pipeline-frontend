@@ -1,4 +1,4 @@
-<div class="variable-overwrites">
+<div class="variable-overwrites" *ngIf="pipeline$ | async as pipeline; else skeleton">
   <fdp-dynamic-page ariaLabel="CI/CD Setup">
     <fdp-dynamic-page-title title="CI/CD Setup">
       <fdp-dynamic-page-global-actions>
@@ -27,7 +27,7 @@
     <fdp-dynamic-page-content>
       <fd-flexible-column-layout [(layout)]="localLayout">
         <ng-template #startColumn>
-          <div *ngIf="pipeline$ | async as pipeline; else skeleton" class="scrollable-container">
+          <div class="scrollable-container">
             <div class="header-content">
               <div *ngIf="debugModeService.debugModeEnabled()" class="header-debug-mode">
                 <span>Debug Mode</span>
@@ -403,22 +403,14 @@
               </ng-container>
             </div>
           </div>
-          <ng-template #skeleton>
-            <fd-skeleton height="6rem" type="rectangle" width="100%"></fd-skeleton>
-            <div class="pipeline-container">
-              <fd-skeleton class="skeleton-text" textLines="2" type="text" width="15rem"></fd-skeleton>
-              <fd-skeleton class="skeleton-top-margin" height="6rem" type="rectangle" width="100%"></fd-skeleton>
-              <fd-skeleton class="skeleton-top-margin" height="6rem" type="rectangle" width="100%"></fd-skeleton>
-              <fd-skeleton class="skeleton-top-margin" height="6rem" type="rectangle" width="100%"></fd-skeleton>
-            </div>
-          </ng-template>
         </ng-template>
         <ng-template #midColumn>
           <div class="scrollable-container">
             <app-service-details-skeleton
               (localLayoutEvent)="updateLocalLayout($event)"
               [activeTile]="activeTile"
-              [localLayout]="localLayout"></app-service-details-skeleton>
+              [localLayout]="localLayout"
+              [pipeline]="pipeline"></app-service-details-skeleton>
           </div>
         </ng-template>
       </fd-flexible-column-layout>
@@ -434,4 +426,13 @@
   You need to be 'Vault Maintainer' to see credentials.
   <br />
   Go to the members list to contact a project owner.
+</ng-template>
+
+<ng-template #skeleton>
+  <fd-skeleton height="3rem" type="rectangle" width="100%"></fd-skeleton>
+  <div class="pipeline-container">
+    <fd-skeleton class="skeleton-top-element-margin" height="4rem" type="rectangle" width="100%"></fd-skeleton>
+    <fd-skeleton class="skeleton-margin" height="4rem" type="rectangle" width="100%"></fd-skeleton>
+    <fd-skeleton class="skeleton-margin" height="4rem" type="rectangle" width="100%"></fd-skeleton>
+  </div>
 </ng-template>

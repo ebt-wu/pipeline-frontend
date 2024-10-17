@@ -1,10 +1,9 @@
 import { CommonModule } from '@angular/common'
 import { Component, Input, OnInit, signal, ChangeDetectionStrategy } from '@angular/core'
 import { BusyIndicatorModule, FundamentalNgxCoreModule, InlineHelpDirective } from '@fundamental-ngx/core'
-import { SecretService } from '../../../../micro-frontend/services/secret.service'
 import { GetJenkinsPipelineQuery } from '@generated/graphql'
 import { AuthorizationModule } from '@dxp/ngx-core/authorization'
-import { PolicyService } from '../../../services/policy.service'
+import { BaseServiceDetailsComponent } from '../base-service-details.component'
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -14,25 +13,16 @@ import { PolicyService } from '../../../services/policy.service'
   styleUrl: './jenkins-service-details.component.css',
   imports: [BusyIndicatorModule, CommonModule, FundamentalNgxCoreModule, AuthorizationModule, InlineHelpDirective],
 })
-export class JenkinServiceDetailsComponent implements OnInit {
-  constructor(
-    private readonly secretService: SecretService,
-    private readonly policyService: PolicyService,
-  ) {}
-
+export class JenkinServiceDetailsComponent extends BaseServiceDetailsComponent implements OnInit {
   @Input() serviceDetails: GetJenkinsPipelineQuery['getJenkinsPipeline']
 
-  canUserEditCredentials = false
-
   loading = signal(false)
-  pendingShowInVault = signal(false)
 
   originURL: string
 
   async ngOnInit() {
     this.loading.set(true)
-    this.canUserEditCredentials = await this.policyService.canUserEditCredentials()
-
+    await super.ngOnInit()
     const jobURL = new URL(this.serviceDetails.jobUrl)
     this.originURL = jobURL.origin
     this.loading.set(false)
@@ -44,11 +34,5 @@ export class JenkinServiceDetailsComponent implements OnInit {
       '_blank',
       'noopener, noreferrer',
     )
-  }
-
-  async showInVault(vaultPath: string) {
-    this.pendingShowInVault.set(true)
-    window.open(await this.secretService.getVaultUrlOfSecret(vaultPath), '_blank', 'noopener, noreferrer')
-    this.pendingShowInVault.set(false)
   }
 }

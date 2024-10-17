@@ -14,7 +14,7 @@ import { DebugModeService } from '../../services/debug-mode.service'
 import { KindCategory, KindName } from '../../../constants'
 import { Pipeline, ResourceRef } from '../../../types'
 import { firstValueFrom } from 'rxjs'
-import { Kinds, ServiceStatus } from '../../../enums'
+import { Kinds, ServiceStatus, StepKey } from '../../../enums'
 import { RouterModule } from '@angular/router'
 import { AuthorizationModule } from '@dxp/ngx-core/authorization'
 import { LuigiClient } from '@dxp/ngx-core/luigi'
@@ -23,7 +23,7 @@ import { ErrorMessageComponent } from '../error-message/error-message.component'
 
 export interface ServiceData {
   name: string
-  kind: Kinds
+  kind: Kinds | StepKey
   status: string
   pipeline?: Pipeline
 }
@@ -57,6 +57,8 @@ export class ServiceListItemComponent implements OnInit {
 
   isCompliant: boolean = true
 
+  notManagedInfoString: string
+
   constructor(
     readonly debugModeService: DebugModeService,
     readonly luigiClient: LuigiClient,
@@ -64,7 +66,7 @@ export class ServiceListItemComponent implements OnInit {
     private cd: ChangeDetectorRef,
   ) {}
 
-  openDetails(kind: Kinds, name: string, status: string) {
+  openDetails(kind: Kinds | StepKey, name: string, status: string) {
     this.openDetailsEvent.emit({ kind, name, status })
   }
 
@@ -72,6 +74,8 @@ export class ServiceListItemComponent implements OnInit {
     if (this.isOSCItem()) {
       this.fetchIsOpenSourceCompliant()
     }
+
+    this.notManagedInfoString = `${KindName[this.resourceRef.kind]} is not available in the Hyperspace Portal. The Portal will not manage your setup or allow for edits.`
   }
 
   isOSCItem() {

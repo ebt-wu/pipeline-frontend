@@ -2,10 +2,11 @@ import { CommonModule } from '@angular/common'
 import { Component, signal, ChangeDetectionStrategy, OnInit } from '@angular/core'
 import { FormattedTextModule, FundamentalNgxCoreModule } from '@fundamental-ngx/core'
 import { PipelineService } from '../../services/pipeline.service'
-import { Observable, debounceTime, firstValueFrom } from 'rxjs'
+import { Observable, combineLatestWith, debounceTime, firstValueFrom, map } from 'rxjs'
 import { Pipeline } from '@types'
 import { LuigiClient } from '@dxp/ngx-core/luigi'
 import { AuthorizationModule } from '@dxp/ngx-core/authorization'
+import { NotManagedServices } from '@generated/graphql'
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -26,7 +27,17 @@ export class PipelineDebugModalComponent implements OnInit {
   watch$: Observable<Pipeline>
 
   ngOnInit(): void {
-    this.watch$ = this.pipelineService.watchPipeline().pipe(debounceTime(50))
+    const watchPipeline$ = this.pipelineService.watchPipeline().pipe(debounceTime(50))
+    const watchNotManagedServices$ = this.pipelineService
+      .watchNotManagedServicesInPipeline()
+      .pipe(debounceTime(50)) as Observable<NotManagedServices>
+
+    this.watch$ = watchPipeline$.pipe(
+      combineLatestWith(watchNotManagedServices$),
+      map(([pipeline, notManaged]) => {
+        return { ...pipeline, notManagedServices: notManaged }
+      }),
+    )
   }
 
   async deletePipeline(event: MouseEvent) {

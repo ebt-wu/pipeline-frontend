@@ -7,6 +7,7 @@ import { ErrorMessageComponent } from '../../error-message/error-message.compone
 import { DxpLuigiContextService, LuigiClient } from '@dxp/ngx-core/luigi'
 import { AuthorizationModule } from '@dxp/ngx-core/authorization'
 import { PolicyService } from '../../../services/policy.service'
+import { BaseServiceDetailsComponent } from '../base-service-details.component'
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -16,13 +17,15 @@ import { PolicyService } from '../../../services/policy.service'
   imports: [CommonModule, FundamentalNgxCoreModule, ErrorMessageComponent, AuthorizationModule, InlineHelpDirective],
   styleUrl: './github-actions-service-details.component.css',
 })
-export class GithubActionsServiceDetailsComponent implements OnInit {
+export class GithubActionsServiceDetailsComponent extends BaseServiceDetailsComponent implements OnInit {
   constructor(
-    private readonly secretService: SecretService,
+    protected override readonly secretService: SecretService,
+    protected override readonly policyService: PolicyService,
     private readonly luigiService: DxpLuigiContextService,
     private readonly luigiClient: LuigiClient,
-    private readonly policyService: PolicyService,
-  ) {}
+  ) {
+    super(policyService, secretService)
+  }
 
   @Input() serviceDetails: GetGithubActionsCrossNamespaceQuery['getGithubActionsCrossNamespace']
 
@@ -35,12 +38,10 @@ export class GithubActionsServiceDetailsComponent implements OnInit {
 
   githubOrganizationUrl: string
   githubActionsRunnerGroupUrl: string
-  errorMessage = signal('')
   catalogUrl = signal('')
   isCurrentProjectResponsible = signal(false)
   responsibleProjectUrl = signal('')
   showActionsGetStartedWarning = signal(false)
-  canUserEditCredentials = false
 
   async ngOnInit() {
     this.githubOrganizationUrl = `${this.serviceDetails.githubInstance}/${this.serviceDetails.githubOrganization}`
@@ -57,8 +58,7 @@ export class GithubActionsServiceDetailsComponent implements OnInit {
     const context = await this.luigiService.getContextAsync()
     this.catalogUrl.set(context.frameBaseUrl + '/catalog')
 
-    this.canUserEditCredentials = await this.policyService.canUserEditCredentials()
-
+    await super.ngOnInit()
     if (context.projectId != this.serviceDetails.responsibleProject) {
       this.responsibleProjectUrl.set(`${context.frameBaseUrl}/projects/${this.serviceDetails.responsibleProject}`)
     }
@@ -72,25 +72,6 @@ export class GithubActionsServiceDetailsComponent implements OnInit {
       '_blank',
       'noopener, noreferrer',
     )
-  }
-
-  async showInVault(vaultPath: string) {
-    this.pendingShowInVault.set(true)
-    try {
-      window.open(await this.secretService.getVaultUrlOfSecret(vaultPath), '_blank', 'noopener, noreferrer')
-    } catch (error) {
-      const errorMessage = (error as Error).message
-      if (errorMessage) {
-        this.errorMessage.set(errorMessage)
-      } else {
-        this.errorMessage.set('Unknown error')
-      }
-    }
-    this.pendingShowInVault.set(false)
-  }
-
-  dismissErrorMessage() {
-    this.errorMessage.set('')
   }
 
   async storeDismissInLocalStorage() {

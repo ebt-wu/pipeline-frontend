@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core'
 import { BehaviorSubject, Observable } from 'rxjs'
-import { Kinds } from '../../enums'
+import { Kinds, StepKey } from '@enums'
 
 interface SelectedResourceData {
-  kind: Kinds
+  kind: Kinds | StepKey
   name: string
 }
 
@@ -17,7 +17,7 @@ export class SharedDataService {
     this.selectedResourceData$ = this.resourceDataSubject.asObservable()
   }
 
-  publishResourceData(kind: Kinds, name: string) {
+  publishResourceData(kind: Kinds | StepKey, name: string) {
     this.resourceDataSubject.next({ kind, name })
   }
 }

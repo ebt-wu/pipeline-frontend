@@ -145,12 +145,14 @@
     }
 }
 
-.skeleton-text {
-    padding: 20px;
+.skeleton-margin {
+    margin-top: 1rem;
+    margin-left: 2.5rem;
 }
 
-.skeleton-top-margin {
-    margin-top: 1rem;
+.skeleton-top-element-margin {
+    margin-top: 2.5rem;
+    margin-left: 2.5rem;
 }
 
 .spacer {

@@ -108,8 +108,8 @@
           <span *ngIf="!serviceDetailsLoading() && serviceCreationTimestamp() && !debugModeService.debugModeEnabled()">
             {{ formatDate(serviceCreationTimestamp()) }}
           </span>
-          <span *ngIf="!serviceDetailsLoading() && debugModeService.debugModeEnabled()">
-            {{ serviceCreationTimestamp()?.toISOString() ?? 'undefined' }}
+          <span *ngIf="!serviceDetailsLoading() && serviceCreationTimestamp() && debugModeService.debugModeEnabled()">
+            {{ getIsoString(serviceCreationTimestamp()) }}
           </span>
           <fd-skeleton *ngIf="serviceDetailsLoading()" width="85px" height="21px">
             <svg:rect x="0" y="8" width="85" height="8" rx="4"></svg:rect>
@@ -142,12 +142,42 @@
               <app-github-actions-service-details
                 *ngSwitchCase="kinds.GITHUB_ACTIONS_WORKFLOW"
                 [serviceDetails]="serviceDetails()"></app-github-actions-service-details>
-              <app-static-security-check-details
+              <app-github-advanced-security-service-details
                 *ngSwitchCase="kinds.GITHUB_ADVANCED_SECURITY"
-                [serviceDetails]="serviceDetails()"></app-static-security-check-details>
+                [serviceDetails]="serviceDetails()"></app-github-advanced-security-service-details>
               <app-open-source-compliance-details
                 *ngSwitchCase="kinds.OPEN_SOURCE_COMPLIANCE"
                 [serviceDetails]="serviceDetails()"></app-open-source-compliance-details>
+              <app-sonar-service-details
+                *ngSwitchCase="kinds.SONAR_QUBE_PROJECT"
+                [serviceDetails]="serviceDetails()"></app-sonar-service-details>
+              <app-azure-service-details
+                *ngSwitchCase="stepKeys.AZURE_DEV_OPS"
+                [serviceDetails]="serviceDetails()"></app-azure-service-details>
+              <app-xmake-service-details
+                *ngSwitchCase="stepKeys.XMAKE"
+                [serviceDetails]="serviceDetails()"></app-xmake-service-details>
+              <app-black-duck-service-details
+                *ngSwitchCase="stepKeys.BLACK_DUCK_HUB"
+                [serviceDetails]="serviceDetails()"></app-black-duck-service-details>
+              <app-cnb-service-details
+                *ngSwitchCase="stepKeys.CNB"
+                [serviceDetails]="serviceDetails()"></app-cnb-service-details>
+              <app-common-repository-service-details
+                *ngSwitchCase="stepKeys.COMMON_REPOSITORY"
+                [serviceDetails]="serviceDetails()"></app-common-repository-service-details>
+              <app-checkmarx-service-details
+                *ngSwitchCase="stepKeys.CHECKMARX"
+                [serviceDetails]="serviceDetails()"></app-checkmarx-service-details>
+              <app-fortify-service-details
+                *ngSwitchCase="stepKeys.FORTIFY"
+                [serviceDetails]="serviceDetails()"></app-fortify-service-details>
+              <app-whitesource-service-details
+                *ngSwitchCase="stepKeys.WHITE_SOURCE"
+                [serviceDetails]="serviceDetails()"></app-whitesource-service-details>
+              <app-ppms-foss-service-details
+                *ngSwitchCase="stepKeys.PPMS_FOSS"
+                [serviceDetails]="serviceDetails()"></app-ppms-foss-service-details>
             </div>
             <div class="tab-margin">
               <fd-skeleton width="350px" height="10rem" *ngIf="serviceDetailsLoading()">

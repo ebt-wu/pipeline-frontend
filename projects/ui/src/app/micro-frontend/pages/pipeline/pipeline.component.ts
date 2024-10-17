@@ -2,7 +2,7 @@ import { CommonModule } from '@angular/common'
 import { ChangeDetectionStrategy, Component, Input, OnDestroy, OnInit, signal } from '@angular/core'
 import { RouterModule } from '@angular/router'
 import { DxpLuigiContextService, LuigiClient, LuigiDialogUtil } from '@dxp/ngx-core/luigi'
-import { Categories, DeletionPolicy, Kinds, ServiceStatus, Stages } from '@enums'
+import { Categories, DeletionPolicy, Kinds, ServiceStatus, Stages, StepKey } from '@enums'
 import {
   FlexibleColumnLayout,
   FundamentalNgxCoreModule,
@@ -47,6 +47,7 @@ import {
 } from '@fundamental-ngx/platform'
 import { PolicyService } from '../../services/policy.service'
 import { PipelineService } from '../../services/pipeline.service'
+import { SonarServiceDetailsComponent } from '../../components/service-details/sonar/sonar-service-details.component'
 import { map } from 'rxjs/operators'
 
 type Error = {
@@ -71,6 +72,7 @@ type Error = {
     DismissibleMessageComponent,
     CumlusServiceDetailsComponent,
     GithubServiceDetailsComponent,
+    SonarServiceDetailsComponent,
     JenkinServiceDetailsComponent,
     PiperServiceDetailsComponent,
     StagingServiceServiceDetailsComponent,
@@ -208,6 +210,11 @@ export class PipelineComponent implements OnInit, OnDestroy {
 
             if (ref.kind === Kinds.OPEN_SOURCE_COMPLIANCE) {
               this.isOpenSourceChecksSetup.set(true)
+              this.isValidationStageOpen.set(true)
+            }
+
+            if (ref.kind === Kinds.SONAR_QUBE_PROJECT) {
+              this.isStaticCodeChecksSetup.set(true)
               this.isValidationStageOpen.set(true)
             }
 
@@ -415,7 +422,7 @@ export class PipelineComponent implements OnInit, OnDestroy {
     const componentId = (await this.luigiService.getContextAsync()).componentId
 
     const orchestratorKind = pipeline.resourceRefs.find((ref) =>
-      [Kinds.GITHUB_ACTIONS_WORKFLOW, Kinds.JENKINS_PIPELINE].includes(ref.kind),
+      ([Kinds.GITHUB_ACTIONS_WORKFLOW, Kinds.JENKINS_PIPELINE] as Array<Kinds | StepKey>).includes(ref.kind),
     )?.kind
 
     const mb = this.messageBoxService.open(DeleteBuildModalComponent, {
@@ -491,7 +498,7 @@ export class PipelineComponent implements OnInit, OnDestroy {
   }
 
   openDetails(event: ServiceData) {
-    if (event.status != ServiceStatus.CREATED.toString()) {
+    if (event.status !== ServiceStatus.CREATED.toString() && event.status !== ServiceStatus.NOT_MANAGED.toString()) {
       return
     }
 

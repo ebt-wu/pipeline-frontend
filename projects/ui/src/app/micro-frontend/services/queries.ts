@@ -38,6 +38,63 @@ export const WATCH_PIPELINE = gql`
   }
 `
 
+export const WATCH_NOT_MANAGED_SERVICES = gql`
+  subscription WatchNotManagedServices($projectId: String!, $componentId: String!) {
+    watchNotManagedServices(projectId: $projectId, componentId: $componentId) {
+      pipelineCreationTimestamp
+      azureDevOps {
+        azurePipelineName
+        azureProjectName
+        azurePipelineId
+        pipelineDefinitionUrl
+        secretPath
+      }
+      cnb {
+        builder
+        path
+      }
+      xmake {
+        id
+        uuid
+        projectPortalProjectUrl
+        secretPath
+      }
+      commonRepository {
+        secretPath
+      }
+      blackDuckHub {
+        pipelineName
+        ppmsId
+        groupName
+        projectLink
+        secretPath
+      }
+      checkmarx {
+        teamName
+        projectName
+        teamFullName
+        secretPath
+      }
+      fortify {
+        projectName
+        secretPath
+      }
+      whiteSource {
+        productName
+        productUrl
+        serviceUserName
+        serviceUserEmail
+        secretPath
+      }
+      ppmsFoss {
+        scvId
+        scvName
+        ppmsLightSCVURL
+      }
+    }
+  }
+`
+
 /**
  * SECRETS QUERIES
  */

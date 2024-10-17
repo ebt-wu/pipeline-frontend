@@ -18,13 +18,16 @@ import { StagingServiceServiceDetailsComponent } from './components/service-deta
 import { PlatformFormGeneratorCustomInfoBoxComponent } from './components/form-generator/form-generator-info-box/form-generator-info-box.component'
 import { CumulusInfoModalComponent } from './components/cumulus-info-modal/cumulus-info-modal.component'
 import { GithubActionsServiceDetailsComponent } from './components/service-details/github-actions/github-actions-service-details.component'
-import { StaticSecurityCheckDetailsComponent } from './components/service-details/static-security-check/static-security-check-details.component'
+import { GithubAdvancedSecurityServiceDetailsComponent } from './components/service-details/github-advanced-security/github-advanced-security-service-details.component'
 import { ResourceStagePipe } from './pipes/resource-stage.pipe'
 import { SetupServiceListItemComponent } from './components/setup-service-list-item/setup-service-list-item.component'
+import { SonarServiceDetailsComponent } from './components/service-details/sonar/sonar-service-details.component'
+import { AzureServiceDetailsComponent } from './components/service-details/azure/azure-service-details.component'
 
 @NgModule({
   providers: [ContentDensityService, ThemingService],
   imports: [
+    AzureServiceDetailsComponent,
     CommonModule,
     CumlusServiceDetailsComponent,
     CumulusInfoModalComponent,
@@ -33,6 +36,7 @@ import { SetupServiceListItemComponent } from './components/setup-service-list-i
     FundamentalNgxCoreModule,
     FundamentalNgxPlatformModule,
     GithubActionsServiceDetailsComponent,
+    GithubAdvancedSecurityServiceDetailsComponent,
     GithubServiceDetailsComponent,
     HomePageComponent,
     JenkinServiceDetailsComponent,
@@ -45,8 +49,8 @@ import { SetupServiceListItemComponent } from './components/setup-service-list-i
     ResourceStagePipe,
     SetupComponent,
     SetupServiceListItemComponent,
+    SonarServiceDetailsComponent,
     StagingServiceServiceDetailsComponent,
-    StaticSecurityCheckDetailsComponent,
   ],
 })
 export class MicroFrontendModule {}

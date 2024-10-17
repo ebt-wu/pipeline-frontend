@@ -20,6 +20,8 @@ export enum Extensions {
   JAAS = 'jaas',
   GITHUB_ADVANCED_SECURITY = 'github-advanced-security-github-tools-sap',
   OPEN_SOURCE_COMPLIANCE = 'hyperspace-open-source-compliance-management',
+  XMAKE = 'xmake',
+  BLACKDUCK = 'blackduck-detect',
 }
 
 export interface ExtensionClass {

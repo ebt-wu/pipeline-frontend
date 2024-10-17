@@ -1,4 +1,4 @@
-import { BuildTool, PipelineType } from '@generated/graphql'
+import { BuildTool, NotManagedServices, PipelineType } from '@generated/graphql'
 import {
   CredentialTypes,
   GithubInstances,
@@ -7,6 +7,7 @@ import {
   Orchestrators,
   OSCPlatforms,
   ServiceStatus,
+  StepKey,
   ValidationTools,
 } from '@enums'
 
@@ -46,7 +47,7 @@ export type SetupOSCFormValue = {
 export type ResourceRef = {
   error?: string
   name?: string
-  kind?: Kinds
+  kind?: Kinds | StepKey
   status?: ServiceStatus
 }
 
@@ -56,6 +57,7 @@ export type Pipeline = {
   pipelineType?: PipelineType
   resourceRefs?: ResourceRef[]
   labels?: Label[]
+  notManagedServices?: NotManagedServices
 }
 
 export type Label = {

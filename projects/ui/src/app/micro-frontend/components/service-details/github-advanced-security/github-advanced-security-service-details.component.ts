@@ -17,13 +17,14 @@ import { AsyncPipe, NgIf } from '@angular/common'
 import { AuthorizationModule } from '@dxp/ngx-core/authorization'
 import { Secret, SecretService } from '../../../services/secret.service'
 import { PolicyService } from '../../../services/policy.service'
+import { BaseServiceDetailsComponent } from '../base-service-details.component'
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: true,
-  selector: 'app-static-security-check-details',
-  templateUrl: './static-security-check-details.component.html',
-  styleUrl: './static-security-check-details.component.css',
+  selector: 'app-github-advanced-security-service-details',
+  templateUrl: './github-advanced-security-service-details.component.html',
+  styleUrl: './github-advanced-security-service-details.component.css',
   imports: [
     BusyIndicatorModule,
     FacetModule,
@@ -36,7 +37,7 @@ import { PolicyService } from '../../../services/policy.service'
     InlineHelpDirective,
   ],
 })
-export class StaticSecurityCheckDetailsComponent implements OnInit {
+export class GithubAdvancedSecurityServiceDetailsComponent extends BaseServiceDetailsComponent implements OnInit {
   @Input() serviceDetails: GetGitHubAdvancedSecurityQuery['getGitHubAdvancedSecurity'] & {
     repoUrl: string
     githubRepoName: string
@@ -46,10 +47,7 @@ export class StaticSecurityCheckDetailsComponent implements OnInit {
   cumulusInfo: CumulusPipeline
   githubSecret: Secret
 
-  canUserEditCredentials = false
-
   loading = signal(false)
-  pendingShowInVault = signal(false)
   error: string
 
   GITHUB_ACTIONS_DOCU_LINK =
@@ -61,13 +59,16 @@ export class StaticSecurityCheckDetailsComponent implements OnInit {
   constructor(
     private readonly pipelineService: PipelineService,
     private readonly cumulusService: CumulusService,
-    private readonly secretService: SecretService,
-    private readonly policyService: PolicyService,
-  ) {}
+    protected override readonly secretService: SecretService,
+    protected override readonly policyService: PolicyService,
+  ) {
+    super(policyService, secretService)
+  }
 
+  // eslint-disable-next-line @angular-eslint/no-async-lifecycle-method
   async ngOnInit() {
     this.loading.set(true)
-    this.canUserEditCredentials = await this.policyService.canUserEditCredentials()
+    await super.ngOnInit()
 
     this.watch$ = this.pipelineService.watchPipeline().pipe(debounceTime(50))
     const cumulusRef = (await firstValueFrom(this.watch$)).resourceRefs.find(
@@ -96,11 +97,5 @@ export class StaticSecurityCheckDetailsComponent implements OnInit {
       '_blank',
       'noopener, noreferrer',
     )
-  }
-
-  async showInVault(vaultPath: string) {
-    this.pendingShowInVault.set(true)
-    window.open(await this.secretService.getVaultUrlOfSecret(vaultPath), '_blank', 'noopener, noreferrer')
-    this.pendingShowInVault.set(false)
   }
 }

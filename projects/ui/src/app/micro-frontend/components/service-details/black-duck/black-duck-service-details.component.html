@@ -1,0 +1,17 @@
+<div>
+  <div class="flex-box">
+    <h3 class="heading-margin">BlackDuck</h3>
+    <button
+      class="auto-left-margin"
+      role="button"
+      fdType="transparent"
+      glyph="question-mark"
+      label="Learn More"
+      (click)="openDocumentation()"
+      fd-button></button>
+  </div>
+
+  <a [href]="serviceDetails.projectLink" target="_blank" rel="noopener noreferrer">
+    {{ serviceDetails.pipelineName }}
+  </a>
+</div>

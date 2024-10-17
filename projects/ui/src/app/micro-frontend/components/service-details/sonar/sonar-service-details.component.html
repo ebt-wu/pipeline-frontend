@@ -1,0 +1,21 @@
+<div *ngIf="!loading()">
+  <div class="flex-box">
+    <h3 class="heading-margin">Project</h3>
+    <button
+      class="auto-left-margin"
+      role="button"
+      fdType="transparent"
+      glyph="question-mark"
+      label="Learn More"
+      (click)="openDocumentation()"
+      fd-button></button>
+  </div>
+  <a [href]="serviceDetails.host" target="_blank" rel="noopener noreferrer">
+    {{ serviceDetails.projectKey }}
+  </a>
+  <div class="code-box">
+    <div class="code">
+      {{ serviceDetails.configString }}
+    </div>
+  </div>
+</div>

@@ -1,10 +1,9 @@
 import { CommonModule } from '@angular/common'
 import { Component, Input, OnInit, signal, ChangeDetectionStrategy } from '@angular/core'
 import { BusyIndicatorComponent, FundamentalNgxCoreModule, InlineHelpDirective } from '@fundamental-ngx/core'
-import { SecretService } from '../../../../micro-frontend/services/secret.service'
 import { GetGithubRepositoryQuery } from '@generated/graphql'
 import { AuthorizationModule } from '@dxp/ngx-core/authorization'
-import { PolicyService } from '../../../services/policy.service'
+import { BaseServiceDetailsComponent } from '../base-service-details.component'
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -14,29 +13,19 @@ import { PolicyService } from '../../../services/policy.service'
   imports: [BusyIndicatorComponent, CommonModule, FundamentalNgxCoreModule, AuthorizationModule, InlineHelpDirective],
   styleUrl: './github-service-details.component.css',
 })
-export class GithubServiceDetailsComponent implements OnInit {
-  constructor(
-    private readonly secretService: SecretService,
-    private readonly policyService: PolicyService,
-  ) {}
-
+export class GithubServiceDetailsComponent extends BaseServiceDetailsComponent implements OnInit {
   @Input() serviceDetails: GetGithubRepositoryQuery['getGithubRepository']
 
-  canUserEditCredentials = false
   githubInstance = ''
-
   loading = signal(false)
 
   async ngOnInit() {
     this.loading.set(true)
-    this.canUserEditCredentials = await this.policyService.canUserEditCredentials()
-
+    await super.ngOnInit()
     const repoUrl = new URL(this.serviceDetails.repositoryUrl)
     this.githubInstance = repoUrl.origin
     this.loading.set(false)
   }
-
-  pendingShowInVault = signal(false)
 
   openDocumentation() {
     window.open(
@@ -44,11 +33,5 @@ export class GithubServiceDetailsComponent implements OnInit {
       '_blank',
       'noopener, noreferrer',
     )
-  }
-
-  async showInVault(vaultPath: string) {
-    this.pendingShowInVault.set(true)
-    window.open(await this.secretService.getVaultUrlOfSecret(vaultPath), '_blank', 'noopener, noreferrer')
-    this.pendingShowInVault.set(false)
   }
 }

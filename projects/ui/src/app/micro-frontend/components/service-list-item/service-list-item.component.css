@@ -13,17 +13,17 @@
 }
 
 .list-item-icon {
-    /* Need to override this to align the with the chevron and icon of the list heading*/
-    width: fit-content !important;
-    min-width: 16px !important;
-    max-width: 16px !important;
-    margin-left: 8px !important;
-    margin-right: 16px !important;
+  /* Need to override this to align the with the chevron and icon of the list heading*/
+  width: fit-content !important;
+  min-width: 16px !important;
+  max-width: 16px !important;
+  margin-left: 8px !important;
+  margin-right: 16px !important;
+  pointer-events: auto;
 }
 
-
 .status-icon {
-    font-size: 16px;
+  font-size: 16px !important;
 }
 
 li::before {
@@ -58,6 +58,11 @@ li::before {
             font-size: 13px;
             color: var(--sapNeutralColor);
         }
+    }
+
+    .info-label {
+      margin-left: 0.5rem;
+      margin-top: -0.1rem;
     }
 
     .spacer {

@@ -3,7 +3,7 @@ import { ChangeDetectionStrategy, Component, OnDestroy, OnInit, signal, ViewChil
 import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms'
 import { ValidationLanguages } from '@constants'
 import { DxpLuigiContextService, LuigiClient } from '@dxp/ngx-core/luigi'
-import { Kinds, ValidationTools } from '@enums'
+import { Kinds, StepKey, ValidationTools } from '@enums'
 import { FormattedTextModule, FormModule, FundamentalNgxCoreModule, RadioModule } from '@fundamental-ngx/core'
 import {
   DynamicFormItem,
@@ -114,7 +114,7 @@ export class SetupValidationModalComponent implements OnInit, OnDestroy {
       codeScanJobOrchestrator: orchestrator,
     }
   }
-  getOrchestrator(kinds: Kinds[]) {
+  getOrchestrator(kinds: Array<Kinds | StepKey>) {
     if (kinds.includes(Kinds.JENKINS_PIPELINE)) {
       return Orchestrators.Jenkins
     } else if (kinds.includes(Kinds.GITHUB_ACTION)) {

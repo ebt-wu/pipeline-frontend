@@ -20,6 +20,24 @@ export type AutomaticdInput = {
   useDynamicNamespace?: InputMaybe<Scalars['Boolean']['input']>;
 };
 
+export type AzureDevOps = {
+  __typename?: 'AzureDevOps';
+  azurePipelineId: Scalars['String']['output'];
+  azurePipelineName: Scalars['String']['output'];
+  azureProjectName: Scalars['String']['output'];
+  pipelineDefinitionUrl: Scalars['String']['output'];
+  secretPath?: Maybe<Scalars['String']['output']>;
+};
+
+export type BlackDuckHub = {
+  __typename?: 'BlackDuckHub';
+  groupName: Scalars['String']['output'];
+  pipelineName: Scalars['String']['output'];
+  ppmsId: Scalars['String']['output'];
+  projectLink: Scalars['String']['output'];
+  secretPath?: Maybe<Scalars['String']['output']>;
+};
+
 export enum BuildTool {
   Docker = 'DOCKER',
   Golang = 'GOLANG',
@@ -29,6 +47,25 @@ export enum BuildTool {
   Npm = 'NPM',
   Python = 'PYTHON'
 }
+
+export type Cnb = {
+  __typename?: 'CNB';
+  builder: Scalars['String']['output'];
+  path: Scalars['String']['output'];
+};
+
+export type Checkmarx = {
+  __typename?: 'Checkmarx';
+  projectName: Scalars['String']['output'];
+  secretPath?: Maybe<Scalars['String']['output']>;
+  teamFullName: Scalars['String']['output'];
+  teamName: Scalars['String']['output'];
+};
+
+export type CommonRepository = {
+  __typename?: 'CommonRepository';
+  secretPath?: Maybe<Scalars['String']['output']>;
+};
 
 export type CumulusPipeline = {
   __typename?: 'CumulusPipeline';
@@ -43,6 +80,12 @@ export enum DeletionPolicy {
   Delete = 'DELETE',
   Orphan = 'ORPHAN'
 }
+
+export type Fortify = {
+  __typename?: 'Fortify';
+  projectName: Scalars['String']['output'];
+  secretPath?: Maybe<Scalars['String']['output']>;
+};
 
 export type GitHubAdvancedSecurityCreatePayload = {
   buildTool?: InputMaybe<BuildTool>;
@@ -304,6 +347,20 @@ export type MutationWriteSecretArgs = {
   vaultPath: Scalars['String']['input'];
 };
 
+export type NotManagedServices = {
+  __typename?: 'NotManagedServices';
+  azureDevOps?: Maybe<AzureDevOps>;
+  blackDuckHub?: Maybe<BlackDuckHub>;
+  checkmarx?: Maybe<Checkmarx>;
+  cnb?: Maybe<Cnb>;
+  commonRepository?: Maybe<CommonRepository>;
+  fortify?: Maybe<Fortify>;
+  pipelineCreationTimestamp: Scalars['String']['output'];
+  ppmsFoss?: Maybe<PpmsFoss>;
+  whiteSource?: Maybe<WhiteSource>;
+  xmake?: Maybe<XMake>;
+};
+
 export type OpenSourceComplianceCreatePayload = {
   githubInfo?: InputMaybe<GithubCreationRequest>;
   jira?: InputMaybe<Scalars['String']['input']>;
@@ -374,6 +431,13 @@ export type PiperTemplateArgsGeneral = {
 
 export type PiperTemplateArgsStagingService = {
   dockerImageName?: InputMaybe<Scalars['String']['input']>;
+};
+
+export type PpmsFoss = {
+  __typename?: 'PpmsFoss';
+  ppmsLightSCVURL: Scalars['String']['output'];
+  scvId: Scalars['String']['output'];
+  scvName: Scalars['String']['output'];
 };
 
 export type Query = {
@@ -485,7 +549,14 @@ export type StagingServiceCredential = {
 
 export type Subscription = {
   __typename?: 'Subscription';
+  watchNotManagedServices: NotManagedServices;
   watchPipeline: Pipeline;
+};
+
+
+export type SubscriptionWatchNotManagedServicesArgs = {
+  componentId: Scalars['String']['input'];
+  projectId: Scalars['String']['input'];
 };
 
 
@@ -498,6 +569,23 @@ export type VaultOnboardingInfo = {
   __typename?: 'VaultOnboardingInfo';
   token: Scalars['String']['output'];
   vaultUrl: Scalars['String']['output'];
+};
+
+export type WhiteSource = {
+  __typename?: 'WhiteSource';
+  productName: Scalars['String']['output'];
+  productUrl: Scalars['String']['output'];
+  secretPath?: Maybe<Scalars['String']['output']>;
+  serviceUserEmail: Scalars['String']['output'];
+  serviceUserName: Scalars['String']['output'];
+};
+
+export type XMake = {
+  __typename?: 'XMake';
+  id: Scalars['String']['output'];
+  projectPortalProjectUrl: Scalars['String']['output'];
+  secretPath?: Maybe<Scalars['String']['output']>;
+  uuid: Scalars['String']['output'];
 };
 
 export type CreatePipelineMutationVariables = Exact<{
@@ -524,6 +612,14 @@ export type WatchPipelineSubscriptionVariables = Exact<{
 
 
 export type WatchPipelineSubscription = { __typename?: 'Subscription', watchPipeline: { __typename?: 'Pipeline', name: string, pipelineType: PipelineType, namespace: string, automaticdClientName: string, automaticdClientNamespace: string, labels: Array<{ __typename?: 'Label', key: string, value: string }>, resourceRefs?: Array<{ __typename?: 'ResourceRef', kind: string, status: string, error: string, name: string }> | null } };
+
+export type WatchNotManagedServicesSubscriptionVariables = Exact<{
+  projectId: Scalars['String']['input'];
+  componentId: Scalars['String']['input'];
+}>;
+
+
+export type WatchNotManagedServicesSubscription = { __typename?: 'Subscription', watchNotManagedServices: { __typename?: 'NotManagedServices', pipelineCreationTimestamp: string, azureDevOps?: { __typename?: 'AzureDevOps', azurePipelineName: string, azureProjectName: string, azurePipelineId: string, pipelineDefinitionUrl: string, secretPath?: string | null } | null, cnb?: { __typename?: 'CNB', builder: string, path: string } | null, xmake?: { __typename?: 'XMake', id: string, uuid: string, projectPortalProjectUrl: string, secretPath?: string | null } | null, commonRepository?: { __typename?: 'CommonRepository', secretPath?: string | null } | null, blackDuckHub?: { __typename?: 'BlackDuckHub', pipelineName: string, ppmsId: string, groupName: string, projectLink: string, secretPath?: string | null } | null, checkmarx?: { __typename?: 'Checkmarx', teamName: string, projectName: string, teamFullName: string, secretPath?: string | null } | null, fortify?: { __typename?: 'Fortify', projectName: string, secretPath?: string | null } | null, whiteSource?: { __typename?: 'WhiteSource', productName: string, productUrl: string, serviceUserName: string, serviceUserEmail: string, secretPath?: string | null } | null, ppmsFoss?: { __typename?: 'PpmsFoss', scvId: string, scvName: string, ppmsLightSCVURL: string } | null } };
 
 export type WriteSecretMutationVariables = Exact<{
   projectId: Scalars['String']['input'];

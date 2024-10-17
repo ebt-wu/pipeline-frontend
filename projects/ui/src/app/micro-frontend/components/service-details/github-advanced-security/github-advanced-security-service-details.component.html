@@ -69,10 +69,10 @@
           <strong>Vault Path</strong>
         </div>
         <fd-busy-indicator [loading]="pendingShowInVault()" size="s">
-          <div [fd-inline-help]="insufficientVaultPermissions" [disabled]="canUserEditCredentials">
+          <div [fd-inline-help]="insufficientVaultPermissions" [disabled]="canUserEditCredentials()">
             <a
               (click)="showInVault(githubSecret.path)"
-              [disabled]="pendingShowInVault() || !canUserEditCredentials"
+              [disabled]="pendingShowInVault() || !canUserEditCredentials()"
               fd-link>
               {{ githubSecret.path }}
             </a>

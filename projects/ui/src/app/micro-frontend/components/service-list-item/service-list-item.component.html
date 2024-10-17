@@ -33,6 +33,11 @@
           *ngIf="resourceRef.status === serviceStatus.FAILING_CREATION"
           status="negative"
           glyph="message-error"></span>
+        <fd-icon
+          title="unclear compliance status"
+          *ngIf="resourceRef.status === serviceStatus.NOT_MANAGED"
+          glyph="question-mark"
+          class="status-icon"></fd-icon>
         <span
           fd-object-status
           class="status-icon"
@@ -44,7 +49,7 @@
           <div style="display: inline-flex">
             <b class="category">{{ kindCategory[resourceRef.kind] }}</b>
             <fd-info-label
-              class="not-compliant-info-label"
+              class="info-label"
               *ngIf="!isCompliant"
               label="not compliant"
               [color]="1"
@@ -52,6 +57,13 @@
               [fd-inline-help]="
                 'Missing PPMS info. You shouldn\'t release this component to customers.'
               "></fd-info-label>
+            <fd-info-label
+              class="info-label"
+              *ngIf="resourceRef.status === serviceStatus.NOT_MANAGED"
+              [title]="notManagedInfoString"
+              label="not managed"
+              [color]="10"
+              data-testid="not-managed-info-label"></fd-info-label>
           </div>
           <span class="name-details">
             {{ kindName[resourceRef.kind] }}
@@ -77,7 +89,10 @@
             (click)="retryService($event, resourceRef)"></button>
         </div>
         <div class="details-icon">
-          <fd-icon *ngIf="resourceRef.status === serviceStatus.CREATED" glyph="slim-arrow-right" class="icon"></fd-icon>
+          <fd-icon
+            *ngIf="resourceRef.status === serviceStatus.CREATED || resourceRef.status === serviceStatus.NOT_MANAGED"
+            glyph="slim-arrow-right"
+            class="icon"></fd-icon>
         </div>
         <ng-container
           *ngIf="

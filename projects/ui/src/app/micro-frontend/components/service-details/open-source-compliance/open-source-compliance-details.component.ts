@@ -14,6 +14,8 @@ import { AsyncPipe, NgIf } from '@angular/common'
 import { AuthorizationModule } from '@dxp/ngx-core/authorization'
 import { PolicyService } from '../../../services/policy.service'
 import { APIService } from '../../../services/api.service'
+import { SecretService } from '../../../services/secret.service'
+import { BaseServiceDetailsComponent } from '../base-service-details.component'
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -34,15 +36,15 @@ import { APIService } from '../../../services/api.service'
     MessageStripModule,
   ],
 })
-export class OpenSourceComplianceDetailsComponent implements OnInit {
+export class OpenSourceComplianceDetailsComponent extends BaseServiceDetailsComponent implements OnInit {
   @Input() serviceDetails: GetOscRegistrationQuery['getOscRegistration']
 
   isOscRegistrationActive: boolean
   issuetrackerProjectName: string
   issuetrackerProjectUrl: string
   ppmsScv: string
-
-  canUserEditCredentials = false
+  addScvLink =
+    'https://pages.github.tools.sap/hyperspace/cicd-setup-documentation/use-cases/validate-your-code-OSCS.html'
 
   loading = signal(false)
   error: string
@@ -54,14 +56,16 @@ export class OpenSourceComplianceDetailsComponent implements OnInit {
 
   constructor(
     private readonly apiService: APIService,
-    private readonly policyService: PolicyService,
-  ) {}
+    protected override policyService: PolicyService,
+    protected override secretService: SecretService,
+  ) {
+    super(policyService, secretService)
+  }
 
   async ngOnInit() {
     this.loading.set(true)
 
-    this.canUserEditCredentials = await this.policyService.canUserEditCredentials()
-
+    await super.ngOnInit()
     this.isOscRegistrationActive = this.serviceDetails.isActive
 
     if (this.serviceDetails.jiraRef) {

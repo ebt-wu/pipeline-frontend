@@ -1,10 +1,9 @@
 import { CommonModule } from '@angular/common'
 import { Component, Input, signal, ChangeDetectionStrategy, OnInit } from '@angular/core'
 import { BusyIndicatorModule, FundamentalNgxCoreModule, InlineHelpDirective } from '@fundamental-ngx/core'
-import { SecretService } from '../../../../micro-frontend/services/secret.service'
 import { GetStagingServiceCredentialQuery } from '@generated/graphql'
 import { AuthorizationModule } from '@dxp/ngx-core/authorization'
-import { PolicyService } from '../../../services/policy.service'
+import { BaseServiceDetailsComponent } from '../base-service-details.component'
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -14,22 +13,14 @@ import { PolicyService } from '../../../services/policy.service'
   styleUrl: './staging-service-service-details.component.css',
   imports: [BusyIndicatorModule, CommonModule, FundamentalNgxCoreModule, AuthorizationModule, InlineHelpDirective],
 })
-export class StagingServiceServiceDetailsComponent implements OnInit {
-  constructor(
-    private readonly secretService: SecretService,
-    private readonly policyService: PolicyService,
-  ) {}
-
-  canUserEditCredentials = false
-
+export class StagingServiceServiceDetailsComponent extends BaseServiceDetailsComponent implements OnInit {
   @Input() serviceDetails: GetStagingServiceCredentialQuery['getStagingServiceCredential']
 
   loading = signal(false)
-  pendingShowInVault = signal(false)
 
   async ngOnInit() {
     this.loading.set(true)
-    this.canUserEditCredentials = await this.policyService.canUserEditCredentials()
+    await super.ngOnInit()
     this.loading.set(false)
   }
 
@@ -39,11 +30,5 @@ export class StagingServiceServiceDetailsComponent implements OnInit {
       '_blank',
       'noopener, noreferrer',
     )
-  }
-
-  async showInVault(vaultPath: string) {
-    this.pendingShowInVault.set(true)
-    window.open(await this.secretService.getVaultUrlOfSecret(vaultPath), '_blank', 'noopener, noreferrer')
-    this.pendingShowInVault.set(false)
   }
 }

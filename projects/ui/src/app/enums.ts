@@ -10,6 +10,19 @@ export enum Kinds {
   GITHUB_ADVANCED_SECURITY = 'GitHubAdvancedSecurity',
   CX_ONE = 'CxOne',
   OPEN_SOURCE_COMPLIANCE = 'OscRegistration',
+  SONAR_QUBE_PROJECT = 'SonarQubeProject',
+}
+
+export enum StepKey {
+  AZURE_DEV_OPS = 'azureDevOps',
+  CNB = 'cnb',
+  XMAKE = 'xmake',
+  COMMON_REPOSITORY = 'commonRepository',
+  BLACK_DUCK_HUB = 'blackDuckHub',
+  CHECKMARX = 'checkmarx',
+  FORTIFY = 'fortify',
+  WHITE_SOURCE = 'whiteSource',
+  PPMS_FOSS = 'ppmsFoss',
 }
 
 export enum Categories {
@@ -21,6 +34,9 @@ export enum Categories {
   STATIC_SECURITY_CHECKS = 'Static Security Checks',
   STATIC_CODE_CHECKS = 'Static Code Checks',
   OPEN_SOURCE_CHECKS = 'Open Source Checks',
+  CONTAINER_IMAGE_CREATION = 'Container Image Creation',
+  BINARY_MANAGEMENT = 'Binary Management',
+  PRODUCT_MGMT_SYSTEM = 'Product Management System',
 }
 export enum Stages {
   BUILD = 'BUILD',
@@ -39,6 +55,7 @@ export enum ServiceStatus {
   FAILING_CREATION = 'FailingCreation',
   NOT_FOUND = 'NotFound',
   UN_KNOWN = 'Unknown',
+  NOT_MANAGED = 'NotManaged',
 }
 
 export enum Languages {

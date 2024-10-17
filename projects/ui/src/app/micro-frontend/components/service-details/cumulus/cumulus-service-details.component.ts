@@ -1,10 +1,9 @@
 import { CommonModule } from '@angular/common'
-import { Component, Input, signal, ChangeDetectionStrategy, OnInit } from '@angular/core'
+import { Component, Input, ChangeDetectionStrategy, OnInit, signal } from '@angular/core'
 import { BusyIndicatorModule, FundamentalNgxCoreModule, InlineHelpDirective } from '@fundamental-ngx/core'
-import { SecretService } from '../../../../micro-frontend/services/secret.service'
 import { GetCumulusPipelineQuery } from '@generated/graphql'
 import { AuthorizationModule } from '@dxp/ngx-core/authorization'
-import { PolicyService } from '../../../services/policy.service'
+import { BaseServiceDetailsComponent } from '../base-service-details.component'
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -14,37 +13,22 @@ import { PolicyService } from '../../../services/policy.service'
   imports: [BusyIndicatorModule, CommonModule, FundamentalNgxCoreModule, AuthorizationModule, InlineHelpDirective],
   styleUrl: './cumulus-service-details.component.css',
 })
-export class CumlusServiceDetailsComponent implements OnInit {
-  constructor(
-    private readonly secretService: SecretService,
-    private readonly policyService: PolicyService,
-  ) {}
-
+export class CumlusServiceDetailsComponent extends BaseServiceDetailsComponent implements OnInit {
   @Input() serviceDetails: GetCumulusPipelineQuery['getCumulusPipeline']
 
   // cumulus secret path is hardcoded here: https://github.tools.sap/hyperspace/pipeline-backend/blob/937fc53e719077cc63b97c7b6277fde838c304dd/service/cumulus/service.go#L79
   cumulusSecretPath = 'GROUP-SECRETS/cumulus'
-  canUserEditCredentials = false
   loading = signal(false)
-  pendingShowInVault = signal(false)
-
   async ngOnInit() {
     this.loading.set(true)
-    this.canUserEditCredentials = await this.policyService.canUserEditCredentials()
+    await super.ngOnInit()
     this.loading.set(false)
   }
-
   openDocumentation() {
     window.open(
       'https://pages.github.tools.sap/hyperspace/cicd-setup-documentation/connected-tools/build/cumulus.html',
       '_blank',
       'noopener, noreferrer',
     )
-  }
-
-  async showInVault(vaultPath: string) {
-    this.pendingShowInVault.set(true)
-    window.open(await this.secretService.getVaultUrlOfSecret(vaultPath), '_blank', 'noopener, noreferrer')
-    this.pendingShowInVault.set(false)
   }
 }

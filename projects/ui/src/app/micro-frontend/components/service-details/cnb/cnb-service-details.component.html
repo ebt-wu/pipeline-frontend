@@ -1,0 +1,17 @@
+<div>
+  <div class="flex-box">
+    <h3 class="heading-margin">Cloud Native Buildpacks</h3>
+    <button
+      class="auto-left-margin"
+      role="button"
+      fdType="transparent"
+      glyph="question-mark"
+      label="Learn More"
+      (click)="openDocumentation()"
+      fd-button></button>
+  </div>
+
+  <a [href]="serviceDetails.path" target="_blank" rel="noopener noreferrer">
+    {{ serviceDetails.builder }}
+  </a>
+</div>

@@ -1,8 +1,8 @@
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, Output, signal } from '@angular/core'
 import { FlexibleColumnLayout, FundamentalNgxCoreModule } from '@fundamental-ngx/core'
 import { CommonModule } from '@angular/common'
-import { KindCategory, KindExtensionName, KindName } from '@constants'
-import { Kinds } from '@enums'
+import { KindCategory, KindExtensionName, KindName, NotManagedServices } from '@constants'
+import { Kinds, StepKey } from '@enums'
 import { firstValueFrom, map, Observable } from 'rxjs'
 import { APIService } from '../../services/api.service'
 import { CumlusServiceDetailsComponent } from '../service-details/cumulus/cumulus-service-details.component'
@@ -16,15 +16,25 @@ import { ExtensionClass, ServiceLevel } from '../../services/extension.types'
 import { GitHubIssueLinkService } from '../../services/github-issue-link.service'
 import { ExtensionService } from '../../services/extension.service'
 import { DebugModeService } from '../../services/debug-mode.service'
+import { JiraService } from '../../services/jira.service'
 import { DxpLuigiContextService, LuigiClient } from '@dxp/ngx-core/luigi'
 import { DxpContext } from '@dxp/ngx-core/common'
 import { SharedDataService } from '../../services/shared-data.service'
 import { ErrorMessageComponent } from '../error-message/error-message.component'
-import { ErrorMessage } from '@types'
-import { StaticSecurityCheckDetailsComponent } from '../service-details/static-security-check/static-security-check-details.component'
+import { ErrorMessage, Pipeline } from '@types'
+import { GithubAdvancedSecurityServiceDetailsComponent } from '../service-details/github-advanced-security/github-advanced-security-service-details.component'
 import { MenuComponent, MenuTriggerDirective, PlatformMenuButtonModule } from '@fundamental-ngx/platform'
 import { GithubRepository, JenkinsPipeline, PiperConfig } from '@generated/graphql'
-import { JiraService } from '../../services/jira.service'
+import { SonarServiceDetailsComponent } from '../service-details/sonar/sonar-service-details.component'
+import { AzureServiceDetailsComponent } from '../service-details/azure/azure-service-details.component'
+import { XMakeServiceDetailsComponent } from '../service-details/xmake/xmake-service-details.component'
+import { CnbServiceDetailsComponent } from '../service-details/cnb/cnb-service-details.component'
+import { CommonRepositoryServiceDetailsComponent } from '../service-details/commonrepository/common-repository-service-details.component'
+import { BlackDuckServiceDetailsComponent } from '../service-details/black-duck/black-duck-service-details.component'
+import { CheckmarxServiceDetailsComponent } from '../service-details/checkmarx/checkmarx-service-details.component'
+import { FortifyServiceDetailsComponent } from '../service-details/fortify/fortify-service-details.component'
+import { WhiteSourceServiceDetailsComponent } from '../service-details/whitesource/whitesource-service-details.component'
+import { PpmsFossServiceDetailsComponent } from '../service-details/ppms-foss/ppms-foss-service-details.component'
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export type ServiceDetails = any
@@ -47,8 +57,18 @@ const dateFormatter = new Intl.DateTimeFormat('en', { year: 'numeric', month: 's
     StagingServiceServiceDetailsComponent,
     GithubActionsServiceDetailsComponent,
     OpenSourceComplianceDetailsComponent,
+    AzureServiceDetailsComponent,
+    XMakeServiceDetailsComponent,
+    SonarServiceDetailsComponent,
+    BlackDuckServiceDetailsComponent,
+    CheckmarxServiceDetailsComponent,
+    CnbServiceDetailsComponent,
+    FortifyServiceDetailsComponent,
+    WhiteSourceServiceDetailsComponent,
+    PpmsFossServiceDetailsComponent,
+    CommonRepositoryServiceDetailsComponent,
     ErrorMessageComponent,
-    StaticSecurityCheckDetailsComponent,
+    GithubAdvancedSecurityServiceDetailsComponent,
     PlatformMenuButtonModule,
     MenuTriggerDirective,
     MenuComponent,
@@ -57,12 +77,14 @@ const dateFormatter = new Intl.DateTimeFormat('en', { year: 'numeric', month: 's
 export class ServiceDetailsSkeletonComponent implements OnInit {
   @Input() activeTile: string
   @Input() localLayout: FlexibleColumnLayout
+  @Input() pipeline: Pipeline
   @Output() readonly localLayoutEvent: EventEmitter<FlexibleColumnLayout> = new EventEmitter<FlexibleColumnLayout>()
 
   // maps
   kindName = KindName
   kindCategory = KindCategory
   kinds = Kinds
+  stepKeys = StepKey
 
   dxpContext$: Observable<DxpContext>
 
@@ -86,6 +108,7 @@ export class ServiceDetailsSkeletonComponent implements OnInit {
     readonly debugModeService: DebugModeService,
   ) {}
 
+  // eslint-disable-next-line @angular-eslint/no-async-lifecycle-method
   async ngOnInit() {
     this.dxpContext$ = this.luigiService.contextObservable().pipe(map((value) => value.context))
     const context = await this.luigiService.getContextAsync()
@@ -118,7 +141,25 @@ export class ServiceDetailsSkeletonComponent implements OnInit {
     this.localLayoutEvent.emit(this.localLayout)
   }
 
-  async loadDetails(kind: Kinds, name: string) {
+  determineServiceCreationTimestamp(kind: Kinds | StepKey = null) {
+    if (kind === null) {
+      return
+    }
+
+    if ((this.serviceDetails() as { creationTimestamp: string }).creationTimestamp) {
+      this.serviceCreationTimestamp.set(
+        new Date((this.serviceDetails() as { creationTimestamp: string }).creationTimestamp),
+      )
+    }
+
+    if (NotManagedServices.includes(kind as StepKey)) {
+      if (this.pipeline.notManagedServices?.pipelineCreationTimestamp) {
+        this.serviceCreationTimestamp.set(new Date(this.pipeline.notManagedServices.pipelineCreationTimestamp))
+      }
+    }
+  }
+
+  async loadDetails(kind: Kinds | StepKey, name: string) {
     const { githubRepoUrl, githubInstance, githubOrgName, githubRepoName } =
       await this.api.githubService.getGithubMetadata()
 
@@ -147,6 +188,22 @@ export class ServiceDetailsSkeletonComponent implements OnInit {
         case Kinds.STAGING_SERVICE_CREDENTIAL:
           this.serviceDetails.set(await firstValueFrom(this.api.stagingServiceService.getStagingServiceCredential()))
           break
+        case StepKey.AZURE_DEV_OPS:
+          const azureDetails = this.pipeline.notManagedServices[StepKey.AZURE_DEV_OPS]
+          this.serviceDetails.set(azureDetails)
+          break
+        case StepKey.CNB:
+          const cnbDetails = this.pipeline.notManagedServices[StepKey.CNB]
+          this.serviceDetails.set(cnbDetails)
+          break
+        case StepKey.XMAKE:
+          const xmakeDetails = this.pipeline.notManagedServices[StepKey.XMAKE]
+          this.serviceDetails.set(xmakeDetails)
+          break
+        case StepKey.COMMON_REPOSITORY:
+          const commonRepositoryDetails = this.pipeline.notManagedServices[StepKey.COMMON_REPOSITORY]
+          this.serviceDetails.set(commonRepositoryDetails)
+          break
         case Kinds.GITHUB_ACTION:
         case Kinds.GITHUB_ACTIONS_WORKFLOW:
           this.serviceDetails.set(
@@ -158,7 +215,6 @@ export class ServiceDetailsSkeletonComponent implements OnInit {
             this.serviceUrl.set(githubRepoUrl + '/actions')
           }
           break
-
         case Kinds.GITHUB_ADVANCED_SECURITY:
           if (githubRepoUrl) {
             this.serviceUrl.set(githubRepoUrl)
@@ -183,11 +239,33 @@ export class ServiceDetailsSkeletonComponent implements OnInit {
 
           this.serviceDetails.set(oscRegistration)
           break
+        case Kinds.SONAR_QUBE_PROJECT:
+          // TODO: call sonarqube service
+          // this.serviceDetails.set(await firstValueFrom(this.api.sonarService.getSonarqubeProject()))
+          break
+        case StepKey.BLACK_DUCK_HUB:
+          const blackduckDetails = this.pipeline.notManagedServices[StepKey.BLACK_DUCK_HUB]
+          this.serviceDetails.set(blackduckDetails)
+          break
+        case StepKey.CHECKMARX:
+          const checkmarxDetails = this.pipeline.notManagedServices[StepKey.CHECKMARX]
+          this.serviceDetails.set(checkmarxDetails)
+          break
+        case StepKey.FORTIFY:
+          const fortifyDetails = this.pipeline.notManagedServices[StepKey.FORTIFY]
+          this.serviceDetails.set(fortifyDetails)
+          break
+        case StepKey.WHITE_SOURCE:
+          const whiteSourceDetails = this.pipeline.notManagedServices[StepKey.WHITE_SOURCE]
+          this.serviceDetails.set(whiteSourceDetails)
+          break
+        case StepKey.PPMS_FOSS:
+          const ppmsFossDetails = this.pipeline.notManagedServices[StepKey.PPMS_FOSS]
+          this.serviceDetails.set(ppmsFossDetails)
+          break
       }
 
-      this.serviceCreationTimestamp.set(
-        new Date((this.serviceDetails() as { creationTimestamp: string }).creationTimestamp),
-      )
+      this.determineServiceCreationTimestamp(kind)
     } catch (err) {
       const errorMessage = (err as Error).message
       this.errors.update((errors) => {
@@ -279,7 +357,23 @@ The information might be missing in the Hyperspace portal extension backend, Lea
   }
 
   formatDate(date: Date) {
+    if (!this.isDate(date)) {
+      return null
+    }
+
     return dateFormatter.format(date)
+  }
+
+  getIsoString(date: Date) {
+    if (!this.isDate(date)) {
+      return null
+    }
+
+    return date.toISOString()
+  }
+
+  isDate(date: Date) {
+    return !isNaN(date.getTime())
   }
 
   openGHASScannnerResults() {

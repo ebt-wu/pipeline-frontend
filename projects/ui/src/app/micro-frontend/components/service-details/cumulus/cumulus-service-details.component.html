@@ -48,10 +48,10 @@
       <b>Vault Path</b>
     </div>
     <fd-busy-indicator [loading]="pendingShowInVault()" size="s">
-      <div [fd-inline-help]="insufficientVaultPermissions" [disabled]="canUserEditCredentials">
+      <div [fd-inline-help]="insufficientVaultPermissions" [disabled]="canUserEditCredentials()">
         <a
           fd-link
-          [disabled]="pendingShowInVault() || !canUserEditCredentials"
+          [disabled]="pendingShowInVault() || !canUserEditCredentials()"
           (click)="showInVault(cumulusSecretPath)">
           {{ cumulusSecretPath }}
         </a>
