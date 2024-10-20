@@ -217,13 +217,13 @@ export class SetupOSCModalComponent implements OnInit {
           showRefreshButton: true,
           // eslint-disable-next-line @typescript-eslint/require-await
           instructions: async () => {
-            return `<ol>   
-              <li>Install the Hyperspace Portal Jira extension from the              
-              <a href='${this.context().frameBaseUrl}/projects/${this.context().projectId}/catalog?modal=%2Fprojects%2F${this.context().projectId}%2Finstall-extensions&modalParams=%7B%22title%22%3A%22Install%20Extensions%22%2C%22size%22%3A%22fullscreen%22%7D', target="_blank"> 
+            return `<ol>
+              <li>Install the Hyperspace Portal Jira extension from the
+              <a href='${this.context().frameBaseUrl}/projects/${this.context().projectId}/catalog?modal=%2Fprojects%2F${this.context().projectId}%2Finstall-extensions&modalParams=%7B%22title%22%3A%22Install%20Extensions%22%2C%22size%22%3A%22fullscreen%22%7D', target="_blank">
                 catalog.</a>
               </li>
-              
-              <li><a href='${this.context().frameBaseUrl}/projects/${this.context().projectId}/catalog?~extClassName=jira&~layout=TwoColumnsMidExpanded&modal=%2Fprojects%2F${this.context().projectId}%2Fcatalog%2Fcreate-res%2Fglobal%2Fjira%2Faccount%2Fjira-tools%3F~type%3Djira-tools&modalParams=%7B%22title%22%3A%22Create%20an%20account%22%2C%22size%22%3A%22s%22%7D', target="_blank"> 
+
+              <li><a href='${this.context().frameBaseUrl}/projects/${this.context().projectId}/catalog?~extClassName=jira&~layout=TwoColumnsMidExpanded&modal=%2Fprojects%2F${this.context().projectId}%2Fcatalog%2Fcreate-res%2Fglobal%2Fjira%2Faccount%2Fjira-tools%3F~type%3Djira-tools&modalParams=%7B%22title%22%3A%22Create%20an%20account%22%2C%22size%22%3A%22s%22%7D', target="_blank">
                  Create an account
               </a> and fill in your Jira project configuration details.
               </li>
@@ -252,6 +252,36 @@ export class SetupOSCModalComponent implements OnInit {
         )
       },
       validators: [Validators.required],
+    },
+    {
+      type: 'message-strip',
+      name: 'jiraOscUserInfoMessageStrip',
+      message: '',
+      guiOptions: {
+        additionalData: {
+          type: 'information',
+          addMargins: true,
+          message: () => {
+            return `To report issues in you Jira project, you need to add to it the user T_HYPERSPACE-ACT with a role that has the permissions to Browse Projects and Create/Edit/Close Issues.
+            Refer to <a
+                  href="https://wiki.one.int.sap/wiki/x/UE2pmw"
+                  target="_blank"
+                  rel="noopener noreferrer">
+                  staff a JIRA project
+                </a>
+            and <a
+                  href="https://wiki.one.int.sap/wiki/x/L1dclQ"
+                  target="_blank"
+                  rel="noopener noreferrer">
+                  JIRA permissions
+                </a>
+            for further details.`
+          },
+        },
+      },
+      when: (formValue: SetupOSCFormValue) => {
+        return formValue.platform === OSCPlatforms.JIRA && this.isJiraInstanceConnected
+      },
     },
     // Github
     {
