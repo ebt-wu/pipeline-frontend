@@ -262,7 +262,7 @@ export class SetupOSCModalComponent implements OnInit {
           type: 'information',
           addMargins: true,
           message: () => {
-            return `To report issues in you Jira project, you need to add to it the user T_HYPERSPACE-ACT with a role that has the permissions to Browse Projects and Create/Edit/Close Issues.
+            return `To report issues in your Jira project, add user T_HYPERSPACE-ACT to it with a role that has the permissions to Browse Projects and Browse/Create/Edit/Close Issues.
             Refer to <a
                   href="https://wiki.one.int.sap/wiki/x/UE2pmw"
                   target="_blank"
