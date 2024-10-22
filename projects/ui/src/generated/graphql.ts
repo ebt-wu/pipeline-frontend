@@ -22,7 +22,7 @@ export type AutomaticdInput = {
 
 export type AzureDevOps = {
   __typename?: 'AzureDevOps';
-  azurePipelineId: Scalars['String']['output'];
+  azurePipelineId: Scalars['Int']['output'];
   azurePipelineName: Scalars['String']['output'];
   azureProjectName: Scalars['String']['output'];
   pipelineDefinitionUrl: Scalars['String']['output'];
@@ -186,6 +186,7 @@ export type Mutation = {
   createOscRegistration?: Maybe<Scalars['String']['output']>;
   createPipeline: Scalars['String']['output'];
   createPiperConfig?: Maybe<Scalars['String']['output']>;
+  createSonarQubeProject?: Maybe<Scalars['String']['output']>;
   deleteCumulusPipeline?: Maybe<Scalars['String']['output']>;
   deleteGitHubAdvancedSecurity?: Maybe<Scalars['String']['output']>;
   deleteGithubActions?: Maybe<Scalars['String']['output']>;
@@ -253,6 +254,13 @@ export type MutationCreatePipelineArgs = {
 export type MutationCreatePiperConfigArgs = {
   componentId: Scalars['String']['input'];
   params: PiperConfigCreationRequest;
+  projectId: Scalars['String']['input'];
+};
+
+
+export type MutationCreateSonarQubeProjectArgs = {
+  componentId: Scalars['String']['input'];
+  params: SonarQubeProjectCreatePayload;
   projectId: Scalars['String']['input'];
 };
 
@@ -451,6 +459,7 @@ export type Query = {
   getOscRegistration?: Maybe<OpenSourceComplianceGetResponse>;
   getPipelineSecrets?: Maybe<Array<Secret>>;
   getPiperConfig: PiperConfig;
+  getSonarQubeProject?: Maybe<SonarQubeProject>;
   getStagingServiceCredential?: Maybe<StagingServiceCredential>;
   onboardingGroups: Array<Maybe<Group>>;
 };
@@ -510,6 +519,12 @@ export type QueryGetPiperConfigArgs = {
 };
 
 
+export type QueryGetSonarQubeProjectArgs = {
+  projectId: Scalars['String']['input'];
+  resourceName: Scalars['String']['input'];
+};
+
+
 export type QueryGetStagingServiceCredentialArgs = {
   projectId: Scalars['String']['input'];
 };
@@ -537,6 +552,26 @@ export type SecretData = {
 export type SecretMetadata = {
   __typename?: 'SecretMetadata';
   scopes?: Maybe<Scalars['String']['output']>;
+};
+
+export type SonarQubeProject = {
+  __typename?: 'SonarQubeProject';
+  host: Scalars['String']['output'];
+  name: Scalars['String']['output'];
+  pullRequest?: Maybe<SonarQubePullRequest>;
+  repositoryRef: Scalars['String']['output'];
+  secretPath: Scalars['String']['output'];
+  sonarQubeConfigurationCustomValues?: Maybe<Scalars['String']['output']>;
+};
+
+export type SonarQubeProjectCreatePayload = {
+  projectName: Scalars['String']['input'];
+  secretPath: Scalars['String']['input'];
+};
+
+export type SonarQubePullRequest = {
+  __typename?: 'SonarQubePullRequest';
+  branch: Scalars['String']['output'];
 };
 
 export type StagingServiceCredential = {
@@ -619,7 +654,7 @@ export type WatchNotManagedServicesSubscriptionVariables = Exact<{
 }>;
 
 
-export type WatchNotManagedServicesSubscription = { __typename?: 'Subscription', watchNotManagedServices: { __typename?: 'NotManagedServices', pipelineCreationTimestamp: string, azureDevOps?: { __typename?: 'AzureDevOps', azurePipelineName: string, azureProjectName: string, azurePipelineId: string, pipelineDefinitionUrl: string, secretPath?: string | null } | null, cnb?: { __typename?: 'CNB', builder: string, path: string } | null, xmake?: { __typename?: 'XMake', id: string, uuid: string, projectPortalProjectUrl: string, secretPath?: string | null } | null, commonRepository?: { __typename?: 'CommonRepository', secretPath?: string | null } | null, blackDuckHub?: { __typename?: 'BlackDuckHub', pipelineName: string, ppmsId: string, groupName: string, projectLink: string, secretPath?: string | null } | null, checkmarx?: { __typename?: 'Checkmarx', teamName: string, projectName: string, teamFullName: string, secretPath?: string | null } | null, fortify?: { __typename?: 'Fortify', projectName: string, secretPath?: string | null } | null, whiteSource?: { __typename?: 'WhiteSource', productName: string, productUrl: string, serviceUserName: string, serviceUserEmail: string, secretPath?: string | null } | null, ppmsFoss?: { __typename?: 'PpmsFoss', scvId: string, scvName: string, ppmsLightSCVURL: string } | null } };
+export type WatchNotManagedServicesSubscription = { __typename?: 'Subscription', watchNotManagedServices: { __typename?: 'NotManagedServices', pipelineCreationTimestamp: string, azureDevOps?: { __typename?: 'AzureDevOps', azurePipelineName: string, azureProjectName: string, azurePipelineId: number, pipelineDefinitionUrl: string, secretPath?: string | null } | null, cnb?: { __typename?: 'CNB', builder: string, path: string } | null, xmake?: { __typename?: 'XMake', id: string, uuid: string, projectPortalProjectUrl: string, secretPath?: string | null } | null, commonRepository?: { __typename?: 'CommonRepository', secretPath?: string | null } | null, blackDuckHub?: { __typename?: 'BlackDuckHub', pipelineName: string, ppmsId: string, groupName: string, projectLink: string, secretPath?: string | null } | null, checkmarx?: { __typename?: 'Checkmarx', teamName: string, projectName: string, teamFullName: string, secretPath?: string | null } | null, fortify?: { __typename?: 'Fortify', projectName: string, secretPath?: string | null } | null, whiteSource?: { __typename?: 'WhiteSource', productName: string, productUrl: string, serviceUserName: string, serviceUserEmail: string, secretPath?: string | null } | null, ppmsFoss?: { __typename?: 'PpmsFoss', scvId: string, scvName: string, ppmsLightSCVURL: string } | null } };
 
 export type WriteSecretMutationVariables = Exact<{
   projectId: Scalars['String']['input'];

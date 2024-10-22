@@ -3,13 +3,7 @@ import { BaseAPIService } from './base.service'
 import { first, map, mergeMap } from 'rxjs/operators'
 import { combineLatest, firstValueFrom, lastValueFrom, Observable } from 'rxjs'
 import { DxpLuigiContextService } from '@dxp/ngx-core/luigi'
-import {
-  CREATE_GITHUB_REPOSITORY,
-  DELETE_GITHUB_REPOSITORY,
-  GET_GITHUB_REPOSITORY,
-  GET_REPO_LANGUAGES,
-  GET_REPO_PULLS,
-} from './queries'
+import { CREATE_GITHUB_REPOSITORY, DELETE_GITHUB_REPOSITORY, GET_GITHUB_REPOSITORY } from './queries'
 import {
   CreateGithubRepositoryMutation,
   CreateGithubRepositoryMutationVariables,
@@ -26,6 +20,7 @@ import { EntityContext, ghTokenFormValue, SetupBuildFormValue, ValidationLanguag
 import { PolicyService } from './policy.service'
 import { MetadataApolloClientService } from '@dxp/ngx-core/apollo'
 import { ApolloQueryResult } from '@apollo/client/core'
+import { GET_REPO_LANGUAGES, GET_REPO_PULLS } from './external-queries'
 
 export interface GithubMetadata {
   githubInstance: string
