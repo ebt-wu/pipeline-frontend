@@ -8,9 +8,15 @@
 
 .flex-box .heading-margin {
     margin-bottom: 0.5rem;
+    margin-top: 24px;
 }
 
 a {
     color: var(--sapLinkColor);
     text-decoration: none;
+}
+
+.p-tag-remove-margin {
+    margin-bottom: 0rem;
+    margin-top: 0rem;
 }

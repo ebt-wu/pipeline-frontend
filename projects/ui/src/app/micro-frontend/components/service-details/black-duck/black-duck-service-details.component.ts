@@ -3,6 +3,7 @@ import { ChangeDetectionStrategy, Component, Input } from '@angular/core'
 import { BusyIndicatorComponent, FundamentalNgxCoreModule, InlineHelpDirective } from '@fundamental-ngx/core'
 import { AuthorizationModule } from '@dxp/ngx-core/authorization'
 import { BlackDuckHub } from '@generated/graphql'
+import { BaseServiceDetailsComponent } from '../base-service-details.component'
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -12,9 +13,7 @@ import { BlackDuckHub } from '@generated/graphql'
   imports: [BusyIndicatorComponent, CommonModule, FundamentalNgxCoreModule, AuthorizationModule, InlineHelpDirective],
   styleUrl: './black-duck-service-details.component.css',
 })
-export class BlackDuckServiceDetailsComponent {
-  constructor() {}
-
+export class BlackDuckServiceDetailsComponent extends BaseServiceDetailsComponent {
   @Input() serviceDetails: BlackDuckHub
 
   openDocumentation() {

@@ -3,6 +3,7 @@ import { ChangeDetectionStrategy, Component, Input } from '@angular/core'
 import { BusyIndicatorComponent, FundamentalNgxCoreModule, InlineHelpDirective } from '@fundamental-ngx/core'
 import { AuthorizationModule } from '@dxp/ngx-core/authorization'
 import { Fortify } from '@generated/graphql'
+import { BaseServiceDetailsComponent } from '../base-service-details.component'
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -12,9 +13,7 @@ import { Fortify } from '@generated/graphql'
   imports: [BusyIndicatorComponent, CommonModule, FundamentalNgxCoreModule, AuthorizationModule, InlineHelpDirective],
   styleUrl: './fortify-service-details.component.css',
 })
-export class FortifyServiceDetailsComponent {
-  constructor() {}
-
+export class FortifyServiceDetailsComponent extends BaseServiceDetailsComponent {
   @Input() serviceDetails: Fortify
 
   openDocumentation() {

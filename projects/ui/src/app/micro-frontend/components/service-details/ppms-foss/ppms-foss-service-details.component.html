@@ -1,6 +1,6 @@
 <div>
   <div class="flex-box">
-    <h3 class="heading-margin">PPMS FOSS</h3>
+    <h3 class="heading-margin">PPMS-FOSS SCV</h3>
     <button
       class="auto-left-margin"
       role="button"
@@ -11,7 +11,16 @@
       fd-button></button>
   </div>
 
-  <a [href]="serviceDetails.ppmsLightSCVURL" target="_blank" rel="noopener noreferrer">
-    {{ serviceDetails.scvName }}
-  </a>
+  <div *ngIf="serviceDetails.scvName && serviceDetails.scvId">
+    <div *ngIf="serviceDetails.ppmsLightSCVURL">
+      <a [href]="serviceDetails.ppmsLightSCVURL" target="_blank" rel="noopener noreferrer">
+        {{ serviceDetails.scvId }} | {{ serviceDetails.scvName }}
+      </a>
+    </div>
+    <div *ngIf="!serviceDetails.ppmsLightSCVURL">
+      <a [href]="serviceDetails.ppmsLightSCVURL" target="_blank" rel="noopener noreferrer">
+        {{ serviceDetails.scvId }} | {{ serviceDetails.scvName }}
+      </a>
+    </div>
+  </div>
 </div>

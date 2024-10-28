@@ -3,6 +3,7 @@ import { ChangeDetectionStrategy, Component, Input } from '@angular/core'
 import { BusyIndicatorComponent, FundamentalNgxCoreModule, InlineHelpDirective } from '@fundamental-ngx/core'
 import { AuthorizationModule } from '@dxp/ngx-core/authorization'
 import { WhiteSource } from '@generated/graphql'
+import { BaseServiceDetailsComponent } from '../base-service-details.component'
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -12,9 +13,7 @@ import { WhiteSource } from '@generated/graphql'
   imports: [BusyIndicatorComponent, CommonModule, FundamentalNgxCoreModule, AuthorizationModule, InlineHelpDirective],
   styleUrl: './whitesource-service-details.component.css',
 })
-export class WhiteSourceServiceDetailsComponent {
-  constructor() {}
-
+export class WhiteSourceServiceDetailsComponent extends BaseServiceDetailsComponent {
   @Input() serviceDetails: WhiteSource
 
   openDocumentation() {

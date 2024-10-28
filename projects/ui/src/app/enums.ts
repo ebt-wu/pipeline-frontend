@@ -23,6 +23,7 @@ export enum StepKey {
   FORTIFY = 'fortify',
   WHITE_SOURCE = 'whiteSource',
   PPMS_FOSS = 'ppmsFoss',
+  CX_ONE = 'cxOne',
 }
 
 export enum Categories {

@@ -1,6 +1,6 @@
 <div>
   <div class="flex-box">
-    <h3 class="heading-margin">WhiteSource</h3>
+    <h3 class="heading-margin">Mend</h3>
     <button
       class="auto-left-margin"
       role="button"
@@ -14,4 +14,44 @@
   <a [href]="serviceDetails.productUrl" target="_blank" rel="noopener noreferrer">
     {{ serviceDetails.productName }}
   </a>
+
+  <div class="flex-box">
+    <h3 class="heading-margin">Mend Service User Name</h3>
+  </div>
+
+  <p class="p-tag-remove-margin">{{ serviceDetails.serviceUserName }}</p>
+
+  <div class="flex-box">
+    <h3 class="heading-margin">Mend Service User Email</h3>
+  </div>
+
+  <p class="p-tag-remove-margin">{{ serviceDetails.serviceUserEmail }}</p>
+
+  <div *ngIf="serviceDetails.secretPath">
+    <div *dxpRequiredPolicies="['member', 'owner', 'vault_maintainer']; operator: 'or'">
+      <div class="flex-box top-margin">
+        <h3>Mend Credentials</h3>
+        <br />
+      </div>
+      <div>
+        <b>Vault Path</b>
+      </div>
+      <fd-busy-indicator [loading]="pendingShowInVault()" size="s">
+        <div [fd-inline-help]="insufficientVaultPermissions" [disabled]="canUserEditCredentials()">
+          <a
+            fd-link
+            [disabled]="pendingShowInVault() || !canUserEditCredentials()"
+            (click)="showInVault(serviceDetails.secretPath)">
+            {{ serviceDetails.secretPath }}
+          </a>
+        </div>
+      </fd-busy-indicator>
+    </div>
+  </div>
 </div>
+
+<ng-template #insufficientVaultPermissions>
+  You need to be 'Vault Maintainer' to see credentials.
+  <br />
+  Go to the members list to contact a project owner.
+</ng-template>

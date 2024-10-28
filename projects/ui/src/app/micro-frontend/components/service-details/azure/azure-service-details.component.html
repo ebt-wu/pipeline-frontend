@@ -1,6 +1,6 @@
 <div>
   <div class="flex-box">
-    <h3 class="heading-margin">Pipeline</h3>
+    <h3 class="heading-margin">Azure Pipeline</h3>
     <button
       class="auto-left-margin"
       role="button"
@@ -14,24 +14,27 @@
   <a [href]="serviceDetails.pipelineDefinitionUrl" target="_blank" rel="noopener noreferrer">
     {{ serviceDetails.azureProjectName }}/{{ serviceDetails.azurePipelineName }}
   </a>
-  <div *dxpRequiredPolicies="['member', 'owner', 'vault_maintainer']; operator: 'or'">
-    <div class="flex-box top-margin">
-      <h3>Azure DevOps Credentials</h3>
-      <br />
-    </div>
-    <div>
-      <b>Vault Path</b>
-    </div>
-    <fd-busy-indicator [loading]="pendingShowInVault()" size="s">
-      <div [fd-inline-help]="insufficientVaultPermissions" [disabled]="canUserEditCredentials()">
-        <a
-          fd-link
-          [disabled]="pendingShowInVault() || !canUserEditCredentials()"
-          (click)="showInVault(serviceDetails.secretPath)">
-          {{ serviceDetails.secretPath }}
-        </a>
+
+  <div *ngIf="serviceDetails.secretPath">
+    <div *dxpRequiredPolicies="['member', 'owner', 'vault_maintainer']; operator: 'or'">
+      <div class="flex-box top-margin">
+        <h3>Azure DevOps Credentials</h3>
+        <br />
       </div>
-    </fd-busy-indicator>
+      <div>
+        <b>Vault Path</b>
+      </div>
+      <fd-busy-indicator [loading]="pendingShowInVault()" size="s">
+        <div [fd-inline-help]="insufficientVaultPermissions" [disabled]="canUserEditCredentials()">
+          <a
+            fd-link
+            [disabled]="pendingShowInVault() || !canUserEditCredentials()"
+            (click)="showInVault(serviceDetails.secretPath)">
+            {{ serviceDetails.secretPath }}
+          </a>
+        </div>
+      </fd-busy-indicator>
+    </div>
   </div>
 </div>
 
