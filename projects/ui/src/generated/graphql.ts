@@ -76,6 +76,14 @@ export type CumulusPipeline = {
   key?: Maybe<Scalars['String']['output']>;
 };
 
+export type CxOne = {
+  __typename?: 'CxOne';
+  applicationName: Scalars['String']['output'];
+  applicationUrl: Scalars['String']['output'];
+  projectName: Scalars['String']['output'];
+  secretPath?: Maybe<Scalars['String']['output']>;
+};
+
 export enum DeletionPolicy {
   Delete = 'DELETE',
   Orphan = 'ORPHAN'
@@ -362,6 +370,7 @@ export type NotManagedServices = {
   checkmarx?: Maybe<Checkmarx>;
   cnb?: Maybe<Cnb>;
   commonRepository?: Maybe<CommonRepository>;
+  cxOne?: Maybe<CxOne>;
   fortify?: Maybe<Fortify>;
   pipelineCreationTimestamp: Scalars['String']['output'];
   ppmsFoss?: Maybe<PpmsFoss>;
@@ -654,7 +663,7 @@ export type WatchNotManagedServicesSubscriptionVariables = Exact<{
 }>;
 
 
-export type WatchNotManagedServicesSubscription = { __typename?: 'Subscription', watchNotManagedServices: { __typename?: 'NotManagedServices', pipelineCreationTimestamp: string, azureDevOps?: { __typename?: 'AzureDevOps', azurePipelineName: string, azureProjectName: string, azurePipelineId: number, pipelineDefinitionUrl: string, secretPath?: string | null } | null, cnb?: { __typename?: 'CNB', builder: string, path: string } | null, xmake?: { __typename?: 'XMake', id: string, uuid: string, projectPortalProjectUrl: string, secretPath?: string | null } | null, commonRepository?: { __typename?: 'CommonRepository', secretPath?: string | null } | null, blackDuckHub?: { __typename?: 'BlackDuckHub', pipelineName: string, ppmsId: string, groupName: string, projectLink: string, secretPath?: string | null } | null, checkmarx?: { __typename?: 'Checkmarx', teamName: string, projectName: string, teamFullName: string, secretPath?: string | null } | null, fortify?: { __typename?: 'Fortify', projectName: string, secretPath?: string | null } | null, whiteSource?: { __typename?: 'WhiteSource', productName: string, productUrl: string, serviceUserName: string, serviceUserEmail: string, secretPath?: string | null } | null, ppmsFoss?: { __typename?: 'PpmsFoss', scvId: string, scvName: string, ppmsLightSCVURL: string } | null } };
+export type WatchNotManagedServicesSubscription = { __typename?: 'Subscription', watchNotManagedServices: { __typename?: 'NotManagedServices', pipelineCreationTimestamp: string, azureDevOps?: { __typename?: 'AzureDevOps', azurePipelineName: string, azureProjectName: string, azurePipelineId: number, pipelineDefinitionUrl: string, secretPath?: string | null } | null, cnb?: { __typename?: 'CNB', builder: string, path: string } | null, xmake?: { __typename?: 'XMake', id: string, uuid: string, projectPortalProjectUrl: string, secretPath?: string | null } | null, commonRepository?: { __typename?: 'CommonRepository', secretPath?: string | null } | null, blackDuckHub?: { __typename?: 'BlackDuckHub', pipelineName: string, ppmsId: string, groupName: string, projectLink: string, secretPath?: string | null } | null, checkmarx?: { __typename?: 'Checkmarx', teamName: string, projectName: string, teamFullName: string, secretPath?: string | null } | null, cxOne?: { __typename?: 'CxOne', applicationName: string, applicationUrl: string, projectName: string, secretPath?: string | null } | null, fortify?: { __typename?: 'Fortify', projectName: string, secretPath?: string | null } | null, whiteSource?: { __typename?: 'WhiteSource', productName: string, productUrl: string, serviceUserName: string, serviceUserEmail: string, secretPath?: string | null } | null, ppmsFoss?: { __typename?: 'PpmsFoss', scvId: string, scvName: string, ppmsLightSCVURL: string } | null } };
 
 export type WriteSecretMutationVariables = Exact<{
   projectId: Scalars['String']['input'];

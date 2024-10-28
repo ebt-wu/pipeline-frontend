@@ -11,7 +11,7 @@ export const KindName = {
   [Kinds.GITHUB_ACTION]: 'GitHub Actions',
   [Kinds.GITHUB_ACTIONS_WORKFLOW]: 'GitHub Actions',
   [Kinds.GITHUB_ADVANCED_SECURITY]: 'GitHub Advanced Security',
-  [Kinds.CX_ONE]: 'CxONE',
+  [StepKey.CX_ONE]: 'Checkmarx ONE',
   [Kinds.SONAR_QUBE_PROJECT]: 'SonarQube Project',
   [Kinds.OPEN_SOURCE_COMPLIANCE]: 'Hyperspace Open-Source Compliance Service',
   [StepKey.AZURE_DEV_OPS]: 'Azure DevOps',
@@ -34,7 +34,7 @@ export const KindCategory = {
   [Kinds.PIPER_CONFIG]: Categories.CODE_BUILD,
   [Kinds.GITHUB_ACTIONS_WORKFLOW]: Categories.ORCHESTRATION,
   [Kinds.GITHUB_ADVANCED_SECURITY]: Categories.STATIC_SECURITY_CHECKS,
-  [Kinds.CX_ONE]: Categories.STATIC_SECURITY_CHECKS,
+  [StepKey.CX_ONE]: Categories.STATIC_SECURITY_CHECKS,
   [Kinds.OPEN_SOURCE_COMPLIANCE]: Categories.OPEN_SOURCE_CHECKS,
   [Kinds.SONAR_QUBE_PROJECT]: Categories.STATIC_CODE_CHECKS,
   [StepKey.AZURE_DEV_OPS]: Categories.ORCHESTRATION,
@@ -59,6 +59,7 @@ export const KindExtensionName = {
   [Kinds.GITHUB_ADVANCED_SECURITY]: Extensions.GITHUB_ADVANCED_SECURITY,
   [Kinds.OPEN_SOURCE_COMPLIANCE]: Extensions.OPEN_SOURCE_COMPLIANCE,
   [Kinds.SONAR_QUBE_PROJECT]: Extensions.SONARQUBE,
+  [StepKey.CX_ONE]: Extensions.CHECKMARX_ONE,
   [StepKey.AZURE_DEV_OPS]: Extensions.AZURE_PIPELINES,
   [StepKey.XMAKE]: Extensions.XMAKE,
   [StepKey.COMMON_REPOSITORY]: Extensions.ARTIFACTORY_INTERNET_FACING,
@@ -86,6 +87,7 @@ export const KindStage = {
   [StepKey.BLACK_DUCK_HUB]: Stages.VALIDATE, // Open Source Checks - upgradable to OSC
   [StepKey.CHECKMARX]: Stages.VALIDATE, // Static Security Check - upgradable to GHAS/CxOne
   [StepKey.FORTIFY]: Stages.VALIDATE, // Static Security Check - upgradable to GHAS/CxOne
+  [StepKey.CX_ONE]: Stages.VALIDATE,
   [StepKey.PPMS_FOSS]: Stages.VALIDATE,
   [StepKey.WHITE_SOURCE]: Stages.VALIDATE,
 }
@@ -100,6 +102,7 @@ export const NotManagedServices = [
   StepKey.PPMS_FOSS,
   StepKey.WHITE_SOURCE,
   StepKey.XMAKE,
+  StepKey.CX_ONE,
 ]
 
 export const ValidationLanguages: ValidationLanguage[] = [

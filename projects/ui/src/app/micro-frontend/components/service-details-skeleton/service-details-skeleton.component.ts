@@ -32,6 +32,7 @@ import { CnbServiceDetailsComponent } from '../service-details/cnb/cnb-service-d
 import { CommonRepositoryServiceDetailsComponent } from '../service-details/commonrepository/common-repository-service-details.component'
 import { BlackDuckServiceDetailsComponent } from '../service-details/black-duck/black-duck-service-details.component'
 import { CheckmarxServiceDetailsComponent } from '../service-details/checkmarx/checkmarx-service-details.component'
+import { CXOneServiceDetailsComponent } from '../service-details/cx-one/cx-one-service-details.component'
 import { FortifyServiceDetailsComponent } from '../service-details/fortify/fortify-service-details.component'
 import { WhiteSourceServiceDetailsComponent } from '../service-details/whitesource/whitesource-service-details.component'
 import { PpmsFossServiceDetailsComponent } from '../service-details/ppms-foss/ppms-foss-service-details.component'
@@ -62,6 +63,7 @@ const dateFormatter = new Intl.DateTimeFormat('en', { year: 'numeric', month: 's
     SonarServiceDetailsComponent,
     BlackDuckServiceDetailsComponent,
     CheckmarxServiceDetailsComponent,
+    CXOneServiceDetailsComponent,
     CnbServiceDetailsComponent,
     FortifyServiceDetailsComponent,
     WhiteSourceServiceDetailsComponent,
@@ -250,6 +252,10 @@ export class ServiceDetailsSkeletonComponent implements OnInit {
         case StepKey.CHECKMARX:
           const checkmarxDetails = this.pipeline.notManagedServices[StepKey.CHECKMARX]
           this.serviceDetails.set(checkmarxDetails)
+          break
+        case StepKey.CX_ONE:
+          const cxOneDetails = this.pipeline.notManagedServices[StepKey.CX_ONE]
+          this.serviceDetails.set(cxOneDetails)
           break
         case StepKey.FORTIFY:
           const fortifyDetails = this.pipeline.notManagedServices[StepKey.FORTIFY]

@@ -170,6 +170,9 @@
               <app-checkmarx-service-details
                 *ngSwitchCase="stepKeys.CHECKMARX"
                 [serviceDetails]="serviceDetails()"></app-checkmarx-service-details>
+              <app-cx-one-service-details
+                *ngSwitchCase="stepKeys.CX_ONE"
+                [serviceDetails]="serviceDetails()"></app-cx-one-service-details>
               <app-fortify-service-details
                 *ngSwitchCase="stepKeys.FORTIFY"
                 [serviceDetails]="serviceDetails()"></app-fortify-service-details>
