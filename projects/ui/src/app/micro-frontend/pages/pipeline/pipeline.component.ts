@@ -203,7 +203,7 @@ export class PipelineComponent implements OnInit, OnDestroy {
             }
 
             // Handle validation stage
-            if (ref.kind === Kinds.GITHUB_ADVANCED_SECURITY || ref.kind === Kinds.CX_ONE) {
+            if (ref.kind === Kinds.GITHUB_ADVANCED_SECURITY || ref.kind === StepKey.CX_ONE) {
               this.isStaticSecurityChecksSetup.set(true)
               this.isValidationStageOpen.set(true)
             }

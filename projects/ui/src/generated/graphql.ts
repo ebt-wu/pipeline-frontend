@@ -62,6 +62,21 @@ export type Checkmarx = {
   teamName: Scalars['String']['output'];
 };
 
+export type CheckmarxOne = {
+  __typename?: 'CheckmarxOne';
+  applicationName: Scalars['String']['output'];
+  applicationUrl: Scalars['String']['output'];
+  projectName: Scalars['String']['output'];
+  secretPath?: Maybe<Scalars['String']['output']>;
+};
+
+export type CloudFoundry = {
+  __typename?: 'CloudFoundry';
+  acceptance?: Maybe<StepConfigCloudFoundryStageData>;
+  performance?: Maybe<StepConfigCloudFoundryStageData>;
+  release?: Maybe<StepConfigCloudFoundryStageData>;
+};
+
 export type CommonRepository = {
   __typename?: 'CommonRepository';
   secretPath?: Maybe<Scalars['String']['output']>;
@@ -74,14 +89,6 @@ export type CumulusPipeline = {
   groupKey?: Maybe<Scalars['String']['output']>;
   id?: Maybe<Scalars['String']['output']>;
   key?: Maybe<Scalars['String']['output']>;
-};
-
-export type CxOne = {
-  __typename?: 'CxOne';
-  applicationName: Scalars['String']['output'];
-  applicationUrl: Scalars['String']['output'];
-  projectName: Scalars['String']['output'];
-  secretPath?: Maybe<Scalars['String']['output']>;
 };
 
 export enum DeletionPolicy {
@@ -171,6 +178,15 @@ export type JiraProject = {
   jiraInstanceUrl?: Maybe<Scalars['String']['output']>;
   projectKey?: Maybe<Scalars['String']['output']>;
   resourceName?: Maybe<Scalars['String']['output']>;
+};
+
+export type Kubernetes = {
+  __typename?: 'Kubernetes';
+  acceptance: StepConfigKubernetesDeployStage;
+  chartPath: Scalars['String']['output'];
+  performance: StepConfigKubernetesDeployStage;
+  release: StepConfigKubernetesDeployStage;
+  secretPath?: Maybe<Scalars['String']['output']>;
 };
 
 export type Label = {
@@ -368,10 +384,12 @@ export type NotManagedServices = {
   azureDevOps?: Maybe<AzureDevOps>;
   blackDuckHub?: Maybe<BlackDuckHub>;
   checkmarx?: Maybe<Checkmarx>;
+  checkmarxOne?: Maybe<CheckmarxOne>;
+  cloudFoundry?: Maybe<CloudFoundry>;
   cnb?: Maybe<Cnb>;
   commonRepository?: Maybe<CommonRepository>;
-  cxOne?: Maybe<CxOne>;
   fortify?: Maybe<Fortify>;
+  kubernetes?: Maybe<Kubernetes>;
   pipelineCreationTimestamp: Scalars['String']['output'];
   ppmsFoss?: Maybe<PpmsFoss>;
   whiteSource?: Maybe<WhiteSource>;
@@ -591,6 +609,38 @@ export type StagingServiceCredential = {
   url?: Maybe<Scalars['String']['output']>;
 };
 
+export type StepConfigCloudFoundryStageData = {
+  __typename?: 'StepConfigCloudFoundryStageData';
+  enabled: Scalars['Boolean']['output'];
+  manifest?: Maybe<Scalars['String']['output']>;
+  organization?: Maybe<Scalars['String']['output']>;
+  secret?: Maybe<Scalars['Boolean']['output']>;
+  space?: Maybe<Scalars['String']['output']>;
+  testServerUrl?: Maybe<Scalars['String']['output']>;
+};
+
+export type StepConfigKubernetesDeployHelm = {
+  __typename?: 'StepConfigKubernetesDeployHelm';
+  deploymentName?: Maybe<Scalars['String']['output']>;
+  namespace?: Maybe<Scalars['String']['output']>;
+  valuesFilePath?: Maybe<Scalars['String']['output']>;
+};
+
+export type StepConfigKubernetesDeployKubectl = {
+  __typename?: 'StepConfigKubernetesDeployKubectl';
+  manifestFilePath?: Maybe<Scalars['String']['output']>;
+  namespace?: Maybe<Scalars['String']['output']>;
+};
+
+export type StepConfigKubernetesDeployStage = {
+  __typename?: 'StepConfigKubernetesDeployStage';
+  deployTool?: Maybe<Scalars['String']['output']>;
+  enabled: Scalars['Boolean']['output'];
+  helm?: Maybe<StepConfigKubernetesDeployHelm>;
+  kubectl?: Maybe<StepConfigKubernetesDeployKubectl>;
+  secret?: Maybe<Scalars['Boolean']['output']>;
+};
+
 export type Subscription = {
   __typename?: 'Subscription';
   watchNotManagedServices: NotManagedServices;
@@ -663,7 +713,7 @@ export type WatchNotManagedServicesSubscriptionVariables = Exact<{
 }>;
 
 
-export type WatchNotManagedServicesSubscription = { __typename?: 'Subscription', watchNotManagedServices: { __typename?: 'NotManagedServices', pipelineCreationTimestamp: string, azureDevOps?: { __typename?: 'AzureDevOps', azurePipelineName: string, azureProjectName: string, azurePipelineId: number, pipelineDefinitionUrl: string, secretPath?: string | null } | null, cnb?: { __typename?: 'CNB', builder: string, path: string } | null, xmake?: { __typename?: 'XMake', id: string, uuid: string, projectPortalProjectUrl: string, secretPath?: string | null } | null, commonRepository?: { __typename?: 'CommonRepository', secretPath?: string | null } | null, blackDuckHub?: { __typename?: 'BlackDuckHub', pipelineName: string, ppmsId: string, groupName: string, projectLink: string, secretPath?: string | null } | null, checkmarx?: { __typename?: 'Checkmarx', teamName: string, projectName: string, teamFullName: string, secretPath?: string | null } | null, cxOne?: { __typename?: 'CxOne', applicationName: string, applicationUrl: string, projectName: string, secretPath?: string | null } | null, fortify?: { __typename?: 'Fortify', projectName: string, secretPath?: string | null } | null, whiteSource?: { __typename?: 'WhiteSource', productName: string, productUrl: string, serviceUserName: string, serviceUserEmail: string, secretPath?: string | null } | null, ppmsFoss?: { __typename?: 'PpmsFoss', scvId: string, scvName: string, ppmsLightSCVURL: string } | null } };
+export type WatchNotManagedServicesSubscription = { __typename?: 'Subscription', watchNotManagedServices: { __typename?: 'NotManagedServices', pipelineCreationTimestamp: string, azureDevOps?: { __typename?: 'AzureDevOps', azurePipelineName: string, azureProjectName: string, azurePipelineId: number, pipelineDefinitionUrl: string, secretPath?: string | null } | null, cnb?: { __typename?: 'CNB', builder: string, path: string } | null, xmake?: { __typename?: 'XMake', id: string, uuid: string, projectPortalProjectUrl: string, secretPath?: string | null } | null, commonRepository?: { __typename?: 'CommonRepository', secretPath?: string | null } | null, blackDuckHub?: { __typename?: 'BlackDuckHub', pipelineName: string, ppmsId: string, groupName: string, projectLink: string, secretPath?: string | null } | null, checkmarx?: { __typename?: 'Checkmarx', teamName: string, projectName: string, teamFullName: string, secretPath?: string | null } | null, checkmarxOne?: { __typename?: 'CheckmarxOne', applicationName: string, applicationUrl: string, projectName: string, secretPath?: string | null } | null, fortify?: { __typename?: 'Fortify', projectName: string, secretPath?: string | null } | null, whiteSource?: { __typename?: 'WhiteSource', productName: string, productUrl: string, serviceUserName: string, serviceUserEmail: string, secretPath?: string | null } | null, ppmsFoss?: { __typename?: 'PpmsFoss', scvId: string, scvName: string, ppmsLightSCVURL: string } | null } };
 
 export type WriteSecretMutationVariables = Exact<{
   projectId: Scalars['String']['input'];

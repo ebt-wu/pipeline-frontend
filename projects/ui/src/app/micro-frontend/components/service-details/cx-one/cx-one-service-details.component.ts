@@ -3,7 +3,7 @@ import { BusyIndicatorComponent, FundamentalNgxCoreModule, InlineHelpDirective }
 import { BaseServiceDetailsComponent } from '../base-service-details.component'
 import { CommonModule } from '@angular/common'
 import { AuthorizationModule } from '@dxp/ngx-core/authorization'
-import { CxOne } from '@generated/graphql'
+import { CheckmarxOne } from '@generated/graphql'
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -14,7 +14,7 @@ import { CxOne } from '@generated/graphql'
   styleUrl: './cx-one-service-details.component.css',
 })
 export class CXOneServiceDetailsComponent extends BaseServiceDetailsComponent {
-  @Input() serviceDetails: CxOne
+  @Input() serviceDetails: CheckmarxOne
 
   openDocumentation() {
     // TODO: write and link correct documentation

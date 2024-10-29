@@ -8,7 +8,6 @@ export enum Kinds {
   CUMULUS_GROUP = 'CumulusGroup',
   GITHUB_ACTIONS_WORKFLOW = 'GithubActionsWorkflow',
   GITHUB_ADVANCED_SECURITY = 'GitHubAdvancedSecurity',
-  CX_ONE = 'CxOne',
   OPEN_SOURCE_COMPLIANCE = 'OscRegistration',
   SONAR_QUBE_PROJECT = 'SonarQubeProject',
 }
@@ -23,7 +22,7 @@ export enum StepKey {
   FORTIFY = 'fortify',
   WHITE_SOURCE = 'whiteSource',
   PPMS_FOSS = 'ppmsFoss',
-  CX_ONE = 'cxOne',
+  CX_ONE = 'checkmarxOne',
 }
 
 export enum Categories {

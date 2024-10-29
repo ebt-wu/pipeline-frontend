@@ -75,7 +75,7 @@ export const WATCH_NOT_MANAGED_SERVICES = gql`
         teamFullName
         secretPath
       }
-      cxOne {
+      checkmarxOne {
         applicationName
         applicationUrl
         projectName
