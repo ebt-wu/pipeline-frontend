@@ -18,7 +18,7 @@ import {
 } from '@fundamental-ngx/platform'
 import { PlatformMessagePopoverModule } from '@fundamental-ngx/platform/message-popover'
 import { EntityContext, Pipeline, SetupOSCFormValue, ValidationLanguage } from '@types'
-import { JiraProjectTypes, Kinds, OSCPlatforms } from '@enums'
+import { JiraProjectTypes, Kinds, OSCPlatforms, StepKey } from '@enums'
 import { debounceTime, firstValueFrom, Observable } from 'rxjs'
 import { ErrorMessageComponent } from '../error-message/error-message.component'
 import { PlatformFormGeneratorCustomHeaderElementComponent } from '../form-generator/form-generator-header/form-generator-header.component'
@@ -34,7 +34,7 @@ import { toolsSvg } from 'projects/ui/src/assets/ts-svg/tools'
 import { JiraService } from '../../services/jira.service'
 import { PlatformFormGeneratorCustomInfoBoxComponent } from '../form-generator/form-generator-info-box/form-generator-info-box.component'
 import { DxpContext } from '@dxp/ngx-core/common'
-import { JiraProject } from '@generated/graphql'
+import { JiraProject, NotManagedServices } from '@generated/graphql'
 
 enum OSCSetupSteps {
   PREREQUISITES_INFO = 'PREREQUISITES_INFO',
@@ -79,6 +79,7 @@ const ModalSettingsBySetupStep = {
 export class SetupOSCModalComponent implements OnInit {
   @ViewChild('formGenerator') formGenerator: FormGeneratorComponent
   watch$: Observable<Pipeline>
+  watchNotManagedServices$: Observable<NotManagedServices>
 
   jiraProjects = signal<JiraProject[]>([])
   prerequisitesRecommendedLanguage = signal({} as ValidationLanguage)
@@ -86,6 +87,7 @@ export class SetupOSCModalComponent implements OnInit {
   prerequisitesXmakeChoices = signal(['Yes', 'No'])
   context = signal({} as DxpContext)
   isBuildPipelineSetup = signal(false)
+  isxMakePresent = signal(false)
 
   setupPrerequisitesFormGroup = new FormGroup({
     languageSelection: new FormControl(null as ValidationLanguage, Validators.required),
@@ -349,8 +351,19 @@ export class SetupOSCModalComponent implements OnInit {
   }
 
   async ngOnInit() {
-    this.watch$ = this.pipelineService.watchPipeline().pipe(debounceTime(50))
+    const watchNotManagedServices$ = this.pipelineService
+      .watchNotManagedServicesInPipeline()
+      .pipe(debounceTime(50)) as Observable<NotManagedServices>
+
+    const watchPipeline$ = this.pipelineService.watchPipeline().pipe(debounceTime(50))
+
+    this.watch$ = this.pipelineService.combinePipelineWithNotManagedServices(watchPipeline$, watchNotManagedServices$)
+
     const resourceRefs = (await firstValueFrom(this.watch$)).resourceRefs
+
+    this.isxMakePresent.set(resourceRefs.some((ref) => ref.kind === StepKey.XMAKE))
+    if (this.isxMakePresent()) this.setupPrerequisitesFormGroup.controls.xMakeOption.setValue('Yes')
+
     this.isBuildPipelineSetup.set(this.pipelineService.isBuildPipelineSetup(resourceRefs))
     this.jiraProjects.set(await firstValueFrom(this.jiraService.getJiraItems()))
 
@@ -361,7 +374,7 @@ export class SetupOSCModalComponent implements OnInit {
 
     await this.recommendLanguage()
     this.setupPrerequisitesFormGroup.controls.languageSelection.patchValue(this.prerequisitesRecommendedLanguage())
-    await this.moveTo(isRefreshPress, this.isBuildPipelineSetup())
+    await this.moveToNextStep(isRefreshPress, this.isBuildPipelineSetup(), this.isxMakePresent())
 
     const extensionClasses = await firstValueFrom(this.extensionService.getExtensionClassesForScopesQuery())
     this.oscExtensionClass = extensionClasses.find(
@@ -371,7 +384,7 @@ export class SetupOSCModalComponent implements OnInit {
     this.loading.set(false)
   }
 
-  private async moveTo(isRefreshPress: boolean, isBuildPipelineSetup: boolean) {
+  private async moveToNextStep(isRefreshPress: boolean, isBuildPipelineSetup: boolean, isXmakePresent: boolean) {
     if (isRefreshPress) {
       await this.luigiClient
         .storageManager()
@@ -379,7 +392,9 @@ export class SetupOSCModalComponent implements OnInit {
       this.moveToOscPlatformFormStep()
     } else if (isBuildPipelineSetup) {
       this.moveToOscPrerequisitesSetupStep()
-      this.setupPrerequisitesFormGroup.removeControl('xMakeOption')
+      if (!isXmakePresent) {
+        this.setupPrerequisitesFormGroup.removeControl('xMakeOption')
+      }
     }
   }
 

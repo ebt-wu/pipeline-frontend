@@ -42,7 +42,7 @@
   <!-- Prerequisites Setup step -->
   <div class="setup-osc-margin-all-sides" *ngIf="isPrerequisitesSetupStep()">
     <form [formGroup]="setupPrerequisitesFormGroup">
-      <div class="validation-xmake-content with-bottom-margin" *ngIf="!isBuildPipelineSetup()">
+      <div class="validation-xmake-content with-bottom-margin" *ngIf="!isBuildPipelineSetup() || isxMakePresent()">
         <div class="headline-flex-box">
           <div class="headline margin-bottom-zero">Are you using xMake?</div>
           <fd-icon
@@ -86,7 +86,9 @@
         <figure fd-illustrated-message [noSvg]="true" type="spot">
           <figcaption *ngIf="isXmakeSelected()" fd-illustrated-message-figcaption id="spot-description">
             <h3 fd-illustrated-message-title>xMake is not supported</h3>
-            <p fd-illustrated-message-text>If you need Open Source Checks, you need to add BlackDuck manually.</p>
+            <p fd-illustrated-message-text>
+              For Open Source Checks, you need to add BlackDuck manually, if not already added.
+            </p>
           </figcaption>
           <figcaption
             *ngIf="isLanguageUnsupported() && !isXmakeSelected()"

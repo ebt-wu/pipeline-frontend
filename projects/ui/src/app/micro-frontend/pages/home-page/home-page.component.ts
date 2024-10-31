@@ -5,16 +5,15 @@ import { PlatformDynamicPageModule } from '@fundamental-ngx/platform/dynamic-pag
 import { FundamentalNgxCoreModule, SvgConfig } from '@fundamental-ngx/core'
 import { ApolloModule } from 'apollo-angular'
 import { PipelineService } from '../../services/pipeline.service'
-import { BehaviorSubject, combineLatestWith, debounceTime, firstValueFrom, map, Observable } from 'rxjs'
+import { BehaviorSubject, debounceTime, firstValueFrom, Observable } from 'rxjs'
 import { PipelineComponent } from '../pipeline/pipeline.component'
-import { Pipeline, ResourceRef } from '@types'
+import { Pipeline } from '@types'
 import { DebugModeService } from '../../services/debug-mode.service'
 import { tntSpotSecret } from '../../../../assets/ts-svg/tnt-spot-secret'
 import { AuthorizationModule } from '@dxp/ngx-core/authorization'
 import { DxpLuigiContextService, LuigiClient } from '@dxp/ngx-core/luigi'
 import { NotManagedServices, PipelineType } from '@generated/graphql'
 import { PolicyService } from '../../services/policy.service'
-import { ServiceStatus, StepKey } from '@enums'
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -64,25 +63,7 @@ export class HomePageComponent implements OnInit {
       .watchNotManagedServicesInPipeline()
       .pipe(debounceTime(50)) as Observable<NotManagedServices>
 
-    this.watch$ = watchPipeline$.pipe(
-      combineLatestWith(watchNotManagedServices$),
-      map(([pipeline, notManagedServices]) => {
-        if (pipeline.resourceRefs) {
-          for (const key of Object.keys(notManagedServices)) {
-            if (notManagedServices[key] != null) {
-              const notManagedService: ResourceRef = {
-                kind: key as StepKey,
-                status: ServiceStatus.NOT_MANAGED,
-                error: null,
-                name: '',
-              }
-              pipeline.resourceRefs.push(notManagedService)
-            }
-          }
-        }
-        return { ...pipeline, notManagedServices: notManagedServices }
-      }),
-    )
+    this.watch$ = this.pipelineService.combinePipelineWithNotManagedServices(watchPipeline$, watchNotManagedServices$)
   }
 
   navigateToProjectMembers() {

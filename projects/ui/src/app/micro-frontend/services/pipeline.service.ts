@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core'
 import { BaseAPIService } from './base.service'
-import { catchError, first, map, mergeMap } from 'rxjs/operators'
+import { catchError, combineLatestWith, first, map, mergeMap } from 'rxjs/operators'
 import { Observable, combineLatest, of } from 'rxjs'
 import { DxpLuigiContextService } from '@dxp/ngx-core/luigi'
 import { CREATE_PIPELINE, DELETE_PIPELINE, WATCH_NOT_MANAGED_SERVICES, WATCH_PIPELINE } from './queries'
@@ -150,5 +150,30 @@ export class PipelineService {
   areResourcesCompletelyCreated(resourceRefs: ResourceRef[]): boolean {
     const isThereNotCreatedResource = resourceRefs.some((ref) => ref.status !== ServiceStatus.CREATED)
     return !isThereNotCreatedResource
+  }
+
+  combinePipelineWithNotManagedServices(
+    watchPipeline$: Observable<Pipeline>,
+    watchNotMangedServices$: Observable<NotManagedServices>,
+  ): Observable<Pipeline> {
+    return watchPipeline$.pipe(
+      combineLatestWith(watchNotMangedServices$),
+      map(([pipeline, notManagedServices]) => {
+        if (pipeline.resourceRefs) {
+          for (const key of Object.keys(notManagedServices)) {
+            if (notManagedServices[key] != null) {
+              const notManagedService: ResourceRef = {
+                kind: key as StepKey,
+                status: ServiceStatus.NOT_MANAGED,
+                error: null,
+                name: '',
+              }
+              pipeline.resourceRefs.push(notManagedService)
+            }
+          }
+        }
+        return { ...pipeline, notManagedServices: notManagedServices }
+      }),
+    )
   }
 }
