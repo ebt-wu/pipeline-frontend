@@ -148,7 +148,7 @@ export const WATCH_NOT_MANAGED_SERVICES = gql`
           organization
           space
           manifest
-          testServerURL
+          testServerUrl
         }
         performance {
           enabled
@@ -156,7 +156,7 @@ export const WATCH_NOT_MANAGED_SERVICES = gql`
           organization
           space
           manifest
-          testServerURL
+          testServerUrl
         }
         release {
           enabled
@@ -164,7 +164,7 @@ export const WATCH_NOT_MANAGED_SERVICES = gql`
           organization
           space
           manifest
-          testServerURL
+          testServerUrl
         }
       }
     }
