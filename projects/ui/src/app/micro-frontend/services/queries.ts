@@ -96,6 +96,77 @@ export const WATCH_NOT_MANAGED_SERVICES = gql`
         scvName
         ppmsLightSCVURL
       }
+      kubernetes {
+        chartPath
+        acceptance {
+          enabled
+          secret
+          deployTool
+          helm {
+            namespace
+            deploymentName
+            valuesFilePath
+          }
+          kubectl {
+            manifestFilePath
+            namespace
+          }
+        }
+        performance {
+          enabled
+          secret
+          deployTool
+          helm {
+            namespace
+            deploymentName
+            valuesFilePath
+          }
+          kubectl {
+            manifestFilePath
+            namespace
+          }
+        }
+        release {
+          enabled
+          secret
+          deployTool
+          helm {
+            namespace
+            deploymentName
+            valuesFilePath
+          }
+          kubectl {
+            manifestFilePath
+            namespace
+          }
+        }
+      }
+      cloudFoundry {
+        acceptance {
+          enabled
+          secret
+          organization
+          space
+          manifest
+          testServerURL
+        }
+        performance {
+          enabled
+          secret
+          organization
+          space
+          manifest
+          testServerURL
+        }
+        release {
+          enabled
+          secret
+          organization
+          space
+          manifest
+          testServerURL
+        }
+      }
     }
   }
 `
