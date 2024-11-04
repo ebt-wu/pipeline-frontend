@@ -26,32 +26,4 @@
   </div>
 
   <p class="p-tag-remove-margin">{{ serviceDetails.serviceUserEmail }}</p>
-
-  <div *ngIf="serviceDetails.secretPath">
-    <div *dxpRequiredPolicies="['member', 'owner', 'vault_maintainer']; operator: 'or'">
-      <div class="flex-box top-margin">
-        <h3>Mend Credentials</h3>
-        <br />
-      </div>
-      <div>
-        <b>Vault Path</b>
-      </div>
-      <fd-busy-indicator [loading]="pendingShowInVault()" size="s">
-        <div [fd-inline-help]="insufficientVaultPermissions" [disabled]="canUserEditCredentials()">
-          <a
-            fd-link
-            [disabled]="pendingShowInVault() || !canUserEditCredentials()"
-            (click)="showInVault(serviceDetails.secretPath)">
-            {{ serviceDetails.secretPath }}
-          </a>
-        </div>
-      </fd-busy-indicator>
-    </div>
-  </div>
 </div>
-
-<ng-template #insufficientVaultPermissions>
-  You need to be 'Vault Maintainer' to see credentials.
-  <br />
-  Go to the members list to contact a project owner.
-</ng-template>

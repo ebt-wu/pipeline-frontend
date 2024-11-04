@@ -90,7 +90,6 @@ export const WATCH_NOT_MANAGED_SERVICES = gql`
         productUrl
         serviceUserName
         serviceUserEmail
-        secretPath
       }
       ppmsFoss {
         scvId
