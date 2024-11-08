@@ -26,7 +26,7 @@ export class CumlusServiceDetailsComponent extends BaseServiceDetailsComponent i
   }
   openDocumentation() {
     window.open(
-      'https://pages.github.tools.sap/hyperspace/cicd-setup-documentation/connected-tools/build/cumulus.html',
+      'https://pages.github.tools.sap/hyperspace/cicd-setup-documentation/managed-tools/build/cumulus.html',
       '_blank',
       'noopener, noreferrer',
     )

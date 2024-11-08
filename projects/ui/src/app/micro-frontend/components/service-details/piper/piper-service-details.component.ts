@@ -26,7 +26,7 @@ export class PiperServiceDetailsComponent {
 
   openDocumentation() {
     window.open(
-      'https://pages.github.tools.sap/hyperspace/cicd-setup-documentation/connected-tools/build/piper.html',
+      'https://pages.github.tools.sap/hyperspace/cicd-setup-documentation/managed-tools/build/piper.html',
       '_blank',
       'noopener, noreferrer',
     )
