@@ -193,8 +193,9 @@ export class SetupComponent implements OnInit, OnDestroy {
         additionalData: {
           header: 'Jenkins instance',
           subheader: () =>
-            Promise.resolve(`Don't have an instance yet?
-            <a href="https://jenx.int.sap.eu2.hana.ondemand.com/#/imageOverview" target="_blank" rel="noopener noreferrer">Request one.</a>`),
+            Promise.resolve(
+              `Don't have an instance yet? Create an account in the Jenkins as a Service extension to get one.`,
+            ),
         },
       },
       when: (formValue: SetupBuildFormValue) => {
