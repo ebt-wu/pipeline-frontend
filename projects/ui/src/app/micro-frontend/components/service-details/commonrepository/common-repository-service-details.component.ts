@@ -17,7 +17,10 @@ export class CommonRepositoryServiceDetailsComponent extends BaseServiceDetailsC
   @Input() serviceDetails: CommonRepository
 
   openDocumentation() {
-    // TODO: write and link correct documentation
-    window.open('https://pages.github.tools.sap/hyperspace/cicd-setup-documentation', '_blank', 'noopener,noreferrer')
+    window.open(
+      'https://pages.github.tools.sap/hyperspace/cicd-setup-documentation/not-managed-tools.html#common-repository',
+      '_blank',
+      'noopener,noreferrer',
+    )
   }
 }

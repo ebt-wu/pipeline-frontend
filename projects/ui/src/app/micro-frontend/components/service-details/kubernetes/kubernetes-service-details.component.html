@@ -1,0 +1,19 @@
+<div>
+  <div class="flex-box">
+    <h3 class="heading-margin">Kubernetes</h3>
+    <button
+      class="auto-left-margin"
+      role="button"
+      fdType="transparent"
+      glyph="question-mark"
+      label="Learn More"
+      (click)="openDocumentation()"
+      fd-button></button>
+  </div>
+
+  <h3 class="heading-margin">Piper config.yml file</h3>
+
+  <a [href]="githubRepoUrl() + '/blob/main/.pipeline/config.yml'" target="_blank" rel="noopener noreferrer">
+    .pipeline/config.yml
+  </a>
+</div>

@@ -2,11 +2,11 @@
     display: flex;
 }
 
-.flex-box .auto-left-margin {
+.auto-left-margin {
     margin-left: auto;
 }
 
-.flex-box .heading-margin {
+.heading-margin {
     margin-bottom: 0.5rem;
     margin-top: 24px;
 }

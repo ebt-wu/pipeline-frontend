@@ -17,7 +17,10 @@ export class WhiteSourceServiceDetailsComponent extends BaseServiceDetailsCompon
   @Input() serviceDetails: WhiteSource
 
   openDocumentation() {
-    // TODO: write and link correct documentation
-    window.open('https://pages.github.tools.sap/hyperspace/cicd-setup-documentation', '_blank', 'noopener,noreferrer')
+    window.open(
+      'https://pages.github.tools.sap/hyperspace/cicd-setup-documentation/not-managed-tools.html#mend',
+      '_blank',
+      'noopener,noreferrer',
+    )
   }
 }

@@ -104,6 +104,7 @@ export class PipelineComponent implements OnInit, OnDestroy {
   isOpenSourceChecksSetup = signal(false)
 
   isValidationStageOpen = signal(false)
+  isDeployStageOpen = signal(false)
   isGithubActionsEnabledInSameComponent = signal(false)
   // hacky workaround solution
   pendingDeletion = signal(false)
@@ -372,6 +373,10 @@ export class PipelineComponent implements OnInit, OnDestroy {
 
   openValidationStage() {
     this.isValidationStageOpen.set(!this.isValidationStageOpen())
+  }
+
+  openDeployStage() {
+    this.isDeployStageOpen.set(!this.isDeployStageOpen())
   }
 
   async getPipelineURL(pipeline: Pipeline) {

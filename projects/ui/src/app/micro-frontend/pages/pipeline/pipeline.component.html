@@ -225,27 +225,66 @@
                   </ng-container>
                 </fd-card-content>
               </fd-card>
-              <fd-card cardType="linkList" class="stage-card disabled">
-                <fd-card-content>
-                  <div class="coming-soon-stage">
-                    <div class="card-content stage-headline-padding">
+
+              <div *ngIf="(pipeline.resourceRefs | resourceStage: stages.DEPLOY).length > 0">
+                <fd-card cardType="linkList" class="stage-card">
+                  <fd-card-content class="card-content-padding">
+                    <div
+                      (click)="openDeployStage()"
+                      class="card-content stage-headline-padding"
+                      data-testid="deploy-stage-arrow">
                       <div class="icons">
-                        <div class="placeholder"></div>
+                        <fd-icon *ngIf="!isDeployStageOpen()" class="icon" glyph="slim-arrow-right"></fd-icon>
+                        <fd-icon *ngIf="isDeployStageOpen()" class="icon" glyph="slim-arrow-down"></fd-icon>
                         <fd-avatar [colorAccent]="10" glyph="shipping-status" size="xs"></fd-avatar>
                       </div>
                       <div class="card-description">
                         <div class="card-description-stage-headline">
-                          <h1 class="disabled-headline">Deploy</h1>
+                          <h1>Deploy</h1>
                           <p *ngIf="localLayout === 'OneColumnStartFullScreen'">
                             Enable a deployment of your packaged code
                           </p>
                         </div>
                       </div>
                     </div>
-                    <fd-info-label color="10" fdCozy label="Vision" title="Vision"></fd-info-label>
-                  </div>
-                </fd-card-content>
-              </fd-card>
+                    <ng-container *ngIf="isDeployStageOpen()">
+                      <div *ngFor="let resourceRef of pipeline.resourceRefs | resourceStage: stages.DEPLOY">
+                        <app-service-list-item
+                          (openDetailsEvent)="openDetails($event)"
+                          [activeTile]="activeTile"
+                          [localLayout]="localLayout"
+                          [resourceRef]="resourceRef"
+                          [attr.data-testid]="'setup-deployment-step-' + resourceRef.kind"></app-service-list-item>
+                      </div>
+                    </ng-container>
+                  </fd-card-content>
+                </fd-card>
+              </div>
+
+              <div *ngIf="(pipeline.resourceRefs | resourceStage: stages.DEPLOY).length === 0">
+                <fd-card cardType="linkList" class="stage-card disabled">
+                  <fd-card-content>
+                    <div class="coming-soon-stage">
+                      <div class="card-content stage-headline-padding">
+                        <div class="icons">
+                          <div class="placeholder"></div>
+                          <fd-avatar [colorAccent]="10" glyph="shipping-status" size="xs"></fd-avatar>
+                        </div>
+                        <div class="card-description">
+                          <div class="card-description-stage-headline">
+                            <h1 class="disabled-headline">Deploy</h1>
+                            <p *ngIf="localLayout === 'OneColumnStartFullScreen'">
+                              Enable a deployment of your packaged code
+                            </p>
+                          </div>
+                        </div>
+                      </div>
+                      <fd-info-label color="10" fdCozy label="No Deployment" title="No Deployment"></fd-info-label>
+                    </div>
+                  </fd-card-content>
+                </fd-card>
+              </div>
+
               <ng-container *ngIf="showGithubActions()">
                 <div class="automate-workflows-header">
                   <h3>Automate Workflows</h3>

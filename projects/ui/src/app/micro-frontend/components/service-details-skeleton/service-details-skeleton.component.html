@@ -182,6 +182,13 @@
               <app-ppms-foss-service-details
                 *ngSwitchCase="stepKeys.PPMS_FOSS"
                 [serviceDetails]="serviceDetails()"></app-ppms-foss-service-details>
+              <app-kubernetes-service-details
+                *ngSwitchCase="stepKeys.KUBERNETES"
+                [serviceDetails]="serviceDetails()"></app-kubernetes-service-details>
+              <app-cloud-foundry-service-details
+                *ngSwitchCase="stepKeys.CLOUD_FOUNDRY"
+                [pipelineID]="getPipelineId ? getPipelineId : undefined"
+                [serviceDetails]="serviceDetails()"></app-cloud-foundry-service-details>
             </div>
             <div class="tab-margin">
               <fd-skeleton width="350px" height="10rem" *ngIf="serviceDetailsLoading()">
@@ -197,7 +204,9 @@
             </div>
           </div>
         </fd-tab>
-        <fd-tab title="Service Info">
+        <fd-tab
+          title="Service Info"
+          *ngIf="activeTile !== stepKeys.KUBERNETES && activeTile !== stepKeys.CLOUD_FOUNDRY">
           <!-- title="" is required to prevent the title attribute from being transferred from fd-tab to downstream elements -->
           <div title="">
             <div *ngIf="getExtensionClass(activeTile) as extension" class="extension-info">

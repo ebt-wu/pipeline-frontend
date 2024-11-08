@@ -23,6 +23,8 @@ export enum StepKey {
   WHITE_SOURCE = 'whiteSource',
   PPMS_FOSS = 'ppmsFoss',
   CX_ONE = 'checkmarxOne',
+  KUBERNETES = 'kubernetes',
+  CLOUD_FOUNDRY = 'cloudFoundry',
 }
 
 export enum Categories {
@@ -37,6 +39,7 @@ export enum Categories {
   CONTAINER_IMAGE_CREATION = 'Container Image Creation',
   BINARY_MANAGEMENT = 'Binary Management',
   PRODUCT_MGMT_SYSTEM = 'Product Management System',
+  DEPLOY = 'Deployment',
 }
 export enum Stages {
   BUILD = 'BUILD',

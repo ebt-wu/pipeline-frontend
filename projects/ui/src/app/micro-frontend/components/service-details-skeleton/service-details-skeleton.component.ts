@@ -36,6 +36,8 @@ import { CXOneServiceDetailsComponent } from '../service-details/cx-one/cx-one-s
 import { FortifyServiceDetailsComponent } from '../service-details/fortify/fortify-service-details.component'
 import { WhiteSourceServiceDetailsComponent } from '../service-details/whitesource/whitesource-service-details.component'
 import { PpmsFossServiceDetailsComponent } from '../service-details/ppms-foss/ppms-foss-service-details.component'
+import { KubernetesServiceDetailsComponent } from '../service-details/kubernetes/kubernetes-service-details.component'
+import { CloudFoundryServiceDetailsComponent } from '../service-details/cloud-foundry/cloud-foundry-service-details.component'
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export type ServiceDetails = any
@@ -69,6 +71,8 @@ const dateFormatter = new Intl.DateTimeFormat('en', { year: 'numeric', month: 's
     WhiteSourceServiceDetailsComponent,
     PpmsFossServiceDetailsComponent,
     CommonRepositoryServiceDetailsComponent,
+    KubernetesServiceDetailsComponent,
+    CloudFoundryServiceDetailsComponent,
     ErrorMessageComponent,
     GithubAdvancedSecurityServiceDetailsComponent,
     PlatformMenuButtonModule,
@@ -98,6 +102,13 @@ export class ServiceDetailsSkeletonComponent implements OnInit {
   extensionClasses = signal<ExtensionClass[]>([])
   catalogUrl = signal('')
   resourceName = signal('')
+
+  isKubernetes = signal<boolean>(false)
+  isCloudFoundry = signal<boolean>(false)
+
+  get getPipelineId() {
+    return this.pipeline?.labels?.find((label) => label.key === 'sap.hyperspace/pipeline-id')?.value
+  }
 
   constructor(
     private readonly api: APIService,
@@ -268,6 +279,14 @@ export class ServiceDetailsSkeletonComponent implements OnInit {
         case StepKey.PPMS_FOSS:
           const ppmsFossDetails = this.pipeline.notManagedServices[StepKey.PPMS_FOSS]
           this.serviceDetails.set(ppmsFossDetails)
+          break
+        case StepKey.KUBERNETES:
+          const kubernetesDetails = this.pipeline.notManagedServices[StepKey.KUBERNETES]
+          this.serviceDetails.set(kubernetesDetails)
+          break
+        case StepKey.CLOUD_FOUNDRY:
+          const cloudFoundryDetails = this.pipeline.notManagedServices[StepKey.CLOUD_FOUNDRY]
+          this.serviceDetails.set(cloudFoundryDetails)
           break
       }
 

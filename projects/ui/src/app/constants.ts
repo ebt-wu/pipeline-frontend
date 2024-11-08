@@ -23,6 +23,8 @@ export const KindName = {
   [StepKey.FORTIFY]: 'Fortify',
   [StepKey.PPMS_FOSS]: 'PPMS FOSS',
   [StepKey.WHITE_SOURCE]: 'Mend',
+  [StepKey.KUBERNETES]: 'Kubernetes',
+  [StepKey.CLOUD_FOUNDRY]: 'Cloud Foundry',
 }
 
 export const KindCategory = {
@@ -46,6 +48,8 @@ export const KindCategory = {
   [StepKey.FORTIFY]: Categories.STATIC_SECURITY_CHECKS,
   [StepKey.PPMS_FOSS]: Categories.PRODUCT_MGMT_SYSTEM,
   [StepKey.WHITE_SOURCE]: Categories.OPEN_SOURCE_CHECKS,
+  [StepKey.KUBERNETES]: Categories.DEPLOY,
+  [StepKey.CLOUD_FOUNDRY]: Categories.DEPLOY,
 }
 
 export const KindExtensionName = {
@@ -90,6 +94,8 @@ export const KindStage = {
   [StepKey.CX_ONE]: Stages.VALIDATE,
   [StepKey.PPMS_FOSS]: Stages.VALIDATE,
   [StepKey.WHITE_SOURCE]: Stages.VALIDATE,
+  [StepKey.KUBERNETES]: Stages.DEPLOY,
+  [StepKey.CLOUD_FOUNDRY]: Stages.DEPLOY,
 }
 
 export const NotManagedServices = [
@@ -103,6 +109,8 @@ export const NotManagedServices = [
   StepKey.WHITE_SOURCE,
   StepKey.XMAKE,
   StepKey.CX_ONE,
+  StepKey.KUBERNETES,
+  StepKey.CLOUD_FOUNDRY,
 ]
 
 export const ValidationLanguages: ValidationLanguage[] = [

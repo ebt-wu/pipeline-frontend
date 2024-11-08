@@ -39,8 +39,11 @@ export class SonarServiceDetailsComponent implements OnInit {
   pendingShowInVault = signal(false)
 
   openDocumentation() {
-    // TODO: write and link correct documentation
-    window.open('https://pages.github.tools.sap/hyperspace/cicd-setup-documentation', '_blank', 'noopener,noreferrer')
+    window.open(
+      'https://pages.github.tools.sap/hyperspace/cicd-setup-documentation/managed-tools/validate/sonarqube.html',
+      '_blank',
+      'noopener,noreferrer',
+    )
   }
 
   async showInVault(vaultPath: string) {

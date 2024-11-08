@@ -1,0 +1,197 @@
+<div>
+  <div class="flex-box">
+    <h3 class="heading-margin">Acceptance Stage</h3>
+    <button
+      class="auto-left-margin"
+      role="button"
+      fdType="transparent"
+      glyph="question-mark"
+      label="Learn More"
+      (click)="openDocumentation()"
+      fd-button></button>
+  </div>
+
+  <div *ngIf="serviceDetails.acceptance.enabled">
+    <div class="flex-gap">
+      <div>
+        <h4 class="heading-margin-h4">Organization</h4>
+        <p>{{ serviceDetails.acceptance.organization }}</p>
+      </div>
+
+      <div>
+        <h4 class="heading-margin-h4">Space</h4>
+        <p>{{ serviceDetails.acceptance.space }}</p>
+      </div>
+
+      <div>
+        <h4 class="heading-margin-h4">Manifest</h4>
+        <p>{{ serviceDetails.acceptance.manifest }}</p>
+      </div>
+
+      <div>
+        <h4 class="heading-margin-h4">Test server URL</h4>
+        <p>{{ serviceDetails.acceptance.testServerUrl }}</p>
+      </div>
+    </div>
+  </div>
+  <div class="flex-box">
+    <h4 class="heading-margin-h4">SAP Cloud Platform Cockpit</h4>
+  </div>
+  <a
+    [href]="'https://account.int.sap.eu2.hana.ondemand.com/cockpit#/home/allaccounts'"
+    target="_blank"
+    rel="noopener noreferrer">
+    Open Cockpit
+  </a>
+  <div *ngIf="serviceDetails.acceptance.enabled">
+    <h3 class="heading-margin">Cloud Foundry Credentials</h3>
+    <h4 class="heading-margin-h4">Vault Path</h4>
+    <p class="p-tag-remove-margin p-tag-bottom-margin">
+      <a
+        fd-link
+        [disabled]="pendingShowInVault() || !canUserEditCredentials()"
+        (click)="
+          showInVault(
+            getSecretPath(
+              serviceDetails.acceptance.secret,
+              serviceDetails.acceptance.organization,
+              serviceDetails.acceptance.space
+            )
+          )
+        ">
+        {{
+          getSecretPath(
+            serviceDetails.acceptance.secret,
+            serviceDetails.acceptance.organization,
+            serviceDetails.acceptance.space
+          )
+        }}
+      </a>
+    </p>
+  </div>
+
+  <hr class="line-separator" />
+
+  <h3 class="heading-margin">Performance Stage</h3>
+  <div *ngIf="serviceDetails.performance.enabled">
+    <div class="flex-gap">
+      <div>
+        <h4 class="heading-margin-h4">Organization</h4>
+        <p>{{ serviceDetails.performance.organization }}</p>
+      </div>
+
+      <div>
+        <h4 class="heading-margin-h4">Space</h4>
+        <p>{{ serviceDetails.performance.space }}</p>
+      </div>
+
+      <div>
+        <h4 class="heading-margin-h4">Manifest</h4>
+        <p>{{ serviceDetails.performance.manifest }}</p>
+      </div>
+
+      <div>
+        <h4 class="heading-margin-h4">Test server URL</h4>
+        <p>{{ serviceDetails.performance.testServerUrl }}</p>
+      </div>
+    </div>
+  </div>
+  <div class="flex-box">
+    <h4 class="heading-margin-h4">SAP Cloud Platform Cockpit</h4>
+  </div>
+  <a
+    class="p-tag-bottom-margin"
+    [href]="'https://account.int.sap.eu2.hana.ondemand.com/cockpit#/home/allaccounts'"
+    target="_blank"
+    rel="noopener noreferrer">
+    Open Cockpit
+  </a>
+  <div *ngIf="serviceDetails.performance.enabled">
+    <h3 class="heading-margin">Cloud Foundry Credentials</h3>
+    <h4 class="heading-margin-h4">Vault Path</h4>
+    <p class="p-tag-remove-margin p-tag-bottom-margin">
+      <a
+        fd-link
+        [disabled]="pendingShowInVault() || !canUserEditCredentials()"
+        (click)="
+          showInVault(
+            getSecretPath(
+              serviceDetails.performance.secret,
+              serviceDetails.performance.organization,
+              serviceDetails.performance.space
+            )
+          )
+        ">
+        {{
+          getSecretPath(
+            serviceDetails.performance.secret,
+            serviceDetails.performance.organization,
+            serviceDetails.performance.space
+          )
+        }}
+      </a>
+    </p>
+  </div>
+
+  <hr class="line-separator" />
+
+  <h3 class="heading-margin">Release Stage</h3>
+  <div *ngIf="serviceDetails.release.enabled">
+    <div class="flex-gap">
+      <div>
+        <h4 class="heading-margin-h4">Organization</h4>
+        <p>{{ serviceDetails.release.organization }}</p>
+      </div>
+
+      <div>
+        <h4 class="heading-margin-h4">Space</h4>
+        <p>{{ serviceDetails.release.space }}</p>
+      </div>
+
+      <div>
+        <h4 class="heading-margin-h4">Manifest</h4>
+        <p>{{ serviceDetails.release.manifest }}</p>
+      </div>
+
+      <div>
+        <h4 class="heading-margin-h4">Test server URL</h4>
+        <p>{{ serviceDetails.release.testServerUrl }}</p>
+      </div>
+    </div>
+  </div>
+  <div class="flex-box">
+    <h4 class="heading-margin-h4">SAP Cloud Platform Cockpit</h4>
+  </div>
+  <a
+    [href]="'https://account.int.sap.eu2.hana.ondemand.com/cockpit#/home/allaccounts'"
+    target="_blank"
+    rel="noopener noreferrer">
+    Open Cockpit
+  </a>
+  <div *ngIf="serviceDetails.release.enabled">
+    <h3 class="heading-margin">Cloud Foundry Credentials</h3>
+    <h4 class="heading-margin-h4">Vault Path</h4>
+    <p class="p-tag-remove-margin p-tag-bottom-margin">
+      <a
+        fd-link
+        [disabled]="pendingShowInVault() || !canUserEditCredentials()"
+        (click)="
+          showInVault(
+            getSecretPath(
+              serviceDetails.release.secret,
+              serviceDetails.release.organization,
+              serviceDetails.release.space
+            )
+          )
+        ">
+        {{
+          getSecretPath(
+            serviceDetails.release.secret,
+            serviceDetails.release.organization,
+            serviceDetails.release.space
+          )
+        }}
+      </a>
+    </p>
+  </div>
+</div>
