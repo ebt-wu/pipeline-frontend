@@ -14,7 +14,7 @@ export const KindName = {
   [StepKey.CX_ONE]: 'Checkmarx ONE',
   [Kinds.SONAR_QUBE_PROJECT]: 'SonarQube Project',
   [Kinds.OPEN_SOURCE_COMPLIANCE]: 'Hyperspace Open-Source Compliance Service',
-  [StepKey.AZURE_DEV_OPS]: 'Azure DevOps',
+  [StepKey.AZURE_DEV_OPS]: 'Azure Pipelines',
   [StepKey.CNB]: 'Cloud Native Buildpacks',
   [StepKey.XMAKE]: 'xMake',
   [StepKey.COMMON_REPOSITORY]: 'Common Repository',

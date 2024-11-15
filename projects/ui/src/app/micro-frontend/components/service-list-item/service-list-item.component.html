@@ -60,7 +60,7 @@
             <fd-info-label
               class="info-label"
               *ngIf="resourceRef.status === serviceStatus.NOT_MANAGED"
-              [title]="notManagedInfoString"
+              [fd-inline-help]="notManagedInlineHelp"
               label="not managed"
               [color]="10"
               data-testid="not-managed-info-label"></fd-info-label>
@@ -106,3 +106,8 @@
     </a>
   </li>
 </ul>
+<ng-template #notManagedInlineHelp>
+  {{ kindName[this.resourceRef.kind] }} is not available in the Hyperspace Portal.
+  <br />
+  The Portal will not manage your setup or allow for edits.
+</ng-template>

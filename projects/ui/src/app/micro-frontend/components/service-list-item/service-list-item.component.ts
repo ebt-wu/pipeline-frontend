@@ -57,8 +57,6 @@ export class ServiceListItemComponent implements OnInit {
 
   isCompliant: boolean = true
 
-  notManagedInfoString: string
-
   constructor(
     readonly debugModeService: DebugModeService,
     readonly luigiClient: LuigiClient,
@@ -74,8 +72,6 @@ export class ServiceListItemComponent implements OnInit {
     if (this.isOSCItem()) {
       this.fetchIsOpenSourceCompliant()
     }
-
-    this.notManagedInfoString = `${KindName[this.resourceRef.kind]} is not available in the Hyperspace Portal. The Portal will not manage your setup or allow for edits.`
   }
 
   isOSCItem() {
