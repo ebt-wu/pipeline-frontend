@@ -80,6 +80,15 @@
                 message="YAY! Your build pipeline is set up."
                 type="success"></app-dismissible-message>
               <fd-message-strip
+                type="information"
+                [dismissible]="false"
+                *ngIf="!isBuildStageSetup() && isTransferredTemplatePipeline()">
+                Your Hyperspace Onboarding pipeline is being transferred. This might take up to an hour.
+                <br />
+                If it takes longer, please
+                <a (click)="contactOnTransferIssues()" fd-link>open an issue.</a>
+              </fd-message-strip>
+              <fd-message-strip
                 *ngIf="openPrCount$ | async as openPrCount"
                 class="pull-requests-message"
                 type="warning"
@@ -119,15 +128,21 @@
                     <div *dxpRequiredPolicies="['member', 'owner', 'vault_maintainer']; operator: 'or'">
                       <button
                         (click)="openSetupWizard($event)"
-                        *ngIf="!isBuildStageSetup()"
+                        *ngIf="!isBuildStageSetup() && !isTransferredTemplatePipeline()"
                         data-testid="build-pipeline-set-up-button"
                         fd-button
                         fdType="emphasized"
                         label="Set Up"></button>
+                      <fd-busy-indicator
+                        [loading]="true"
+                        size="s"
+                        *ngIf="!isBuildStageSetup() && isTransferredTemplatePipeline()"
+                        ariaLabel="loading"
+                        title="Please Wait"></fd-busy-indicator>
                       <button
                         (click)="deletePipeline($event, pipeline)"
                         data-testid="build-pipeline-delete-button"
-                        *ngIf="isBuildStageSetup() && !pendingDeletion()"
+                        *ngIf="isBuildStageSetup() && !pendingDeletion() && !isTransferredTemplatePipeline()"
                         fd-button
                         glyph="delete"
                         title="Delete"></button>
@@ -296,7 +311,11 @@
                     else loadingContent
                   ">
                   <app-upgrade-banner
-                    *ngIf="(isGithubActionsEnabledInSameComponent() || gha.isAlreadyManaged) && !isBuildStageSetup()"
+                    *ngIf="
+                      (isGithubActionsEnabledInSameComponent() || gha.isAlreadyManaged) &&
+                      !isBuildStageSetup() &&
+                      !isTransferredTemplatePipeline()
+                    "
                     [showBalloons]="localLayout === 'OneColumnStartFullScreen'"
                     class="upgrade-github-actions-banner"></app-upgrade-banner>
                   <!--the below card will be shown if the GitHub Actions is enabled -->

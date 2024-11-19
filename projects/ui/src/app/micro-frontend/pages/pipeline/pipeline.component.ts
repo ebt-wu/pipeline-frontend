@@ -49,6 +49,7 @@ import { PolicyService } from '../../services/policy.service'
 import { PipelineService } from '../../services/pipeline.service'
 import { SonarServiceDetailsComponent } from '../../components/service-details/sonar/sonar-service-details.component'
 import { map } from 'rxjs/operators'
+import { GitHubIssueLinkService } from '../../services/github-issue-link.service'
 
 type Error = {
   title: string
@@ -122,6 +123,8 @@ export class PipelineComponent implements OnInit, OnDestroy {
 
   canUserEditCredentials = false
 
+  isTransferredTemplatePipeline = signal(false)
+
   localLayout: FlexibleColumnLayout = 'OneColumnStartFullScreen'
   activeTile: string = ''
   githubMetadata: GithubMetadata
@@ -149,6 +152,7 @@ export class PipelineComponent implements OnInit, OnDestroy {
     private readonly featureFlagService: FeatureFlagService,
     readonly debugModeService: DebugModeService,
     private readonly sharedResourceDataService: SharedDataService,
+    private readonly githubIssueLinkService: GitHubIssueLinkService,
     private readonly policyService: PolicyService,
     private readonly pipelineService: PipelineService,
   ) {}
@@ -196,6 +200,11 @@ export class PipelineComponent implements OnInit, OnDestroy {
         this.errors.set([])
         this.isBuildPipelineSetupAndCreated.set(false)
         this.jenkinsPipelineError = false
+
+        if (pipeline.notManagedServices?.pipelineCreationTimestamp) {
+          this.isTransferredTemplatePipeline.set(true)
+        }
+
         if (pipeline?.resourceRefs) {
           for (const ref of pipeline.resourceRefs) {
             if (ref.kind === Kinds.GITHUB_ACTION) {
@@ -500,6 +509,16 @@ export class PipelineComponent implements OnInit, OnDestroy {
     } finally {
       this.pendingShowCredentials.set(false)
     }
+  }
+
+  async contactOnTransferIssues() {
+    const context = await this.luigiService.getContextAsync()
+    const issueURL = this.githubIssueLinkService.createIssueWithContext(
+      context,
+      `Transfer issue for ${context.projectId}/${context.componentId}`,
+      'Pipeline is not displayed in the Hyperspace Portal.',
+    )
+    window.open(issueURL, '_blank', 'noopener, noreferrer')
   }
 
   openDetails(event: ServiceData) {
