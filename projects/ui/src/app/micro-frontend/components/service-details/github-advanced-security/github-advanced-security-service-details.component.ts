@@ -79,14 +79,16 @@ export class GithubAdvancedSecurityServiceDetailsComponent extends BaseServiceDe
       this.cumulusInfo = await firstValueFrom(this.cumulusService.getCumulusPipeline(cumulusRef.name))
     }
 
-    const secrets = await firstValueFrom(this.secretService.getPipelineSecrets())
+    if (await this.policyService.canUserSetUpPipeline()) {
+      const secrets = await firstValueFrom(this.secretService.getPipelineSecrets())
 
-    // Try to get a secret from the list that matches the instance
-    const githubInstance = new URL(this.serviceDetails.repoUrl).hostname.replace(/\./g, '-')
-    this.githubSecret = secrets.find((secret) => secret.path.includes(githubInstance))
-    // If no secret matches the instance, just look for one with github in the name (could be the case from transferred pipelines)
-    if (!this.githubSecret) {
-      this.githubSecret = secrets.find((secret) => secret.path.includes('github'))
+      // Try to get a secret from the list that matches the instance
+      const githubInstance = new URL(this.serviceDetails.repoUrl).hostname.replace(/\./g, '-')
+      this.githubSecret = secrets.find((secret) => secret.path.includes(githubInstance))
+      // If no secret matches the instance, just look for one with github in the name (could be the case from transferred pipelines)
+      if (!this.githubSecret) {
+        this.githubSecret = secrets.find((secret) => secret.path.includes('github'))
+      }
     }
     this.loading.set(false)
   }
