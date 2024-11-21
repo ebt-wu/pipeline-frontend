@@ -6,6 +6,7 @@ import { CardProjectPromotionComponent } from './card-project/card-project-promo
 import { ModalProjectGetStartedComponent } from './card-project/modal-project-get-started/modal-project-get-started.component'
 import { ApolloModule } from 'apollo-angular'
 import { HttpClientModule } from '@angular/common/http'
+import { ɵSharedStylesHost } from '@angular/platform-browser'
 
 @NgModule({
   declarations: [],
@@ -19,7 +20,9 @@ import { HttpClientModule } from '@angular/common/http'
   ],
 })
 export class AppModule implements DoBootstrap {
-  constructor(private injector: Injector) {}
+  constructor(private injector: Injector) {
+    this.injector.get(ɵSharedStylesHost).removeHost(document.head)
+  }
 
   ngDoBootstrap(): void {
     registerLuigiWebComponents(
