@@ -1,4 +1,5 @@
 import { gql } from 'apollo-angular'
+import { MutationToggleDebugLabelArgs, ToggleDebugLabelMutation } from '@generated/graphql'
 
 /**
  * PIPELINE QUERIES
@@ -401,6 +402,11 @@ export const ENSURE_VAULT_ONBOARDING = gql`
 export const FORCE_DEBUG_RECONCILIATION = gql`
   mutation ForceDebugReconciliation($projectId: String!, $kind: String!, $resourceName: String!) {
     forceDebugReconciliation(projectId: $projectId, kind: $kind, resourceName: $resourceName)
+  }
+`
+export const TOGGLE_DEBUG_LABEL = gql<ToggleDebugLabelMutation, MutationToggleDebugLabelArgs>`
+  mutation ToggleDebugLabel($projectId: String!, $kind: String!, $resourceName: String!, $userId: String!) {
+    toggleDebugLabel(projectId: $projectId, kind: $kind, resourceName: $resourceName, userId: $userId)
   }
 `
 

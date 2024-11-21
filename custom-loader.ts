@@ -1,3 +1,4 @@
+/* eslint-disable */
 const { buildClientSchema, getIntrospectionQuery } = require('graphql')
 const { Issuer, generators } = require('openid-client')
 const http = require('http')

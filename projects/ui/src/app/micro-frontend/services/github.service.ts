@@ -30,6 +30,7 @@ export interface GithubMetadata {
   githubOrgName: string
   githubTechnicalUserSelfServiceUrl: string
 }
+
 export type LanguageQueryResult = {
   component: {
     extensions: {
@@ -372,6 +373,7 @@ export class GithubService {
       }),
     )
   }
+
   getRepositoryLanguages() {
     // see metadata schema here: https://github.tools.sap/dxp/metadata-registry-service/blob/main/graph/schema.graphql
     return combineLatest([this.metadataService.apollo(), this.luigiService.contextObservable()]).pipe(

@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core'
 import { BaseAPIService } from './base.service'
 import { first, map, mergeMap } from 'rxjs/operators'
-import { Observable, combineLatest, lastValueFrom, firstValueFrom } from 'rxjs'
+import { combineLatest, firstValueFrom, lastValueFrom, Observable } from 'rxjs'
 import { DxpLuigiContextService } from '@dxp/ngx-core/luigi'
 import { ENSURE_VAULT_ONBOARDING, GET_PIPELINE_SECRETS, WRITE_SECRET } from './queries'
 import {
@@ -11,7 +11,7 @@ import {
   GetPipelineSecretsQueryVariables,
   WriteSecretMutation,
   WriteSecretMutationVariables,
-} from '../../../generated/graphql'
+} from '@generated/graphql'
 
 export interface SecretData {
   key: string
@@ -96,6 +96,7 @@ export class SecretService {
     }
     return `${componentId}/${selectCredentialValue}`
   }
+
   /**
    * Only works for a path to a secret not to another path
    * @param secretPath

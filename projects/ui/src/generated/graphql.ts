@@ -222,6 +222,7 @@ export type Mutation = {
   forceDebugReconciliation?: Maybe<Scalars['String']['output']>;
   provideTokenToAutomaticd: Scalars['String']['output'];
   removeStagingServiceCredential?: Maybe<Scalars['String']['output']>;
+  toggleDebugLabel?: Maybe<Scalars['String']['output']>;
   writeSecret?: Maybe<Scalars['String']['output']>;
 };
 
@@ -369,6 +370,14 @@ export type MutationProvideTokenToAutomaticdArgs = {
 export type MutationRemoveStagingServiceCredentialArgs = {
   componentId: Scalars['String']['input'];
   projectId: Scalars['String']['input'];
+};
+
+
+export type MutationToggleDebugLabelArgs = {
+  kind: Scalars['String']['input'];
+  projectId: Scalars['String']['input'];
+  resourceName: Scalars['String']['input'];
+  userId: Scalars['String']['input'];
 };
 
 
@@ -711,7 +720,7 @@ export type WatchNotManagedServicesSubscriptionVariables = Exact<{
 }>;
 
 
-export type WatchNotManagedServicesSubscription = { __typename?: 'Subscription', watchNotManagedServices: { __typename?: 'NotManagedServices', pipelineCreationTimestamp: string, azureDevOps?: { __typename?: 'AzureDevOps', azurePipelineName: string, azureProjectName: string, azurePipelineId: number, pipelineDefinitionUrl: string, secretPath?: string | null } | null, cnb?: { __typename?: 'CNB', builder: string, path: string } | null, xmake?: { __typename?: 'XMake', id: string, uuid: string, projectPortalProjectUrl: string, secretPath?: string | null } | null, commonRepository?: { __typename?: 'CommonRepository', secretPath?: string | null } | null, blackDuckHub?: { __typename?: 'BlackDuckHub', pipelineName: string, ppmsId: string, groupName: string, projectLink: string, secretPath?: string | null } | null, checkmarx?: { __typename?: 'Checkmarx', teamName: string, projectName: string, teamFullName: string, secretPath?: string | null } | null, checkmarxOne?: { __typename?: 'CheckmarxOne', applicationName: string, applicationUrl: string, projectName: string, secretPath?: string | null } | null, fortify?: { __typename?: 'Fortify', projectName: string, secretPath?: string | null } | null, whiteSource?: { __typename?: 'WhiteSource', productName: string, productUrl: string, serviceUserName: string, serviceUserEmail: string } | null, ppmsFoss?: { __typename?: 'PpmsFoss', scvId: string, scvName: string, ppmsLightSCVURL: string } | null } };
+export type WatchNotManagedServicesSubscription = { __typename?: 'Subscription', watchNotManagedServices: { __typename?: 'NotManagedServices', pipelineCreationTimestamp: string, azureDevOps?: { __typename?: 'AzureDevOps', azurePipelineName: string, azureProjectName: string, azurePipelineId: number, pipelineDefinitionUrl: string, secretPath?: string | null } | null, cnb?: { __typename?: 'CNB', builder: string, path: string } | null, xmake?: { __typename?: 'XMake', id: string, uuid: string, projectPortalProjectUrl: string, secretPath?: string | null } | null, commonRepository?: { __typename?: 'CommonRepository', secretPath?: string | null } | null, blackDuckHub?: { __typename?: 'BlackDuckHub', pipelineName: string, ppmsId: string, groupName: string, projectLink: string, secretPath?: string | null } | null, checkmarx?: { __typename?: 'Checkmarx', teamName: string, projectName: string, teamFullName: string, secretPath?: string | null } | null, checkmarxOne?: { __typename?: 'CheckmarxOne', applicationName: string, applicationUrl: string, projectName: string, secretPath?: string | null } | null, fortify?: { __typename?: 'Fortify', projectName: string, secretPath?: string | null } | null, whiteSource?: { __typename?: 'WhiteSource', productName: string, productUrl: string, serviceUserName: string, serviceUserEmail: string } | null, ppmsFoss?: { __typename?: 'PpmsFoss', scvId: string, scvName: string, ppmsLightSCVURL: string } | null, kubernetes?: { __typename?: 'Kubernetes', chartPath: string, acceptance: { __typename?: 'StepConfigKubernetesDeployStage', enabled: boolean, secret?: boolean | null, deployTool?: string | null, helm?: { __typename?: 'StepConfigKubernetesDeployHelm', namespace?: string | null, deploymentName?: string | null, valuesFilePath?: string | null } | null, kubectl?: { __typename?: 'StepConfigKubernetesDeployKubectl', manifestFilePath?: string | null, namespace?: string | null } | null }, performance: { __typename?: 'StepConfigKubernetesDeployStage', enabled: boolean, secret?: boolean | null, deployTool?: string | null, helm?: { __typename?: 'StepConfigKubernetesDeployHelm', namespace?: string | null, deploymentName?: string | null, valuesFilePath?: string | null } | null, kubectl?: { __typename?: 'StepConfigKubernetesDeployKubectl', manifestFilePath?: string | null, namespace?: string | null } | null }, release: { __typename?: 'StepConfigKubernetesDeployStage', enabled: boolean, secret?: boolean | null, deployTool?: string | null, helm?: { __typename?: 'StepConfigKubernetesDeployHelm', namespace?: string | null, deploymentName?: string | null, valuesFilePath?: string | null } | null, kubectl?: { __typename?: 'StepConfigKubernetesDeployKubectl', manifestFilePath?: string | null, namespace?: string | null } | null } } | null, cloudFoundry?: { __typename?: 'CloudFoundry', acceptance?: { __typename?: 'StepConfigCloudFoundryStageData', enabled: boolean, secret?: boolean | null, organization?: string | null, space?: string | null, manifest?: string | null, testServerUrl?: string | null } | null, performance?: { __typename?: 'StepConfigCloudFoundryStageData', enabled: boolean, secret?: boolean | null, organization?: string | null, space?: string | null, manifest?: string | null, testServerUrl?: string | null } | null, release?: { __typename?: 'StepConfigCloudFoundryStageData', enabled: boolean, secret?: boolean | null, organization?: string | null, space?: string | null, manifest?: string | null, testServerUrl?: string | null } | null } | null } };
 
 export type WriteSecretMutationVariables = Exact<{
   projectId: Scalars['String']['input'];
@@ -869,6 +878,16 @@ export type ForceDebugReconciliationMutationVariables = Exact<{
 
 
 export type ForceDebugReconciliationMutation = { __typename?: 'Mutation', forceDebugReconciliation?: string | null };
+
+export type ToggleDebugLabelMutationVariables = Exact<{
+  projectId: Scalars['String']['input'];
+  kind: Scalars['String']['input'];
+  resourceName: Scalars['String']['input'];
+  userId: Scalars['String']['input'];
+}>;
+
+
+export type ToggleDebugLabelMutation = { __typename?: 'Mutation', toggleDebugLabel?: string | null };
 
 export type CreateGithubActionsMutationVariables = Exact<{
   projectId: Scalars['String']['input'];

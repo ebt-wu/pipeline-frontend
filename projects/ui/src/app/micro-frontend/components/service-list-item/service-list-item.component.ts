@@ -1,11 +1,11 @@
 import {
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
   Component,
   EventEmitter,
   Input,
-  Output,
-  ChangeDetectionStrategy,
   OnInit,
-  ChangeDetectorRef,
+  Output,
   signal,
 } from '@angular/core'
 import { FundamentalNgxCoreModule, IconModule } from '@fundamental-ngx/core'
@@ -13,13 +13,14 @@ import { CommonModule } from '@angular/common'
 import { DebugModeService } from '../../services/debug-mode.service'
 import { KindCategory, KindName } from '../../../constants'
 import { Pipeline, ResourceRef } from '../../../types'
-import { firstValueFrom } from 'rxjs'
+import { firstValueFrom, map } from 'rxjs'
 import { Kinds, ServiceStatus, StepKey } from '../../../enums'
 import { RouterModule } from '@angular/router'
 import { AuthorizationModule } from '@dxp/ngx-core/authorization'
 import { LuigiClient } from '@dxp/ngx-core/luigi'
 import { OpenSourceComplianceService } from '../../services/open-source-compliance.service'
 import { ErrorMessageComponent } from '../error-message/error-message.component'
+import { ApolloError } from '@apollo/client/core'
 
 export interface ServiceData {
   name: string
@@ -78,9 +79,45 @@ export class ServiceListItemComponent implements OnInit {
     return this.resourceRef.kind === Kinds.OPEN_SOURCE_COMPLIANCE
   }
 
-  async retryService(e: Event, resourceRef: ResourceRef) {
+  async retryService(e: Event, resourceRef: ResourceRef): Promise<void> {
     e?.stopPropagation()
-    await firstValueFrom(this.debugModeService.forceDebugReconciliation(resourceRef.kind, resourceRef.name))
+    try {
+      await firstValueFrom(this.debugModeService.forceDebugReconciliation(resourceRef.kind, resourceRef.name))
+    } catch (e) {
+      if (e instanceof ApolloError) {
+        this.debugModeService.messageToastService.open(e.message, {
+          duration: 5000,
+        })
+      }
+    }
+  }
+
+  async toggleDebugLabel(e: Event, resourceRef: ResourceRef): Promise<void> {
+    e?.stopPropagation()
+    try {
+      if (!isKind(resourceRef.kind)) {
+        return void 0 // We don't want to toggle debug label for StepKey
+      }
+      await firstValueFrom(
+        this.debugModeService.toggleDebugLabel(resourceRef.kind, resourceRef.name).pipe(
+          map((result) => {
+            if (result.data?.toggleDebugLabel) {
+              this.debugModeService.messageToastService.open(result.data?.toggleDebugLabel, {
+                duration: 5000,
+              })
+            }
+            return void 0
+          }),
+        ),
+      )
+    } catch (error) {
+      if (error instanceof ApolloError) {
+        this.debugModeService.messageToastService.open(error.message, {
+          duration: 5000,
+        })
+      }
+      return void 0
+    }
   }
 
   fetchIsOpenSourceCompliant() {
@@ -102,4 +139,8 @@ export class ServiceListItemComponent implements OnInit {
   dismissErrorMessage() {
     this.errorMessage.set('')
   }
+}
+
+function isKind(value: Kinds | StepKey): value is Kinds {
+  return Object.values(Kinds).includes(value as Kinds)
 }

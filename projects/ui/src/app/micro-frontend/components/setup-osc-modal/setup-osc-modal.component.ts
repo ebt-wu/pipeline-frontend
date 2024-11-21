@@ -542,7 +542,7 @@ export class SetupOSCModalComponent implements OnInit {
 
   openBlackDuck() {
     const url = 'https://wiki.one.int.sap/wiki/x/CQIwi'
-    window.open(url, '_blank')
+    window.open(url, '_blank', 'noopener')
   }
 
   async createMoveToOSCPlatformForm() {

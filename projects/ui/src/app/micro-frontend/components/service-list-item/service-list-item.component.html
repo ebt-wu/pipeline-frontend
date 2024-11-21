@@ -88,6 +88,25 @@
             class="retry-button"
             (click)="retryService($event, resourceRef)"></button>
         </div>
+        <div>
+          <div
+            *ngIf="
+              localLayout === 'OneColumnStartFullScreen' &&
+              debugModeService.debugModeEnabled() &&
+              debugModeService.isHyperspaceAdmin() &&
+              resourceRef.status !== serviceStatus.NOT_MANAGED
+            ">
+            <button
+              fd-button
+              label="Toggle Debug"
+              glyph="cancel-maintenance"
+              fdType="transparent"
+              ariaLabel="Toggle Debug"
+              title="This will toggle the 'automaticd.sap/debug' label with your CDI-User so you can see the resource in your local debugger."
+              class="debug-label-button"
+              (click)="toggleDebugLabel($event, resourceRef)"></button>
+          </div>
+        </div>
         <div class="details-icon">
           <fd-icon
             *ngIf="resourceRef.status === serviceStatus.CREATED || resourceRef.status === serviceStatus.NOT_MANAGED"
