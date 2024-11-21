@@ -18,7 +18,7 @@ export class WhiteSourceServiceDetailsComponent extends BaseServiceDetailsCompon
 
   openDocumentation() {
     window.open(
-      'https://pages.github.tools.sap/hyperspace/cicd-setup-documentation/not-managed-tools.html#mend',
+      'https://pages.github.tools.sap/hyperspace/cicd-setup-documentation/not-managed-services.html#mend',
       '_blank',
       'noopener,noreferrer',
     )

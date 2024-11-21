@@ -29,7 +29,7 @@ export class GithubServiceDetailsComponent extends BaseServiceDetailsComponent i
 
   openDocumentation() {
     window.open(
-      'https://pages.github.tools.sap/hyperspace/cicd-setup-documentation/managed-tools/build/github.html',
+      'https://pages.github.tools.sap/hyperspace/cicd-setup-documentation/managed-services/build/github.html',
       '_blank',
       'noopener, noreferrer',
     )

@@ -93,7 +93,7 @@ export class GithubAdvancedSecurityServiceDetailsComponent extends BaseServiceDe
 
   openDocumentation() {
     window.open(
-      'https://pages.github.tools.sap/hyperspace/cicd-setup-documentation/managed-tools/validate/ghas.html',
+      'https://pages.github.tools.sap/hyperspace/cicd-setup-documentation/managed-services/validate/ghas.html',
       '_blank',
       'noopener, noreferrer',
     )

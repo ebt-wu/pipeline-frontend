@@ -30,7 +30,7 @@ export class JenkinServiceDetailsComponent extends BaseServiceDetailsComponent i
 
   openDocumentation() {
     window.open(
-      'https://pages.github.tools.sap/hyperspace/cicd-setup-documentation/managed-tools/build/jenkins.html',
+      'https://pages.github.tools.sap/hyperspace/cicd-setup-documentation/managed-services/build/jenkins.html',
       '_blank',
       'noopener, noreferrer',
     )

@@ -36,7 +36,7 @@ export class CnbServiceDetailsComponent {
 
   openDocumentation() {
     window.open(
-      'https://pages.github.tools.sap/hyperspace/cicd-setup-documentation/not-managed-tools.html#cloud-native-buildpacks',
+      'https://pages.github.tools.sap/hyperspace/cicd-setup-documentation/not-managed-services.html#cloud-native-buildpacks',
       '_blank',
       'noopener,noreferrer',
     )

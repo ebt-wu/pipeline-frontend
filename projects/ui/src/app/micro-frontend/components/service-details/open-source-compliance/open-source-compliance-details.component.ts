@@ -99,7 +99,7 @@ export class OpenSourceComplianceDetailsComponent extends BaseServiceDetailsComp
 
   openDocumentation() {
     window.open(
-      'https://pages.github.tools.sap/hyperspace/cicd-setup-documentation/managed-tools/validate/osc.html',
+      'https://pages.github.tools.sap/hyperspace/cicd-setup-documentation/managed-services/validate/osc.html',
       '_blank',
       'noopener, noreferrer',
     )

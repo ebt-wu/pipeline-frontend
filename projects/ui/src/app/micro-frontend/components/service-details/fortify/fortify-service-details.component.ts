@@ -18,7 +18,7 @@ export class FortifyServiceDetailsComponent extends BaseServiceDetailsComponent 
 
   openDocumentation() {
     window.open(
-      'https://pages.github.tools.sap/hyperspace/cicd-setup-documentation/not-managed-tools.html#fortify',
+      'https://pages.github.tools.sap/hyperspace/cicd-setup-documentation/not-managed-services.html#fortify',
       '_blank',
       'noopener,noreferrer',
     )

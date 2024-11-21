@@ -18,7 +18,7 @@ export class XMakeServiceDetailsComponent extends BaseServiceDetailsComponent {
 
   openDocumentation() {
     window.open(
-      'https://pages.github.tools.sap/hyperspace/cicd-setup-documentation/not-managed-tools.html#xmake',
+      'https://pages.github.tools.sap/hyperspace/cicd-setup-documentation/not-managed-services.html#xmake',
       '_blank',
       'noopener,noreferrer',
     )

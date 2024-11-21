@@ -26,7 +26,7 @@ export class StagingServiceServiceDetailsComponent extends BaseServiceDetailsCom
 
   openDocumentation() {
     window.open(
-      'https://pages.github.tools.sap/hyperspace/cicd-setup-documentation/managed-tools/build/staging-service.html',
+      'https://pages.github.tools.sap/hyperspace/cicd-setup-documentation/managed-services/build/staging-service.html',
       '_blank',
       'noopener, noreferrer',
     )

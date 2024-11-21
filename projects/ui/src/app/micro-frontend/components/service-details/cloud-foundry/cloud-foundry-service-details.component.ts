@@ -27,7 +27,7 @@ export class CloudFoundryServiceDetailsComponent extends BaseServiceDetailsCompo
 
   openDocumentation() {
     window.open(
-      'https://pages.github.tools.sap/hyperspace/cicd-setup-documentation/not-managed-tools.html#cloud-foundry',
+      'https://pages.github.tools.sap/hyperspace/cicd-setup-documentation/not-managed-services.html#cloud-foundry',
       '_blank',
       'noopener,noreferrer',
     )

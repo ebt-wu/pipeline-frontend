@@ -187,13 +187,13 @@ export class SetupValidationModalComponent implements OnInit, OnDestroy {
   onButtonLearnMore(tool: ValidationTools) {
     if (tool === ValidationTools.GHAS) {
       window.open(
-        'https://pages.github.tools.sap/hyperspace/cicd-setup-documentation/managed-tools/validate/ghas.html',
+        'https://pages.github.tools.sap/hyperspace/cicd-setup-documentation/managed-services/validate/ghas.html',
         '_blank',
         'noopener, noreferrer',
       )
     } else if (tool === ValidationTools.CX) {
       window.open(
-        'https://pages.github.tools.sap/hyperspace/cicd-setup-documentation/managed-tools/validate/cxone.html',
+        'https://pages.github.tools.sap/hyperspace/cicd-setup-documentation/managed-services/validate/cxone.html',
         '_blank',
         'noopener, noreferrer',
       )

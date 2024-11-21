@@ -18,7 +18,7 @@ export class CXOneServiceDetailsComponent extends BaseServiceDetailsComponent {
 
   openDocumentation() {
     window.open(
-      'https://pages.github.tools.sap/hyperspace/cicd-setup-documentation/not-managed-tools.html#checkmarx-one-cxone',
+      'https://pages.github.tools.sap/hyperspace/cicd-setup-documentation/not-managed-services.html#checkmarx-one-cxone',
       '_blank',
       'noopener,noreferrer',
     )

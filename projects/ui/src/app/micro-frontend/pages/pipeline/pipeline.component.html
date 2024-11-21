@@ -216,7 +216,7 @@
                     <div *ngIf="!isStaticSecurityChecksSetup()">
                       <app-setup-service-list-item
                         [setupDialogType]="categories.STATIC_SECURITY_CHECKS"
-                        infoPopoverText="Configure Static Security tools like GitHub Advanced Security and CxONE"
+                        infoPopoverText="Configure Static Security services like GitHub Advanced Security and CxONE"
                         serviceName="Static Security Checks"></app-setup-service-list-item>
                     </div>
                     <div *ngIf="!isOpenSourceChecksSetup() && !showOSC()">
@@ -233,7 +233,7 @@
                     </div>
                     <div *ngIf="!isStaticCodeChecksSetup()">
                       <app-setup-service-list-item
-                        infoPopoverText="Configure Static Code Check tools like SonarQube"
+                        infoPopoverText="Configure Static Code Check services like SonarQube"
                         labelText="coming soon"
                         serviceName="Static Code Checks"></app-setup-service-list-item>
                     </div>

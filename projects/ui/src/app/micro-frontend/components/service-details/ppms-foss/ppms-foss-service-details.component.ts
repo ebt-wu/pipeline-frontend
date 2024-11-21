@@ -19,7 +19,7 @@ export class PpmsFossServiceDetailsComponent {
 
   openDocumentation() {
     window.open(
-      'https://pages.github.tools.sap/hyperspace/cicd-setup-documentation/not-managed-tools.html#ppms',
+      'https://pages.github.tools.sap/hyperspace/cicd-setup-documentation/not-managed-services.html#ppms',
       '_blank',
       'noopener,noreferrer',
     )

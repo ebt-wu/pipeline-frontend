@@ -18,7 +18,7 @@ export class CheckmarxServiceDetailsComponent extends BaseServiceDetailsComponen
 
   openDocumentation() {
     window.open(
-      'https://pages.github.tools.sap/hyperspace/cicd-setup-documentation/not-managed-tools.html#checkmarx-cxsast',
+      'https://pages.github.tools.sap/hyperspace/cicd-setup-documentation/not-managed-services.html#checkmarx-cxsast',
       '_blank',
       'noopener,noreferrer',
     )

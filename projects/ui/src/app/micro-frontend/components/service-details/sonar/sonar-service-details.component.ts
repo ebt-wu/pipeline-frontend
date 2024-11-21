@@ -40,7 +40,7 @@ export class SonarServiceDetailsComponent implements OnInit {
 
   openDocumentation() {
     window.open(
-      'https://pages.github.tools.sap/hyperspace/cicd-setup-documentation/managed-tools/validate/sonarqube.html',
+      'https://pages.github.tools.sap/hyperspace/cicd-setup-documentation/managed-services/validate/sonarqube.html',
       '_blank',
       'noopener,noreferrer',
     )

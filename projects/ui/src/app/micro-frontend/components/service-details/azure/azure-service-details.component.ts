@@ -18,7 +18,7 @@ export class AzureServiceDetailsComponent extends BaseServiceDetailsComponent {
 
   openDocumentation() {
     window.open(
-      'https://pages.github.tools.sap/hyperspace/cicd-setup-documentation/not-managed-tools.html#azure-pipelines',
+      'https://pages.github.tools.sap/hyperspace/cicd-setup-documentation/not-managed-services.html#azure-pipelines',
       '_blank',
       'noopener,noreferrer',
     )

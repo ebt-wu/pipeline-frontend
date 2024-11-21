@@ -68,7 +68,7 @@ export class GithubActionsServiceDetailsComponent extends BaseServiceDetailsComp
 
   openDocumentation() {
     window.open(
-      'https://pages.github.tools.sap/hyperspace/cicd-setup-documentation/managed-tools/build/github-actions.html',
+      'https://pages.github.tools.sap/hyperspace/cicd-setup-documentation/managed-services/build/github-actions.html',
       '_blank',
       'noopener, noreferrer',
     )

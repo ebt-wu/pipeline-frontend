@@ -18,7 +18,7 @@ export class CommonRepositoryServiceDetailsComponent extends BaseServiceDetailsC
 
   openDocumentation() {
     window.open(
-      'https://pages.github.tools.sap/hyperspace/cicd-setup-documentation/not-managed-tools.html#common-repository',
+      'https://pages.github.tools.sap/hyperspace/cicd-setup-documentation/not-managed-services.html#common-repository',
       '_blank',
       'noopener,noreferrer',
     )

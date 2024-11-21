@@ -18,7 +18,7 @@ export class BlackDuckServiceDetailsComponent extends BaseServiceDetailsComponen
 
   openDocumentation() {
     window.open(
-      'https://pages.github.tools.sap/hyperspace/cicd-setup-documentation/not-managed-tools.html#blackduck-hub',
+      'https://pages.github.tools.sap/hyperspace/cicd-setup-documentation/not-managed-services.html#blackduck-hub',
       '_blank',
       'noopener,noreferrer',
     )

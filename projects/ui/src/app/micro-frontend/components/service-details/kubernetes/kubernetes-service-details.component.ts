@@ -35,7 +35,7 @@ export class KubernetesServiceDetailsComponent extends BaseServiceDetailsCompone
 
   openDocumentation() {
     window.open(
-      'https://pages.github.tools.sap/hyperspace/cicd-setup-documentation/not-managed-tools.html#kubernetes',
+      'https://pages.github.tools.sap/hyperspace/cicd-setup-documentation/not-managed-services.html#kubernetes',
       '_blank',
       'noopener,noreferrer',
     )
