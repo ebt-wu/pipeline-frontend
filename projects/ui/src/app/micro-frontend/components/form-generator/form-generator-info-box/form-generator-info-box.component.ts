@@ -8,6 +8,13 @@ import {
 } from '@fundamental-ngx/platform'
 import { ButtonComponent } from '@fundamental-ngx/core/button'
 
+export type FormGeneratorInfoBoxAdditionalData = {
+  header?: string
+  instructions?: () => Promise<string>
+  showRefreshButton?: boolean
+  callBeforeRefresh?: () => Promise<void>
+}
+
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-fdp-form-generator-info-box',
@@ -21,7 +28,7 @@ import { ButtonComponent } from '@fundamental-ngx/core/button'
 export class PlatformFormGeneratorCustomInfoBoxComponent extends BaseDynamicFormGeneratorControl implements OnInit {
   instructions: Promise<string>
   showRefreshButton = false
-  callBeforeRefresh: () => Promise<unknown>
+  callBeforeRefresh: () => Promise<void>
 
   constructor() {
     super()
@@ -34,11 +41,7 @@ export class PlatformFormGeneratorCustomInfoBoxComponent extends BaseDynamicForm
 
   ngOnInit(): void {
     const guiOptions = this.formItem.guiOptions
-    const additionalData = guiOptions?.additionalData as {
-      instructions: () => Promise<string>
-      showRefreshButton: boolean
-      callBeforeRefresh: () => Promise<unknown>
-    }
+    const additionalData = guiOptions?.additionalData as FormGeneratorInfoBoxAdditionalData
 
     if (additionalData?.instructions) {
       this.instructions = additionalData.instructions()

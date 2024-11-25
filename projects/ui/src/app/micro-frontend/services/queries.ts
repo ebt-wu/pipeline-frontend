@@ -204,8 +204,8 @@ export const CREATE_GITHUB_REPOSITORY = gql`
     $baseUrl: String!
     $org: String!
     $repo: String!
-    $secretPath: String!
     $isGithubActionsGPP: Boolean!
+    $secretPath: String
   ) {
     createGithubRepository(
       projectId: $projectId
@@ -433,6 +433,12 @@ export const CREATE_GITHUB_ACTIONS = gql`
 export const DELETE_GITHUB_ACTIONS = gql`
   mutation DeleteGithubActions($projectId: String!, $componentId: String!, $resourceName: String!) {
     deleteGithubActions(projectId: $projectId, componentId: $componentId, resourceName: $resourceName)
+  }
+`
+
+export const GET_GITHUB_ACTONS_SOLINAS_VERIFICATION = gql`
+  query getGithubActionsSolinasVerification($projectId: String!, $githubOrg: String!, $githubUrl: String!) {
+    getGithubActionsSolinasVerification(projectId: $projectId, githubOrg: $githubOrg, githubUrl: $githubUrl)
   }
 `
 

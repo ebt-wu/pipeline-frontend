@@ -24,6 +24,6 @@ export class UpgradeBannerComponent {
     await this.luigiClient
       .linkManager()
       .withParams({ orchestrator: Orchestrators.GITHUB_ACTIONS_WORKFLOW })
-      .openAsModal('setup', { size: 's', title: 'Set up Build' })
+      .openAsModal('setup', { title: 'Set up Build Pipeline', width: '27rem', height: '33rem' })
   }
 }

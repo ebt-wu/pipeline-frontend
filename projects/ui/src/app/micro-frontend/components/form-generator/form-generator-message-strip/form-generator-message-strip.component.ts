@@ -9,6 +9,12 @@ import {
   dynamicFormGroupChildProvider,
 } from '@fundamental-ngx/platform'
 
+export type FormGeneratorMessageStripAdditionalData = {
+  message?: () => Promise<string>
+  type?: MessageStripType
+  addMargins?: boolean
+}
+
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-fdp-form-generator-message-strip',
@@ -24,7 +30,6 @@ export class PlatformFormGeneratorCustomMessageStripComponent
 {
   type: MessageStripType = 'information'
   message = ''
-  isValidationRequired = signal(false)
   isLoaded = signal(false)
 
   constructor() {
@@ -33,12 +38,7 @@ export class PlatformFormGeneratorCustomMessageStripComponent
 
   async ngOnInit() {
     const guiOptions = this.formItem.guiOptions
-    const additionalData = guiOptions?.additionalData as {
-      message: () => Promise<string>
-      type: MessageStripType
-      isValidationRequired: boolean
-      addMargins: boolean // used directly in html
-    }
+    const additionalData = guiOptions?.additionalData as FormGeneratorMessageStripAdditionalData
 
     if (additionalData?.type) {
       this.type = additionalData.type
@@ -46,10 +46,6 @@ export class PlatformFormGeneratorCustomMessageStripComponent
 
     if (additionalData?.message) {
       this.message = await additionalData.message()
-    }
-
-    if (additionalData?.isValidationRequired) {
-      this.isValidationRequired.set(additionalData.isValidationRequired)
     }
 
     this.isLoaded.set(true)

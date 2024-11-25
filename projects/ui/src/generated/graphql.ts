@@ -488,6 +488,7 @@ export type Query = {
   getCumulusPipeline?: Maybe<CumulusPipeline>;
   getGitHubAdvancedSecurity?: Maybe<GitHubAdvancedSecurityGetPayload>;
   getGithubActionsCrossNamespace?: Maybe<GithubActionsGetPayload>;
+  getGithubActionsSolinasVerification: Scalars['Boolean']['output'];
   getGithubRepository?: Maybe<GithubRepository>;
   getJenkinsPipeline?: Maybe<JenkinsPipeline>;
   getJiraProjects?: Maybe<Array<Maybe<JiraProject>>>;
@@ -515,6 +516,13 @@ export type QueryGetGitHubAdvancedSecurityArgs = {
 export type QueryGetGithubActionsCrossNamespaceArgs = {
   githubInstance: Scalars['String']['input'];
   githubOrg: Scalars['String']['input'];
+  projectId: Scalars['String']['input'];
+};
+
+
+export type QueryGetGithubActionsSolinasVerificationArgs = {
+  githubOrg: Scalars['String']['input'];
+  githubUrl: Scalars['String']['input'];
   projectId: Scalars['String']['input'];
 };
 
@@ -908,6 +916,15 @@ export type DeleteGithubActionsMutationVariables = Exact<{
 
 
 export type DeleteGithubActionsMutation = { __typename?: 'Mutation', deleteGithubActions?: string | null };
+
+export type GetGithubActionsSolinasVerificationQueryVariables = Exact<{
+  projectId: Scalars['String']['input'];
+  githubOrg: Scalars['String']['input'];
+  githubUrl: Scalars['String']['input'];
+}>;
+
+
+export type GetGithubActionsSolinasVerificationQuery = { __typename?: 'Query', getGithubActionsSolinasVerification: boolean };
 
 export type GetGithubActionsCrossNamespaceQueryVariables = Exact<{
   projectId: Scalars['String']['input'];

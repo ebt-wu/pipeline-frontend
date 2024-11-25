@@ -1,10 +1,9 @@
-import { BuildTool, NotManagedServices, PipelineType } from '@generated/graphql'
+import { NotManagedServices, PipelineType } from '@generated/graphql'
 import {
   CredentialTypes,
   GithubInstances,
   JiraProjectTypes,
   Kinds,
-  Orchestrators,
   OSCPlatforms,
   ServiceStatus,
   StepKey,
@@ -15,26 +14,6 @@ export type ghTokenFormValue = {
   githubToken?: string
   githubCredentialType?: CredentialTypes
   githubSelectCredential?: string
-}
-
-export type SetupBuildFormValue = {
-  buildTool?: BuildTool
-  buildToolHeader?: string
-  githubCredentialType?: CredentialTypes
-  githubHeaderGithubActions?: void
-  githubHeaderJenkins?: void
-  githubSelectCredential?: string
-  githubToken?: string
-  jenkinsCredentialType?: CredentialTypes
-  jenkinsInstanceHeader?: void
-  jenkinsCredentialHeader?: void
-  jenkinsSelectCredential?: string
-  jenkinsToken?: string
-  jenkinsUrl?: string
-  jenkinsUserId?: string
-  orchestrator?: Orchestrators
-  orchestratorHeader?: void
-  patInfoBox?: void
 }
 
 export type SetupOSCFormValue = {

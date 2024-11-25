@@ -1,0 +1,10 @@
+<ng-container [formGroup]="form">
+  <ng-container [formGroupName]="formGroupName">
+    <span
+      fd-object-status
+      [status]="formItem.guiOptions?.additionalData?.status"
+      [label]="formItem.guiOptions?.additionalData?.label"
+      [inverted]="formItem.guiOptions?.additionalData?.inverted"
+      [glyph]="formItem.guiOptions?.additionalData?.glyph"></span>
+  </ng-container>
+</ng-container>

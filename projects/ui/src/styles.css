@@ -20,3 +20,40 @@
 body {
   margin: 0;
 }
+
+/* Tweaks for fdx form-generator */
+fdp-form-generator {
+  .fd-container.fd-form-layout-grid-container.fd-form-layout-grid-container {
+    /* Make radio buttons outline fully visible */
+    .fd-row .fd-col {
+      overflow: visible;
+    }
+
+    .fd-form-group .fd-row.fd-form-item:nth-child(2) {
+      /* Remove margin of the 1st form generator element */
+      margin-top: 0;
+    }
+
+    fdp-dynamic-form-generator-radio {
+      .fd-form-group--inline .fd-form-item {
+        /* Fix form generator bug when radio buttons become misaligned in inline mode */
+        margin-top: 0;
+      }
+
+      .fd-form-group .fd-form-item {
+        /* Remove excessive radio buttons' margins */
+        margin-top: 0;
+        /* 
+          Make radio buttons aligned with other form generator elements.
+          By default radio buttons are moved slightly to the right
+        */
+        margin-left: -0.5rem;
+      }
+    }
+
+    fdp-dynamic-form-generator-select fd-select {
+      /* Make select span the entire row */
+      width: 100%;
+    }
+  }
+}

@@ -1,0 +1,10 @@
+<ng-container [formGroup]="form">
+  <ng-container [formGroupName]="formGroupName">
+    <button
+      fd-button
+      [label]="formItem.guiOptions?.additionalData?.label"
+      [fdType]="formItem.guiOptions?.additionalData?.type"
+      [glyph]="formItem.guiOptions?.additionalData?.glyph"
+      (click)="formItem.guiOptions?.additionalData?.action()"></button>
+  </ng-container>
+</ng-container>

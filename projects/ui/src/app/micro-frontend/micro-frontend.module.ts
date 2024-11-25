@@ -6,7 +6,7 @@ import { LuigiAngularSupportModule } from '@luigi-project/client-support-angular
 import { MicroFrontendRoutingModule } from './micro-frontend-routing.module'
 import { HomePageComponent } from './pages/home-page/home-page.component'
 import { PipelineComponent } from './pages/pipeline/pipeline.component'
-import { SetupComponent } from './components/setup-build/setup-build.component'
+import { SetupBuildComponent } from './components/setup-build/setup-build.component'
 import { ErrorMessageComponent } from './components/error-message/error-message.component'
 import { PlatformFormGeneratorCustomHeaderElementComponent } from './components/form-generator/form-generator-header/form-generator-header.component'
 import { DismissibleMessageComponent } from './components/dismissible-message/dismissible-message.component'
@@ -47,7 +47,7 @@ import { AzureServiceDetailsComponent } from './components/service-details/azure
     PlatformFormGeneratorCustomHeaderElementComponent,
     PlatformFormGeneratorCustomInfoBoxComponent,
     ResourceStagePipe,
-    SetupComponent,
+    SetupBuildComponent,
     SetupServiceListItemComponent,
     SonarServiceDetailsComponent,
     StagingServiceServiceDetailsComponent,

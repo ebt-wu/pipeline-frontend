@@ -7,7 +7,5 @@
       [ngClass]="formItem.guiOptions?.additionalData?.addMargins ? 'margins' : ''">
       <span [innerHTML]="message"></span>
     </fd-message-strip>
-    <!-- input field is required for validation to work -->
-    <fdp-input *ngIf="isValidationRequired()" [name]="name" [formControlName]="name" type="text"></fdp-input>
   </ng-container>
 </ng-container>

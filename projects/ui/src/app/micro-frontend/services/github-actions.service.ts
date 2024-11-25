@@ -3,12 +3,18 @@ import { BaseAPIService } from './base.service'
 import { first, map, mergeMap } from 'rxjs/operators'
 import { combineLatest, Observable } from 'rxjs'
 import { DxpLuigiContextService } from '@dxp/ngx-core/luigi'
-import { CREATE_GITHUB_ACTIONS, GET_GITHUB_ACTIONS_CROSS_NAMESPACE } from './queries'
+import {
+  CREATE_GITHUB_ACTIONS,
+  GET_GITHUB_ACTIONS_CROSS_NAMESPACE,
+  GET_GITHUB_ACTONS_SOLINAS_VERIFICATION,
+} from './queries'
 import {
   CreateGithubActionsMutation,
   CreateGithubActionsMutationVariables,
   GetGithubActionsCrossNamespaceQuery,
   GetGithubActionsCrossNamespaceQueryVariables,
+  GetGithubActionsSolinasVerificationQuery,
+  GetGithubActionsSolinasVerificationQueryVariables,
   GithubActionsGetPayload,
 } from '@generated/graphql'
 
@@ -54,6 +60,25 @@ export class GithubActionsService {
             },
           })
           .pipe(map((res) => res.data?.getGithubActionsCrossNamespace ?? null))
+      }),
+    )
+  }
+
+  getGithubActionSolinasVerification(githubOrg: string, githubUrl: string): Observable<boolean> {
+    return combineLatest([this.apiService.apollo(), this.luigiService.contextObservable()]).pipe(
+      first(),
+      mergeMap(([client, ctx]) => {
+        return client
+          .query<GetGithubActionsSolinasVerificationQuery, GetGithubActionsSolinasVerificationQueryVariables>({
+            query: GET_GITHUB_ACTONS_SOLINAS_VERIFICATION,
+            fetchPolicy: 'no-cache',
+            variables: {
+              projectId: ctx.context.projectId,
+              githubOrg: githubOrg,
+              githubUrl: githubUrl,
+            },
+          })
+          .pipe(map((res) => res.data?.getGithubActionsSolinasVerification ?? null))
       }),
     )
   }

@@ -8,6 +8,7 @@ export const Flags = {
   GITHUB_ACTIONS_ENABLED: 'GITHUB_ACTIONS_ENABLED',
   GHAS_ENABLED: 'GHAS_ENABLED',
   OSC_ENABLED: 'OSC_ENABLED',
+  SUGAR_REGISTRATION_ENABLED: 'SUGAR_REGISTRATION_ENABLED',
 } as const
 
 const TEST_TENANT_ID = '01ezesr3cgghmhgpbny04hv8qn'
@@ -24,6 +25,10 @@ export class FeatureFlagService {
 
   async isOscEnabled(projectId: string) {
     return (await this.getFlagValue(Flags.OSC_ENABLED, projectId)) || this.isTestTenant()
+  }
+
+  async isSugarRegistrationEnabled(projectId: string): Promise<boolean> {
+    return (await this.getFlagValue(Flags.SUGAR_REGISTRATION_ENABLED, projectId)) || this.isTestTenant()
   }
 
   isTestTenant() {

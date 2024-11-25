@@ -22,7 +22,3 @@
   --sapButton_BorderColor: var(--sapButton_Negative_Background);
   --sapButton_Background: var(--sapButton_Negative_BorderColor);
 }
-
-:host ::ng-deep .fd-container.fd-form-layout-grid-container fdp-dynamic-form-generator-radio .fd-form-group--inline .fd-form-item {
-  margin-top: 0;
-}

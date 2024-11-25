@@ -1,11 +1,25 @@
 import { CommonModule } from '@angular/common'
 import { Component, NO_ERRORS_SCHEMA, ChangeDetectionStrategy, OnInit } from '@angular/core'
+import { ReactiveFormsModule } from '@angular/forms'
+import { ButtonComponent } from '@fundamental-ngx/core/button'
 import {
   BaseDynamicFormGeneratorControl,
   dynamicFormFieldProvider,
   dynamicFormGroupChildProvider,
 } from '@fundamental-ngx/platform'
-import { ReactiveFormsModule } from '@angular/forms'
+
+export type FormGeneratorHeaderAdditionalData = {
+  header: string
+  subheader?: () => Promise<string>
+  subheaderStyle?: string | object
+
+  buttonText?: string
+  buttonAction?: () => void
+
+  doubleTopMargin?: boolean
+  ignoreTopMargin?: boolean
+  ignoreBottomMargin?: boolean
+}
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -13,7 +27,7 @@ import { ReactiveFormsModule } from '@angular/forms'
   templateUrl: './form-generator-header.component.html',
   viewProviders: [dynamicFormFieldProvider, dynamicFormGroupChildProvider],
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule, ButtonComponent],
   schemas: [NO_ERRORS_SCHEMA],
   styleUrl: './form-generator-header.component.css',
 })
@@ -28,7 +42,7 @@ export class PlatformFormGeneratorCustomHeaderElementComponent
   }
 
   ngOnInit(): void {
-    const additionalData = this.formItem.guiOptions?.additionalData as { subheader: () => Promise<string> }
+    const additionalData = this.formItem.guiOptions?.additionalData as FormGeneratorHeaderAdditionalData
     const subheader = additionalData.subheader
 
     if (subheader) {

@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core'
 import { RouterModule, Routes } from '@angular/router'
 import { HomePageComponent } from './pages/home-page/home-page.component'
-import { SetupComponent } from './components/setup-build/setup-build.component'
+import { SetupBuildComponent } from './components/setup-build/setup-build.component'
 import { AppRouterOutletComponent } from './components/router-outlet/router-outlet.component'
 import { PipelineDebugModalComponent } from './components/pipeline-debug/pipeline-debug.component'
 import { ImportExistingPipelineModalComponent } from './components/import-existing-pipeline-modal/import-existing-pipeline.component'
@@ -21,7 +21,7 @@ const routes: Routes = [
       },
       {
         path: 'setup',
-        component: SetupComponent,
+        component: SetupBuildComponent,
       },
       {
         path: 'setup-validation',

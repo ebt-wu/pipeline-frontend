@@ -21,7 +21,10 @@ import { EntityContext, Pipeline, SetupOSCFormValue, ValidationLanguage } from '
 import { JiraProjectTypes, Kinds, OSCPlatforms, StepKey } from '@enums'
 import { debounceTime, firstValueFrom, Observable } from 'rxjs'
 import { ErrorMessageComponent } from '../error-message/error-message.component'
-import { PlatformFormGeneratorCustomHeaderElementComponent } from '../form-generator/form-generator-header/form-generator-header.component'
+import {
+  FormGeneratorHeaderAdditionalData,
+  PlatformFormGeneratorCustomHeaderElementComponent,
+} from '../form-generator/form-generator-header/form-generator-header.component'
 import { PlatformFormGeneratorCustomMessageStripComponent } from '../form-generator/form-generator-message-strip/form-generator-message-strip.component'
 import { OpenSourceComplianceService } from '../../services/open-source-compliance.service'
 import { PlatformFormGeneratorCustomReadOnlyInputComponent } from '../form-generator/form-generator-read-only-input/form-generator-read-only-input.component'
@@ -287,6 +290,17 @@ export class SetupOSCModalComponent implements OnInit {
     },
     // Github
     {
+      type: 'header',
+      name: 'githubRepositorySpacer',
+      message: '',
+      guiOptions: {
+        additionalData: <FormGeneratorHeaderAdditionalData>{
+          header: '',
+          ignoreBottomMargin: true,
+        },
+      },
+    },
+    {
       type: 'read-only-input',
       name: 'githubRepository',
       message: 'Repository',
@@ -535,8 +549,9 @@ export class SetupOSCModalComponent implements OnInit {
 
   async openSetupBuildModal() {
     await this.luigiClient.linkManager().fromVirtualTreeRoot().openAsModal('setup', {
-      title: 'Set Up Build',
-      size: 's',
+      title: 'Set up Build Pipeline',
+      width: '27rem',
+      height: '33rem',
     })
   }
 

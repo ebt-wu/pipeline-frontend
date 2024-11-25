@@ -21,4 +21,14 @@ export class PolicyService {
       userPolicies.includes('member') || userPolicies.includes('vault_maintainer') || userPolicies.includes('owner')
     )
   }
+
+  async getCantAddCredentialsErrorMessage(): Promise<string> {
+    const context = await this.luigiService.getContextAsync()
+    return `
+      You can’t add new credentials due to missing permissions.<br/>
+      You need to be „Vault Maintainer“ to maintain credentials.
+      <a href="${context.frameBaseUrl}/projects/${context.projectId}/members" target="_blank" rel="noopener noreferrer">
+        Contact a project owner
+      </a>`
+  }
 }

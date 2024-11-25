@@ -16,7 +16,7 @@
         [formFields]="formGenerator?.formFields">
         <fdp-form-generator
           *ngIf="!loading"
-          [formItems]="questions"
+          [formItems]="formItems"
           (formSubmitted)="onFormSubmitted($event)"
           (formCreated)="onFormCreated()"></fdp-form-generator>
       </fdp-message-popover-form-wrapper>
