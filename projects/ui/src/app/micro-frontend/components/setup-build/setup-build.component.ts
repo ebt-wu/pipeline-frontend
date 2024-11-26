@@ -858,6 +858,13 @@ export class SetupBuildComponent implements OnInit, OnDestroy {
     } catch (error) {
       this.isGithubAppInstallationFinished = true
       this.githubAppInstallationError = "That didn't work. Try re-installing the app."
+    } finally {
+      if (this.formCreated) {
+        // steps visibility update isn't triggered on component-level variable change,
+        // have to trigger it manually
+        // P.S: signal also doesn't help
+        await this.formGenerator.refreshStepsVisibility()
+      }
     }
   }
 
