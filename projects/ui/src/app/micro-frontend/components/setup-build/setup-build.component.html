@@ -6,7 +6,7 @@
       (byDismiss)="dismissErrorMessage()"
       *ngIf="errorMessage()"
       data-testid="setup-build-dialog-error-banner"></app-error-message>
-    <div class="busy-indicator" *ngIf="loading">
+    <div class="busy-indicator" *ngIf="loading()">
       <fd-busy-indicator [loading]="true" ariaLabel="loading" title="Please Wait"></fd-busy-indicator>
     </div>
     <div class="form-margins">
@@ -15,7 +15,7 @@
         [forms]="formGenerator?.formGroup"
         [formFields]="formGenerator?.formFields">
         <fdp-form-generator
-          *ngIf="!loading"
+          *ngIf="!loading()"
           [formItems]="formItems"
           (formSubmitted)="onFormSubmitted($event)"
           (formCreated)="onFormCreated()"></fdp-form-generator>
@@ -31,7 +31,7 @@
         fd-button
         *ngIf="formCreated"
         (click)="submitForm()"
-        [disabled]="loading"
+        [disabled]="loading()"
         type="submit"
         fdType="emphasized"
         label="Set up Build"
@@ -40,7 +40,7 @@
         fd-button
         *ngIf="formCreated"
         fdType="transparent"
-        [disabled]="loading"
+        [disabled]="loading()"
         label="Cancel"
         (click)="cancel()"
         data-testid="setup-build-dialog-cancel-button"></button>

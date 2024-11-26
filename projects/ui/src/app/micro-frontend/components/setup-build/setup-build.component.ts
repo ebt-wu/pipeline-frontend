@@ -109,7 +109,7 @@ export class SetupBuildComponent implements OnInit, OnDestroy {
 
   @ViewChild(FormGeneratorComponent) formGenerator: FormGeneratorComponent
 
-  loading = false
+  loading = signal(true)
   errorMessage = signal('')
 
   formCreated = false
@@ -840,6 +840,7 @@ export class SetupBuildComponent implements OnInit, OnDestroy {
     this.showGithubAppInstallation = await this.featureFlagService.isSugarRegistrationEnabled(context.projectId)
 
     if (!this.showGithubAppInstallation) {
+      this.loading.set(false)
       return
     }
 
@@ -859,12 +860,7 @@ export class SetupBuildComponent implements OnInit, OnDestroy {
       this.isGithubAppInstallationFinished = true
       this.githubAppInstallationError = "That didn't work. Try re-installing the app."
     } finally {
-      if (this.formCreated) {
-        // steps visibility update isn't triggered on component-level variable change,
-        // have to trigger it manually
-        // P.S: signal also doesn't help
-        await this.formGenerator.refreshStepsVisibility()
-      }
+      this.loading.set(false)
     }
   }
 
@@ -882,7 +878,7 @@ export class SetupBuildComponent implements OnInit, OnDestroy {
 
   // TODO: remove this function with sugar app feature-flag removal
   async onGithubPatFormSubmit(buildFormValue: SetupBuildFormValue): Promise<void> {
-    this.loading = true
+    this.loading.set(true)
 
     const context = await this.luigiService.getContextAsync()
     const labels = (await firstValueFrom(this.watch$)).labels
@@ -987,13 +983,13 @@ export class SetupBuildComponent implements OnInit, OnDestroy {
       const errorMessage = (error as Error).message ?? 'Unknown error'
       this.errorMessage.set(errorMessage)
     } finally {
-      this.loading = false
+      this.loading.set(false)
     }
   }
 
   // TODO: rename this function to onFormSubmitted() with sugar app feature-flag removal
   async onGithubAppFormSubmit(buildFormValue: SetupBuildFormValue): Promise<void> {
-    this.loading = true
+    this.loading.set(true)
 
     const context = await this.luigiService.getContextAsync()
     const labels = (await firstValueFrom(this.watch$)).labels
@@ -1090,7 +1086,7 @@ export class SetupBuildComponent implements OnInit, OnDestroy {
       const errorMessage = (error as Error).message ?? 'Unknown error'
       this.errorMessage.set(errorMessage)
     } finally {
-      this.loading = false
+      this.loading.set(false)
     }
   }
 
