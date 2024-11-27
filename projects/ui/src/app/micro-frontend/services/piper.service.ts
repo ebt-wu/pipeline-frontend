@@ -1,12 +1,10 @@
 import { Injectable } from '@angular/core'
 import { BaseAPIService } from './base.service'
 import { DxpLuigiContextService } from '@dxp/ngx-core/luigi'
-import { Observable, combineLatest, first, map, mergeMap } from 'rxjs'
+import { combineLatest, first, map, mergeMap, Observable } from 'rxjs'
 import { CREATE_PIPER_CONFIG, DELETE_PIPER_CONFIG, GET_PIPER_CONFIG } from './queries'
 import {
   BuildTool,
-  CreatePiperConfigMutation,
-  CreatePiperConfigMutationVariables,
   DeletePiperConfigMutation,
   DeletePiperConfigMutationVariables,
   GetPiperConfigQuery,
@@ -22,7 +20,7 @@ export class PiperService {
   ) {}
 
   createPiperConfig(
-    githubSecretRef: string,
+    githubSecretRef: string | null,
     repositoryResource: string,
     buildTool: BuildTool,
     pipelineOptimization: boolean,
@@ -33,7 +31,7 @@ export class PiperService {
       first(),
       mergeMap(([client, ctx]) => {
         return client
-          .mutate<CreatePiperConfigMutation, CreatePiperConfigMutationVariables>({
+          .mutate({
             mutation: CREATE_PIPER_CONFIG,
             variables: {
               projectId: ctx.context.projectId,

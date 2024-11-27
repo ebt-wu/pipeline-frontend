@@ -1,15 +1,12 @@
-/* eslint-disable */
-const { buildClientSchema, getIntrospectionQuery } = require('graphql')
-const { Issuer, generators } = require('openid-client')
-const http = require('http')
+import http from 'http'
+import open from 'open'
+import { CallbackParamsType, generators, Issuer } from 'openid-client'
+import { buildClientSchema, getIntrospectionQuery } from 'graphql'
+import type { IntrospectionQuery } from 'graphql/utilities/getIntrospectionQuery'
 
-let API_URL
-// eslint-disable-next-line prefer-const
-API_URL = 'https://api.portal.d1.hyperspace.tools.sap/pipeline/query'
-// Uncomment the below line to use a local backend for generating the schema
-// API_URL = 'http://localhost:3000/query'
+const API_URL = process.env.API_URL || 'https://api.portal.d1.hyperspace.tools.sap/pipeline/query'
 
-module.exports = async () => {
+export default async function customLoader() {
   const issuer = await Issuer.discover('https://hyperspacedev.accounts.ondemand.com')
 
   const client = new issuer.Client({
@@ -24,13 +21,13 @@ module.exports = async () => {
   const code_challenge = generators.codeChallenge(code_verifier)
 
   // Generate authorization url, that we will open for the user
-  const authorizationUrl = await client.authorizationUrl({
+  const authorizationUrl = client.authorizationUrl({
     scope: 'openid',
     code_challenge,
     code_challenge_method: 'S256',
   })
 
-  let params
+  let params: CallbackParamsType | undefined
 
   // Very simple webserver, using Nodes standard http module
   const server = http
@@ -47,9 +44,8 @@ module.exports = async () => {
     })
     .listen(8000) // static local port
 
-  // Open authorization url in preferred browser, works cross-platform
-  const opn = await import('open')
-  opn.default(authorizationUrl)
+  // Open authorization url in preferred browser, works cross-platform using import open
+  await open(authorizationUrl)
 
   // Recheck every 500ms if we received any parameters
   // This is a simple example without a timeout
@@ -71,7 +67,7 @@ module.exports = async () => {
     body: JSON.stringify({ query: introspectionQuery }),
   })
 
-  const data = await response.json()
+  const data = (await response.json()) as { data: IntrospectionQuery }
 
   return buildClientSchema(data.data)
 }

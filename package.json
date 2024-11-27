@@ -28,6 +28,7 @@
     "format:wc": "prettier --write ./projects/webcomponent",
     "extract:ui": "ng xi18n --output-path=projects/ui/src/locale",
     "codegen": "graphql-codegen -r ts-node/register --config codegen.ts",
+    "codegen:local": "API_URL=http://localhost:3000/query graphql-codegen -r ts-node/register --config codegen.ts",
     "prepare": "husky || true"
   },
   "dependencies": {

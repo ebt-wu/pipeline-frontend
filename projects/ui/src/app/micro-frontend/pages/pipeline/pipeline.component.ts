@@ -2,7 +2,7 @@ import { CommonModule } from '@angular/common'
 import { ChangeDetectionStrategy, Component, Input, OnDestroy, OnInit, signal } from '@angular/core'
 import { RouterModule } from '@angular/router'
 import { DxpLuigiContextService, LuigiClient, LuigiDialogUtil } from '@dxp/ngx-core/luigi'
-import { Categories, DeletionPolicy, Kinds, ServiceStatus, Stages, StepKey } from '@enums'
+import { Categories, Kinds, ServiceStatus, Stages, StepKey } from '@enums'
 import {
   FlexibleColumnLayout,
   FundamentalNgxCoreModule,
@@ -12,7 +12,7 @@ import {
   MessageBoxService,
   MessageToastService,
 } from '@fundamental-ngx/core'
-import { GithubActionsGetPayload } from '@generated/graphql'
+import { DeletionPolicy, GithubActionsGetPayload } from '@generated/graphql'
 import { debounceTime, firstValueFrom, Observable, Subscription, tap } from 'rxjs'
 import { KindExtensionName, KindName } from '@constants'
 import { Pipeline, ResourceRef } from '@types'
@@ -20,12 +20,6 @@ import { DeleteBuildModalComponent } from '../../components/delete-build-modal/d
 import { DismissibleMessageComponent } from '../../components/dismissible-message/dismissible-message.component'
 import { ErrorMessageComponent } from '../../components/error-message/error-message.component'
 import { ServiceDetailsSkeletonComponent } from '../../components/service-details-skeleton/service-details-skeleton.component'
-import { CumlusServiceDetailsComponent } from '../../components/service-details/cumulus/cumulus-service-details.component'
-import { GithubActionsServiceDetailsComponent } from '../../components/service-details/github-actions/github-actions-service-details.component'
-import { GithubServiceDetailsComponent } from '../../components/service-details/github/github-service-details.component'
-import { JenkinServiceDetailsComponent } from '../../components/service-details/jenkins/jenkins-service-details.component'
-import { PiperServiceDetailsComponent } from '../../components/service-details/piper/piper-service-details.component'
-import { StagingServiceServiceDetailsComponent } from '../../components/service-details/staging-service/staging-service-service-details.component'
 import { ServiceData, ServiceListItemComponent } from '../../components/service-list-item/service-list-item.component'
 import { UpgradeBannerComponent } from '../../components/upgrade-banner/upgrade-banner.component'
 import { APIService } from '../../services/api.service'
@@ -47,7 +41,6 @@ import {
 } from '@fundamental-ngx/platform'
 import { PolicyService } from '../../services/policy.service'
 import { PipelineService } from '../../services/pipeline.service'
-import { SonarServiceDetailsComponent } from '../../components/service-details/sonar/sonar-service-details.component'
 import { map } from 'rxjs/operators'
 import { GitHubIssueLinkService } from '../../services/github-issue-link.service'
 
@@ -71,14 +64,6 @@ type Error = {
     InlineHelpModule,
     ErrorMessageComponent,
     DismissibleMessageComponent,
-    CumlusServiceDetailsComponent,
-    GithubServiceDetailsComponent,
-    SonarServiceDetailsComponent,
-    JenkinServiceDetailsComponent,
-    PiperServiceDetailsComponent,
-    StagingServiceServiceDetailsComponent,
-    DeleteBuildModalComponent,
-    GithubActionsServiceDetailsComponent,
     ServiceDetailsSkeletonComponent,
     ServiceListItemComponent,
     UpgradeBannerComponent,
@@ -324,6 +309,7 @@ export class PipelineComponent implements OnInit, OnDestroy {
       'noopener, noreferrer',
     )
   }
+
   async openCumulusModal(e: Event) {
     e.stopPropagation()
     await this.luigiClient.linkManager().fromVirtualTreeRoot().openAsModal('cumulus-info', {
@@ -449,7 +435,12 @@ export class PipelineComponent implements OnInit, OnDestroy {
       },
     })
 
-    this.luigiDialogUtil.manageLuigiBackdrops(mb as MessageBoxRef<{ componentId: string; orchestratorKind: Kinds }>)
+    this.luigiDialogUtil.manageLuigiBackdrops(
+      mb as MessageBoxRef<{
+        componentId: string
+        orchestratorKind: Kinds
+      }>,
+    )
 
     const action = (await firstValueFrom(mb.afterClosed)) as string
 
@@ -471,9 +462,9 @@ export class PipelineComponent implements OnInit, OnDestroy {
       await firstValueFrom(this.api.piperService.deletePiperConfig(piperRef.name))
 
       if (orchestratorKind === Kinds.JENKINS_PIPELINE) {
-        let jenkinsDeletionPolicy = DeletionPolicy.ORPHAN
+        let jenkinsDeletionPolicy = DeletionPolicy.Orphan
         if (action === 'hard-delete') {
-          jenkinsDeletionPolicy = DeletionPolicy.DELETE
+          jenkinsDeletionPolicy = DeletionPolicy.Delete
         }
         const jenkinsRef = pipeline.resourceRefs.find((ref) => ref.kind == Kinds.JENKINS_PIPELINE)
         await firstValueFrom(this.api.jenkinsService.deleteJenkinsPipeline(jenkinsRef.name, jenkinsDeletionPolicy))

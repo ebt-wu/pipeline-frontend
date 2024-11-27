@@ -1,5 +1,12 @@
 import { gql } from 'apollo-angular'
-import { MutationToggleDebugLabelArgs, ToggleDebugLabelMutation } from '@generated/graphql'
+import {
+  CreatePiperConfigMutation,
+  CreatePiperConfigMutationVariables,
+  DeleteJenkinsPipelineMutation,
+  DeleteJenkinsPipelineMutationVariables,
+  MutationToggleDebugLabelArgs,
+  ToggleDebugLabelMutation,
+} from '@generated/graphql'
 
 /**
  * PIPELINE QUERIES
@@ -319,7 +326,7 @@ export const GET_JENKINS_PIPELINE = gql`
   }
 `
 
-export const DELETE_JENKINS_PIPELINE = gql`
+export const DELETE_JENKINS_PIPELINE = gql<DeleteJenkinsPipelineMutation, DeleteJenkinsPipelineMutationVariables>`
   mutation DeleteJenkinsPipeline(
     $projectId: String!
     $componentId: String!
@@ -339,11 +346,11 @@ export const DELETE_JENKINS_PIPELINE = gql`
  * PIPER CONFIG QUERIES
  */
 
-export const CREATE_PIPER_CONFIG = gql`
+export const CREATE_PIPER_CONFIG = gql<CreatePiperConfigMutation, CreatePiperConfigMutationVariables>`
   mutation CreatePiperConfig(
     $projectId: String!
     $componentId: String!
-    $githubSecretRef: String!
+    $githubSecretRef: String
     $repositoryResource: String!
     $buildTool: BuildTool!
     $pipelineOptimization: Boolean!

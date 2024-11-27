@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common'
-import { Component, OnDestroy, OnInit, signal, ViewChild, ChangeDetectionStrategy } from '@angular/core'
+import { ChangeDetectionStrategy, Component, OnDestroy, OnInit, signal, ViewChild } from '@angular/core'
 import { Validators } from '@angular/forms'
 import { FormModule, FundamentalNgxCoreModule } from '@fundamental-ngx/core'
 import { FundamentalNgxPlatformModule } from '@fundamental-ngx/platform'
@@ -8,7 +8,7 @@ import { DxpLuigiContextService, LuigiClient } from '@dxp/ngx-core/luigi'
 import { CredentialTypes, GithubInstances, Orchestrators } from '@enums'
 import { Pipeline, ValidationLanguage } from '@types'
 import { SecretData, SecretService } from '../../services/secret.service'
-import { debounceTime, firstValueFrom, lastValueFrom, Subscription, Observable } from 'rxjs'
+import { debounceTime, firstValueFrom, lastValueFrom, Observable, Subscription } from 'rxjs'
 import { GithubService } from '../../services/github.service'
 import { JenkinsService } from '../../services/jenkins.service'
 import { ErrorMessageComponent } from '../error-message/error-message.component'
@@ -1017,7 +1017,7 @@ export class SetupBuildComponent implements OnInit, OnDestroy {
         ),
       )
 
-      let githubSecretPath = ''
+      let githubSecretPath: string | null = null
       // Jenkins
       if (buildFormValue.orchestrator === Orchestrators.JENKINS) {
         // Github credentials

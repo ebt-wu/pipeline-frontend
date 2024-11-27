@@ -1,27 +1,17 @@
 {
   "root": true,
-  "ignorePatterns": [
-    "projects/**/*"
-  ],
-  "plugins": [
-    "unused-imports"
-  ],
-  "extends": [
-    "@dxp/eslint-config-angular"
-  ],
+  "ignorePatterns": ["projects/**/*"],
+  "plugins": ["unused-imports", "prettier"],
+  "extends": ["@dxp/eslint-config-angular", "plugin:prettier/recommended"],
   "rules": {
     "unused-imports/no-unused-imports": "error",
     "unused-imports/no-unused-vars": "warn"
   },
   "overrides": [
     {
-      "files": [
-        "*.ts"
-      ],
+      "files": ["*.ts"],
       "parserOptions": {
-        "project": [
-          "tsconfig.json"
-        ]
+        "project": ["tsconfig.json"]
       },
       "rules": {
         "@typescript-eslint/unbound-method": "warn",
