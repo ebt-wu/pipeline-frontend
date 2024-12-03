@@ -3,10 +3,10 @@
   [message]="errorMessage()"
   (byDismiss)="dismissErrorMessage()"
   *ngIf="errorMessage()"></app-error-message>
-<div class="busy-indicator" *ngIf="loading">
+<div class="busy-indicator" *ngIf="loading()">
   <fd-busy-indicator [loading]="true" ariaLabel="loading" title="Please Wait"></fd-busy-indicator>
 </div>
-<div *ngIf="!loading" class="description">
+<div *ngIf="!loading()" class="description">
   <b>Enable GitHub Actions and runners</b>
   for the GitHub organization
   <a
@@ -21,10 +21,10 @@
   [forms]="formGenerator?.formGroup"
   [formFields]="formGenerator?.formFields">
   <fdp-form-generator
-    [formItems]="githubActionFormItems"
+    [formItems]="formItems"
     (formCreated)="onFormCreated()"
     (formSubmitted)="onFormSubmitted($event)"
-    *ngIf="!loading"></fdp-form-generator>
+    *ngIf="!loading()"></fdp-form-generator>
 </fdp-message-popover-form-wrapper>
 <div fd-bar barDesign="footer" class="actions-footer">
   <div fd-bar-left>
@@ -34,7 +34,7 @@
     <fdp-button
       *ngIf="formCreated"
       (click)="submitForm()"
-      [disabled]="loading"
+      [disabled]="loading()"
       type="submit"
       buttonType="emphasized"
       label="Enable"></fdp-button>
@@ -42,7 +42,7 @@
       *ngIf="formCreated"
       buttonType="transparent"
       label="Cancel"
-      [disabled]="loading"
+      [disabled]="loading()"
       (click)="cancel()"></fdp-button>
   </div>
 </div>

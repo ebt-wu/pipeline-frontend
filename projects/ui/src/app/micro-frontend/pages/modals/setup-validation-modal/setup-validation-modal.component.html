@@ -153,7 +153,7 @@
         <div *ngIf="!githubResourceExists()">
           <div class="credential-headline setup-validation-margin-sides">Add your GitHub credentials</div>
           <fdp-message-popover-form-wrapper [forms]="formGenerator?.formGroup" [formFields]="formGenerator?.formFields">
-            <fdp-form-generator [formItems]="ghCredentialForm"></fdp-form-generator>
+            <fdp-form-generator [formItems]="formItems"></fdp-form-generator>
           </fdp-message-popover-form-wrapper>
         </div>
       </div>

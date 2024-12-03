@@ -1,17 +1,17 @@
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core'
 import { FundamentalNgxCoreModule, InlineHelpModule } from '@fundamental-ngx/core'
 import { NgIf } from '@angular/common'
-import { PipelineService } from '../../services/pipeline.service'
+import { PipelineService } from '../../../services/pipeline.service'
 import { debounceTime, firstValueFrom, Observable } from 'rxjs'
 import { Pipeline } from '@types'
 import { Kinds } from '@enums'
-import { CumulusService } from '../../services/cumulus.service'
-import { SecretService } from '../../services/secret.service'
+import { CumulusService } from '../../../services/cumulus.service'
+import { SecretService } from '../../../services/secret.service'
 import { CumulusPipeline, PipelineType } from '@generated/graphql'
 import { LuigiClient } from '@dxp/ngx-core/luigi'
 import { PlatformButtonModule } from '@fundamental-ngx/platform'
 import { AuthorizationModule } from '@dxp/ngx-core/authorization'
-import { PolicyService } from '../../services/policy.service'
+import { PolicyService } from '../../../services/policy.service'
 
 @Component({
   selector: 'app-cumulus-info-modal',

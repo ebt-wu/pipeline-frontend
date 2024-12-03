@@ -13,16 +13,23 @@ import {
   PlatformMessagePopoverModule,
 } from '@fundamental-ngx/platform'
 import { BuildTool, Orchestrators } from '@generated/graphql'
-import { EntityContext, ghTokenFormValue, Pipeline, ResourceRef, ValidationLanguage } from '@types'
+import { EntityContext, Pipeline, ResourceRef, ValidationLanguage } from '@types'
 import { debounceTime, firstValueFrom, Observable, Subscription } from 'rxjs'
-import { ErrorMessageComponent } from '../error-message/error-message.component'
-import { GithubAdvancedSecurityService } from '../../services/github-advanced-security.service'
-import { GithubService } from '../../services/github.service'
-import { PipelineService } from '../../services/pipeline.service'
-import { PlatformFormGeneratorCustomInfoBoxComponent } from '../form-generator/form-generator-info-box/form-generator-info-box.component'
-import { SecretData, SecretService } from '../../services/secret.service'
-import { PlatformFormGeneratorCustomMessageStripComponent } from '../form-generator/form-generator-message-strip/form-generator-message-strip.component'
-import { PlatformFormGeneratorCustomValidatorComponent } from '../form-generator/form-generator-validator/form-generator-validator.component'
+import { ErrorMessageComponent } from '../../../components/error-message/error-message.component'
+import { GithubAdvancedSecurityService } from '../../../services/github-advanced-security.service'
+import { GithubService } from '../../../services/github.service'
+import { PipelineService } from '../../../services/pipeline.service'
+import { PlatformFormGeneratorCustomInfoBoxComponent } from '../../../components/form-generator/form-generator-info-box/form-generator-info-box.component'
+import { SecretService } from '../../../services/secret.service'
+import { PlatformFormGeneratorCustomMessageStripComponent } from '../../../components/form-generator/form-generator-message-strip/form-generator-message-strip.component'
+import { PlatformFormGeneratorCustomValidatorComponent } from '../../../components/form-generator/form-generator-validator/form-generator-validator.component'
+import {
+  GithubCredentialFormService,
+  GithubCredentialFormValueP,
+} from '../../../services/forms/github-credential-form.service'
+
+type GithubCredentialFormPrefix = 'github'
+type GithubCredentialFormValue = GithubCredentialFormValueP<GithubCredentialFormPrefix>
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -59,16 +66,20 @@ export class SetupValidationModalComponent implements OnInit, OnDestroy {
   languageSelection = new FormControl(null as ValidationLanguage)
   toolSelection = new FormControl(null)
   @ViewChild(FormGeneratorComponent) formGenerator: FormGeneratorComponent
-  ghCredentialForm: DynamicFormItem[] = [...this.githubService.GITHUB_CREDENTIAL_FORM]
+  formItems: DynamicFormItem[] = this.githubCredentialFormService.buildFormItems<
+    GithubCredentialFormValue,
+    GithubCredentialFormPrefix
+  >('github', () => true)
 
   constructor(
+    private luigiClient: LuigiClient,
     private readonly githubService: GithubService,
     private readonly pipelineService: PipelineService,
     private readonly githubAdvancedSecurityService: GithubAdvancedSecurityService,
     private readonly luigiService: DxpLuigiContextService,
     private readonly secretService: SecretService,
     private readonly _formGeneratorService: FormGeneratorService,
-    private luigiClient: LuigiClient,
+    private readonly githubCredentialFormService: GithubCredentialFormService,
   ) {
     this._formGeneratorService.addComponent(PlatformFormGeneratorCustomInfoBoxComponent, ['info'])
     this._formGeneratorService.addComponent(PlatformFormGeneratorCustomMessageStripComponent, ['message-strip'])
@@ -134,7 +145,7 @@ export class SetupValidationModalComponent implements OnInit, OnDestroy {
     this.loading.set(true)
 
     if (!this.githubResourceExists()) {
-      const formVal = (this.formGenerator.formGroup.form.value as { ungrouped: ghTokenFormValue }).ungrouped
+      const formVal = (this.formGenerator.formGroup.form.value as { ungrouped: GithubCredentialFormValue }).ungrouped
       await this.createGithubResource(formVal)
     }
 
@@ -202,7 +213,7 @@ export class SetupValidationModalComponent implements OnInit, OnDestroy {
     }
   }
 
-  async createGithubResource(value: ghTokenFormValue): Promise<void> {
+  async createGithubResource(value: GithubCredentialFormValue): Promise<void> {
     const context = await this.luigiService.getContextAsync()
     const entityContext = context.entityContext as unknown as EntityContext
 
@@ -226,18 +237,5 @@ export class SetupValidationModalComponent implements OnInit, OnDestroy {
         this.errorMessage.set('Unknown error')
       }
     }
-  }
-
-  private async storeCredential(credentialPrefix: string, secretData: SecretData[], userId: string): Promise<string> {
-    const path = `GROUP-SECRETS/${credentialPrefix}-${userId}`
-    await firstValueFrom(this.secretService.writeSecret(path, secretData))
-    return path
-  }
-
-  private getCredentialPath(selectCredentialValue: string, componentId: string): string {
-    if (selectCredentialValue.includes('GROUP-SECRETS')) {
-      return selectCredentialValue
-    }
-    return `${componentId}/${selectCredentialValue}`
   }
 }

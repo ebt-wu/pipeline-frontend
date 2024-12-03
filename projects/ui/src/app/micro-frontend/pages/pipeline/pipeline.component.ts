@@ -16,7 +16,7 @@ import { DeletionPolicy, GithubActionsGetPayload } from '@generated/graphql'
 import { debounceTime, firstValueFrom, Observable, Subscription, tap } from 'rxjs'
 import { KindExtensionName, KindName } from '@constants'
 import { Pipeline, ResourceRef } from '@types'
-import { DeleteBuildModalComponent } from '../../components/delete-build-modal/delete-build-modal.component'
+import { DeleteBuildModalComponent } from '../modals/delete-build-modal/delete-build-modal.component'
 import { DismissibleMessageComponent } from '../../components/dismissible-message/dismissible-message.component'
 import { ErrorMessageComponent } from '../../components/error-message/error-message.component'
 import { ServiceDetailsSkeletonComponent } from '../../components/service-details-skeleton/service-details-skeleton.component'
@@ -349,7 +349,7 @@ export class PipelineComponent implements OnInit, OnDestroy {
     await this.luigiClient
       .linkManager()
       .fromVirtualTreeRoot()
-      .openAsModal('github-actions', { title: 'Enable GitHub Actions', width: '38rem', height: '30rem' })
+      .openAsModal('github-actions', { title: 'Enable GitHub Actions', width: '27rem', height: '33rem' })
   }
 
   async openPipelineDebugModal(e: Event) {

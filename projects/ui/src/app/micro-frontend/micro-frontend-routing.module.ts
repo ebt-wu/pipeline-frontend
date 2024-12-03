@@ -1,14 +1,14 @@
 import { NgModule } from '@angular/core'
 import { RouterModule, Routes } from '@angular/router'
 import { HomePageComponent } from './pages/home-page/home-page.component'
-import { SetupBuildComponent } from './components/setup-build/setup-build.component'
+import { SetupBuildComponent } from './pages/modals/setup-build/setup-build.component'
 import { AppRouterOutletComponent } from './components/router-outlet/router-outlet.component'
 import { PipelineDebugModalComponent } from './components/pipeline-debug/pipeline-debug.component'
 import { ImportExistingPipelineModalComponent } from './components/import-existing-pipeline-modal/import-existing-pipeline.component'
-import { GithubActionsComponent } from './pages/github-actions/github-actions.component'
-import { SetupValidationModalComponent } from './components/setup-validation-modal/setup-validation-modal.component'
-import { SetupOSCModalComponent } from './components/setup-osc-modal/setup-osc-modal.component'
-import { CumulusInfoModalComponent } from './components/cumulus-info-modal/cumulus-info-modal.component'
+import { GithubActionsComponent } from './pages/modals/setup-github-actions/setup-github-actions.component'
+import { SetupValidationModalComponent } from './pages/modals/setup-validation-modal/setup-validation-modal.component'
+import { SetupOSCModalComponent } from './pages/modals/setup-osc-modal/setup-osc-modal.component'
+import { CumulusInfoModalComponent } from './pages/modals/cumulus-info-modal/cumulus-info-modal.component'
 
 const routes: Routes = [
   {

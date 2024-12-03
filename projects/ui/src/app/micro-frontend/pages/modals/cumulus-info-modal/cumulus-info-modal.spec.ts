@@ -1,10 +1,10 @@
 import { MockService } from 'ng-mocks'
 import { LuigiClient } from '@dxp/ngx-core/luigi'
 import { CumulusInfoModalComponent } from './cumulus-info-modal.component'
-import { PipelineService } from '../../services/pipeline.service'
-import { CumulusService } from '../../services/cumulus.service'
-import { SecretService } from '../../services/secret.service'
-import { PolicyService } from '../../services/policy.service'
+import { PipelineService } from '../../../services/pipeline.service'
+import { CumulusService } from '../../../services/cumulus.service'
+import { SecretService } from '../../../services/secret.service'
+import { PolicyService } from '../../../services/policy.service'
 
 describe('Cumulus Info Modal HSOBRD-74', () => {
   let cumulusInfoModal: CumulusInfoModalComponent

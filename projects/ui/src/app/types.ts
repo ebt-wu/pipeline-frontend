@@ -1,19 +1,8 @@
 import { NotManagedServices, PipelineType } from '@generated/graphql'
-import {
-  CredentialTypes,
-  GithubInstances,
-  JiraProjectTypes,
-  Kinds,
-  OSCPlatforms,
-  ServiceStatus,
-  StepKey,
-  ValidationTools,
-} from '@enums'
+import { GithubInstances, JiraProjectTypes, Kinds, OSCPlatforms, ServiceStatus, StepKey, ValidationTools } from '@enums'
 
-export type ghTokenFormValue = {
-  githubToken?: string
-  githubCredentialType?: CredentialTypes
-  githubSelectCredential?: string
+export type AddPrefixToTypeProperties<T, P extends string> = {
+  [K in keyof T as `${P}${Capitalize<string & K>}`]: T[K]
 }
 
 export type SetupOSCFormValue = {

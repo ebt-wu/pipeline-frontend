@@ -427,7 +427,7 @@ export const CREATE_GITHUB_ACTIONS = gql`
     $componentId: String!
     $githubInstance: String!
     $githubOrganization: String!
-    $secretPath: String!
+    $secretPath: String
   ) {
     createGithubActions(
       projectId: $projectId
