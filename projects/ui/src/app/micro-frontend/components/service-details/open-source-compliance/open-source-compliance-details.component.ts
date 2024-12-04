@@ -69,7 +69,7 @@ export class OpenSourceComplianceDetailsComponent extends BaseServiceDetailsComp
     this.isOscRegistrationActive = this.serviceDetails.isActive
 
     if (this.serviceDetails.jiraRef) {
-      const jiraProjects = await firstValueFrom(this.apiService.jiraService.getJiraItems())
+      const jiraProjects = await firstValueFrom(this.apiService.jiraService.getJiraProjects())
       const jiraProject = jiraProjects.find((project) => project.resourceName === this.serviceDetails.jiraRef)
 
       if (jiraProject) {

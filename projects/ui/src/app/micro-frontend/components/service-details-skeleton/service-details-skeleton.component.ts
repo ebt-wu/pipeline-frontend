@@ -1,8 +1,17 @@
-import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, Output, signal } from '@angular/core'
-import { FlexibleColumnLayout, FundamentalNgxCoreModule } from '@fundamental-ngx/core'
+import {
+  ChangeDetectionStrategy,
+  Component,
+  EventEmitter,
+  Input,
+  OnChanges,
+  OnInit,
+  Output,
+  signal,
+} from '@angular/core'
+import { ColorAccent, FlexibleColumnLayout, FundamentalNgxCoreModule } from '@fundamental-ngx/core'
 import { CommonModule } from '@angular/common'
-import { KindCategory, KindExtensionName, KindName, NotManagedServices } from '@constants'
-import { Kinds, StepKey } from '@enums'
+import { KindCategory, KindExtensionName, KindName, NotManagedServices, OrderedStepsByCategory } from '@constants'
+import { Categories, Kinds, ServiceStatus, StepKey } from '@enums'
 import { firstValueFrom, map, Observable } from 'rxjs'
 import { APIService } from '../../services/api.service'
 import { CumlusServiceDetailsComponent } from '../service-details/cumulus/cumulus-service-details.component'
@@ -16,15 +25,19 @@ import { ExtensionClass, ServiceLevel } from '../../services/extension.types'
 import { GitHubIssueLinkService } from '../../services/github-issue-link.service'
 import { ExtensionService } from '../../services/extension.service'
 import { DebugModeService } from '../../services/debug-mode.service'
-import { JiraService } from '../../services/jira.service'
 import { DxpLuigiContextService, LuigiClient } from '@dxp/ngx-core/luigi'
 import { DxpContext } from '@dxp/ngx-core/common'
-import { SharedDataService } from '../../services/shared-data.service'
 import { ErrorMessageComponent } from '../error-message/error-message.component'
-import { ErrorMessage, Pipeline } from '@types'
+import { ErrorMessage, Pipeline, ResourceRef, ServiceDetails } from '@types'
 import { GithubAdvancedSecurityServiceDetailsComponent } from '../service-details/github-advanced-security/github-advanced-security-service-details.component'
-import { MenuComponent, MenuTriggerDirective, PlatformMenuButtonModule } from '@fundamental-ngx/platform'
-import { GithubRepository, JenkinsPipeline, PiperConfig } from '@generated/graphql'
+import {
+  IconTabBarComponent,
+  IconTabBarTabComponent,
+  IconTabBarTabContentDirective,
+  MenuComponent,
+  MenuTriggerDirective,
+  PlatformMenuButtonModule,
+} from '@fundamental-ngx/platform'
 import { SonarServiceDetailsComponent } from '../service-details/sonar/sonar-service-details.component'
 import { AzureServiceDetailsComponent } from '../service-details/azure/azure-service-details.component'
 import { XMakeServiceDetailsComponent } from '../service-details/xmake/xmake-service-details.component'
@@ -38,11 +51,13 @@ import { WhiteSourceServiceDetailsComponent } from '../service-details/whitesour
 import { PpmsFossServiceDetailsComponent } from '../service-details/ppms-foss/ppms-foss-service-details.component'
 import { KubernetesServiceDetailsComponent } from '../service-details/kubernetes/kubernetes-service-details.component'
 import { CloudFoundryServiceDetailsComponent } from '../service-details/cloud-foundry/cloud-foundry-service-details.component'
-
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export type ServiceDetails = any
-
-const dateFormatter = new Intl.DateTimeFormat('en', { year: 'numeric', month: 'short', day: 'numeric' })
+import {
+  GithubRepository,
+  JenkinsPipeline,
+  OpenSourceComplianceGetResponse,
+  PiperConfig,
+  SonarQubeProject,
+} from '@generated/graphql'
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -78,37 +93,32 @@ const dateFormatter = new Intl.DateTimeFormat('en', { year: 'numeric', month: 's
     PlatformMenuButtonModule,
     MenuTriggerDirective,
     MenuComponent,
+    IconTabBarComponent,
+    IconTabBarTabComponent,
+    IconTabBarTabContentDirective,
   ],
 })
-export class ServiceDetailsSkeletonComponent implements OnInit {
-  @Input() activeTile: string
+export class ServiceDetailsSkeletonComponent implements OnInit, OnChanges {
+  @Input() activeCategory: Categories
   @Input() localLayout: FlexibleColumnLayout
   @Input() pipeline: Pipeline
+  @Input() leanIxData: ExtensionClass[]
   @Output() readonly localLayoutEvent: EventEmitter<FlexibleColumnLayout> = new EventEmitter<FlexibleColumnLayout>()
 
   // maps
   kindName = KindName
-  kindCategory = KindCategory
   kinds = Kinds
   stepKeys = StepKey
 
   dxpContext$: Observable<DxpContext>
 
+  servicesToShow = signal<(Kinds | StepKey)[]>([])
   serviceDetailsLoading = signal(false)
-  serviceDetails = signal<ServiceDetails>({})
-  serviceUrl = signal('')
-  serviceCreationTimestamp = signal<Date>(null)
-  errors = signal<ErrorMessage[]>([])
-  extensionClasses = signal<ExtensionClass[]>([])
+  serviceDetails = signal<Map<Kinds | StepKey, ServiceDetails>>(new Map())
+  serviceUrls = signal(new Map<Kinds | StepKey, string>())
+  errors = signal<Map<Kinds | StepKey, ErrorMessage[]>>(new Map())
+  errorKinds = signal<(Kinds | StepKey)[]>([])
   catalogUrl = signal('')
-  resourceName = signal('')
-
-  isKubernetes = signal<boolean>(false)
-  isCloudFoundry = signal<boolean>(false)
-
-  get getPipelineId() {
-    return this.pipeline?.labels?.find((label) => label.key === 'sap.hyperspace/pipeline-id')?.value
-  }
 
   constructor(
     private readonly api: APIService,
@@ -116,27 +126,32 @@ export class ServiceDetailsSkeletonComponent implements OnInit {
     private readonly luigiService: DxpLuigiContextService,
     private readonly luigiClient: LuigiClient,
     private readonly githubIssueLinkService: GitHubIssueLinkService,
-    private readonly sharedService: SharedDataService,
-    private readonly jiraService: JiraService,
     readonly debugModeService: DebugModeService,
   ) {}
 
-  // eslint-disable-next-line @angular-eslint/no-async-lifecycle-method
+  get getPipelineId() {
+    return this.pipeline?.labels?.find((label) => label.key === 'sap.hyperspace/pipeline-id')?.value
+  }
+
+  async ngOnChanges() {
+    this.servicesToShow.set(this.findAndSortServicesFromCategory(this.activeCategory))
+
+    this.serviceDetailsLoading.set(true)
+    const serviceDetailsMap = new Map<Kinds | StepKey, ServiceDetails>()
+    const serviceUrlMap = new Map<Kinds | StepKey, string>()
+    for (const tile of this.servicesToShow()) {
+      serviceDetailsMap.set(tile, await this.getDetails(tile))
+      this.serviceDetails.set(serviceDetailsMap)
+      serviceUrlMap.set(tile, await this.getServiceLink(tile))
+    }
+    this.serviceUrls.set(serviceUrlMap)
+    this.serviceDetailsLoading.set(false)
+  }
+
   async ngOnInit() {
     this.dxpContext$ = this.luigiService.contextObservable().pipe(map((value) => value.context))
     const context = await this.luigiService.getContextAsync()
     this.catalogUrl.set(context.frameBaseUrl + '/catalog')
-    const extensionClasses = await firstValueFrom(this.extensionService.getExtensionClassesForScopesQuery())
-    this.extensionClasses.set(extensionClasses)
-
-    // eslint-disable-next-line @typescript-eslint/no-misused-promises
-    this.sharedService.selectedResourceData$.subscribe(async (resource) => {
-      if (resource == null) {
-        return
-      }
-      this.resourceName.set(resource.name)
-      await this.loadDetails(resource.kind, resource.name)
-    })
   }
 
   expandDetails() {
@@ -154,154 +169,170 @@ export class ServiceDetailsSkeletonComponent implements OnInit {
     this.localLayoutEvent.emit(this.localLayout)
   }
 
-  determineServiceCreationTimestamp(kind: Kinds | StepKey = null) {
-    if (kind === null) {
+  getInstallationDate(kind: Kinds | StepKey = null): Date | null {
+    if (!kind) {
       return
     }
-
-    if ((this.serviceDetails() as { creationTimestamp: string }).creationTimestamp) {
-      this.serviceCreationTimestamp.set(
-        new Date((this.serviceDetails() as { creationTimestamp: string }).creationTimestamp),
-      )
-    }
-
     if (NotManagedServices.includes(kind as StepKey)) {
-      if (this.pipeline.notManagedServices?.pipelineCreationTimestamp) {
-        this.serviceCreationTimestamp.set(new Date(this.pipeline.notManagedServices.pipelineCreationTimestamp))
+      return this.pipeline.notManagedServices?.pipelineCreationTimestamp
+        ? new Date(this.pipeline.notManagedServices.pipelineCreationTimestamp)
+        : null
+    } else {
+      try {
+        const details: ServiceDetails = this.serviceDetails().get(kind)
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+        if (details && details['creationTimestamp']) {
+          // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+          return new Date(details['creationTimestamp'] as string)
+        }
+      } catch (err) {
+        console.error(err)
       }
     }
   }
 
-  async loadDetails(kind: Kinds | StepKey, name: string) {
+  async getServiceLink(kind: Kinds | StepKey): Promise<string> {
+    try {
+      const serviceDetailsForKind: ServiceDetails = this.serviceDetails().get(kind)
+      const { githubRepoUrl } = await this.api.githubService.getGithubMetadata()
+
+      switch (kind) {
+        case Kinds.JENKINS_PIPELINE:
+          return (serviceDetailsForKind as JenkinsPipeline).jobUrl
+
+        case Kinds.GITHUB_REPOSITORY:
+          return (serviceDetailsForKind as GithubRepository).repositoryUrl
+
+        case Kinds.PIPER_CONFIG:
+          return (serviceDetailsForKind as PiperConfig).pullRequestURL
+
+        case Kinds.GITHUB_ACTION:
+        case Kinds.GITHUB_ACTIONS_WORKFLOW: {
+          return githubRepoUrl + '/actions'
+        }
+        case Kinds.GITHUB_ADVANCED_SECURITY:
+          return githubRepoUrl
+
+        case Kinds.OPEN_SOURCE_COMPLIANCE:
+          const oscRegistration = serviceDetailsForKind as OpenSourceComplianceGetResponse
+          if (oscRegistration.jiraRef === '') {
+            return githubRepoUrl + '/issues'
+          } else {
+            const jiraItems = await firstValueFrom(this.api.jiraService.getJiraProjects())
+            const jiraItem = jiraItems.find((item) => item.resourceName === oscRegistration.jiraRef)
+            return `https://${jiraItem.jiraInstanceUrl}/projects/${jiraItem.projectKey}`
+          }
+        case Kinds.SONAR_QUBE_PROJECT:
+          // TODO check if this is correct
+          return `${(serviceDetailsForKind as SonarQubeProject).host}/dashboard?id=${(serviceDetailsForKind as SonarQubeProject).name}`
+      }
+    } catch (err) {
+      const errorMessage = (err as Error).message
+      this.errors.update((map) => {
+        const errorMessages = map.get(kind) || []
+        errorMessages.push({
+          title: `Load service URL failed for kind ${kind}`,
+          message: `${errorMessage}`,
+        })
+        map.set(kind, errorMessages)
+        return map
+      })
+    }
+  }
+
+  serviceSetupSuccessfully(serviceKind: Kinds | StepKey): boolean {
+    return !this.errorKinds().includes(serviceKind)
+  }
+
+  async getDetails(kind: Kinds | StepKey): Promise<ServiceDetails> {
     const { githubRepoUrl, githubInstance, githubOrgName, githubRepoName } =
       await this.api.githubService.getGithubMetadata()
 
-    this.serviceDetailsLoading.set(true)
-
-    this.serviceDetails.set({})
-    this.serviceUrl.set('')
-    this.serviceCreationTimestamp.set(null)
+    const name = this.getResourceNameFromResourceRefs(kind, this.pipeline.resourceRefs)
     try {
       switch (kind) {
         case Kinds.JENKINS_PIPELINE:
-          this.serviceDetails.set(await firstValueFrom(this.api.jenkinsService.getJenkinsPipeline(name)))
-          this.serviceUrl.set((this.serviceDetails() as JenkinsPipeline).jobUrl)
-          break
+          return await firstValueFrom(this.api.jenkinsService.getJenkinsPipeline(name))
+
         case Kinds.GITHUB_REPOSITORY:
-          this.serviceDetails.set(await firstValueFrom(this.api.githubService.getGithubRepository(name)))
-          this.serviceUrl.set((this.serviceDetails() as GithubRepository).repositoryUrl)
-          break
+          return await firstValueFrom(this.api.githubService.getGithubRepository(name))
+
         case Kinds.CUMULUS_PIPELINE:
-          this.serviceDetails.set(await firstValueFrom(this.api.cumulusService.getCumulusPipeline(name)))
-          break
+          return await firstValueFrom(this.api.cumulusService.getCumulusPipeline(name))
+
         case Kinds.PIPER_CONFIG:
-          this.serviceDetails.set(await firstValueFrom(this.api.piperService.getPiperConfig(name)))
-          this.serviceUrl.set((this.serviceDetails() as PiperConfig).pullRequestURL)
-          break
+          return await firstValueFrom(this.api.piperService.getPiperConfig(name))
+
         case Kinds.STAGING_SERVICE_CREDENTIAL:
-          this.serviceDetails.set(await firstValueFrom(this.api.stagingServiceService.getStagingServiceCredential()))
-          break
+          return await firstValueFrom(this.api.stagingServiceService.getStagingServiceCredential())
+
         case StepKey.AZURE_DEV_OPS:
-          const azureDetails = this.pipeline.notManagedServices[StepKey.AZURE_DEV_OPS]
-          this.serviceDetails.set(azureDetails)
-          break
+          return this.pipeline.notManagedServices[StepKey.AZURE_DEV_OPS]
+
         case StepKey.CNB:
-          const cnbDetails = this.pipeline.notManagedServices[StepKey.CNB]
-          this.serviceDetails.set(cnbDetails)
-          break
+          return this.pipeline.notManagedServices[StepKey.CNB]
+
         case StepKey.XMAKE:
-          const xmakeDetails = this.pipeline.notManagedServices[StepKey.XMAKE]
-          this.serviceDetails.set(xmakeDetails)
-          break
+          return this.pipeline.notManagedServices[StepKey.XMAKE]
+
         case StepKey.COMMON_REPOSITORY:
-          const commonRepositoryDetails = this.pipeline.notManagedServices[StepKey.COMMON_REPOSITORY]
-          this.serviceDetails.set(commonRepositoryDetails)
-          break
+          return this.pipeline.notManagedServices[StepKey.COMMON_REPOSITORY]
+
         case Kinds.GITHUB_ACTION:
         case Kinds.GITHUB_ACTIONS_WORKFLOW:
-          this.serviceDetails.set(
-            await firstValueFrom(
-              this.api.githubActionsService.getGithubActionsCrossNamespace(githubInstance, githubOrgName),
-            ),
+          return await firstValueFrom(
+            this.api.githubActionsService.getGithubActionsCrossNamespace(githubInstance, githubOrgName),
           )
-          if (githubRepoUrl) {
-            this.serviceUrl.set(githubRepoUrl + '/actions')
-          }
-          break
-        case Kinds.GITHUB_ADVANCED_SECURITY:
-          if (githubRepoUrl) {
-            this.serviceUrl.set(githubRepoUrl)
-          }
-          this.serviceDetails.set({
-            ...(await firstValueFrom(this.api.githubAdvancedSecurityService.getGithubAdvancedSecurity(name))),
-            repoUrl: this.serviceUrl(),
-            githubRepoName,
-          })
-          break
-        case Kinds.OPEN_SOURCE_COMPLIANCE:
-          const oscRegistration = await firstValueFrom(
-            this.api.openSourceComplianceService.getOpenSourceComplianceRegistration(),
-          )
-          if (oscRegistration.jiraRef === '') {
-            this.serviceUrl.set(githubRepoUrl + '/issues')
-          } else {
-            const jiraItems = await firstValueFrom(this.jiraService.getJiraItems())
-            const jiraItem = jiraItems.find((item) => item.resourceName === oscRegistration.jiraRef)
-            this.serviceUrl.set('https://' + jiraItem.jiraInstanceUrl + '/projects/' + jiraItem.projectKey)
-          }
 
-          this.serviceDetails.set(oscRegistration)
-          break
+        case Kinds.GITHUB_ADVANCED_SECURITY:
+          return {
+            ...(await firstValueFrom(this.api.githubAdvancedSecurityService.getGithubAdvancedSecurity(name))),
+            githubRepoName,
+            repoUrl: githubRepoUrl,
+          }
+        case Kinds.OPEN_SOURCE_COMPLIANCE:
+          return await firstValueFrom(this.api.openSourceComplianceService.getOpenSourceComplianceRegistration())
+
         case Kinds.SONAR_QUBE_PROJECT:
           // TODO: call sonarqube service
-          // this.serviceDetails.set(await firstValueFrom(this.api.sonarService.getSonarqubeProject()))
-          break
-        case StepKey.BLACK_DUCK_HUB:
-          const blackduckDetails = this.pipeline.notManagedServices[StepKey.BLACK_DUCK_HUB]
-          this.serviceDetails.set(blackduckDetails)
-          break
-        case StepKey.CHECKMARX:
-          const checkmarxDetails = this.pipeline.notManagedServices[StepKey.CHECKMARX]
-          this.serviceDetails.set(checkmarxDetails)
-          break
-        case StepKey.CX_ONE:
-          const cxOneDetails = this.pipeline.notManagedServices[StepKey.CX_ONE]
-          this.serviceDetails.set(cxOneDetails)
-          break
-        case StepKey.FORTIFY:
-          const fortifyDetails = this.pipeline.notManagedServices[StepKey.FORTIFY]
-          this.serviceDetails.set(fortifyDetails)
-          break
-        case StepKey.WHITE_SOURCE:
-          const whiteSourceDetails = this.pipeline.notManagedServices[StepKey.WHITE_SOURCE]
-          this.serviceDetails.set(whiteSourceDetails)
-          break
-        case StepKey.PPMS_FOSS:
-          const ppmsFossDetails = this.pipeline.notManagedServices[StepKey.PPMS_FOSS]
-          this.serviceDetails.set(ppmsFossDetails)
-          break
-        case StepKey.KUBERNETES:
-          const kubernetesDetails = this.pipeline.notManagedServices[StepKey.KUBERNETES]
-          this.serviceDetails.set(kubernetesDetails)
-          break
-        case StepKey.CLOUD_FOUNDRY:
-          const cloudFoundryDetails = this.pipeline.notManagedServices[StepKey.CLOUD_FOUNDRY]
-          this.serviceDetails.set(cloudFoundryDetails)
-          break
-      }
+          return {} as SonarQubeProject
+        // this.serviceDetails.set(await firstValueFrom(this.api.sonarService.getSonarqubeProject()))
 
-      this.determineServiceCreationTimestamp(kind)
+        case StepKey.BLACK_DUCK_HUB:
+          return this.pipeline.notManagedServices[StepKey.BLACK_DUCK_HUB]
+
+        case StepKey.CHECKMARX:
+          return this.pipeline.notManagedServices[StepKey.CHECKMARX]
+
+        case StepKey.CX_ONE:
+          return this.pipeline.notManagedServices[StepKey.CX_ONE]
+
+        case StepKey.FORTIFY:
+          return this.pipeline.notManagedServices[StepKey.FORTIFY]
+
+        case StepKey.WHITE_SOURCE:
+          return this.pipeline.notManagedServices[StepKey.WHITE_SOURCE]
+
+        case StepKey.PPMS_FOSS:
+          return this.pipeline.notManagedServices[StepKey.PPMS_FOSS]
+
+        case StepKey.KUBERNETES:
+          return this.pipeline.notManagedServices[StepKey.KUBERNETES]
+
+        case StepKey.CLOUD_FOUNDRY:
+          return this.pipeline.notManagedServices[StepKey.CLOUD_FOUNDRY]
+      }
     } catch (err) {
       const errorMessage = (err as Error).message
-      this.errors.update((errors) => {
-        errors.push({
+      this.errors.update((map) => {
+        const errorMessages = map.get(kind) || []
+        errorMessages.push({
           title: `Load service details failed for kind ${kind}`,
           message: `${errorMessage}`,
         })
-        return errors
+        map.set(kind, errorMessages)
+        return map
       })
-    } finally {
-      this.serviceDetailsLoading.set(false)
     }
   }
 
@@ -315,31 +346,49 @@ export class ServiceDetailsSkeletonComponent implements OnInit {
         buttonDismiss: 'No',
       })
       .then(async () => {
-        await firstValueFrom(this.api.githubAdvancedSecurityService.deleteGithubAdvancedSecurity(this.resourceName()))
+        const resourceName = this.getResourceNameFromResourceRefs(
+          Kinds.GITHUB_ADVANCED_SECURITY,
+          this.pipeline.resourceRefs,
+        )
+        if (!resourceName) {
+          throw new Error('GHAS resource not found')
+        }
+        await firstValueFrom(this.api.githubAdvancedSecurityService.deleteGithubAdvancedSecurity(resourceName))
       })
       .catch((err) => {
         const errorMessage = (err as Error).message
-        this.errors.update((errors) => {
-          errors.push({ title: 'Deleting Static Security Checks failed', message: errorMessage })
-          return errors
+        this.errors.update((map) => {
+          const errorMessages = map.get(Kinds.GITHUB_ADVANCED_SECURITY) || []
+          errorMessages.push({
+            title: 'Deleting Static Security Checks failed',
+            message: errorMessage,
+          })
+          map.set(Kinds.GITHUB_ADVANCED_SECURITY, errorMessages)
+          return map
         })
       })
   }
 
-  openService() {
-    window.open(this.serviceUrl(), '_blank', 'noopener, noreferrer')
+  openService(kind: Kinds | StepKey) {
+    const link = this.serviceUrls().get(kind)
+    window.open(link, '_blank', 'noopener, noreferrer')
   }
 
-  public getIcon(extension: ExtensionClass): string {
+  getIcon(extension: ExtensionClass): string {
     if (extension) {
       return this.extensionService.getIcon(extension)
     }
     return ''
   }
 
-  public getExtensionClass(activeTile: string): ExtensionClass {
+  getResourceNameFromResourceRefs(kind: Kinds | StepKey, resourceRefs: ResourceRef[]): string {
+    const resource = resourceRefs.find((ref) => ref.kind === kind)
+    return resource?.name
+  }
+
+  getExtensionClass(activeTile: string): ExtensionClass {
     const extensionName = KindExtensionName[activeTile] as string
-    return this.extensionClasses().find((extensionClass) => extensionClass.name == extensionName)
+    return this.leanIxData.find((extensionClass) => extensionClass.name === extensionName)
   }
 
   getComma(element: unknown, array: unknown[]): string {
@@ -381,31 +430,59 @@ The information might be missing in the Hyperspace portal extension backend, Lea
     )
   }
 
-  formatDate(date: Date) {
-    if (!this.isDate(date)) {
-      return null
-    }
-
-    return dateFormatter.format(date)
+  getAllErrors(): ErrorMessage[] {
+    return Array.from(this.errors().values()).flat()
   }
-
-  getIsoString(date: Date) {
-    if (!this.isDate(date)) {
-      return null
-    }
-
-    return date.toISOString()
-  }
-
-  isDate(date: Date) {
-    return !isNaN(date.getTime())
-  }
-
   openGHASScannnerResults() {
-    window.open(this.serviceUrl() + '/security/code-scanning', '_blank', 'noopener, noreferrer')
+    window.open(
+      this.serviceUrls().get(Kinds.GITHUB_ADVANCED_SECURITY) + '/security/code-scanning',
+      '_blank',
+      'noopener, noreferrer',
+    )
   }
 
   openGHASSettings() {
-    window.open(this.serviceUrl() + '/settings/security_analysis/', '_blank', 'noopener, noreferrer')
+    window.open(
+      this.serviceUrls().get(Kinds.GITHUB_ADVANCED_SECURITY) + '/settings/security_analysis/',
+      '_blank',
+      'noopener, noreferrer',
+    )
+  }
+
+  findAndSortServicesFromCategory(category: Categories): (Kinds | StepKey)[] {
+    const kindsStepKeys = Object.keys(KindCategory).filter((key) => KindCategory[key] === category)
+    const matchingResourceRefs = this.pipeline.resourceRefs
+      .filter((ref) => kindsStepKeys.includes(ref.kind))
+      .map((ref) => ref.kind)
+    let servicesToShow: (Kinds | StepKey)[]
+
+    if (this.pipeline.notManagedServices) {
+      const matchingNotManagedServices = Object.entries(this.pipeline.notManagedServices)
+        .filter(([key, value]) => {
+          return kindsStepKeys.includes(key) && value !== null
+        })
+        .map(([key]) => key as StepKey)
+      servicesToShow = Array.from(new Set([...matchingResourceRefs, ...matchingNotManagedServices]))
+    } else {
+      servicesToShow = matchingResourceRefs
+    }
+
+    // Sort the services if there's more than 1
+    if (servicesToShow.length > 1) {
+      return servicesToShow.sort((a, b) => OrderedStepsByCategory[a] - OrderedStepsByCategory[b])
+    }
+
+    return servicesToShow
+  }
+  isServiceFailingCreation(kind: Kinds | StepKey): boolean {
+    const ref = this.pipeline.resourceRefs.find((ref) => ref.kind === kind)
+    return ref && ref.status === ServiceStatus.FAILING_CREATION
+  }
+  isServiceNotManaged(kind: Kinds | StepKey): boolean {
+    return NotManagedServices.includes(kind as StepKey)
+  }
+
+  getNeutralColorAccent() {
+    return 10 as ColorAccent
   }
 }

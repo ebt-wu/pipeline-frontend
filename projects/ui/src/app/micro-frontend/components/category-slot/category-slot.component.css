@@ -1,0 +1,66 @@
+.list-item-border {
+    border-top: 1px !important;
+    border-color: var(--sapList_BorderColor) !important;
+    border-style: solid !important;
+}
+
+.list-item-icon {
+    /* Need to override this to align the with the chevron and icon of the list heading*/
+    width: fit-content !important;
+    min-width: 16px !important;
+    max-width: 16px !important;
+    margin-left: 8px !important;
+    margin-right: 16px !important;
+    pointer-events: auto;
+    font-size: 16px !important;
+
+
+}
+
+.category-container {
+    display: flex;
+    width: 100%;
+    align-items: center;
+
+    .category-name {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        font-size: 16px;
+
+
+        .icon {
+            color: var(--sapNeutralColor);
+            position: relative;
+        }
+
+
+        .category-details {
+            font-size: 14px;
+            color: var(--sapNeutralColor);
+        }
+
+        .debug-details {
+            font-size: 12px;
+        }
+    }
+
+        .coming-soon-label {
+            margin-left: auto;
+        }
+
+}
+
+.details-icon {
+    margin-right: 1rem;
+    font-size: 20px;
+    color: var(--sapNeutralColor);
+
+}
+
+
+@media only screen and (max-width: 960px) {
+    .hide-on-small-screen {
+        display: none;
+    }
+}

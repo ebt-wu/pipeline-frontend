@@ -1,0 +1,85 @@
+<ul fd-list [byline]="true" [noBorder]="true">
+  <li fd-list-item class="list-item-border">
+    <a fd-list-link (click)="onDetailsOpened()">
+      <span fd-list-thumbnail class="list-item-icon">
+        <ng-container *ngIf="statusIconConfig && statusIconConfig.statusIconType === serviceStatus.CREATED">
+          <span fd-object-status class="status-icon" size="m" [glyph]="'status-completed'" status="positive"></span>
+        </ng-container>
+        <fd-busy-indicator
+          [loading]="true"
+          *ngIf="
+            statusIconConfig &&
+            (statusIconConfig.statusIconType === serviceStatus.PENDING_CREATION ||
+              statusIconConfig.statusIconType === serviceStatus.UN_KNOWN)
+          "
+          ariaLabel="loading"
+          size="s"
+          title="Please Wait"></fd-busy-indicator>
+        <span
+          fd-object-status
+          class="status-icon"
+          *ngIf="statusIconConfig && statusIconConfig.statusIconType === serviceStatus.FAILING_CREATION"
+          status="negative"
+          glyph="message-error"></span>
+        <fd-icon
+          [title]="statusIconConfig.statusIconInlineHelpText || null"
+          *ngIf="statusIconConfig && statusIconConfig.statusIconType === serviceStatus.NOT_MANAGED"
+          glyph="question-mark"
+          class="status-icon"></fd-icon>
+        <span
+          fd-object-status
+          class="status-icon"
+          *ngIf="statusIconConfig && statusIconConfig.statusIconType === serviceStatus.NOT_FOUND"
+          glyph="circle-task"></span>
+      </span>
+      <div class="category-container">
+        <div class="category-name">
+          <div>
+            <strong>{{ category }}</strong>
+            <fd-icon
+              *ngIf="infoIconConfig && infoIconConfig.isIconShown"
+              class="icon"
+              glyph="hint"
+              [fd-inline-help]="infoIconConfig.iconInlineHelpText || null"></fd-icon>
+          </div>
+          <div *ngIf="configuredServicesText" class="category-details">
+            <span>{{ configuredServicesText }}</span>
+            <code class="debug-details" *ngIf="debugModeConfig.isDebugModeEnabled">
+              {{ debugModeConfig.debugModeText }}
+            </code>
+          </div>
+        </div>
+
+        <fd-info-label
+          *ngIf="statusTagConfig && statusTagConfig.isStatusTagShown"
+          color="10"
+          font="SAP-icons-TNT"
+          [label]="statusTagConfig.statusTagText"></fd-info-label>
+        <fd-info-label
+          *ngIf="isComingSoonFlagShown"
+          class="coming-soon-label"
+          color="10"
+          fdcozy
+          font="SAP-icons-TNT"
+          label="coming soon"></fd-info-label>
+      </div>
+
+      <div *dxpRequiredPolicies="['member', 'owner', 'vault_maintainer']; operator: 'or'">
+        <button
+          *ngIf="buttonConfig && buttonConfig.isButtonShown && !buttonConfig.isButtonDisabled"
+          [ariaLabel]="buttonConfig.buttonText"
+          fd-button
+          [label]="buttonConfig.buttonText"
+          (click)="buttonConfig.buttonAction()"></button>
+        <button
+          *ngIf="buttonConfig && buttonConfig.isButtonDisabled"
+          [aria-disabled]="buttonConfig.isButtonDisabled"
+          [fd-inline-help]="buttonConfig.disabledButtonInlineHelpText"
+          [ariaLabel]="buttonConfig.buttonText"
+          fd-button
+          [label]="buttonConfig.buttonText"></button>
+      </div>
+      <fd-icon *ngIf="isOpenArrowShown" glyph="slim-arrow-right" class="details-icon"></fd-icon>
+    </a>
+  </li>
+</ul>

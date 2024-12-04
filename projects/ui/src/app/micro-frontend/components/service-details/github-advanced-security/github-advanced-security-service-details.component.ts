@@ -7,17 +7,18 @@ import {
   InlineHelpDirective,
   LinkModule,
 } from '@fundamental-ngx/core'
-import { CumulusPipeline, GetGitHubAdvancedSecurityQuery } from '@generated/graphql'
+import { CumulusPipeline } from '@generated/graphql'
 import { PipelineService } from '../../../services/pipeline.service'
 import { debounceTime, firstValueFrom, Observable } from 'rxjs'
 import { Kinds } from '@enums'
-import { Pipeline } from '@types'
+import { GithubAdvancedSecurityServiceDetails, Pipeline } from '@types'
 import { CumulusService } from '../../../services/cumulus.service'
 import { AsyncPipe, NgIf } from '@angular/common'
 import { AuthorizationModule } from '@dxp/ngx-core/authorization'
 import { Secret, SecretService } from '../../../services/secret.service'
 import { PolicyService } from '../../../services/policy.service'
 import { BaseServiceDetailsComponent } from '../base-service-details.component'
+import { GithubService } from '../../../services/github.service'
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -38,10 +39,7 @@ import { BaseServiceDetailsComponent } from '../base-service-details.component'
   ],
 })
 export class GithubAdvancedSecurityServiceDetailsComponent extends BaseServiceDetailsComponent implements OnInit {
-  @Input() serviceDetails: GetGitHubAdvancedSecurityQuery['getGitHubAdvancedSecurity'] & {
-    repoUrl: string
-    githubRepoName: string
-  }
+  @Input() serviceDetails: GithubAdvancedSecurityServiceDetails
 
   watch$: Observable<Pipeline>
   cumulusInfo: CumulusPipeline
@@ -57,6 +55,7 @@ export class GithubAdvancedSecurityServiceDetailsComponent extends BaseServiceDe
   ADD_SCAN_PROJECT_SIRIUS_DOCU_LINK = 'https://wiki.one.int.sap/wiki/x/s9XS7w'
 
   constructor(
+    private readonly githubService: GithubService,
     private readonly pipelineService: PipelineService,
     private readonly cumulusService: CumulusService,
     protected override readonly secretService: SecretService,
@@ -83,7 +82,9 @@ export class GithubAdvancedSecurityServiceDetailsComponent extends BaseServiceDe
       const secrets = await firstValueFrom(this.secretService.getPipelineSecrets())
 
       // Try to get a secret from the list that matches the instance
-      const githubInstance = new URL(this.serviceDetails.repoUrl).hostname.replace(/\./g, '-')
+      const { githubRepoUrl } = await this.githubService.getGithubMetadata()
+
+      const githubInstance = new URL(githubRepoUrl).hostname.replace(/\./g, '-')
       this.githubSecret = secrets.find((secret) => secret.path.includes(githubInstance))
       // If no secret matches the instance, just look for one with github in the name (could be the case from transferred pipelines)
       if (!this.githubSecret) {

@@ -23,6 +23,7 @@ import { ResourceStagePipe } from './pipes/resource-stage.pipe'
 import { SetupServiceListItemComponent } from './components/setup-service-list-item/setup-service-list-item.component'
 import { SonarServiceDetailsComponent } from './components/service-details/sonar/sonar-service-details.component'
 import { AzureServiceDetailsComponent } from './components/service-details/azure/azure-service-details.component'
+import { ValidateCodeSectionComponent } from './components/validate-code-section/validate-code-section.component'
 
 @NgModule({
   providers: [ContentDensityService, ThemingService],
@@ -51,6 +52,7 @@ import { AzureServiceDetailsComponent } from './components/service-details/azure
     SetupServiceListItemComponent,
     SonarServiceDetailsComponent,
     StagingServiceServiceDetailsComponent,
+    ValidateCodeSectionComponent,
   ],
 })
 export class MicroFrontendModule {}

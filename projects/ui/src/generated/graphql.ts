@@ -681,6 +681,13 @@ export type DeletePipelineMutationVariables = Exact<{
 }>
 
 export type DeletePipelineMutation = { __typename?: 'Mutation'; deletePipeline?: string | null }
+export type DeleteNotManagedServiceMutationVariables = Exact<{
+  stepKey: Scalars['String']['input']
+  projectId: Scalars['String']['input']
+  componentId: Scalars['String']['input']
+}>
+
+export type DeleteNotManagedServiceMutation = { __typename?: 'Mutation'; deleteNotManagedService?: string | null }
 
 export type WatchPipelineSubscriptionVariables = Exact<{
   projectId: Scalars['String']['input']

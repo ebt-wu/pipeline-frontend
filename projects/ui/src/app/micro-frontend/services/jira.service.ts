@@ -15,7 +15,7 @@ export class JiraService {
     private readonly luigiService: DxpLuigiContextService,
   ) {}
 
-  getJiraItems(): Observable<JiraProject[]> {
+  getJiraProjects(): Observable<JiraProject[]> {
     return combineLatest([this.apiService.apollo(), this.luigiService.contextObservable()]).pipe(
       mergeMap(([client, ctx]) => {
         return client

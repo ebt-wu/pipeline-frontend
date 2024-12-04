@@ -15,7 +15,7 @@ fd-card-content {
     margin: 0.1rem 0.1rem 0.1rem 0.5rem;
 
     .header {
-        padding: 1.5rem 1.5rem;
+        padding: 0.75rem 1.5rem;
 
         .header-items {
             display: flex;
@@ -24,15 +24,19 @@ fd-card-content {
 
             .header-text {
                 font-size: 1.5rem;
-                font-weight: 900;
-                margin: 0;
+                margin: 1rem;
             }
-
             .buttons {
                 display: flex;
                 align-items: center;
-                gap: 0.5rem;
-
+                .buttons-separator {
+                    border-left: 1px solid var(--sapToolbar_SeparatorColor);
+                    padding-left: 1rem;
+                    height: 26px;
+                }
+                .button-margin {
+                    margin-right: 1rem;
+                }
             }
         }
     }
@@ -43,34 +47,35 @@ fd-card-content {
 
     .card {
         margin-top: 1rem;
-        padding: 0.5rem;
 
         .header {
             display: flex;
 
-            .headline {
-                margin: 0;
-                font-size: 24px;
-                font-weight: 900;
-            }
-            .flexbox-center {
+            .text {
                 display: flex;
-                align-items: center;
-                gap: 0.5rem;
+                flex-direction: column;
+                margin: 0.5rem 1rem;
+
+                .headline {
+                    margin: 0;
+                }
+
+                .subheader {
+                    color: var(--sapNeutralColor);
+                }
             }
 
-            .buttons {
-                display: flex;
-                gap: 0.5rem;
+            .open-service-button {
                 margin-left: auto;
+                margin-right: 1rem;
+                margin-top: 0.5rem;
             }
         }
 
         .service-meta {
             display: flex;
+            margin: 1rem;
             gap: 2rem;
-            margin-bottom: 1.5rem;
-            margin-top: 1.5rem;
 
             .meta-info {
                 display: flex;
@@ -82,16 +87,19 @@ fd-card-content {
             margin-bottom: 1.5rem;
             background-color: var(--fdCard_Background_Color);
 
+            .tab-margin {
+                margin: 1rem;
+            }
 
             .debug-service-details-heading {
                 margin: 0;
             }
 
             .extension-info {
-                padding-top: 0.5rem;
+                margin: 2rem 1rem;
 
                 .extension-support-option {
-                    margin: 0.2rem 0;
+                    margin: 0.2rem 0rem;
 
                     .option-name {
                         color: var(--sapNeutralColor);
@@ -119,13 +127,11 @@ fd-card-content {
             }
 
             /* Hide scrollbar for Chrome, Safari and Opera */
-
             .hide-scrollbar::-webkit-scrollbar {
                 display: none;
             }
 
             /* Hide scrollbar for IE, Edge and Firefox */
-
             .hide-scrollbar {
                 -ms-overflow-style: none; /* IE and Edge */
                 scrollbar-width: none; /* Firefox */

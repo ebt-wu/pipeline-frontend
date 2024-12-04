@@ -24,6 +24,12 @@ export const DELETE_PIPELINE = gql`
   }
 `
 
+export const DELETE_NOT_MANAGED_SERVICE = gql`
+  mutation DeleteNotManagedService($stepKey: String!, $projectId: String!, $componentId: String!) {
+    deleteNotManagedService(stepKey: $stepKey, projectId: $projectId, componentId: $componentId)
+  }
+`
+
 export const WATCH_PIPELINE = gql`
   subscription WatchPipeline($projectId: String!, $componentId: String!) {
     watchPipeline(projectId: $projectId, componentId: $componentId) {

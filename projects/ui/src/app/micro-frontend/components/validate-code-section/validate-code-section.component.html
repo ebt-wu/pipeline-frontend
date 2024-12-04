@@ -1,0 +1,53 @@
+<fd-card cardType="linkList" class="stage-card">
+  <fd-card-content class="card-content-padding">
+    <div
+      (click)="openValidationStage()"
+      class="card-content stage-headline-padding"
+      data-testid="validation-stage-arrow">
+      <div class="icons">
+        <fd-icon *ngIf="!isValidationStageOpen()" class="icon" glyph="slim-arrow-right"></fd-icon>
+        <fd-icon *ngIf="isValidationStageOpen()" class="icon" glyph="slim-arrow-down"></fd-icon>
+        <fd-avatar [colorAccent]="10" glyph="shield" size="xs"></fd-avatar>
+      </div>
+      <div class="card-description">
+        <div class="card-description-stage-headline">
+          <h1>Validate Code</h1>
+          <p *ngIf="localLayout === 'OneColumnStartFullScreen'">Add checks to evaluate the compliance of your code</p>
+        </div>
+      </div>
+    </div>
+
+    <ng-container *ngIf="isValidationStageOpen()">
+      <app-category-slot
+        *ngIf="categoryMap[Categories.STATIC_SECURITY_CHECKS] as staticSecurityChecksConfig"
+        [category]="Categories.STATIC_SECURITY_CHECKS"
+        [buttonConfig]="staticSecurityChecksConfig.buttonConfig"
+        [configuredServicesText]="staticSecurityChecksConfig.configuredServicesText"
+        [statusTagConfig]="staticSecurityChecksConfig.statusTagConfig"
+        [statusIconConfig]="staticSecurityChecksConfig.statusIconConfig"
+        [isComingSoonFlagShown]="staticSecurityChecksConfig.isComingSoonFlagShown"
+        [isOpenArrowShown]="staticSecurityChecksConfig.isOpenArrowShown"
+        (detailsOpened)="onDetailsOpened(Categories.STATIC_SECURITY_CHECKS)"></app-category-slot>
+      <app-category-slot
+        *ngIf="categoryMap[Categories.OPEN_SOURCE_CHECKS] as openSourceChecksConfig"
+        [category]="Categories.OPEN_SOURCE_CHECKS"
+        [buttonConfig]="openSourceChecksConfig.buttonConfig"
+        [configuredServicesText]="openSourceChecksConfig.configuredServicesText"
+        [statusTagConfig]="openSourceChecksConfig.statusTagConfig"
+        [statusIconConfig]="openSourceChecksConfig.statusIconConfig"
+        [isComingSoonFlagShown]="openSourceChecksConfig.isComingSoonFlagShown"
+        [isOpenArrowShown]="openSourceChecksConfig.isOpenArrowShown"
+        (detailsOpened)="onDetailsOpened(Categories.OPEN_SOURCE_CHECKS)"></app-category-slot>
+      <app-category-slot
+        *ngIf="categoryMap[Categories.STATIC_CODE_CHECKS] as staticCodeChecksConfig"
+        [category]="Categories.STATIC_CODE_CHECKS"
+        [buttonConfig]="staticCodeChecksConfig.buttonConfig"
+        [configuredServicesText]="staticCodeChecksConfig.configuredServicesText"
+        [statusTagConfig]="staticCodeChecksConfig.statusTagConfig"
+        [statusIconConfig]="staticCodeChecksConfig.statusIconConfig"
+        [isComingSoonFlagShown]="staticCodeChecksConfig.isComingSoonFlagShown"
+        [isOpenArrowShown]="staticCodeChecksConfig.isOpenArrowShown"
+        (detailsOpened)="onDetailsOpened(Categories.STATIC_CODE_CHECKS)"></app-category-slot>
+    </ng-container>
+  </fd-card-content>
+</fd-card>

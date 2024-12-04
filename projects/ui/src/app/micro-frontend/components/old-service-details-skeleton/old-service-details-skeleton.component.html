@@ -1,0 +1,293 @@
+<div class="service-category-header">
+  <fd-card cardType="linkList">
+    <fd-card-content class="header">
+      <div class="header-items">
+        <h1 class="header-text">
+          <strong>{{ kindCategory[activeTile] }}</strong>
+        </h1>
+        <div class="buttons">
+          <button
+            *ngIf="activeTile === kinds.GITHUB_ADVANCED_SECURITY"
+            ariaLabel="Show Options"
+            class="button-margin"
+            fd-button
+            fdType="transparent"
+            glyph="overflow"
+            [fdpMenuTriggerFor]="showOptionsMenu"></button>
+          <!-- Using the deprecated fdp-menu instead of fd-menu because it
+          fixes an issue with the menu items not closing after being clicked -->
+          <fdp-menu #showOptionsMenu>
+            <li fd-menu-item>
+              <a fd-menu-interactive (click)="deleteGHAS()">
+                <fd-menu-addon position="before" glyph="delete"></fd-menu-addon>
+                <span fd-menu-title>Delete Step</span>
+              </a>
+            </li>
+          </fdp-menu>
+          <div class="buttons-separator"></div>
+          <button
+            class="button-margin"
+            fd-button
+            fdType="transparent"
+            glyph="resize"
+            ariaLabel="Expand Details"
+            *ngIf="localLayout !== 'OneColumnMidFullScreen'"
+            (click)="expandDetails()"></button>
+          <button
+            class="button-margin hide-on-small-screen"
+            fd-button
+            fdType="transparent"
+            glyph="exitfullscreen"
+            *ngIf="localLayout === 'OneColumnMidFullScreen'"
+            ariaLabel="Shrink Details"
+            (click)="shrinkDetails()"></button>
+          <button
+            fd-button
+            fdType="transparent"
+            glyph="decline"
+            ariaLabel="Close Details"
+            (click)="closeDetails()"
+            data-testid="closeDetailsButton"></button>
+        </div>
+      </div>
+    </fd-card-content>
+  </fd-card>
+  <div *ngFor="let error of errors()">
+    <app-error-message [title]="error.title" [message]="error.message"></app-error-message>
+  </div>
+</div>
+<div class="service-card">
+  <fd-card cardType="linkList" class="card">
+    <fd-card-content>
+      <div class="header">
+        <div class="text">
+          <h1 class="headline">
+            <strong>{{ kindName[activeTile] }}</strong>
+          </h1>
+        </div>
+        <button
+          *ngIf="serviceUrl() && activeTile !== kinds.GITHUB_ADVANCED_SECURITY"
+          class="open-service-button"
+          fd-button
+          fdType="emphasized"
+          label="Open"
+          (click)="openService()"
+          ariaLabel="Open"></button>
+        <button
+          *ngIf="activeTile === kinds.GITHUB_ADVANCED_SECURITY"
+          [fdMenuTrigger]="menuShortcut"
+          [fdMenu]="true"
+          class="open-service-button"
+          fd-button
+          fdType="emphasized"
+          label="Open"></button>
+        <fd-menu #menuShortcut>
+          <li fd-menu-item>
+            <a fd-menu-interactive (click)="openGHASScannnerResults()">
+              <span fd-menu-title>Show scanner results</span>
+            </a>
+          </li>
+          <li fd-menu-item>
+            <a fd-menu-interactive (click)="openGHASSettings()">
+              <span fd-menu-title>Open configuration in GitHub</span>
+            </a>
+          </li>
+        </fd-menu>
+      </div>
+      <div class="service-meta">
+        <fd-avatar
+          size="s"
+          image="{{ getIcon(getExtensionClass(activeTile)) }}"
+          [label]="kindName[activeTile]"
+          [colorAccent]="10"></fd-avatar>
+        <div *ngIf="getExtensionClass(activeTile)?.provider" class="meta-info">
+          <b>Provider</b>
+          <span>{{ getExtensionClass(activeTile).provider }}</span>
+        </div>
+        <div class="meta-info">
+          <b>Installed On</b>
+          <span *ngIf="!serviceDetailsLoading() && serviceCreationTimestamp() && !debugModeService.debugModeEnabled()">
+            {{ formatDate(serviceCreationTimestamp()) }}
+          </span>
+          <span *ngIf="!serviceDetailsLoading() && serviceCreationTimestamp() && debugModeService.debugModeEnabled()">
+            {{ getIsoString(serviceCreationTimestamp()) }}
+          </span>
+          <fd-skeleton *ngIf="serviceDetailsLoading()" width="85px" height="21px">
+            <svg:rect x="0" y="8" width="85" height="8" rx="4"></svg:rect>
+          </fd-skeleton>
+        </div>
+      </div>
+      <fd-tab-list class="tab-list">
+        <fd-tab title="CI/CD">
+          <!-- title="" is required to prevent the title attribute from being transferred from fd-tab to downstream elements -->
+          <div title="">
+            <div class="tab-margin" *ngIf="!serviceDetailsLoading()" [ngSwitch]="activeTile">
+              <app-cumulus-service-details
+                *ngSwitchCase="kinds.CUMULUS_PIPELINE"
+                [serviceDetails]="serviceDetails()"></app-cumulus-service-details>
+              <app-github-service-details
+                *ngSwitchCase="kinds.GITHUB_REPOSITORY"
+                [serviceDetails]="serviceDetails()"></app-github-service-details>
+              <app-jenkins-service-details
+                *ngSwitchCase="kinds.JENKINS_PIPELINE"
+                [serviceDetails]="serviceDetails()"></app-jenkins-service-details>
+              <app-piper-service-details
+                *ngSwitchCase="kinds.PIPER_CONFIG"
+                [serviceDetails]="serviceDetails()"></app-piper-service-details>
+              <app-staging-service-service-details
+                *ngSwitchCase="kinds.STAGING_SERVICE_CREDENTIAL"
+                [serviceDetails]="serviceDetails()"></app-staging-service-service-details>
+              <app-github-actions-service-details
+                *ngSwitchCase="kinds.GITHUB_ACTION"
+                [serviceDetails]="serviceDetails()"></app-github-actions-service-details>
+              <app-github-actions-service-details
+                *ngSwitchCase="kinds.GITHUB_ACTIONS_WORKFLOW"
+                [serviceDetails]="serviceDetails()"></app-github-actions-service-details>
+              <app-github-advanced-security-service-details
+                *ngSwitchCase="kinds.GITHUB_ADVANCED_SECURITY"
+                [serviceDetails]="serviceDetails()"></app-github-advanced-security-service-details>
+              <app-open-source-compliance-details
+                *ngSwitchCase="kinds.OPEN_SOURCE_COMPLIANCE"
+                [serviceDetails]="serviceDetails()"></app-open-source-compliance-details>
+              <app-sonar-service-details
+                *ngSwitchCase="kinds.SONAR_QUBE_PROJECT"
+                [serviceDetails]="serviceDetails()"></app-sonar-service-details>
+              <app-azure-service-details
+                *ngSwitchCase="stepKeys.AZURE_DEV_OPS"
+                [serviceDetails]="serviceDetails()"></app-azure-service-details>
+              <app-xmake-service-details
+                *ngSwitchCase="stepKeys.XMAKE"
+                [serviceDetails]="serviceDetails()"></app-xmake-service-details>
+              <app-black-duck-service-details
+                *ngSwitchCase="stepKeys.BLACK_DUCK_HUB"
+                [serviceDetails]="serviceDetails()"></app-black-duck-service-details>
+              <app-cnb-service-details
+                *ngSwitchCase="stepKeys.CNB"
+                [serviceDetails]="serviceDetails()"></app-cnb-service-details>
+              <app-common-repository-service-details
+                *ngSwitchCase="stepKeys.COMMON_REPOSITORY"
+                [serviceDetails]="serviceDetails()"></app-common-repository-service-details>
+              <app-checkmarx-service-details
+                *ngSwitchCase="stepKeys.CHECKMARX"
+                [serviceDetails]="serviceDetails()"></app-checkmarx-service-details>
+              <app-cx-one-service-details
+                *ngSwitchCase="stepKeys.CX_ONE"
+                [serviceDetails]="serviceDetails()"></app-cx-one-service-details>
+              <app-fortify-service-details
+                *ngSwitchCase="stepKeys.FORTIFY"
+                [serviceDetails]="serviceDetails()"></app-fortify-service-details>
+              <app-whitesource-service-details
+                *ngSwitchCase="stepKeys.WHITE_SOURCE"
+                [serviceDetails]="serviceDetails()"></app-whitesource-service-details>
+              <app-ppms-foss-service-details
+                *ngSwitchCase="stepKeys.PPMS_FOSS"
+                [serviceDetails]="serviceDetails()"></app-ppms-foss-service-details>
+              <app-kubernetes-service-details
+                *ngSwitchCase="stepKeys.KUBERNETES"
+                [serviceDetails]="serviceDetails()"></app-kubernetes-service-details>
+              <app-cloud-foundry-service-details
+                *ngSwitchCase="stepKeys.CLOUD_FOUNDRY"
+                [pipelineID]="getPipelineId ? getPipelineId : undefined"
+                [serviceDetails]="serviceDetails()"></app-cloud-foundry-service-details>
+            </div>
+            <div class="tab-margin">
+              <fd-skeleton width="350px" height="10rem" *ngIf="serviceDetailsLoading()">
+                <svg:rect x="0" y="10" width="250" height="16" rx="4"></svg:rect>
+                <svg:rect x="0" y="45" width="160" height="8" rx="4"></svg:rect>
+                <svg:rect x="0" y="65" width="160" height="8" rx="4"></svg:rect>
+                <svg:rect x="0" y="85" width="100" height="8" rx="4"></svg:rect>
+              </fd-skeleton>
+            </div>
+            <div class="tab-margin" *ngIf="debugModeService.debugModeEnabled()">
+              <h4 class="debug-service-details-heading">Service Details:</h4>
+              <pre class="hide-scrollbar service-details-json">{{ serviceDetails() | json }}</pre>
+            </div>
+          </div>
+        </fd-tab>
+        <fd-tab
+          title="Service Info"
+          *ngIf="activeTile !== stepKeys.KUBERNETES && activeTile !== stepKeys.CLOUD_FOUNDRY">
+          <!-- title="" is required to prevent the title attribute from being transferred from fd-tab to downstream elements -->
+          <div title="">
+            <div *ngIf="getExtensionClass(activeTile) as extension" class="extension-info">
+              <div *ngIf="extension.displayName && extension.description">
+                <h3>What is {{ extension.displayName }}?</h3>
+                <p>{{ extension.description }}</p>
+              </div>
+              <div *ngIf="extension.documentation?.url">
+                <h3>Want to know more?</h3>
+                <a
+                  *ngIf="extension.documentation?.url"
+                  fd-link
+                  href="{{ extension.documentation?.url }}"
+                  target="_blank"
+                  rel="noopener noreferrer">
+                  Documentation
+                </a>
+              </div>
+              <div *ngIf="extension.preferredSupportChannels || extension.contacts">
+                <h3>How to get help?</h3>
+                <div>
+                  <div *ngIf="extension.preferredSupportChannels" class="extension-support-option">
+                    <span class="option-name">Channels:</span>
+                    {{ ' ' }}
+                    <span *ngFor="let channel of extension.preferredSupportChannels">
+                      <a
+                        *ngIf="channel.URL && channel.displayName"
+                        fd-link
+                        href="{{ channel.URL }}"
+                        target="_blank"
+                        rel="noopener noreferrer">
+                        {{ channel.displayName + getComma(channel, extension.preferredSupportChannels) }}
+                      </a>
+                    </span>
+                  </div>
+                  <div *ngIf="extension.contacts" class="extension-support-option">
+                    <span class="option-name">Contacts:</span>
+                    {{ ' ' }}
+                    <span *ngFor="let contact of extension.contacts">
+                      <a *ngIf="contact.displayName" fd-link href="{{ getMailLink(contact.email) }}">
+                        {{ contact.displayName }}
+                        <!-- prettier-ignore -->
+                        <span *ngIf='contact.role'>{{ '(' }}<span
+                          *ngFor='let role of contact.role'>{{ role + getComma(role, contact.role) }}</span>{{ ')' + getComma(contact, extension.contacts) }}</span>
+                      </a>
+                    </span>
+                  </div>
+                  <div *ngIf="extension.serviceLevel" class="extension-support-option">
+                    <span class="option-name">Service Level:</span>
+                    {{ ' ' }}
+                    {{ getServiceLevel(extension.serviceLevel) }}
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div *ngIf="!getExtensionClass(activeTile)" class="service-info">
+              <div class="service-info-flexbox">
+                <img src="./assets/notFoundPage.svg" class="service-info-image" alt="not found" />
+                <h2>Uh oh. Couldn't find service details.</h2>
+                <span *ngIf="dxpContext$ | async as context">
+                  We weren't able to load more details about this service. Please let us know by
+                  <a
+                    [href]="missingServiceDetailsTicketUrl(activeTile, context)"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    fd-link>
+                    creating a ticket.
+                  </a>
+                  For now, you can try searching the
+                  <a [href]="catalogUrl()" target="_blank" rel="noopener noreferrer" fd-link>Hyperspace Catalog.</a>
+                  You may find more information on the {{ kindName[activeTile] }} service there.
+                </span>
+              </div>
+            </div>
+            <div class="tab-margin" *ngIf="debugModeService.debugModeEnabled()">
+              <h4 class="debug-service-details-heading">Raw Extension Info:</h4>
+              <pre class="hide-scrollbar service-details-json">{{ getExtensionClass(activeTile) | json }}</pre>
+            </div>
+          </div>
+        </fd-tab>
+      </fd-tab-list>
+    </fd-card-content>
+  </fd-card>
+</div>

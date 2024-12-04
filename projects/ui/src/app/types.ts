@@ -1,4 +1,4 @@
-import { NotManagedServices, PipelineType } from '@generated/graphql'
+import { GitHubAdvancedSecurityGetPayload, NotManagedServices, PipelineType } from '@generated/graphql'
 import { GithubInstances, JiraProjectTypes, Kinds, OSCPlatforms, ServiceStatus, StepKey, ValidationTools } from '@enums'
 
 export type AddPrefixToTypeProperties<T, P extends string> = {
@@ -44,6 +44,27 @@ export type EntityContext = {
   }
 }
 
+export interface CategoryConfig {
+  configuredServicesText: string
+  buttonConfig: {
+    isButtonShown: boolean
+    isButtonDisabled?: boolean
+    disabledButtonInlineHelpText?: string
+    buttonText?: string
+    buttonAction?: () => void | Promise<void>
+  }
+  statusTagConfig?: {
+    isStatusTagShown: boolean
+    statusTagText: string
+  }
+  statusIconConfig?: {
+    statusIconType: ServiceStatus
+    statusIconInlineHelpText?: string
+  }
+  isComingSoonFlagShown?: boolean
+  isOpenArrowShown?: boolean
+}
+
 export type ValidationLanguage = {
   id: string
   displayName: string
@@ -61,3 +82,10 @@ export type ErrorMessage = {
   title: string
   message: string
 }
+
+export type GithubAdvancedSecurityServiceDetails = GitHubAdvancedSecurityGetPayload & {
+  githubRepoName: string
+  repoUrl: string
+}
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export type ServiceDetails = any

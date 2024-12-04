@@ -9,6 +9,7 @@ export const Flags = {
   GHAS_ENABLED: 'GHAS_ENABLED',
   OSC_ENABLED: 'OSC_ENABLED',
   SUGAR_REGISTRATION_ENABLED: 'SUGAR_REGISTRATION_ENABLED',
+  MULTIPLE_SERVICE_DETAILS_UI_ENABLED: 'MULTIPLE_SERVICE_DETAILS_UI_ENABLED',
 } as const
 
 const TEST_TENANT_ID = '01ezesr3cgghmhgpbny04hv8qn'
@@ -29,6 +30,9 @@ export class FeatureFlagService {
 
   async isSugarRegistrationEnabled(projectId: string): Promise<boolean> {
     return (await this.getFlagValue(Flags.SUGAR_REGISTRATION_ENABLED, projectId)) || this.isTestTenant()
+  }
+  async isMultipleServiceDetailsUiEnabled(projectId: string): Promise<boolean> {
+    return await this.getFlagValue(Flags.MULTIPLE_SERVICE_DETAILS_UI_ENABLED, projectId)
   }
 
   isTestTenant() {

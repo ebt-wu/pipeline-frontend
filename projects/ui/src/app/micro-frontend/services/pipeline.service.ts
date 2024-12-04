@@ -3,11 +3,19 @@ import { BaseAPIService } from './base.service'
 import { catchError, combineLatestWith, first, map, mergeMap } from 'rxjs/operators'
 import { Observable, combineLatest, of } from 'rxjs'
 import { DxpLuigiContextService } from '@dxp/ngx-core/luigi'
-import { CREATE_PIPELINE, DELETE_PIPELINE, WATCH_NOT_MANAGED_SERVICES, WATCH_PIPELINE } from './queries'
+import {
+  CREATE_PIPELINE,
+  DELETE_NOT_MANAGED_SERVICE,
+  DELETE_PIPELINE,
+  WATCH_NOT_MANAGED_SERVICES,
+  WATCH_PIPELINE,
+} from './queries'
 import { Pipeline, ResourceRef } from '@types'
 import {
   CreatePipelineMutation,
   CreatePipelineMutationVariables,
+  DeleteNotManagedServiceMutation,
+  DeleteNotManagedServiceMutationVariables,
   DeletePipelineMutation,
   DeletePipelineMutationVariables,
   NotManagedServices,
@@ -57,6 +65,24 @@ export class PipelineService {
             },
           })
           .pipe(map((res) => res.data?.deletePipeline ?? ''))
+      }),
+    )
+  }
+
+  deleteNotManagedService(stepKey: StepKey): Observable<string> {
+    return combineLatest([this.apiService.apollo(), this.luigiService.contextObservable()]).pipe(
+      first(),
+      mergeMap(([client, ctx]) => {
+        return client
+          .mutate<DeleteNotManagedServiceMutation, DeleteNotManagedServiceMutationVariables>({
+            mutation: DELETE_NOT_MANAGED_SERVICE,
+            variables: {
+              stepKey: stepKey,
+              projectId: ctx.context.projectId,
+              componentId: ctx.context.componentId,
+            },
+          })
+          .pipe(map((res) => res.data?.deleteNotManagedService ?? ''))
       }),
     )
   }
@@ -160,19 +186,25 @@ export class PipelineService {
       combineLatestWith(watchNotMangedServices$),
       map(([pipeline, notManagedServices]) => {
         if (pipeline.resourceRefs) {
-          for (const key of Object.keys(notManagedServices)) {
-            if (notManagedServices[key] != null) {
-              const notManagedService: ResourceRef = {
+          // Remove existing not managed services from pipeline resourceRefs
+          pipeline.resourceRefs = pipeline.resourceRefs.filter(
+            (element) => element.status !== ServiceStatus.NOT_MANAGED,
+          )
+          // Add current not managed services to pipeline resourceRefs
+          const notManagedResourceRefs = Object.entries(notManagedServices)
+            .filter(([, value]) => !!value)
+            .map(([key]) => {
+              return {
                 kind: key as StepKey,
                 status: ServiceStatus.NOT_MANAGED,
                 error: null,
                 name: '',
               }
-              pipeline.resourceRefs.push(notManagedService)
-            }
-          }
+            })
+          pipeline.resourceRefs = [...notManagedResourceRefs, ...pipeline.resourceRefs]
         }
-        return { ...pipeline, notManagedServices: notManagedServices }
+        // Return the updated pipeline with not managed services
+        return { ...pipeline, notManagedServices }
       }),
     )
   }

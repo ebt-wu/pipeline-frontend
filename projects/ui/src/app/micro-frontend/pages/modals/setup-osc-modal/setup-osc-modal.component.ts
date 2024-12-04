@@ -374,7 +374,7 @@ export class SetupOSCModalComponent implements OnInit {
     if (this.isxMakePresent()) this.setupPrerequisitesFormGroup.controls.xMakeOption.setValue('Yes')
 
     this.isBuildPipelineSetup.set(this.pipelineService.isBuildPipelineSetup(resourceRefs))
-    this.jiraProjects.set(await firstValueFrom(this.jiraService.getJiraItems()))
+    this.jiraProjects.set(await firstValueFrom(this.jiraService.getJiraProjects()))
 
     this.context.set(await this.luigiService.getContextAsync())
     const isRefreshPress = (await this.luigiClient

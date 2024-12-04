@@ -2,7 +2,7 @@
   "root": true,
   "ignorePatterns": ["projects/**/*"],
   "plugins": ["unused-imports", "prettier"],
-  "extends": ["@dxp/eslint-config-angular", "plugin:prettier/recommended"],
+  "extends": ["plugin:prettier/recommended", "@dxp/eslint-config-angular"],
   "rules": {
     "unused-imports/no-unused-imports": "error",
     "unused-imports/no-unused-vars": "warn"
@@ -15,7 +15,8 @@
       },
       "rules": {
         "@typescript-eslint/unbound-method": "warn",
-        "@angular-eslint/no-async-lifecycle-method": "warn"
+        "@angular-eslint/no-async-lifecycle-method": "warn",
+        "@typescript-eslint/no-unsafe-assignment": "warn"
       }
     }
   ]

@@ -14,12 +14,17 @@ import {
 } from '@fundamental-ngx/core'
 import { DeletionPolicy, GithubActionsGetPayload } from '@generated/graphql'
 import { debounceTime, firstValueFrom, Observable, Subscription, tap } from 'rxjs'
-import { KindExtensionName, KindName } from '@constants'
+import { KindCategory, KindExtensionName, KindName } from '@constants'
 import { Pipeline, ResourceRef } from '@types'
 import { DeleteBuildModalComponent } from '../modals/delete-build-modal/delete-build-modal.component'
 import { DismissibleMessageComponent } from '../../components/dismissible-message/dismissible-message.component'
 import { ErrorMessageComponent } from '../../components/error-message/error-message.component'
-import { ServiceDetailsSkeletonComponent } from '../../components/service-details-skeleton/service-details-skeleton.component'
+import { CumlusServiceDetailsComponent } from '../../components/service-details/cumulus/cumulus-service-details.component'
+import { GithubActionsServiceDetailsComponent } from '../../components/service-details/github-actions/github-actions-service-details.component'
+import { GithubServiceDetailsComponent } from '../../components/service-details/github/github-service-details.component'
+import { JenkinServiceDetailsComponent } from '../../components/service-details/jenkins/jenkins-service-details.component'
+import { PiperServiceDetailsComponent } from '../../components/service-details/piper/piper-service-details.component'
+import { StagingServiceServiceDetailsComponent } from '../../components/service-details/staging-service/staging-service-service-details.component'
 import { ServiceData, ServiceListItemComponent } from '../../components/service-list-item/service-list-item.component'
 import { UpgradeBannerComponent } from '../../components/upgrade-banner/upgrade-banner.component'
 import { APIService } from '../../services/api.service'
@@ -42,7 +47,12 @@ import {
 import { PolicyService } from '../../services/policy.service'
 import { PipelineService } from '../../services/pipeline.service'
 import { map } from 'rxjs/operators'
+import { CategorySlotComponent } from '../../components/category-slot/category-slot.component'
+import { ValidateCodeSectionComponent } from '../../components/validate-code-section/validate-code-section.component'
 import { GitHubIssueLinkService } from '../../services/github-issue-link.service'
+import { OldServiceDetailsSkeletonComponent } from '../../components/old-service-details-skeleton/old-service-details-skeleton.component'
+import { ServiceDetailsSkeletonComponent } from '../../components/service-details-skeleton/service-details-skeleton.component'
+import { SonarServiceDetailsComponent } from '../../components/service-details/sonar/sonar-service-details.component'
 
 type Error = {
   title: string
@@ -64,6 +74,15 @@ type Error = {
     InlineHelpModule,
     ErrorMessageComponent,
     DismissibleMessageComponent,
+    CumlusServiceDetailsComponent,
+    GithubServiceDetailsComponent,
+    SonarServiceDetailsComponent,
+    JenkinServiceDetailsComponent,
+    PiperServiceDetailsComponent,
+    StagingServiceServiceDetailsComponent,
+    DeleteBuildModalComponent,
+    GithubActionsServiceDetailsComponent,
+    OldServiceDetailsSkeletonComponent,
     ServiceDetailsSkeletonComponent,
     ServiceListItemComponent,
     UpgradeBannerComponent,
@@ -75,6 +94,8 @@ type Error = {
     DynamicPageComponent,
     DynamicPageContentComponent,
     DynamicPageGlobalActionsComponent,
+    CategorySlotComponent,
+    ValidateCodeSectionComponent,
   ],
 })
 export class PipelineComponent implements OnInit, OnDestroy {
@@ -103,15 +124,17 @@ export class PipelineComponent implements OnInit, OnDestroy {
 
   // Feature flags
   showGithubActions = signal(false)
-  showGHAS = signal(false)
   showOSC = signal(false)
+  isMultipleServiceDetailUiEnabled = signal(false)
 
   canUserEditCredentials = false
 
   isTransferredTemplatePipeline = signal(false)
 
   localLayout: FlexibleColumnLayout = 'OneColumnStartFullScreen'
+  // TODO replace activeTile with activeCategory
   activeTile: string = ''
+  activeCategory: Categories = null
   githubMetadata: GithubMetadata
   projectId: string
   // maps
@@ -119,6 +142,7 @@ export class PipelineComponent implements OnInit, OnDestroy {
   kinds = Kinds
   serviceStatus = ServiceStatus
   categories = Categories
+  kindCategory = KindCategory
   stages = Stages
   openPrCount$: Observable<number>
   pipelineURL = signal('')
@@ -158,6 +182,9 @@ export class PipelineComponent implements OnInit, OnDestroy {
     // Only show GHA and GHAS if their feature flags are toggled on
     this.showGithubActions.set(await this.featureFlagService.isGithubActionsEnabled(context.projectId))
     this.showOSC.set(await this.featureFlagService.isOscEnabled(context.projectId))
+    this.isMultipleServiceDetailUiEnabled.set(
+      await this.featureFlagService.isMultipleServiceDetailsUiEnabled(context.projectId),
+    )
 
     this.catalogUrl.set(context.frameBaseUrl + '/catalog')
     this.projectId = context.projectId
@@ -174,8 +201,7 @@ export class PipelineComponent implements OnInit, OnDestroy {
 
     this.pipelineSubscription = this.pipeline$
       .pipe(
-        debounceTime(100),
-        // eslint-disable-next-line  @typescript-eslint/no-misused-promises
+        debounceTime(100), // eslint-disable-next-line  @typescript-eslint/no-misused-promises
         tap(async (pipeline) => {
           await this.getPipelineURL(pipeline)
         }),
@@ -502,6 +528,23 @@ export class PipelineComponent implements OnInit, OnDestroy {
     }
   }
 
+  // Todo rename this when the other openDetails isn't used anymore
+  openDetailsFromCategorySlot(event: Categories) {
+    if (!this.activeCategory) {
+      this.localLayout = 'TwoColumnsMidExpanded'
+    }
+
+    if (this.activeCategory === event) {
+      this.localLayout =
+        this.localLayout === 'OneColumnStartFullScreen' ? 'TwoColumnsMidExpanded' : 'OneColumnStartFullScreen'
+    }
+
+    if (this.activeCategory !== event) {
+      this.localLayout = 'TwoColumnsMidExpanded'
+    }
+    this.activeCategory = event
+  }
+
   async contactOnTransferIssues() {
     const context = await this.luigiService.getContextAsync()
     const issueURL = this.githubIssueLinkService.createIssueWithContext(
@@ -560,4 +603,8 @@ export class PipelineComponent implements OnInit, OnDestroy {
     this.extensionClasses.set(extensionClasses)
     this.pendingExtensionClass.set(false)
   }
+
+  protected readonly Kinds = Kinds
+  protected readonly StepKey = StepKey
+  protected readonly Categories = Categories
 }

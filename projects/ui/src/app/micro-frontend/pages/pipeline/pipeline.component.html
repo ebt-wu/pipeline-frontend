@@ -173,7 +173,31 @@
                   </div>
                   <ng-container *ngIf="isBuildStageOpen()">
                     <div *ngFor="let resourceRef of pipeline.resourceRefs | resourceStage: stages.BUILD">
+                      <app-category-slot
+                        *ngIf="isMultipleServiceDetailUiEnabled()"
+                        [category]="kindCategory[resourceRef.kind]"
+                        [configuredServicesText]="kindName[resourceRef.kind]"
+                        [attr.data-testid]="'setup-build-step-' + resourceRef.kind"
+                        [debugModeConfig]="{
+                          isDebugModeEnabled: debugModeService.debugModeEnabled(),
+                          debugModeText: resourceRef.name + ' | ' + resourceRef.kind,
+                        }"
+                        [statusIconConfig]="{
+                          statusIconType: resourceRef.status,
+                          statusIconInlineHelpText:
+                            resourceRef.status === serviceStatus.NOT_MANAGED
+                              ? kindName[resourceRef.kind] +
+                                ' is not available in the Hyperspace Portal. The Portal will not manage your setup or allow for edits.'
+                              : null,
+                        }"
+                        [isOpenArrowShown]="
+                          resourceRef.status === serviceStatus.CREATED ||
+                          resourceRef.status === serviceStatus.NOT_MANAGED
+                        "
+                        (detailsOpened)="openDetailsFromCategorySlot($event)"></app-category-slot>
+
                       <app-service-list-item
+                        *ngIf="!isMultipleServiceDetailUiEnabled()"
                         (openDetailsEvent)="openDetails($event)"
                         [activeTile]="activeTile"
                         [localLayout]="localLayout"
@@ -183,7 +207,12 @@
                   </ng-container>
                 </fd-card-content>
               </fd-card>
-              <fd-card cardType="linkList" class="stage-card">
+              <app-validate-code-section
+                *ngIf="isMultipleServiceDetailUiEnabled()"
+                [pipeline]="pipeline"
+                [localLayout]="localLayout"
+                (detailsOpened)="openDetailsFromCategorySlot($event)"></app-validate-code-section>
+              <fd-card cardType="linkList" class="stage-card" *ngIf="!isMultipleServiceDetailUiEnabled()">
                 <fd-card-content class="card-content-padding">
                   <div
                     (click)="openValidationStage()"
@@ -265,6 +294,7 @@
                     <ng-container *ngIf="isDeployStageOpen()">
                       <div *ngFor="let resourceRef of pipeline.resourceRefs | resourceStage: stages.DEPLOY">
                         <app-service-list-item
+                          *ngIf="!isMultipleServiceDetailUiEnabled()"
                           (openDetailsEvent)="openDetails($event)"
                           [activeTile]="activeTile"
                           [localLayout]="localLayout"
@@ -300,6 +330,8 @@
                 </fd-card>
               </div>
 
+              <!-- TODO: GH Actions should use the category slot too-->
+
               <ng-container *ngIf="showGithubActions()">
                 <div class="automate-workflows-header">
                   <h3>Automate Workflows</h3>
@@ -327,7 +359,14 @@
                       <ul [byline]="true" [noBorder]="true" fd-list>
                         <li
                           (click)="
-                            openDetails({ name: '', kind: kinds.GITHUB_ACTION, status: 'Created', pipeline: pipeline })
+                            isMultipleServiceDetailUiEnabled()
+                              ? openDetailsFromCategorySlot(Categories.ORCHESTRATION)
+                              : openDetails({
+                                  name: '',
+                                  kind: kinds.GITHUB_ACTION,
+                                  status: 'Created',
+                                  pipeline: pipeline,
+                                })
                           "
                           [ngClass]="
                             activeTile === kinds.GITHUB_ACTION && localLayout !== 'OneColumnStartFullScreen'
@@ -464,10 +503,18 @@
         </ng-template>
         <ng-template #midColumn>
           <div class="scrollable-container">
-            <app-service-details-skeleton
+            <app-old-service-details-skeleton
+              *ngIf="!isMultipleServiceDetailUiEnabled()"
               (localLayoutEvent)="updateLocalLayout($event)"
               [activeTile]="activeTile"
               [localLayout]="localLayout"
+              [pipeline]="pipeline"></app-old-service-details-skeleton>
+            <app-service-details-skeleton
+              *ngIf="localLayout !== 'OneColumnStartFullScreen' && isMultipleServiceDetailUiEnabled()"
+              (localLayoutEvent)="updateLocalLayout($event)"
+              [activeCategory]="activeCategory"
+              [localLayout]="localLayout"
+              [leanIxData]="extensionClasses()"
               [pipeline]="pipeline"></app-service-details-skeleton>
           </div>
         </ng-template>

@@ -192,3 +192,51 @@ export const ValidationLanguages: ValidationLanguage[] = [
     order: 11,
   },
 ]
+
+export const OrderedStepsByCategory = {
+  // Orchestrators
+  [Kinds.JENKINS_PIPELINE]: 1,
+  [Kinds.GITHUB_ACTION]: 2,
+  [StepKey.AZURE_DEV_OPS]: 3,
+  [Kinds.GITHUB_ACTIONS_WORKFLOW]: 4,
+
+  // Code build
+  [Kinds.PIPER_CONFIG]: 1,
+  [StepKey.XMAKE]: 2,
+
+  // Static Security Checks
+  [Kinds.GITHUB_ADVANCED_SECURITY]: 1,
+  [StepKey.CX_ONE]: 2,
+  [StepKey.CHECKMARX]: 3,
+  [StepKey.FORTIFY]: 4,
+
+  // Static Code Checks
+  [Kinds.SONAR_QUBE_PROJECT]: 1,
+
+  // Open Source Checks
+  [Kinds.OPEN_SOURCE_COMPLIANCE]: 1,
+  [StepKey.WHITE_SOURCE]: 2,
+  [StepKey.BLACK_DUCK_HUB]: 3,
+
+  // Deployment
+  [StepKey.KUBERNETES]: 1,
+  [StepKey.CLOUD_FOUNDRY]: 2,
+
+  // Compliance
+  [Kinds.CUMULUS_PIPELINE]: 1,
+
+  // Source Code Management
+  [Kinds.GITHUB_REPOSITORY]: 1,
+
+  // Code Transportation
+  [Kinds.STAGING_SERVICE_CREDENTIAL]: 1,
+
+  // Container Image Creation
+  [StepKey.CNB]: 1,
+
+  // Binary Management
+  [StepKey.COMMON_REPOSITORY]: 1,
+
+  // Product Management System
+  [StepKey.PPMS_FOSS]: 1,
+}
