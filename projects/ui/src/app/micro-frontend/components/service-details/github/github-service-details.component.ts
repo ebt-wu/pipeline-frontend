@@ -4,6 +4,8 @@ import { BusyIndicatorComponent, FundamentalNgxCoreModule, InlineHelpDirective }
 import { GetGithubRepositoryQuery } from '@generated/graphql'
 import { AuthorizationModule } from '@dxp/ngx-core/authorization'
 import { BaseServiceDetailsComponent } from '../base-service-details.component'
+import { SecretService } from '../../../services/secret.service'
+import { PolicyService } from '../../../services/policy.service'
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -17,13 +19,29 @@ export class GithubServiceDetailsComponent extends BaseServiceDetailsComponent i
   @Input() serviceDetails: GetGithubRepositoryQuery['getGithubRepository']
 
   githubInstance = ''
-  loading = signal(false)
+  loading = signal(true)
+  showCredentialInfo = signal(true)
+
+  constructor(
+    protected override readonly secretService: SecretService,
+    protected override readonly policyService: PolicyService,
+  ) {
+    super(policyService, secretService)
+  }
 
   async ngOnInit() {
-    this.loading.set(true)
     await super.ngOnInit()
     const repoUrl = new URL(this.serviceDetails.repositoryUrl)
     this.githubInstance = repoUrl.origin
+
+    if (!this.serviceDetails.secretPath) {
+      this.showCredentialInfo.set(false)
+    }
+
+    if (!(await this.policyService.canUserEditCredentials())) {
+      this.showCredentialInfo.set(false)
+    }
+
     this.loading.set(false)
   }
 

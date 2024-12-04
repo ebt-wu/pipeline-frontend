@@ -41,7 +41,9 @@ export class GithubActionsServiceDetailsComponent extends BaseServiceDetailsComp
   catalogUrl = signal('')
   isCurrentProjectResponsible = signal(false)
   responsibleProjectUrl = signal('')
+  pendingShowInVault = signal(false)
   showActionsGetStartedWarning = signal(false)
+  showCredentialInfo = signal(true)
 
   async ngOnInit() {
     this.githubOrganizationUrl = `${this.serviceDetails.githubInstance}/${this.serviceDetails.githubOrganization}`
@@ -58,13 +60,19 @@ export class GithubActionsServiceDetailsComponent extends BaseServiceDetailsComp
     const context = await this.luigiService.getContextAsync()
     this.catalogUrl.set(context.frameBaseUrl + '/catalog')
 
+    if (!this.serviceDetails.secretPath) {
+      this.showCredentialInfo.set(false)
+    }
+
+    if (!(await this.policyService.canUserEditCredentials())) {
+      this.showCredentialInfo.set(false)
+    }
+
     await super.ngOnInit()
     if (context.projectId != this.serviceDetails.responsibleProject) {
       this.responsibleProjectUrl.set(`${context.frameBaseUrl}/projects/${this.serviceDetails.responsibleProject}`)
     }
   }
-
-  pendingShowInVault = signal(false)
 
   openDocumentation() {
     window.open(

@@ -91,8 +91,12 @@ export class GithubActionsFormService {
         guiOptions: {
           additionalData: <FormGeneratorHeaderAdditionalData>{
             header: 'Install runners app',
+            ignoreTopMargin: true,
             ignoreBottomMargin: true,
-            subheader: () => Promise.resolve(`Install the SUGAR app to add runners to your GitHub Actions workflows`),
+            subheader: async () => {
+              const { githubOrgName } = await this.githubService.getGithubMetadata()
+              return `Install the SUGAR app to add runners to your GitHub Organization: <b>${githubOrgName}</b>`
+            },
             subheaderStyle: {
               color: '#000000',
               'font-size': '14px',
@@ -120,14 +124,14 @@ export class GithubActionsFormService {
             glyph: 'action',
             action: async () => {
               const githubAppInstallationToolsLinks = {
-                live: 'https://github.tools.sap/github-apps/sugar/installations/select_target',
-                int: 'https://github.tools.sap/github-apps/sugar-dev/installations/select_target',
-                dev: 'https://github.tools.sap/github-apps/sugar-dev/installations/select_target',
+                live: 'https://github.tools.sap/github-apps/sugar',
+                int: 'https://github.tools.sap/github-apps/sugar-dev',
+                dev: 'https://github.tools.sap/github-apps/sugar-dev',
               }
               const githubAppInstallationWdfLinks = {
-                live: 'https://github.wdf.sap.corp/github-apps/sugar/installations/select_target',
-                int: 'https://github.wdf.sap.corp/github-apps/sugar-dev/installations/select_target',
-                dev: 'https://github.wdf.sap.corp/github-apps/sugar-dev/installations/select_target',
+                live: 'https://github.wdf.sap.corp/github-apps/sugar',
+                int: 'https://github.wdf.sap.corp/github-apps/sugar-dev',
+                dev: 'https://github.wdf.sap.corp/github-apps/sugar-dev',
               }
 
               const githubMetadata = await this.githubService.getGithubMetadata()
@@ -170,7 +174,7 @@ export class GithubActionsFormService {
         message: '',
         guiOptions: {
           additionalData: <FormGeneratorButtonAdditionalData>{
-            type: 'emphasized',
+            type: 'standard',
             label: 'Check Installation',
             action: async () => {
               const githubMetadata = await this.githubService.getGithubMetadata()

@@ -6,16 +6,6 @@
 <div class="busy-indicator" *ngIf="loading()">
   <fd-busy-indicator [loading]="true" ariaLabel="loading" title="Please Wait"></fd-busy-indicator>
 </div>
-<div *ngIf="!loading()" class="description">
-  <b>Enable GitHub Actions and runners</b>
-  for the GitHub organization
-  <a
-    href="{{ githubMetadata.githubInstance }}/{{ githubMetadata.githubOrgName }}"
-    target="_blank"
-    rel="noopener noreferrer">
-    <b>{{ githubMetadata.githubOrgName }}.</b>
-  </a>
-</div>
 <fdp-message-popover-form-wrapper
   #formGeneratorWrapper
   [forms]="formGenerator?.formGroup"

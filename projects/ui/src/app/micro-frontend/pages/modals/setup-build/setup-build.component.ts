@@ -114,6 +114,7 @@ export class SetupBuildComponent implements OnInit, OnDestroy {
             Promise.resolve(
               `Don't have an instance yet? Create an account in the Jenkins as a Service extension to get one.`,
             ),
+          ignoreTopMargin: true,
         },
       },
       when: (formValue: SetupBuildFormValue) => formValue.orchestrator === Orchestrators.JENKINS,
@@ -360,6 +361,18 @@ export class SetupBuildComponent implements OnInit, OnDestroy {
       },
       validators: [Validators.required],
     },
+    {
+      type: 'header',
+      name: 'orchestratorSpacer',
+      message: '',
+      guiOptions: {
+        additionalData: <FormGeneratorHeaderAdditionalData>{
+          header: '',
+          ignoreTopMargin: true,
+          ignoreBottomMargin: true,
+        },
+      },
+    },
     ...this.jenkinsFormItems,
   ]
 
@@ -371,6 +384,12 @@ export class SetupBuildComponent implements OnInit, OnDestroy {
         this.defaultOrchestrator = params.orchestrator
       }
     })
+
+    const context = await this.luigiService.getContextAsync()
+    const isGithubActionsEnabled = await this.featureFlagService.isGithubActionsEnabled(context.projectId)
+    if (isGithubActionsEnabled) {
+      this.defaultOrchestrator = Orchestrators.GITHUB_ACTIONS_WORKFLOW
+    }
 
     const jenkinsGithubCredentialFormItems = this.githubCredentialFormService.buildFormItems<
       SetupBuildFormValue,
