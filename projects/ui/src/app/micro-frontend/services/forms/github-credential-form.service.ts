@@ -16,6 +16,7 @@ import {
 import { GithubService, REQUIRED_SCOPES } from '../github.service'
 import { AddPrefixToTypeProperties } from '@types'
 import { PlatformFormGeneratorCustomValidatorComponent } from '../../components/form-generator/form-generator-validator/form-generator-validator.component'
+import { FormGeneratorHeaderAdditionalData } from '../../components/form-generator/form-generator-header/form-generator-header.component'
 
 export type GithubCredentialFormValueP<P extends string = 'github'> = AddPrefixToTypeProperties<
   GithubCredentialFormValue,
@@ -46,6 +47,20 @@ export class GithubCredentialFormService {
     showFormItems: (formValue: T) => boolean | Promise<boolean>,
   ): DynamicFormItem[] {
     return [
+      {
+        type: 'header',
+        name: `${formItemNamePrefix}Header`,
+        message: '',
+        guiOptions: {
+          additionalData: <FormGeneratorHeaderAdditionalData>{
+            header: 'Github credentials',
+            ignoreBottomMargin: true,
+          },
+        },
+        when: async (formValue: T) => {
+          return await showFormItems(formValue)
+        },
+      },
       {
         type: 'radio',
         name: `${formItemNamePrefix}CredentialType`,
@@ -240,7 +255,7 @@ export class GithubCredentialFormService {
             return false
           }
 
-          return formValue[`${formItemNamePrefix}SelectCredential`] === CredentialTypes.EXISTING.toString()
+          return formValue[`${formItemNamePrefix}CredentialType`] === CredentialTypes.EXISTING
         },
       },
     ]

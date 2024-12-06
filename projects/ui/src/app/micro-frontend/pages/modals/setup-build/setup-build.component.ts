@@ -143,13 +143,12 @@ export class SetupBuildComponent implements OnInit, OnDestroy {
       guiOptions: {
         additionalData: <FormGeneratorHeaderAdditionalData>{
           header: 'Jenkins credentials',
-          subheader: (): Promise<string> => {
-            return new Promise(
-              () => `Your credentials are stored in Vault and needed to create a pipeline
+          subheader: () =>
+            Promise.resolve(
+              `Your credentials are stored in Vault and needed to create a pipeline
             in your Jenkins instance. Technical user is preferred, you can find out how
             to set up one in the <a href="https://pages.github.tools.sap/hyperspace/jaas-documentation/faqs_and_troubleshooting/faq/#how-can-i-get-a-service-user" target="_blank" rel="noopener noreferrer">JaaS documentation.</a>`,
-            )
-          },
+            ),
           ignoreBottomMargin: true,
         },
       },
@@ -557,6 +556,18 @@ export class SetupBuildComponent implements OnInit, OnDestroy {
       }
       const githubRepoUrl = new URL(githubMetadata.githubRepoUrl)
 
+      let githubSecretPath: string | undefined = undefined
+      if (buildFormValue.orchestrator === Orchestrators.JENKINS) {
+        githubSecretPath = await this.githubService.storeGithubCredentials(
+          {
+            githubCredentialType: buildFormValue.jenkinsGithubCredentialType,
+            githubSelectCredential: buildFormValue.jenkinsGithubSelectCredential,
+            githubToken: buildFormValue.jenkinsGithubToken,
+          },
+          githubRepoUrl,
+        )
+      }
+
       // Github repository and Github Actions
       let isGithubActions = false
       if (buildFormValue.orchestrator === Orchestrators.GITHUB_ACTIONS_WORKFLOW) {
@@ -568,26 +579,15 @@ export class SetupBuildComponent implements OnInit, OnDestroy {
           githubRepoUrl.origin,
           githubMetadata.githubOrgName,
           githubMetadata.githubRepoName,
-          undefined,
+          githubSecretPath,
           isGithubActions,
         ),
       )
 
-      let githubSecretPath: string | null = null
       // Jenkins
+      let jenkinsCredentialPath: string
       if (buildFormValue.orchestrator === Orchestrators.JENKINS) {
-        // Github credentials
-        githubSecretPath = await this.githubService.storeGithubCredentials(
-          {
-            githubCredentialType: buildFormValue.jenkinsGithubCredentialType,
-            githubSelectCredential: buildFormValue.jenkinsGithubSelectCredential,
-            githubToken: buildFormValue.jenkinsGithubToken,
-          },
-          githubRepoUrl,
-        )
-
         // Jenkins credential
-        let jenkinsCredentialPath: string
 
         if (buildFormValue.jenkinsCredentialType === CredentialTypes.NEW) {
           const jenkinsUrl = new URL(buildFormValue.jenkinsUrl)
