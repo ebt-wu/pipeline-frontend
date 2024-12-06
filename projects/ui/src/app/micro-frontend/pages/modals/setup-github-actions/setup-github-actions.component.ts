@@ -12,7 +12,10 @@ import { ErrorMessageComponent } from '../../../components/error-message/error-m
 import { GithubActionsService } from '../../../services/github-actions.service'
 import { GithubMetadata, GithubService, REQUIRED_SCOPES } from '../../../services/github.service'
 import { PlatformFormGeneratorCustomInfoBoxComponent } from '../../../components/form-generator/form-generator-info-box/form-generator-info-box.component'
-import { PlatformFormGeneratorCustomMessageStripComponent } from '../../../components/form-generator/form-generator-message-strip/form-generator-message-strip.component'
+import {
+  FormGeneratorMessageStripAdditionalData,
+  PlatformFormGeneratorCustomMessageStripComponent,
+} from '../../../components/form-generator/form-generator-message-strip/form-generator-message-strip.component'
 import { PlatformFormGeneratorCustomValidatorComponent } from '../../../components/form-generator/form-generator-validator/form-generator-validator.component'
 import { PlatformFormGeneratorCustomButtonComponent } from '../../../components/form-generator/form-generator-button/form-generator-button.component'
 import { PlatformFormGeneratorCustomObjectStatusComponent } from '../../../components/form-generator/form-generator-object-status/form-generator-object-status.component'
@@ -68,10 +71,35 @@ export class GithubActionsComponent implements OnInit {
   async ngOnInit() {
     this.githubMetadata = await this.githubService.getGithubMetadata()
 
-    this.formItems = await this.githubActionsFormService.buildFormItems<
-      SetupGithubActionsFormValue,
-      SetupGithubActionsFormPrefix
-    >('github', () => true, this.refreshStepsVisibility.bind(this) as () => Promise<void>)
+    const [formItems, isSolinasAppInstalled] = await Promise.all([
+      this.githubActionsFormService.buildFormItems<SetupGithubActionsFormValue, SetupGithubActionsFormPrefix>(
+        'github',
+        () => true,
+        this.refreshStepsVisibility.bind(this) as () => Promise<void>,
+      ),
+      firstValueFrom(
+        this.githubActionsService.getGithubActionSolinasVerification(
+          this.githubMetadata.githubOrgName,
+          this.githubMetadata.githubRepoUrl,
+        ),
+      ),
+    ])
+
+    this.formItems = [
+      ...formItems,
+      {
+        type: 'message-strip',
+        name: 'solinasAppAlreadyInstalledMessage',
+        message: '',
+        guiOptions: {
+          additionalData: <FormGeneratorMessageStripAdditionalData>{
+            type: 'success',
+            message: () => Promise.resolve('You have everything in place to get started!'),
+          },
+        },
+        when: () => isSolinasAppInstalled,
+      },
+    ]
 
     this.loading.set(false)
   }
