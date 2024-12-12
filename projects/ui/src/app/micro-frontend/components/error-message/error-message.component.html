@@ -9,21 +9,26 @@
       class="ticket-button"
       glyph="kpi-corporate-performance"
       (click)="debugModeService.openTraces($event, automaticdNamespace, automaticdResourceName)"
-      *ngIf="!troubleshootURL() && debugModeService.debugModeEnabled()">
+      *ngIf="!troubleshootContext() && debugModeService.debugModeEnabled()">
       Traces
     </button>
     <div *dxpRequiredPolicies="['member', 'owner', 'vault_maintainer']; operator: 'or'">
-      <button fd-button fdType="transparent" class="ticket-button" (click)="reportError()" *ngIf="!troubleshootURL()">
+      <button
+        fd-button
+        fdType="transparent"
+        class="ticket-button"
+        (click)="reportError()"
+        *ngIf="troubleshootContext()?.showTicketButton">
         Create Ticket
       </button>
     </div>
     <a
       fd-link
       class="ticket-button"
-      [href]="troubleshootURL()"
+      [href]="troubleshootContext().docUrl"
       target="_blank"
       rel="noopener noreferrer"
-      *ngIf="troubleshootURL()">
+      *ngIf="troubleshootContext()">
       Troubleshoot
     </a>
   </div>

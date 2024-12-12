@@ -6,6 +6,31 @@ import { GitHubIssueLinkService } from '../../services/github-issue-link.service
 import { DebugModeService } from '../../services/debug-mode.service'
 import { AuthorizationModule } from '@dxp/ngx-core/authorization'
 
+type ErrorContext = {
+  showTicketButton?: boolean
+  docUrl: string
+}
+
+const knownErrorCodeMappings: Record<string, ErrorContext> = {
+  'GITHUB-ACTION-6': {
+    docUrl:
+      'https://pages.github.tools.sap/hyperspace/cicd-setup-documentation/how-tos/use-github-PAT.html#replacing-an-invalid-personal-access-token',
+  },
+  'GITHUB-ACTION-2': {
+    docUrl:
+      'https://pages.github.tools.sap/hyperspace/cicd-setup-documentation/how-tos/use-github-PAT.html#replacing-an-invalid-personal-access-token',
+  },
+  'GITHUB-4': {
+    docUrl:
+      'https://pages.github.tools.sap/hyperspace/cicd-setup-documentation/how-tos/use-github-PAT.html#replacing-an-invalid-personal-access-token',
+  },
+  'JENKINS-PIPELINE-10': {
+    showTicketButton: true,
+    docUrl:
+      'https://pages.github.tools.sap/hyperspace/cicd-setup-documentation/managed-services/build/jenkins.html#required-permissions',
+  },
+}
+
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: true,
@@ -28,20 +53,15 @@ export class ErrorMessageComponent implements OnInit {
   @Input() automaticdResourceName?: string
   @Input() tracesUrl?: string
 
-  troubleshootURL = signal('')
+  troubleshootContext = signal<ErrorContext | undefined>(undefined)
 
   @Output() readonly byDismiss = new EventEmitter()
 
   ngOnInit() {
     // check messages for error codes to link to troubleshooting instructions instead of offering the option to create a ticket
-    if (
-      this.message.includes('GITHUB-ACTION-6') ||
-      this.message.includes('GITHUB-ACTION-2') ||
-      this.message.includes('GITHUB-4')
-    ) {
-      this.troubleshootURL.set(
-        'https://pages.github.tools.sap/hyperspace/cicd-setup-documentation/how-tos/use-github-PAT.html#replacing-an-invalid-personal-access-token',
-      )
+    const errorKey = Object.keys(knownErrorCodeMappings).find((s) => this.message.includes(`${s}:`))
+    if (this.message && errorKey) {
+      this.troubleshootContext.set(knownErrorCodeMappings[errorKey])
     }
   }
 
