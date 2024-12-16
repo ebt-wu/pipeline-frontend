@@ -352,7 +352,11 @@
                     class="upgrade-github-actions-banner"></app-upgrade-banner>
                   <!--the below card will be shown if the GitHub Actions is enabled -->
                   <fd-card
-                    *ngIf="gha.isAlreadyManaged || isGithubActionsEnabledInSameComponent(); else notEnabled"
+                    *ngIf="
+                      (!isSugarRegistrationEnabled() || isSugarAppInstalled()) &&
+                        (gha.isAlreadyManaged || isGithubActionsEnabledInSameComponent());
+                      else notEnabled
+                    "
                     cardType="linkList"
                     class="stage-card github-actions-enabled-card">
                     <fd-card-content class="card-content-padding">
@@ -461,7 +465,12 @@
                     </fd-card-content>
                   </fd-card>
                   <ng-template #notEnabled>
-                    <fd-card *ngIf="!isGithubActionsEnabledInSameComponent()" cardType="list">
+                    <fd-card
+                      *ngIf="
+                        (isSugarRegistrationEnabled() && !isSugarAppInstalled()) ||
+                        !isGithubActionsEnabledInSameComponent()
+                      "
+                      cardType="list">
                       <!--The GitHub Actions is not yet enabled for the corresponding GitHub organization.-->
                       <fd-card-content>
                         <div class="github-actions-automation-workflows">

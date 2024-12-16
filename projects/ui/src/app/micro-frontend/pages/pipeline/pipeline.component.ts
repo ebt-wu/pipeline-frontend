@@ -53,6 +53,7 @@ import { GitHubIssueLinkService } from '../../services/github-issue-link.service
 import { OldServiceDetailsSkeletonComponent } from '../../components/old-service-details-skeleton/old-service-details-skeleton.component'
 import { ServiceDetailsSkeletonComponent } from '../../components/service-details-skeleton/service-details-skeleton.component'
 import { SonarServiceDetailsComponent } from '../../components/service-details/sonar/sonar-service-details.component'
+import { GithubActionsService } from '../../services/github-actions.service'
 
 type Error = {
   title: string
@@ -126,10 +127,12 @@ export class PipelineComponent implements OnInit, OnDestroy {
   showGithubActions = signal(false)
   showOSC = signal(false)
   isMultipleServiceDetailUiEnabled = signal(false)
+  isSugarRegistrationEnabled = signal(false)
 
   canUserEditCredentials = false
 
   isTransferredTemplatePipeline = signal(false)
+  isSugarAppInstalled = signal(false)
 
   localLayout: FlexibleColumnLayout = 'OneColumnStartFullScreen'
   // TODO replace activeTile with activeCategory
@@ -164,6 +167,7 @@ export class PipelineComponent implements OnInit, OnDestroy {
     private readonly githubIssueLinkService: GitHubIssueLinkService,
     private readonly policyService: PolicyService,
     private readonly pipelineService: PipelineService,
+    private readonly githubActionsService: GithubActionsService,
   ) {}
 
   get showOpenPipelineURL(): boolean {
@@ -176,6 +180,8 @@ export class PipelineComponent implements OnInit, OnDestroy {
     this.githubMetadata = await this.api.githubService.getGithubMetadata()
 
     const context = await this.luigiService.getContextAsync()
+    this.catalogUrl.set(context.frameBaseUrl + '/catalog')
+    this.projectId = context.projectId
 
     this.canUserEditCredentials = await this.policyService.canUserEditCredentials()
 
@@ -185,9 +191,18 @@ export class PipelineComponent implements OnInit, OnDestroy {
     this.isMultipleServiceDetailUiEnabled.set(
       await this.featureFlagService.isMultipleServiceDetailsUiEnabled(context.projectId),
     )
+    this.isSugarRegistrationEnabled.set(await this.featureFlagService.isSugarRegistrationEnabled(context.projectId))
 
-    this.catalogUrl.set(context.frameBaseUrl + '/catalog')
-    this.projectId = context.projectId
+    if (this.isSugarRegistrationEnabled) {
+      this.isSugarAppInstalled.set(
+        await firstValueFrom(
+          this.githubActionsService.getGithubActionSolinasVerification(
+            this.githubMetadata.githubOrgName,
+            this.githubMetadata.githubRepoUrl,
+          ),
+        ),
+      )
+    }
 
     this.isGithubActionsEnabledAlready$ = this.api.githubActionsService.getGithubActionsCrossNamespace(
       this.githubMetadata.githubInstance,

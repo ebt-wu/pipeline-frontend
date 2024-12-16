@@ -98,7 +98,6 @@ export class GithubActionsFormService {
               return `Install the SUGAR app to add runners to your GitHub Organization: <b>${githubOrgName}</b>`
             },
             subheaderStyle: {
-              color: '#000000',
               'font-size': '14px',
             },
           },
