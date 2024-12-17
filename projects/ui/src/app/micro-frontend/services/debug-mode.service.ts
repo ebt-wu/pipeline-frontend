@@ -37,7 +37,7 @@ export class DebugModeService {
       .subscribe((ctx) => {
         const ADMIN_ARM_GROUP = `HyperCluster_Onboarding_${ENV_MAPPING[this.getTier()]}_Admin`.toLowerCase()
         const token = jwtDecode<DxpToken>(ctx.token)
-        const isAdmin = token.groups.map((group) => group.toLowerCase()).includes(ADMIN_ARM_GROUP)
+        const isAdmin = token.groups?.map((group) => group.toLowerCase())?.includes(ADMIN_ARM_GROUP)
         this.isHyperspaceAdmin.set(isAdmin)
       })
   }
