@@ -134,24 +134,9 @@
         languageSelection.getRawValue()?.validationTool === validationTools.GHAS ||
         toolSelection.getRawValue() === validationTools.GHAS
       ">
-      <div>
-        <div *ngIf="!githubResourceExists()" class="separator setup-validation-margin-sides"></div>
-        <div *ngIf="toolSelection.getRawValue() === validationTools.GHAS" class="message-strip-container">
-          <fd-message-strip type="warning" [dismissible]="false">
-            After adding GHAS, since we do not have the full information of your pipeline, the
-            <div class="code">config.yml</div>
-            might have to be manually adjusted before merging the pull request we create for you.
-            <a
-              fd-link
-              href="https://pages.github.tools.sap/hyperspace/cicd-setup-documentation/managed-services/validate/ghas.html#enabling-github-advanced-security-without-a-build-pipeline"
-              target="_blank"
-              rel="noopener noreferrer">
-              Learn more
-            </a>
-          </fd-message-strip>
-        </div>
-        <div *ngIf="!githubResourceExists()">
-          <div class="credential-headline setup-validation-margin-sides">Add your GitHub credentials</div>
+      <div *ngIf="!githubResourceExists()">
+        <div class="separator setup-validation-margin-sides"></div>
+        <div>
           <fdp-message-popover-form-wrapper [forms]="formGenerator?.formGroup" [formFields]="formGenerator?.formFields">
             <fdp-form-generator [formItems]="formItems"></fdp-form-generator>
           </fdp-message-popover-form-wrapper>

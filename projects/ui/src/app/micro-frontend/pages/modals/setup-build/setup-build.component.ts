@@ -475,8 +475,8 @@ export class SetupBuildComponent implements OnInit, OnDestroy {
           githubRepoUrl.origin,
           githubMetadata.githubOrgName,
           githubMetadata.githubRepoName,
-          githubSecretPath,
           isGithubActions,
+          githubSecretPath,
         ),
       )
 
@@ -579,8 +579,8 @@ export class SetupBuildComponent implements OnInit, OnDestroy {
           githubRepoUrl.origin,
           githubMetadata.githubOrgName,
           githubMetadata.githubRepoName,
-          githubSecretPath,
           isGithubActions,
+          githubSecretPath,
         ),
       )
 

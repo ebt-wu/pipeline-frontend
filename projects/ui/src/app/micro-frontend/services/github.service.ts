@@ -13,7 +13,7 @@ import {
   GetGithubRepositoryQueryVariables,
 } from '@generated/graphql'
 import { CredentialTypes, GithubInstances } from '@enums'
-import { Secret, SecretData, SecretService } from './secret.service'
+import { SecretData, SecretService } from './secret.service'
 import { EntityContext, ValidationLanguage } from '@types'
 import { MetadataApolloClientService } from '@dxp/ngx-core/apollo'
 import { ApolloQueryResult } from '@apollo/client/core'
@@ -62,7 +62,7 @@ export class GithubService {
     private readonly metadataService: MetadataApolloClientService,
   ) {}
 
-  public async storeGithubCredentials(formValue: GithubCredentialFormValueP<'github'>, githubRepoUrl: URL) {
+  public async storeGithubCredentials(formValue: GithubCredentialFormValueP, githubRepoUrl: URL) {
     let githubSecretPath = ''
 
     const context = await this.luigiService.getContextAsync()
@@ -91,19 +91,6 @@ export class GithubService {
       githubSecretPath = this.secretService.getCredentialPath(formValue.githubSelectCredential, context.componentId)
     }
     return githubSecretPath
-  }
-
-  isValidGithubSecret(secret: Secret): boolean {
-    if (!secret.path.includes('github')) {
-      return false
-    }
-
-    if (secret.metadata?.scopes) {
-      const scopes = secret.metadata.scopes.split(',')
-      return REQUIRED_SCOPES.every((val) => scopes.includes(val))
-    } else {
-      return true
-    }
   }
 
   async getGithubMetadata(): Promise<GithubMetadata> {
@@ -135,8 +122,8 @@ export class GithubService {
     baseUrl: string,
     org: string,
     repo: string,
-    secretPath: string,
     isGithubActionsGPP: boolean,
+    secretPath?: string,
   ): Observable<string> {
     return combineLatest([this.apiService.apollo(), this.luigiService.contextObservable()]).pipe(
       first(),

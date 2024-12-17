@@ -1,4 +1,3 @@
-import { PolicyService } from './policy.service'
 import { DxpLuigiContextService } from '@dxp/ngx-core/luigi'
 import { GithubService } from './github.service'
 import { BaseAPIService } from './base.service'
@@ -12,23 +11,15 @@ describe('GitHubService', () => {
   let mockApiService: BaseAPIService
   let mockLuigiService: DxpLuigiContextService
   let mockSecretService: SecretService
-  let mockPolicyService: PolicyService
   let mockMetadataService: MetadataApolloClientService
   beforeEach(() => {
     jest.resetAllMocks()
     mockApiService = MockService(BaseAPIService)
     mockLuigiService = MockService(DxpLuigiContextService)
     mockSecretService = MockService(SecretService)
-    mockPolicyService = MockService(PolicyService)
     mockMetadataService = MockService(MetadataApolloClientService)
 
-    githubService = new GithubService(
-      mockApiService,
-      mockLuigiService,
-      mockSecretService,
-      mockPolicyService,
-      mockMetadataService,
-    )
+    githubService = new GithubService(mockApiService, mockLuigiService, mockSecretService, mockMetadataService)
   })
 
   it('should create', () => {

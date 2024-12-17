@@ -20,16 +20,13 @@ import { GithubAdvancedSecurityService } from '../../../services/github-advanced
 import { GithubService } from '../../../services/github.service'
 import { PipelineService } from '../../../services/pipeline.service'
 import { PlatformFormGeneratorCustomInfoBoxComponent } from '../../../components/form-generator/form-generator-info-box/form-generator-info-box.component'
-import { SecretService } from '../../../services/secret.service'
 import { PlatformFormGeneratorCustomMessageStripComponent } from '../../../components/form-generator/form-generator-message-strip/form-generator-message-strip.component'
 import { PlatformFormGeneratorCustomValidatorComponent } from '../../../components/form-generator/form-generator-validator/form-generator-validator.component'
-import {
-  GithubCredentialFormService,
-  GithubCredentialFormValueP,
-} from '../../../services/forms/github-credential-form.service'
+import { GithubActionsFormService, GithubActionsFormValueP } from '../../../services/forms/github-actions-form.service'
+import { GithubActionsService } from '../../../services/github-actions.service'
 
 type GithubCredentialFormPrefix = 'github'
-type GithubCredentialFormValue = GithubCredentialFormValueP<GithubCredentialFormPrefix>
+type SetupGithubActionsFormValue = GithubActionsFormValueP<GithubCredentialFormPrefix>
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -66,10 +63,7 @@ export class SetupValidationModalComponent implements OnInit, OnDestroy {
   languageSelection = new FormControl(null as ValidationLanguage)
   toolSelection = new FormControl(null)
   @ViewChild(FormGeneratorComponent) formGenerator: FormGeneratorComponent
-  formItems: DynamicFormItem[] = this.githubCredentialFormService.buildFormItems<
-    GithubCredentialFormValue,
-    GithubCredentialFormPrefix
-  >('github', () => true)
+  formItems: DynamicFormItem[] = []
 
   constructor(
     private luigiClient: LuigiClient,
@@ -77,9 +71,9 @@ export class SetupValidationModalComponent implements OnInit, OnDestroy {
     private readonly pipelineService: PipelineService,
     private readonly githubAdvancedSecurityService: GithubAdvancedSecurityService,
     private readonly luigiService: DxpLuigiContextService,
-    private readonly secretService: SecretService,
     private readonly _formGeneratorService: FormGeneratorService,
-    private readonly githubCredentialFormService: GithubCredentialFormService,
+    private readonly githubActionsService: GithubActionsService,
+    private readonly githubActionsFormService: GithubActionsFormService,
   ) {
     this._formGeneratorService.addComponent(PlatformFormGeneratorCustomInfoBoxComponent, ['info'])
     this._formGeneratorService.addComponent(PlatformFormGeneratorCustomMessageStripComponent, ['message-strip'])
@@ -89,21 +83,27 @@ export class SetupValidationModalComponent implements OnInit, OnDestroy {
   async ngOnInit() {
     this.loading.set(true)
     await this.recommendLanguage()
+
     this.languageSelection.patchValue(this.recommendedLanguage())
     this.languageSelectionFormChange = this.languageSelection.valueChanges.subscribe(() => {
       this.toolSelection.reset()
     })
     this.watch$ = this.pipelineService.watchPipeline().pipe(debounceTime(50))
 
-    const refs = (await firstValueFrom(this.watch$)).resourceRefs
-    if (refs.find((ref) => ref.kind === Kinds.GITHUB_REPOSITORY)) {
-      this.githubResourceExists.set(true)
-    }
+    this.formItems = await this.githubActionsFormService.buildFormItems<
+      SetupGithubActionsFormValue,
+      GithubCredentialFormPrefix
+    >('github', () => true, this.refreshStepsVisibility.bind(this) as () => Promise<void>)
+
     this.loading.set(false)
   }
 
   ngOnDestroy() {
     this.languageSelectionFormChange.unsubscribe()
+  }
+
+  async refreshStepsVisibility() {
+    await this.formGenerator.refreshStepsVisibility()
   }
 
   async recommendLanguage() {
@@ -127,6 +127,7 @@ export class SetupValidationModalComponent implements OnInit, OnDestroy {
       codeScanJobOrchestrator: orchestrator,
     }
   }
+
   getOrchestrator(kinds: Array<Kinds | StepKey>) {
     if (kinds.includes(Kinds.JENKINS_PIPELINE)) {
       return Orchestrators.Jenkins
@@ -145,11 +146,10 @@ export class SetupValidationModalComponent implements OnInit, OnDestroy {
     this.loading.set(true)
 
     if (!this.githubResourceExists()) {
-      const formVal = (this.formGenerator.formGroup.form.value as { ungrouped: GithubCredentialFormValue }).ungrouped
-      await this.createGithubResource(formVal)
+      await this.createGithubResource()
     }
 
-    // set assumedbuildtool depending on what the user selected as a language
+    // set assumedBuildTool depending on what the user selected as a language
     switch (this.languageSelection.value.id) {
       case 'java':
         assumedBuildTool = BuildTool.Maven
@@ -163,26 +163,30 @@ export class SetupValidationModalComponent implements OnInit, OnDestroy {
 
     const labels = (await firstValueFrom(this.watch$)).labels
 
-    await firstValueFrom(
-      this.githubAdvancedSecurityService.createGithubAdvancedSecurity({
-        githubInstance: metadata.githubInstance,
-        githubOrganization: metadata.githubOrganization,
-        githubRepository: metadata.githubRepository,
-        codeScanJobOrchestrator: metadata.codeScanJobOrchestrator,
-        buildTool: assumedBuildTool,
-        labels: labels,
-      }),
-    )
-      .then(() => {
-        this.luigiClient.uxManager().closeCurrentModal()
-      })
-      .catch((error) => {
-        const errorMessage = (error as Error).message
-        this.errorMessage.set(errorMessage)
-      })
-      .finally(() => {
-        this.loading.set(false)
-      })
+    try {
+      const githubMetadata = await this.githubService.getGithubMetadata()
+      await firstValueFrom(
+        this.githubActionsService.createGithubActions(githubMetadata.githubInstance, githubMetadata.githubOrgName),
+      )
+
+      await firstValueFrom(
+        this.githubAdvancedSecurityService.createGithubAdvancedSecurity({
+          githubInstance: metadata.githubInstance,
+          githubOrganization: metadata.githubOrganization,
+          githubRepository: metadata.githubRepository,
+          codeScanJobOrchestrator: metadata.codeScanJobOrchestrator,
+          buildTool: assumedBuildTool,
+          labels: labels,
+        }),
+      )
+
+      this.luigiClient.uxManager().closeCurrentModal()
+    } catch (error) {
+      const errorMessage = (error as Error).message
+      this.errorMessage.set(errorMessage)
+    } finally {
+      this.loading.set(false)
+    }
   }
 
   cancel() {
@@ -213,7 +217,7 @@ export class SetupValidationModalComponent implements OnInit, OnDestroy {
     }
   }
 
-  async createGithubResource(value: GithubCredentialFormValue): Promise<void> {
+  async createGithubResource(): Promise<void> {
     const context = await this.luigiService.getContextAsync()
     const entityContext = context.entityContext as unknown as EntityContext
 
@@ -224,11 +228,7 @@ export class SetupValidationModalComponent implements OnInit, OnDestroy {
     const githubRepoUrl = new URL(repoUrl)
 
     try {
-      const githubSecretPath = await this.githubService.storeGithubCredentials(value, githubRepoUrl)
-
-      await firstValueFrom(
-        this.githubService.createGithubRepository(githubRepoUrl.origin, login, repoName, githubSecretPath, false),
-      )
+      await firstValueFrom(this.githubService.createGithubRepository(githubRepoUrl.origin, login, repoName, false))
     } catch (error) {
       const errorMessage = (error as Error).message
       if (errorMessage) {

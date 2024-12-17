@@ -92,10 +92,9 @@ export class GithubActionsFormService {
           additionalData: <FormGeneratorHeaderAdditionalData>{
             header: 'Install runners app',
             ignoreTopMargin: true,
-            ignoreBottomMargin: true,
             subheader: async () => {
               const { githubOrgName } = await this.githubService.getGithubMetadata()
-              return `Install the SUGAR app to add runners to your GitHub Organization: <b>${githubOrgName}</b>`
+              return `Install the SUGAR app to add runners to your GitHub Organization:<br /><b>${githubOrgName}</b>`
             },
             subheaderStyle: {
               'font-size': '14px',
