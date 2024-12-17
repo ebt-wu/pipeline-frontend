@@ -19,12 +19,6 @@ import { Pipeline, ResourceRef } from '@types'
 import { DeleteBuildModalComponent } from '../modals/delete-build-modal/delete-build-modal.component'
 import { DismissibleMessageComponent } from '../../components/dismissible-message/dismissible-message.component'
 import { ErrorMessageComponent } from '../../components/error-message/error-message.component'
-import { CumlusServiceDetailsComponent } from '../../components/service-details/cumulus/cumulus-service-details.component'
-import { GithubActionsServiceDetailsComponent } from '../../components/service-details/github-actions/github-actions-service-details.component'
-import { GithubServiceDetailsComponent } from '../../components/service-details/github/github-service-details.component'
-import { JenkinServiceDetailsComponent } from '../../components/service-details/jenkins/jenkins-service-details.component'
-import { PiperServiceDetailsComponent } from '../../components/service-details/piper/piper-service-details.component'
-import { StagingServiceServiceDetailsComponent } from '../../components/service-details/staging-service/staging-service-service-details.component'
 import { ServiceData, ServiceListItemComponent } from '../../components/service-list-item/service-list-item.component'
 import { UpgradeBannerComponent } from '../../components/upgrade-banner/upgrade-banner.component'
 import { APIService } from '../../services/api.service'
@@ -52,7 +46,6 @@ import { ValidateCodeSectionComponent } from '../../components/validate-code-sec
 import { GitHubIssueLinkService } from '../../services/github-issue-link.service'
 import { OldServiceDetailsSkeletonComponent } from '../../components/old-service-details-skeleton/old-service-details-skeleton.component'
 import { ServiceDetailsSkeletonComponent } from '../../components/service-details-skeleton/service-details-skeleton.component'
-import { SonarServiceDetailsComponent } from '../../components/service-details/sonar/sonar-service-details.component'
 import { GithubActionsService } from '../../services/github-actions.service'
 
 type Error = {
@@ -75,14 +68,6 @@ type Error = {
     InlineHelpModule,
     ErrorMessageComponent,
     DismissibleMessageComponent,
-    CumlusServiceDetailsComponent,
-    GithubServiceDetailsComponent,
-    SonarServiceDetailsComponent,
-    JenkinServiceDetailsComponent,
-    PiperServiceDetailsComponent,
-    StagingServiceServiceDetailsComponent,
-    DeleteBuildModalComponent,
-    GithubActionsServiceDetailsComponent,
     OldServiceDetailsSkeletonComponent,
     ServiceDetailsSkeletonComponent,
     ServiceListItemComponent,
@@ -150,7 +135,6 @@ export class PipelineComponent implements OnInit, OnDestroy {
   openPrCount$: Observable<number>
   pipelineURL = signal('')
   private pipelineSubscription: Subscription
-  private githubActionsSubscription: Subscription
   private jenkinsPipelineError = false
 
   constructor(
@@ -193,16 +177,7 @@ export class PipelineComponent implements OnInit, OnDestroy {
     )
     this.isSugarRegistrationEnabled.set(await this.featureFlagService.isSugarRegistrationEnabled(context.projectId))
 
-    if (this.isSugarRegistrationEnabled) {
-      this.isSugarAppInstalled.set(
-        await firstValueFrom(
-          this.githubActionsService.getGithubActionSolinasVerification(
-            this.githubMetadata.githubOrgName,
-            this.githubMetadata.githubRepoUrl,
-          ),
-        ),
-      )
-    }
+    await this.checkSugarAppInstallation()
 
     this.isGithubActionsEnabledAlready$ = this.api.githubActionsService.getGithubActionsCrossNamespace(
       this.githubMetadata.githubInstance,
@@ -312,9 +287,21 @@ export class PipelineComponent implements OnInit, OnDestroy {
       })
   }
 
+  private async checkSugarAppInstallation() {
+    if (this.isSugarRegistrationEnabled) {
+      this.isSugarAppInstalled.set(
+        await firstValueFrom(
+          this.githubActionsService.getGithubActionSolinasVerification(
+            this.githubMetadata.githubOrgName,
+            this.githubMetadata.githubRepoUrl,
+          ),
+        ),
+      )
+    }
+  }
+
   ngOnDestroy(): void {
     this.pipelineSubscription.unsubscribe()
-    this.githubActionsSubscription.unsubscribe()
   }
 
   async getKubeCtlCmd(freestylePipelineName: string, namespace: string) {
@@ -391,6 +378,8 @@ export class PipelineComponent implements OnInit, OnDestroy {
       .linkManager()
       .fromVirtualTreeRoot()
       .openAsModal('github-actions', { title: 'Enable GitHub Actions', width: '27rem', height: '19rem' })
+
+    await this.checkSugarAppInstallation()
   }
 
   async openPipelineDebugModal(e: Event) {
