@@ -243,6 +243,19 @@ export class PipelineComponent implements OnInit, OnDestroy {
               this.jenkinsPipelineError = true
             }
 
+            // Needed customized error message for Freestyle Pipeline
+            if (ref.kind === Kinds.FREESTYLE_PIPELINE) {
+              this.errors.update((errors) => {
+                errors.push({
+                  title: `Configuration of CI/CD setup failed`,
+                  resourceName: ref.name,
+                  message: `<strong>Resource: </strong>${ref.name}<br><strong>Status:</strong> ${ref.status}<br><strong>Error: </strong> ${ref.error}`,
+                })
+                return errors
+              })
+              continue
+            }
+
             // Needed customized error message for GitHub Actions
             if (ref.kind === Kinds.GITHUB_ACTION) {
               this.errors.update((errors) => {

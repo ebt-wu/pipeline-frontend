@@ -10,6 +10,7 @@ export enum Kinds {
   GITHUB_ADVANCED_SECURITY = 'GitHubAdvancedSecurity',
   OPEN_SOURCE_COMPLIANCE = 'OscRegistration',
   SONAR_QUBE_PROJECT = 'SonarQubeProject',
+  FREESTYLE_PIPELINE = 'FreestylePipeline',
 }
 
 export enum StepKey {
