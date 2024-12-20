@@ -45,9 +45,14 @@
         }
     }
 
-        .coming-soon-label {
-            margin-left: auto;
-        }
+    .info-label {
+        margin-left: 0.8rem;
+        margin-top: -1.35rem;
+    }
+
+    .coming-soon-label {
+        margin-left: auto;
+    }
 
 }
 
@@ -58,6 +63,21 @@
 
 }
 
+.flex-container {
+    display: flex;
+    align-items: center; /* Align items vertically centered */
+  }
+
+.status-text {
+    font-size: 14px;
+    color: var(--sapNeutralColor);
+    white-space: nowrap;
+    padding-right: 8px;
+}
+
+.padding-right {
+    padding-right: 16px;
+}
 
 @media only screen and (max-width: 960px) {
     .hide-on-small-screen {

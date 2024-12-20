@@ -43,7 +43,8 @@
               [fd-inline-help]="infoIconConfig.iconInlineHelpText || null"></fd-icon>
           </div>
           <div *ngIf="configuredServicesText" class="category-details">
-            <span>{{ configuredServicesText }}</span>
+            <span *ngIf="isServiceDetailOpen">{{ configuredServicesText | truncate: 28 }}</span>
+            <span *ngIf="!isServiceDetailOpen">{{ configuredServicesText }}</span>
             <code class="debug-details" *ngIf="debugModeConfig.isDebugModeEnabled">
               {{ debugModeConfig.debugModeText }}
             </code>
@@ -51,33 +52,30 @@
         </div>
 
         <fd-info-label
+          class="info-label"
           *ngIf="statusTagConfig && statusTagConfig.isStatusTagShown"
-          color="10"
-          font="SAP-icons-TNT"
-          [label]="statusTagConfig.statusTagText"></fd-info-label>
-        <fd-info-label
-          *ngIf="isComingSoonFlagShown"
-          class="coming-soon-label"
-          color="10"
-          fdcozy
-          font="SAP-icons-TNT"
-          label="coming soon"></fd-info-label>
+          [label]="statusTagConfig.statusTagText"
+          [color]="10"
+          data-testid="not-managed-info-label"></fd-info-label>
       </div>
 
-      <div *dxpRequiredPolicies="['member', 'owner', 'vault_maintainer']; operator: 'or'">
-        <button
-          *ngIf="buttonConfig && buttonConfig.isButtonShown && !buttonConfig.isButtonDisabled"
-          [ariaLabel]="buttonConfig.buttonText"
-          fd-button
-          [label]="buttonConfig.buttonText"
-          (click)="buttonConfig.buttonAction()"></button>
-        <button
-          *ngIf="buttonConfig && buttonConfig.isButtonDisabled"
-          [aria-disabled]="buttonConfig.isButtonDisabled"
-          [fd-inline-help]="buttonConfig.disabledButtonInlineHelpText"
-          [ariaLabel]="buttonConfig.buttonText"
-          fd-button
-          [label]="buttonConfig.buttonText"></button>
+      <div class="padding-right flex-container">
+        <span *ngIf="rightSideText && !isServiceDetailOpen" class="status-text">{{ rightSideText }}</span>
+        <div *dxpRequiredPolicies="['member', 'owner', 'vault_maintainer']; operator: 'or'">
+          <button
+            *ngIf="isAddButtonVisible && !isServiceDetailOpen"
+            [ariaLabel]="buttonConfig.buttonText"
+            fd-button
+            [label]="buttonConfig.buttonText"
+            (click)="buttonConfig.buttonAction()"></button>
+          <button
+            *ngIf="buttonConfig && buttonConfig.isButtonDisabled && !isServiceDetailOpen"
+            [aria-disabled]="buttonConfig.isButtonDisabled"
+            [fd-inline-help]="buttonConfig.disabledButtonInlineHelpText"
+            [ariaLabel]="buttonConfig.buttonText"
+            fd-button
+            [label]="buttonConfig.buttonText"></button>
+        </div>
       </div>
       <fd-icon *ngIf="isOpenArrowShown" glyph="slim-arrow-right" class="details-icon"></fd-icon>
     </a>

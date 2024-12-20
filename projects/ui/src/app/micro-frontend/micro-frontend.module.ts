@@ -21,6 +21,7 @@ import { GithubActionsServiceDetailsComponent } from './components/service-detai
 import { GithubAdvancedSecurityServiceDetailsComponent } from './components/service-details/github-advanced-security/github-advanced-security-service-details.component'
 import { ResourceStagePipe } from './pipes/resource-stage.pipe'
 import { SetupServiceListItemComponent } from './components/setup-service-list-item/setup-service-list-item.component'
+import { CategorySlotComponent } from './components/category-slot/category-slot.component'
 import { SonarServiceDetailsComponent } from './components/service-details/sonar/sonar-service-details.component'
 import { AzureServiceDetailsComponent } from './components/service-details/azure/azure-service-details.component'
 import { ValidateCodeSectionComponent } from './components/validate-code-section/validate-code-section.component'
@@ -29,6 +30,7 @@ import { ValidateCodeSectionComponent } from './components/validate-code-section
   providers: [ContentDensityService, ThemingService],
   imports: [
     AzureServiceDetailsComponent,
+    CategorySlotComponent,
     CommonModule,
     CumlusServiceDetailsComponent,
     CumulusInfoModalComponent,

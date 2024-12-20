@@ -1,4 +1,4 @@
-/* 
+/*
 * We need to overwrite the column layout border and background here to keep our UI look.
 * Related PR: https://github.com/SAP/fundamental-styles/pull/4485/files
 */
@@ -211,6 +211,7 @@
         display: flex;
         flex-direction: row;
         gap: 0.5rem;
+
     }
 }
 
@@ -252,6 +253,9 @@ li::before {
 
         .name {
             font-size: 16px;
+        }
+        .kind {
+            width: fit-content;
         }
     }
 

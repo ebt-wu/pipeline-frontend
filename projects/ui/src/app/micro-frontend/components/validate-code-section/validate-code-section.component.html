@@ -25,8 +25,9 @@
         [configuredServicesText]="staticSecurityChecksConfig.configuredServicesText"
         [statusTagConfig]="staticSecurityChecksConfig.statusTagConfig"
         [statusIconConfig]="staticSecurityChecksConfig.statusIconConfig"
-        [isComingSoonFlagShown]="staticSecurityChecksConfig.isComingSoonFlagShown"
         [isOpenArrowShown]="staticSecurityChecksConfig.isOpenArrowShown"
+        [rightSideText]="staticSecurityChecksConfig.rightSideText"
+        [isServiceDetailOpen]="localLayout !== 'OneColumnStartFullScreen'"
         (detailsOpened)="onDetailsOpened(Categories.STATIC_SECURITY_CHECKS)"></app-category-slot>
       <app-category-slot
         *ngIf="categoryMap[Categories.OPEN_SOURCE_CHECKS] as openSourceChecksConfig"
@@ -35,8 +36,9 @@
         [configuredServicesText]="openSourceChecksConfig.configuredServicesText"
         [statusTagConfig]="openSourceChecksConfig.statusTagConfig"
         [statusIconConfig]="openSourceChecksConfig.statusIconConfig"
-        [isComingSoonFlagShown]="openSourceChecksConfig.isComingSoonFlagShown"
         [isOpenArrowShown]="openSourceChecksConfig.isOpenArrowShown"
+        [isServiceDetailOpen]="localLayout !== 'OneColumnStartFullScreen'"
+        [rightSideText]="openSourceChecksConfig.rightSideText"
         (detailsOpened)="onDetailsOpened(Categories.OPEN_SOURCE_CHECKS)"></app-category-slot>
       <app-category-slot
         *ngIf="categoryMap[Categories.STATIC_CODE_CHECKS] as staticCodeChecksConfig"
@@ -45,8 +47,9 @@
         [configuredServicesText]="staticCodeChecksConfig.configuredServicesText"
         [statusTagConfig]="staticCodeChecksConfig.statusTagConfig"
         [statusIconConfig]="staticCodeChecksConfig.statusIconConfig"
-        [isComingSoonFlagShown]="staticCodeChecksConfig.isComingSoonFlagShown"
+        [rightSideText]="staticCodeChecksConfig.rightSideText"
         [isOpenArrowShown]="staticCodeChecksConfig.isOpenArrowShown"
+        [isServiceDetailOpen]="localLayout !== 'OneColumnStartFullScreen'"
         (detailsOpened)="onDetailsOpened(Categories.STATIC_CODE_CHECKS)"></app-category-slot>
     </ng-container>
   </fd-card-content>

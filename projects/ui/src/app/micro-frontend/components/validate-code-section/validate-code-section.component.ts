@@ -63,32 +63,36 @@ export class ValidateCodeSectionComponent implements OnChanges, OnInit {
           buttonAction: async () => this.openSetupDialog(Categories.STATIC_SECURITY_CHECKS),
         },
         statusTagConfig: {
-          isStatusTagShown: this.isStatusTagShown(Categories.STATIC_SECURITY_CHECKS),
+          isStatusTagShown: (await this.isButtonShown(Categories.STATIC_SECURITY_CHECKS))
+            ? this.isStatusTagShown(Categories.STATIC_SECURITY_CHECKS)
+            : this.showWhenNoManagedServices(Categories.STATIC_SECURITY_CHECKS),
           statusTagText: 'Not Managed',
         },
         statusIconConfig: {
           statusIconType: this.getStatusIconType(Categories.STATIC_SECURITY_CHECKS),
           statusIconInlineHelpText: null,
         },
-        isComingSoonFlagShown: false,
         isOpenArrowShown: this.isCategoryConfigured(Categories.STATIC_SECURITY_CHECKS),
+        rightSideText: (await this.isButtonShown(Categories.STATIC_SECURITY_CHECKS))
+          ? null
+          : this.generateRightSideText(Categories.STATIC_SECURITY_CHECKS),
       },
       [Categories.STATIC_CODE_CHECKS]: {
         configuredServicesText: this.generateConfiguredServicesText(Categories.STATIC_CODE_CHECKS),
         buttonConfig: {
           isButtonShown: await this.isButtonShown(Categories.STATIC_CODE_CHECKS),
           buttonText: 'Add',
-          buttonAction: async () => this.openSetupDialog(Categories.STATIC_SECURITY_CHECKS),
+          buttonAction: async () => this.openSetupDialog(Categories.STATIC_CODE_CHECKS),
         },
         statusTagConfig: {
           isStatusTagShown: this.isStatusTagShown(Categories.STATIC_CODE_CHECKS),
-          statusTagText: 'Not Managed',
+          statusTagText: null,
         },
         statusIconConfig: {
           statusIconType: this.getStatusIconType(Categories.STATIC_CODE_CHECKS),
           statusIconInlineHelpText: null,
         },
-        isComingSoonFlagShown: !this.isCategoryConfigured(Categories.STATIC_CODE_CHECKS),
+        rightSideText: !this.isCategoryConfigured(Categories.STATIC_CODE_CHECKS) ? 'Coming soon' : null,
         isOpenArrowShown: this.isCategoryConfigured(Categories.STATIC_CODE_CHECKS),
       },
       [Categories.OPEN_SOURCE_CHECKS]: {
@@ -99,14 +103,18 @@ export class ValidateCodeSectionComponent implements OnChanges, OnInit {
           buttonAction: async () => this.openSetupDialog(Categories.OPEN_SOURCE_CHECKS),
         },
         statusTagConfig: {
-          isStatusTagShown: this.isStatusTagShown(Categories.OPEN_SOURCE_CHECKS),
+          isStatusTagShown: (await this.isButtonShown(Categories.OPEN_SOURCE_CHECKS))
+            ? this.isStatusTagShown(Categories.OPEN_SOURCE_CHECKS)
+            : this.showWhenNoManagedServices(Categories.OPEN_SOURCE_CHECKS),
           statusTagText: 'Not Managed',
         },
+        rightSideText: (await this.isButtonShown(Categories.OPEN_SOURCE_CHECKS))
+          ? 'Add a compliant service'
+          : this.generateRightSideText(Categories.OPEN_SOURCE_CHECKS),
         statusIconConfig: {
           statusIconType: this.getStatusIconType(Categories.OPEN_SOURCE_CHECKS),
           statusIconInlineHelpText: null,
         },
-        isComingSoonFlagShown: false,
         isOpenArrowShown: this.isCategoryConfigured(Categories.OPEN_SOURCE_CHECKS),
       },
     }
@@ -170,6 +178,7 @@ export class ValidateCodeSectionComponent implements OnChanges, OnInit {
         return false
       case Categories.OPEN_SOURCE_CHECKS:
         // show the button if there is no OSC step (also the case when no steps are set up)
+        console.log(!stepsOfCategory.some((ref) => ref.kind === Kinds.OPEN_SOURCE_COMPLIANCE))
         return !stepsOfCategory.some((ref) => ref.kind === Kinds.OPEN_SOURCE_COMPLIANCE)
     }
     return false
@@ -180,13 +189,8 @@ export class ValidateCodeSectionComponent implements OnChanges, OnInit {
 
     switch (category) {
       case Categories.STATIC_SECURITY_CHECKS: {
-        if (stepsOfCategory.some((ref) => ref.kind === Kinds.GITHUB_ADVANCED_SECURITY)) {
-          // GHAS is present, so status tag should not be shown
-          return false
-        } else if (
-          // if there are any not managed services but no ghas, show the status tag
-          stepsOfCategory.some((ref) => ref.status === ServiceStatus.NOT_MANAGED)
-        ) {
+        if (stepsOfCategory.some((ref) => ref.status === ServiceStatus.NOT_MANAGED)) {
+          // if there are any not managed services, show the status tag
           return true
         }
         break
@@ -194,19 +198,41 @@ export class ValidateCodeSectionComponent implements OnChanges, OnInit {
       case Categories.STATIC_CODE_CHECKS:
         return false
       case Categories.OPEN_SOURCE_CHECKS:
-        if (stepsOfCategory.some((ref) => ref.kind === Kinds.OPEN_SOURCE_COMPLIANCE)) {
-          // GHAS is present, so status tag should not be shown
-          return false
-        } else if (
-          // if there are any not managed services but no OSC, show the status tag
-          stepsOfCategory.some((ref) => ref.status === ServiceStatus.NOT_MANAGED)
-        ) {
+        if (stepsOfCategory.some((ref) => ref.status === ServiceStatus.NOT_MANAGED)) {
+          // if there are any not managed services, show the status tag
           return true
         }
         break
     }
 
     return false
+  }
+  managedNotManagedCount(category: Categories) {
+    const stepsOfCategory = this.pipelineStepsByCategory.get(category)
+    const notManagedServicesCount = stepsOfCategory.filter((ref) => ref.status === ServiceStatus.NOT_MANAGED).length
+    const managedServicesCount = stepsOfCategory.length - notManagedServicesCount
+    return {
+      managedCount: managedServicesCount,
+      notManagedCount: notManagedServicesCount,
+    }
+  }
+  showWhenNoManagedServices(category: Categories) {
+    const managedNotManagedCount = this.managedNotManagedCount(category)
+    const managedServicesCount = managedNotManagedCount.managedCount
+    const notManagedServicesCount = managedNotManagedCount.notManagedCount
+    if (managedServicesCount === 0 && notManagedServicesCount > 0) {
+      return true
+    }
+    return false
+  }
+  generateRightSideText(category: Categories) {
+    const managedNotManagedCount = this.managedNotManagedCount(category)
+    const managedCount = managedNotManagedCount.managedCount
+    const notManagedCount = managedNotManagedCount.notManagedCount
+    if (managedCount > 0 && notManagedCount > 0) {
+      return `${notManagedCount} Not Managed.`
+    }
+    return null
   }
   getStatusIconType(category: Categories) {
     const relevantPipelineSteps = this.pipelineStepsByCategory.get(category)

@@ -7,7 +7,6 @@ import {
   InfoLabelModule,
   InlineHelpModule,
   ListModule,
-  ObjectStatusComponent,
 } from '@fundamental-ngx/core'
 import { Categories } from '@enums'
 import { LuigiClient } from '@dxp/ngx-core/luigi'
@@ -29,7 +28,6 @@ import { NgIf } from '@angular/common'
     ListModule,
     ButtonComponent,
     NgIf,
-    ObjectStatusComponent,
     InfoLabelModule,
     IconModule,
     InlineHelpModule,

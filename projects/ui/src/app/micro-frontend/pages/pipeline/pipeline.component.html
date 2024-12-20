@@ -190,6 +190,10 @@
                                 ' is not available in the Hyperspace Portal. The Portal will not manage your setup or allow for edits.'
                               : null,
                         }"
+                        [statusTagConfig]="{
+                          isStatusTagShown: resourceRef.status === serviceStatus.NOT_MANAGED,
+                          statusTagText: resourceRef.status === serviceStatus.NOT_MANAGED ? 'Not Managed' : null,
+                        }"
                         [isOpenArrowShown]="
                           resourceRef.status === serviceStatus.CREATED ||
                           resourceRef.status === serviceStatus.NOT_MANAGED
@@ -293,6 +297,32 @@
                     </div>
                     <ng-container *ngIf="isDeployStageOpen()">
                       <div *ngFor="let resourceRef of pipeline.resourceRefs | resourceStage: stages.DEPLOY">
+                        <app-category-slot
+                          *ngIf="isMultipleServiceDetailUiEnabled()"
+                          [category]="kindCategory[resourceRef.kind]"
+                          [configuredServicesText]="kindName[resourceRef.kind]"
+                          [attr.data-testid]="'setup-deployment-step-' + resourceRef.kind"
+                          [debugModeConfig]="{
+                            isDebugModeEnabled: debugModeService.debugModeEnabled(),
+                            debugModeText: resourceRef.name + ' | ' + resourceRef.kind,
+                          }"
+                          [statusIconConfig]="{
+                            statusIconType: resourceRef.status,
+                            statusIconInlineHelpText:
+                              resourceRef.status === serviceStatus.NOT_MANAGED
+                                ? kindName[resourceRef.kind] +
+                                  ' is not available in the Hyperspace Portal. The Portal will not manage your setup or allow for edits.'
+                                : null,
+                          }"
+                          [statusTagConfig]="{
+                            isStatusTagShown: resourceRef.status === serviceStatus.NOT_MANAGED,
+                            statusTagText: resourceRef.status === serviceStatus.NOT_MANAGED ? 'Not Managed' : null,
+                          }"
+                          [isOpenArrowShown]="
+                            resourceRef.status === serviceStatus.CREATED ||
+                            resourceRef.status === serviceStatus.NOT_MANAGED
+                          "
+                          (detailsOpened)="openDetailsFromCategorySlot($event)"></app-category-slot>
                         <app-service-list-item
                           *ngIf="!isMultipleServiceDetailUiEnabled()"
                           (openDetailsEvent)="openDetails($event)"
@@ -430,6 +460,7 @@
                               <div class="name-kind">
                                 <b class="name">{{ kindName[kinds.GITHUB_ACTION] }}</b>
                                 <fd-info-label
+                                  class="kind"
                                   color="10"
                                   fdCozy
                                   label="Orchestration"

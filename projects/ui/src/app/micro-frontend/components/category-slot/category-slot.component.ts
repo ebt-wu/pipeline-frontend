@@ -11,6 +11,7 @@ import {
   ListLinkDirective,
   ListThumbnailDirective,
   ObjectStatusComponent,
+  TruncatePipe,
 } from '@fundamental-ngx/core'
 import { Categories, ServiceStatus } from '@enums'
 import { NgIf } from '@angular/common'
@@ -32,6 +33,7 @@ import { NgIf } from '@angular/common'
     NgIf,
     BusyIndicatorComponent,
     ObjectStatusComponent,
+    TruncatePipe,
   ],
   templateUrl: './category-slot.component.html',
   styleUrl: './category-slot.component.css',
@@ -43,7 +45,7 @@ export class CategorySlotComponent {
     iconInlineHelpText?: string
   }
   @Input() configuredServicesText: string
-  @Input() buttonConfig: {
+  @Input() buttonConfig?: {
     isButtonShown: boolean
     isButtonDisabled?: boolean
     disabledButtonInlineHelpText?: string
@@ -60,8 +62,11 @@ export class CategorySlotComponent {
     statusIconType: ServiceStatus
     statusIconInlineHelpText?: string
   }
-  @Input() isComingSoonFlagShown?: boolean = false
   @Input() isOpenArrowShown?: boolean = false
+
+  @Input() isServiceDetailOpen?: boolean = false
+
+  @Input() rightSideText?: string
 
   @Output() readonly detailsOpened = new EventEmitter<Categories>()
 
@@ -72,5 +77,9 @@ export class CategorySlotComponent {
       return
     }
     this.detailsOpened.emit(this.category)
+  }
+
+  get isAddButtonVisible() {
+    return this.buttonConfig && this.buttonConfig.isButtonShown && !this.buttonConfig.isButtonDisabled
   }
 }

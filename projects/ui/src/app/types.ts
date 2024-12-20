@@ -61,7 +61,7 @@ export interface CategoryConfig {
     statusIconType: ServiceStatus
     statusIconInlineHelpText?: string
   }
-  isComingSoonFlagShown?: boolean
+  rightSideText?: string
   isOpenArrowShown?: boolean
 }
 

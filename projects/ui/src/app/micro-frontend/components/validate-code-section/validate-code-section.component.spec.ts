@@ -97,7 +97,7 @@ describe('ValidateCodeSectionComponent', () => {
       fixture.detectChanges()
       expect(component.isStatusTagShown(Categories.STATIC_SECURITY_CHECKS)).toBeTruthy()
     })
-    it('should not show statusTag for Static Security Checks if GHAS is present', () => {
+    it('should show statusTag for Static Security Checks if GHAS is present', () => {
       component = fixture.componentInstance
       component.pipeline = createPipelineForTests([
         { kind: Kinds.GITHUB_ADVANCED_SECURITY },
@@ -109,7 +109,7 @@ describe('ValidateCodeSectionComponent', () => {
         { kind: Kinds.STAGING_SERVICE_CREDENTIAL },
       ])
       fixture.detectChanges()
-      expect(component.isStatusTagShown(Categories.STATIC_SECURITY_CHECKS)).toBeFalsy()
+      expect(component.isStatusTagShown(Categories.STATIC_SECURITY_CHECKS)).toBeTruthy()
     })
 
     it('should not show statusTag for Static Security Checks if no static security checks are present', () => {
@@ -137,7 +137,7 @@ describe('ValidateCodeSectionComponent', () => {
       fixture.detectChanges()
       expect(component.isStatusTagShown(Categories.OPEN_SOURCE_CHECKS)).toBeTruthy()
     })
-    it('should not show statusTag for Open Source Checks when Mend and OSC are both present', () => {
+    it('should show statusTag for Open Source Checks when Mend and OSC are both present', () => {
       component = fixture.componentInstance
       component.pipeline = createPipelineForTests([
         {
@@ -147,7 +147,7 @@ describe('ValidateCodeSectionComponent', () => {
         { kind: Kinds.OPEN_SOURCE_COMPLIANCE },
       ])
       fixture.detectChanges()
-      expect(component.isStatusTagShown(Categories.OPEN_SOURCE_CHECKS)).toBeFalsy()
+      expect(component.isStatusTagShown(Categories.OPEN_SOURCE_CHECKS)).toBeTruthy()
     })
     it('should not show statusTag for Open Source Checks when no resources present', () => {
       component = fixture.componentInstance
