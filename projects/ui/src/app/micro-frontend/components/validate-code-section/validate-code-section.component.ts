@@ -1,6 +1,7 @@
 import { NgIf } from '@angular/common'
 import {
   ChangeDetectionStrategy,
+  ChangeDetectorRef,
   Component,
   EventEmitter,
   Input,
@@ -38,6 +39,7 @@ export class ValidateCodeSectionComponent implements OnChanges, OnInit {
   constructor(
     private readonly luigiClient: LuigiClient,
     private readonly policyService: PolicyService,
+    private readonly changeDetectorRef: ChangeDetectorRef,
   ) {}
 
   async ngOnChanges() {
@@ -118,6 +120,8 @@ export class ValidateCodeSectionComponent implements OnChanges, OnInit {
         isOpenArrowShown: this.isCategoryConfigured(Categories.OPEN_SOURCE_CHECKS),
       },
     }
+    // Needed to trigger a change detection after the map is updated.
+    this.changeDetectorRef.detectChanges()
   }
 
   ngOnInit() {
@@ -178,7 +182,6 @@ export class ValidateCodeSectionComponent implements OnChanges, OnInit {
         return false
       case Categories.OPEN_SOURCE_CHECKS:
         // show the button if there is no OSC step (also the case when no steps are set up)
-        console.log(!stepsOfCategory.some((ref) => ref.kind === Kinds.OPEN_SOURCE_COMPLIANCE))
         return !stepsOfCategory.some((ref) => ref.kind === Kinds.OPEN_SOURCE_COMPLIANCE)
     }
     return false
