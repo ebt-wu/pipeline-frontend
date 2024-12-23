@@ -13,7 +13,7 @@
   <fdp-form-generator
     [formItems]="formItems"
     (formCreated)="onFormCreated()"
-    (formSubmitted)="onFormSubmitted($event)"
+    (formSubmitted)="onFormSubmitted()"
     *ngIf="!loading()"></fdp-form-generator>
 </fdp-message-popover-form-wrapper>
 <div fd-bar barDesign="footer" class="actions-footer">

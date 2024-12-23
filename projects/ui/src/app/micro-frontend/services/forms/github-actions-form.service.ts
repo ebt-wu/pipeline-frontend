@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core'
 import { firstValueFrom } from 'rxjs'
-import { DxpLuigiContextService } from '@dxp/ngx-core/luigi'
 import { GithubInstances } from '@enums'
 import { DynamicFormItem, FormGeneratorService } from '@fundamental-ngx/platform'
 import {
@@ -8,8 +7,6 @@ import {
   PlatformFormGeneratorCustomMessageStripComponent,
 } from '../../components/form-generator/form-generator-message-strip/form-generator-message-strip.component'
 import { GithubService } from '../github.service'
-import { GithubCredentialFormService, GithubCredentialFormValueP } from './github-credential-form.service'
-import { FeatureFlagService } from '../feature-flag.service'
 import {
   FormGeneratorHeaderAdditionalData,
   PlatformFormGeneratorCustomHeaderElementComponent,
@@ -26,18 +23,13 @@ import {
 } from '../../components/form-generator/form-generator-object-status/form-generator-object-status.component'
 import { PlatformFormGeneratorCustomValidatorComponent } from '../../components/form-generator/form-generator-validator/form-generator-validator.component'
 
-export type GithubActionsFormValueP<P extends string = 'github'> = GithubCredentialFormValueP<P>
-
 @Injectable({ providedIn: 'root' })
 export class GithubActionsFormService {
   constructor(
-    private readonly luigiService: DxpLuigiContextService,
     private readonly debugModeService: DebugModeService,
-    private readonly featureFlagService: FeatureFlagService,
     private readonly githubService: GithubService,
     private readonly githubActionsService: GithubActionsService,
     private readonly formGeneratorService: FormGeneratorService,
-    private readonly githubCredentialFormSevice: GithubCredentialFormService,
   ) {
     this.formGeneratorService.addComponent(PlatformFormGeneratorCustomButtonComponent, ['button'])
     this.formGeneratorService.addComponent(PlatformFormGeneratorCustomHeaderElementComponent, ['header'])
@@ -46,47 +38,33 @@ export class GithubActionsFormService {
     this.formGeneratorService.addComponent(PlatformFormGeneratorCustomValidatorComponent, ['validator'])
   }
 
-  public async buildFormItems<T extends GithubActionsFormValueP<P>, P extends string = 'github'>(
-    formItemNamePrefix: P = 'github' as P,
-    showFormItems: (formValue: T) => boolean | Promise<boolean>,
+  public async buildFormItems<T>(
     refreshStepsVisibility: () => Promise<void>,
+    showFormItems?: (formValue: T) => boolean | Promise<boolean>,
   ): Promise<DynamicFormItem[]> {
-    const context = await this.luigiService.getContextAsync()
-    const isSugarRegistrationEnabled = await this.featureFlagService.isSugarRegistrationEnabled(context.projectId)
-
-    const showPatFormItems = async (formValue: T): Promise<boolean> => {
-      return !isSugarRegistrationEnabled && (await showFormItems(formValue))
-    }
-
-    const showAppFormItems = async (formValue: T): Promise<boolean> => {
-      return isSugarRegistrationEnabled && (await showFormItems(formValue))
-    }
-
     let isAppInstalled = false
     let hasAppInstallButtonBeenClicked = false
     let hasAppInstallationFinished = false
     let appInstallationError = ''
+    showFormItems = showFormItems || (() => true)
 
-    if (isSugarRegistrationEnabled) {
-      const githubMetadata = await this.githubService.getGithubMetadata()
-      try {
-        isAppInstalled = await firstValueFrom(
-          this.githubActionsService.getGithubActionSolinasVerification(
-            githubMetadata.githubOrgName,
-            githubMetadata.githubRepoUrl,
-          ),
-        )
-      } catch (error) {
-        hasAppInstallationFinished = true
-        appInstallationError = "That didn't work. Try re-installing the app."
-      }
+    const githubMetadata = await this.githubService.getGithubMetadata()
+    try {
+      isAppInstalled = await firstValueFrom(
+        this.githubActionsService.getGithubActionSolinasVerification(
+          githubMetadata.githubOrgName,
+          githubMetadata.githubRepoUrl,
+        ),
+      )
+    } catch (error) {
+      hasAppInstallationFinished = true
+      appInstallationError = "That didn't work. Try re-installing the app."
     }
 
     return [
-      ...this.githubCredentialFormSevice.buildFormItems<T, P>(formItemNamePrefix, showPatFormItems),
       {
         type: 'header',
-        name: `${formItemNamePrefix}AppHeader`,
+        name: `sugarAppHeader`,
         message: '',
         guiOptions: {
           additionalData: <FormGeneratorHeaderAdditionalData>{
@@ -101,19 +79,19 @@ export class GithubActionsFormService {
             },
           },
         },
-        when: async (formValue: T) => (await showAppFormItems(formValue)) && !isAppInstalled,
+        when: async (formValue: T) => (await showFormItems(formValue)) && !isAppInstalled,
       },
       {
         type: 'validator',
-        name: `${formItemNamePrefix}AppRequiredValidator`,
+        name: `sugarAppRequiredValidator`,
         message: 'SUGAR app',
         validate: () => Promise.resolve("Can't finish the setup without SUGAR app"),
         when: async (formValue: T) =>
-          (await showAppFormItems(formValue)) && !isAppInstalled && !hasAppInstallationFinished,
+          (await showFormItems(formValue)) && !isAppInstalled && !hasAppInstallationFinished,
       },
       {
         type: 'button',
-        name: `${formItemNamePrefix}AppInstallButton`,
+        name: `sugarAppInstallButton`,
         message: '',
         guiOptions: {
           additionalData: <FormGeneratorButtonAdditionalData>{
@@ -160,7 +138,7 @@ export class GithubActionsFormService {
         when: async (formValue: T) => {
           const isInstallationFailed = hasAppInstallationFinished && appInstallationError !== ''
           return (
-            (await showAppFormItems(formValue)) &&
+            (await showFormItems(formValue)) &&
             !isAppInstalled &&
             (!hasAppInstallButtonBeenClicked || isInstallationFailed)
           )
@@ -168,7 +146,7 @@ export class GithubActionsFormService {
       },
       {
         type: 'button',
-        name: `${formItemNamePrefix}AppInstallationCheckButton`,
+        name: `sugarAppInstallationCheckButton`,
         message: '',
         guiOptions: {
           additionalData: <FormGeneratorButtonAdditionalData>{
@@ -203,20 +181,17 @@ export class GithubActionsFormService {
           },
         },
         when: async (formValue: T) =>
-          (await showAppFormItems(formValue)) &&
+          (await showFormItems(formValue)) &&
           !isAppInstalled &&
           hasAppInstallButtonBeenClicked &&
           !hasAppInstallationFinished,
       },
       {
         type: 'message-strip',
-        name: `${formItemNamePrefix}AppInstallationErrorStrip`,
+        name: `sugarAppInstallationErrorStrip`,
         message: '',
         when: async (formValue: T) =>
-          (await showAppFormItems(formValue)) &&
-          !isAppInstalled &&
-          hasAppInstallationFinished &&
-          !!appInstallationError,
+          (await showFormItems(formValue)) && !isAppInstalled && hasAppInstallationFinished && !!appInstallationError,
         guiOptions: {
           additionalData: <FormGeneratorMessageStripAdditionalData>{
             type: 'error',
@@ -226,21 +201,18 @@ export class GithubActionsFormService {
       },
       {
         type: 'validator',
-        name: `${formItemNamePrefix}AppInstallationErrorStripValidator`,
+        name: `sugarAppInstallationErrorStripValidator`,
         message: 'SUGAR app',
         validate: () => Promise.resolve(appInstallationError),
         when: async (formValue: T) =>
-          (await showAppFormItems(formValue)) &&
-          !isAppInstalled &&
-          hasAppInstallationFinished &&
-          !!appInstallationError,
+          (await showFormItems(formValue)) && !isAppInstalled && hasAppInstallationFinished && !!appInstallationError,
       },
       {
         type: 'object-status',
-        name: `${formItemNamePrefix}AppInstallationSuccess`,
+        name: `sugarAppInstallationSuccess`,
         message: '',
         when: async (formValue: T) =>
-          (await showAppFormItems(formValue)) && !isAppInstalled && hasAppInstallationFinished && !appInstallationError,
+          (await showFormItems(formValue)) && !isAppInstalled && hasAppInstallationFinished && !appInstallationError,
         guiOptions: {
           additionalData: <FormGeneratorObjectStatusAdditionalData>{
             status: 'positive',

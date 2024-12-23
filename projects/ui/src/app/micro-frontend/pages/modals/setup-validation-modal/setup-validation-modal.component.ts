@@ -22,11 +22,8 @@ import { PipelineService } from '../../../services/pipeline.service'
 import { PlatformFormGeneratorCustomInfoBoxComponent } from '../../../components/form-generator/form-generator-info-box/form-generator-info-box.component'
 import { PlatformFormGeneratorCustomMessageStripComponent } from '../../../components/form-generator/form-generator-message-strip/form-generator-message-strip.component'
 import { PlatformFormGeneratorCustomValidatorComponent } from '../../../components/form-generator/form-generator-validator/form-generator-validator.component'
-import { GithubActionsFormService, GithubActionsFormValueP } from '../../../services/forms/github-actions-form.service'
+import { GithubActionsFormService } from '../../../services/forms/github-actions-form.service'
 import { GithubActionsService } from '../../../services/github-actions.service'
-
-type GithubCredentialFormPrefix = 'github'
-type SetupGithubActionsFormValue = GithubActionsFormValueP<GithubCredentialFormPrefix>
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -90,10 +87,13 @@ export class SetupValidationModalComponent implements OnInit, OnDestroy {
     })
     this.watch$ = this.pipelineService.watchPipeline().pipe(debounceTime(50))
 
-    this.formItems = await this.githubActionsFormService.buildFormItems<
-      SetupGithubActionsFormValue,
-      GithubCredentialFormPrefix
-    >('github', () => true, this.refreshStepsVisibility.bind(this) as () => Promise<void>)
+    const refs = (await firstValueFrom(this.watch$)).resourceRefs
+    if (refs.find((ref) => ref.kind === Kinds.GITHUB_REPOSITORY)) {
+      this.githubResourceExists.set(true)
+    }
+    this.formItems = await this.githubActionsFormService.buildFormItems(
+      this.refreshStepsVisibility.bind(this) as () => Promise<void>,
+    )
 
     this.loading.set(false)
   }

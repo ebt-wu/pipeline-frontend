@@ -29,7 +29,7 @@ import {
   PlatformFormGeneratorCustomMessageStripComponent,
 } from '../../../components/form-generator/form-generator-message-strip/form-generator-message-strip.component'
 import { PlatformFormGeneratorCustomValidatorComponent } from '../../../components/form-generator/form-generator-validator/form-generator-validator.component'
-import { GithubActionsFormService, GithubActionsFormValueP } from '../../../services/forms/github-actions-form.service'
+import { GithubActionsFormService } from '../../../services/forms/github-actions-form.service'
 import {
   GithubCredentialFormService,
   GithubCredentialFormValueP,
@@ -45,14 +45,10 @@ type SetupBuildFormValue = {
   jenkinsUserId?: string
   jenkinsToken?: string
   jenkinsSelectCredential?: string
-} & JenkinsGithubCredentialFormValue &
-  GithubActionsFormValue
+} & JenkinsGithubCredentialFormValue
 
 type JenkinsGithubCredentialFormPrefix = 'jenkinsGithub'
 type JenkinsGithubCredentialFormValue = GithubCredentialFormValueP<JenkinsGithubCredentialFormPrefix>
-
-type GithubActionsFormPrefix = 'github'
-type GithubActionsFormValue = GithubActionsFormValueP<GithubActionsFormPrefix>
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -394,13 +390,9 @@ export class SetupBuildComponent implements OnInit, OnDestroy {
       SetupBuildFormValue,
       JenkinsGithubCredentialFormPrefix
     >('jenkinsGithub', (formValue) => formValue.orchestrator === Orchestrators.JENKINS)
-    const githubActionsFormItems = await this.githubActionsFormService.buildFormItems<
-      SetupBuildFormValue,
-      GithubActionsFormPrefix
-    >(
-      'github',
-      (formValue) => formValue.orchestrator === Orchestrators.GITHUB_ACTIONS_WORKFLOW,
+    const githubActionsFormItems = await this.githubActionsFormService.buildFormItems<SetupBuildFormValue>(
       this.refreshStepsVisibility.bind(this) as () => Promise<void>,
+      (formValue) => formValue.orchestrator === Orchestrators.GITHUB_ACTIONS_WORKFLOW,
     )
 
     this.formItems = this.formItems.concat(jenkinsGithubCredentialFormItems, githubActionsFormItems)
@@ -421,129 +413,6 @@ export class SetupBuildComponent implements OnInit, OnDestroy {
   }
 
   async onFormSubmitted(buildFormValue: SetupBuildFormValue): Promise<void> {
-    const context = await this.luigiService.getContextAsync()
-    const isSugarRegistrationEnabled = await this.featureFlagService.isSugarRegistrationEnabled(context.projectId)
-
-    if (isSugarRegistrationEnabled) {
-      return await this.onGithubAppFormSubmit(buildFormValue)
-    }
-
-    return await this.onGithubPatFormSubmit(buildFormValue)
-  }
-
-  // TODO: remove this function with sugar app feature-flag removal
-  async onGithubPatFormSubmit(buildFormValue: SetupBuildFormValue): Promise<void> {
-    this.loading.set(true)
-
-    const context = await this.luigiService.getContextAsync()
-    const labels = (await firstValueFrom(this.watch$)).labels
-
-    try {
-      const githubMetadata = await this.githubService.getGithubMetadata()
-      if (!githubMetadata.githubRepoUrl || !githubMetadata.githubOrgName || !githubMetadata.githubRepoName) {
-        throw new Error('Could not get GitHub metadata from Luigi context 🙄. Please reload the page and try again.')
-      }
-      const githubRepoUrl = new URL(githubMetadata.githubRepoUrl)
-
-      let githubCredentialType = buildFormValue.githubCredentialType
-      let githubSelectCredential = buildFormValue.githubSelectCredential
-      let githubToken = buildFormValue.githubToken
-      if (buildFormValue.orchestrator === Orchestrators.JENKINS) {
-        githubCredentialType = buildFormValue.jenkinsGithubCredentialType
-        githubSelectCredential = buildFormValue.jenkinsGithubSelectCredential
-        githubToken = buildFormValue.jenkinsGithubToken
-      }
-
-      // Github credentials
-      const githubSecretPath = await this.githubService.storeGithubCredentials(
-        {
-          githubCredentialType,
-          githubSelectCredential,
-          githubToken,
-        },
-        githubRepoUrl,
-      )
-
-      // Github repository and Github Actions
-      let isGithubActions = false
-      if (buildFormValue.orchestrator === Orchestrators.GITHUB_ACTIONS_WORKFLOW) {
-        isGithubActions = true
-      }
-
-      const repositoryResource = await firstValueFrom(
-        this.githubService.createGithubRepository(
-          githubRepoUrl.origin,
-          githubMetadata.githubOrgName,
-          githubMetadata.githubRepoName,
-          isGithubActions,
-          githubSecretPath,
-        ),
-      )
-
-      // Jenkins
-      if (buildFormValue.orchestrator === Orchestrators.JENKINS) {
-        // Jenkins credential
-        let jenkinsCredentialPath: string
-
-        if (buildFormValue.jenkinsCredentialType === CredentialTypes.NEW) {
-          const jenkinsUrl = new URL(buildFormValue.jenkinsUrl)
-          const secretData: SecretData[] = [
-            { key: 'token', value: buildFormValue.jenkinsToken },
-            { key: 'url', value: jenkinsUrl.href },
-            { key: 'userId', value: buildFormValue.jenkinsUserId },
-          ]
-          // replace the dots in the hostname with dashes to avoid issues with vault path
-          jenkinsCredentialPath = await this.secretService.storeCredential(
-            `jenkins-${jenkinsUrl.hostname.replace(/\./g, '-')}`,
-            secretData,
-            buildFormValue.jenkinsUserId,
-          )
-        } else {
-          jenkinsCredentialPath = this.secretService.getCredentialPath(
-            buildFormValue.jenkinsSelectCredential,
-            context.componentId,
-          )
-        }
-
-        // Jenkins pipeline
-        await firstValueFrom(
-          this.jenkinsService.createJenkinsPipeline(
-            buildFormValue.jenkinsUrl.trim(),
-            jenkinsCredentialPath,
-            repositoryResource,
-            labels,
-          ),
-        )
-      }
-
-      // Piper config
-      let dockerImageName = ''
-      if ([BuildTool.Docker, BuildTool.Golang, BuildTool.Gradle].includes(buildFormValue.buildTool)) {
-        dockerImageName = context.componentId
-      }
-
-      await firstValueFrom(
-        this.piperService.createPiperConfig(
-          githubSecretPath,
-          repositoryResource,
-          buildFormValue.buildTool,
-          false,
-          dockerImageName,
-          labels,
-        ),
-      )
-
-      this.luigiClient.uxManager().closeCurrentModal()
-    } catch (error) {
-      const errorMessage = (error as Error).message ?? 'Unknown error'
-      this.errorMessage.set(errorMessage)
-    } finally {
-      this.loading.set(false)
-    }
-  }
-
-  // TODO: rename this function to onFormSubmitted() with sugar app feature-flag removal
-  async onGithubAppFormSubmit(buildFormValue: SetupBuildFormValue): Promise<void> {
     this.loading.set(true)
 
     const context = await this.luigiService.getContextAsync()

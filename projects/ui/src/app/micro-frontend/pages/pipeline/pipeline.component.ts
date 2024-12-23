@@ -15,7 +15,7 @@ import {
 import { DeletionPolicy, GithubActionsGetPayload } from '@generated/graphql'
 import { debounceTime, firstValueFrom, Observable, Subscription, tap } from 'rxjs'
 import { KindCategory, KindExtensionName, KindName } from '@constants'
-import { Pipeline, ResourceRef } from '@types'
+import { Pipeline } from '@types'
 import { DeleteBuildModalComponent } from '../modals/delete-build-modal/delete-build-modal.component'
 import { DismissibleMessageComponent } from '../../components/dismissible-message/dismissible-message.component'
 import { ErrorMessageComponent } from '../../components/error-message/error-message.component'
@@ -112,7 +112,6 @@ export class PipelineComponent implements OnInit, OnDestroy {
   showGithubActions = signal(false)
   showOSC = signal(false)
   isMultipleServiceDetailUiEnabled = signal(false)
-  isSugarRegistrationEnabled = signal(false)
 
   canUserEditCredentials = false
 
@@ -175,7 +174,6 @@ export class PipelineComponent implements OnInit, OnDestroy {
     this.isMultipleServiceDetailUiEnabled.set(
       await this.featureFlagService.isMultipleServiceDetailsUiEnabled(context.projectId),
     )
-    this.isSugarRegistrationEnabled.set(await this.featureFlagService.isSugarRegistrationEnabled(context.projectId))
 
     await this.checkSugarAppInstallation()
 
@@ -301,16 +299,14 @@ export class PipelineComponent implements OnInit, OnDestroy {
   }
 
   private async checkSugarAppInstallation() {
-    if (this.isSugarRegistrationEnabled) {
-      this.isSugarAppInstalled.set(
-        await firstValueFrom(
-          this.githubActionsService.getGithubActionSolinasVerification(
-            this.githubMetadata.githubOrgName,
-            this.githubMetadata.githubRepoUrl,
-          ),
+    this.isSugarAppInstalled.set(
+      await firstValueFrom(
+        this.githubActionsService.getGithubActionSolinasVerification(
+          this.githubMetadata.githubOrgName,
+          this.githubMetadata.githubRepoUrl,
         ),
-      )
-    }
+      ),
+    )
   }
 
   ngOnDestroy(): void {
@@ -341,14 +337,6 @@ export class PipelineComponent implements OnInit, OnDestroy {
       }, 0)
     }
     return 0
-  }
-
-  openFeedback() {
-    window.open(
-      'https://sapit-home-prod-004.launchpad.cfapps.eu10.hana.ondemand.com/site#feedbackservice-Display&/topic/cc5045ed-6c4e-4e7b-a18d-a0b377faf593/createFeedback',
-      '_blank',
-      'noopener, noreferrer',
-    )
   }
 
   async openCumulusModal(e: Event) {
@@ -429,34 +417,6 @@ export class PipelineComponent implements OnInit, OnDestroy {
     }
 
     this.pipelineURL.set(jenkinsPipeline.jobUrl)
-  }
-
-  async openPipeline(e: Event, pipeline: Pipeline) {
-    if (e) {
-      e.stopPropagation()
-    }
-    this.pendingOpenPipeline.set(true)
-    let jenkinsStatus: ResourceRef = {}
-    try {
-      jenkinsStatus = pipeline.resourceRefs.find((ref) => ref.kind == Kinds.JENKINS_PIPELINE)
-      const jenkinsPipeline = await firstValueFrom(this.api.jenkinsService.getJenkinsPipeline(jenkinsStatus.name))
-      if (!jenkinsPipeline.jobUrl) {
-        throw new Error('Jenkins jobUrl not found')
-      }
-      window.open(jenkinsPipeline.jobUrl, '_blank', 'noopener, noreferrer')
-      this.pendingOpenPipeline.set(false)
-    } catch (e) {
-      const errorMessage = (e as Error).message
-      this.errors.update((errors) => {
-        errors.push({
-          title: `Open Pipeline failed`,
-          resourceName: pipeline.name,
-          message: `${errorMessage}\nJenkins status: ${JSON.stringify(jenkinsStatus)}`,
-        })
-        return errors
-      })
-      this.pendingOpenPipeline.set(false)
-    }
   }
 
   async deletePipeline(e: Event, pipeline: Pipeline) {
@@ -607,11 +567,6 @@ export class PipelineComponent implements OnInit, OnDestroy {
 
   updateLocalLayout(layoutEvent: FlexibleColumnLayout) {
     this.localLayout = layoutEvent
-  }
-
-  // This is true when the GitHub Actions is enabled from one of the other components of the same project
-  isGithubActionsEnabledInSameProject(responsibleProjectName: string): boolean {
-    return this.projectId === responsibleProjectName
   }
 
   private async getExtensionClasses() {
