@@ -28,7 +28,7 @@ export class FeatureFlagService {
   }
 
   async isMultipleServiceDetailsUiEnabled(projectId: string): Promise<boolean> {
-    return await this.getFlagValue(Flags.MULTIPLE_SERVICE_DETAILS_UI_ENABLED, projectId)
+    return (await this.getFlagValue(Flags.MULTIPLE_SERVICE_DETAILS_UI_ENABLED, projectId)) || this.isTestTenant()
   }
 
   isTestTenant() {
