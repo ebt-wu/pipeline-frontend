@@ -5,7 +5,7 @@ import { NoopAnimationsModule } from '@angular/platform-browser/animations'
 import { CardProjectPromotionComponent } from './card-project/card-project-promotion/card-project-promotion.component'
 import { ModalProjectGetStartedComponent } from './card-project/modal-project-get-started/modal-project-get-started.component'
 import { ApolloModule } from 'apollo-angular'
-import { HttpClientModule } from '@angular/common/http'
+import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http'
 import { ɵSharedStylesHost } from '@angular/platform-browser'
 
 @NgModule({
@@ -14,10 +14,10 @@ import { ɵSharedStylesHost } from '@angular/platform-browser'
     ApolloModule,
     CardProjectPromotionComponent,
     FundamentalNgxCoreModule,
-    HttpClientModule,
     ModalProjectGetStartedComponent,
     NoopAnimationsModule,
   ],
+  providers: [provideHttpClient(withInterceptorsFromDi())],
 })
 export class AppModule implements DoBootstrap {
   constructor(private injector: Injector) {

@@ -1,5 +1,4 @@
 import { ChangeDetectionStrategy, Component, HostListener, OnInit, signal } from '@angular/core'
-import { HttpClientModule } from '@angular/common/http'
 import { AsyncPipe, CommonModule } from '@angular/common'
 import { PlatformDynamicPageModule } from '@fundamental-ngx/platform/dynamic-page'
 import { FundamentalNgxCoreModule, SvgConfig } from '@fundamental-ngx/core'
@@ -27,7 +26,6 @@ import { PolicyService } from '../../services/policy.service'
     AsyncPipe,
     FundamentalNgxCoreModule,
     ApolloModule,
-    HttpClientModule,
     PipelineComponent,
     CommonModule,
   ],

@@ -25,9 +25,10 @@ import { CategorySlotComponent } from './components/category-slot/category-slot.
 import { SonarServiceDetailsComponent } from './components/service-details/sonar/sonar-service-details.component'
 import { AzureServiceDetailsComponent } from './components/service-details/azure/azure-service-details.component'
 import { ValidateCodeSectionComponent } from './components/validate-code-section/validate-code-section.component'
+import { provideHttpClient } from '@angular/common/http'
 
 @NgModule({
-  providers: [ContentDensityService, ThemingService],
+  providers: [ContentDensityService, ThemingService, provideHttpClient()],
   imports: [
     AzureServiceDetailsComponent,
     CategorySlotComponent,
