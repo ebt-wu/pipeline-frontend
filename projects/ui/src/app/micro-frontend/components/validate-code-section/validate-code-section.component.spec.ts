@@ -33,6 +33,17 @@ describe('ValidateCodeSectionComponent', () => {
     expect(component).toBeTruthy()
   })
 
+  describe('infoIcon inline help', () => {
+    it('should set infoIcon inline help text if there is no service configured for the category', async () => {
+      component = fixture.componentInstance
+      component.pipeline = createPipelineForTests()
+      await component.ngOnChanges()
+      expect(component.categoryMap[Categories.OPEN_SOURCE_CHECKS].infoIconConfig.iconInlineHelpText).toBeTruthy()
+      expect(component.categoryMap[Categories.STATIC_CODE_CHECKS].infoIconConfig.iconInlineHelpText).toBeTruthy()
+      expect(component.categoryMap[Categories.STATIC_SECURITY_CHECKS].infoIconConfig.iconInlineHelpText).toBeTruthy()
+    })
+  })
+
   describe('isButtonShown', () => {
     it('isButtonShown should return true when no resourceRefs are present', async () => {
       component = fixture.componentInstance

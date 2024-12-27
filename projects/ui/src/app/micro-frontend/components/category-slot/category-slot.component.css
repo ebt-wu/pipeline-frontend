@@ -32,6 +32,7 @@
         .icon {
             color: var(--sapNeutralColor);
             position: relative;
+            left: 8px;
         }
 
 

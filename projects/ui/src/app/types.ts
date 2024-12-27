@@ -53,6 +53,10 @@ export interface CategoryConfig {
     buttonText?: string
     buttonAction?: () => void | Promise<void>
   }
+  infoIconConfig?: {
+    isIconShown?: boolean
+    iconInlineHelpText?: string
+  }
   statusTagConfig?: {
     isStatusTagShown: boolean
     statusTagText: string

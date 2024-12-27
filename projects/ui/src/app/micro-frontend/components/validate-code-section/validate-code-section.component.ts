@@ -78,6 +78,10 @@ export class ValidateCodeSectionComponent implements OnChanges, OnInit {
         rightSideText: (await this.isButtonShown(Categories.STATIC_SECURITY_CHECKS))
           ? null
           : this.generateRightSideText(Categories.STATIC_SECURITY_CHECKS),
+        infoIconConfig: {
+          isIconShown: this.pipelineStepsByCategory.get(Categories.STATIC_SECURITY_CHECKS).length === 0,
+          iconInlineHelpText: 'Configure Static Security services like GitHub Advanced Security and CxONE',
+        },
       },
       [Categories.STATIC_CODE_CHECKS]: {
         configuredServicesText: this.generateConfiguredServicesText(Categories.STATIC_CODE_CHECKS),
@@ -89,6 +93,10 @@ export class ValidateCodeSectionComponent implements OnChanges, OnInit {
         statusTagConfig: {
           isStatusTagShown: this.isStatusTagShown(Categories.STATIC_CODE_CHECKS),
           statusTagText: null,
+        },
+        infoIconConfig: {
+          isIconShown: this.pipelineStepsByCategory.get(Categories.STATIC_CODE_CHECKS).length === 0,
+          iconInlineHelpText: 'Configure Static Code Check services like SonarQube',
         },
         statusIconConfig: {
           statusIconType: this.getStatusIconType(Categories.STATIC_CODE_CHECKS),
@@ -110,12 +118,18 @@ export class ValidateCodeSectionComponent implements OnChanges, OnInit {
             : this.showWhenNoManagedServices(Categories.OPEN_SOURCE_CHECKS),
           statusTagText: 'Not Managed',
         },
-        rightSideText: (await this.isButtonShown(Categories.OPEN_SOURCE_CHECKS))
-          ? 'Add a compliant service'
-          : this.generateRightSideText(Categories.OPEN_SOURCE_CHECKS),
+        rightSideText:
+          (await this.isButtonShown(Categories.OPEN_SOURCE_CHECKS)) &&
+          !this.pipelineStepsByCategory.get(Categories.OPEN_SOURCE_CHECKS)
+            ? 'Add a compliant service'
+            : this.generateRightSideText(Categories.OPEN_SOURCE_CHECKS),
         statusIconConfig: {
           statusIconType: this.getStatusIconType(Categories.OPEN_SOURCE_CHECKS),
           statusIconInlineHelpText: null,
+        },
+        infoIconConfig: {
+          isIconShown: this.pipelineStepsByCategory.get(Categories.OPEN_SOURCE_CHECKS).length === 0,
+          iconInlineHelpText: 'Configure the new Open-Source Compliance Service',
         },
         isOpenArrowShown: this.isCategoryConfigured(Categories.OPEN_SOURCE_CHECKS),
       },
@@ -223,10 +237,7 @@ export class ValidateCodeSectionComponent implements OnChanges, OnInit {
     const managedNotManagedCount = this.managedNotManagedCount(category)
     const managedServicesCount = managedNotManagedCount.managedCount
     const notManagedServicesCount = managedNotManagedCount.notManagedCount
-    if (managedServicesCount === 0 && notManagedServicesCount > 0) {
-      return true
-    }
-    return false
+    return managedServicesCount === 0 && notManagedServicesCount > 0
   }
   generateRightSideText(category: Categories) {
     const managedNotManagedCount = this.managedNotManagedCount(category)
