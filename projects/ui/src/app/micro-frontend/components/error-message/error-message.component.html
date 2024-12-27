@@ -18,7 +18,7 @@
         fdType="transparent"
         class="ticket-button"
         (click)="reportError()"
-        *ngIf="troubleshootContext()?.showTicketButton">
+        *ngIf="troubleshootContext()?.showTicketButton || !troubleshootContext()">
         Create Ticket
       </button>
     </div>
