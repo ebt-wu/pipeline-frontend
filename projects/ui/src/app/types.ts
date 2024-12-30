@@ -50,6 +50,7 @@ export interface CategoryConfig {
     isButtonShown: boolean
     isButtonDisabled?: boolean
     disabledButtonInlineHelpText?: string
+    buttonTestId?: string
     buttonText?: string
     buttonAction?: () => void | Promise<void>
   }

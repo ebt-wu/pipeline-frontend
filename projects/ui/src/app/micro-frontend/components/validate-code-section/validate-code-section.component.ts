@@ -63,6 +63,7 @@ export class ValidateCodeSectionComponent implements OnChanges, OnInit {
           isButtonShown: await this.isButtonShown(Categories.STATIC_SECURITY_CHECKS),
           buttonText: 'Add',
           buttonAction: async () => this.openSetupDialog(Categories.STATIC_SECURITY_CHECKS),
+          buttonTestId: 'add-static-security-checks-button',
         },
         statusTagConfig: {
           isStatusTagShown: (await this.isButtonShown(Categories.STATIC_SECURITY_CHECKS))
@@ -89,6 +90,7 @@ export class ValidateCodeSectionComponent implements OnChanges, OnInit {
           isButtonShown: await this.isButtonShown(Categories.STATIC_CODE_CHECKS),
           buttonText: 'Add',
           buttonAction: async () => this.openSetupDialog(Categories.STATIC_CODE_CHECKS),
+          buttonTestId: 'add-static-code-checks-button',
         },
         statusTagConfig: {
           isStatusTagShown: this.isStatusTagShown(Categories.STATIC_CODE_CHECKS),
@@ -111,6 +113,7 @@ export class ValidateCodeSectionComponent implements OnChanges, OnInit {
           isButtonShown: await this.isButtonShown(Categories.OPEN_SOURCE_CHECKS),
           buttonText: 'Add',
           buttonAction: async () => this.openSetupDialog(Categories.OPEN_SOURCE_CHECKS),
+          buttonTestId: 'add-open-source-checks-button',
         },
         statusTagConfig: {
           isStatusTagShown: (await this.isButtonShown(Categories.OPEN_SOURCE_CHECKS))
