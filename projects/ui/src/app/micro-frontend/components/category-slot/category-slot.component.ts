@@ -83,4 +83,8 @@ export class CategorySlotComponent {
   get isAddButtonVisible() {
     return this.buttonConfig && this.buttonConfig.isButtonShown && !this.buttonConfig.isButtonDisabled
   }
+
+  get testId() {
+    return 'category-slot-' + this.category.replace(/ /g, '-').toLowerCase()
+  }
 }

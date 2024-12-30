@@ -1,6 +1,6 @@
 <ul fd-list [byline]="true" [noBorder]="true">
   <li fd-list-item class="list-item-border">
-    <a fd-list-link (click)="onDetailsOpened()">
+    <a fd-list-link (click)="onDetailsOpened()" [attr.data-testid]="testId">
       <span fd-list-thumbnail class="list-item-icon">
         <ng-container *ngIf="statusIconConfig && statusIconConfig.statusIconType === serviceStatus.CREATED">
           <span fd-object-status class="status-icon" size="m" [glyph]="'status-completed'" status="positive"></span>

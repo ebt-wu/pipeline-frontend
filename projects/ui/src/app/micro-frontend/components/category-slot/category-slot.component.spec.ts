@@ -46,6 +46,7 @@ describe('CategorySlotComponent', () => {
 
   it('should show a button with the provided text if isButtonShown is provided', () => {
     const buttonActionMock = jest.fn()
+    component.category = Categories.COMPLIANCE
     component.buttonConfig = {
       isButtonShown: true,
       isButtonDisabled: false,
@@ -69,7 +70,7 @@ describe('CategorySlotComponent', () => {
     await TestBed.configureTestingModule({
       imports: [CategorySlotComponent, AuthorizationTestingModule.withDefaultPolicies([])], // mock that user has no policies
     }).compileComponents()
-
+    component.category = Categories.COMPLIANCE
     component.buttonConfig = {
       isButtonShown: true,
       isButtonDisabled: false,
@@ -88,6 +89,7 @@ describe('CategorySlotComponent', () => {
       isStatusTagShown: true,
       statusTagText: 'Label Text',
     }
+    component.category = Categories.COMPLIANCE
     fixture.detectChanges()
     const componentHTML: HTMLElement = fixture.nativeElement
     const label = componentHTML.querySelector('fd-info-label')
@@ -95,6 +97,7 @@ describe('CategorySlotComponent', () => {
     expect(label.textContent.trim()).toEqual('Label Text')
   })
   it('should not show a status tag if statusTagConfig is not provided', () => {
+    component.category = Categories.COMPLIANCE
     component.statusTagConfig = undefined
     fixture.detectChanges()
     const componentHTML: HTMLElement = fixture.nativeElement

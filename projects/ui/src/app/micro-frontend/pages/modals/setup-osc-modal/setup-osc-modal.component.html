@@ -204,7 +204,7 @@
     </div>
   </div>
 </div>
-<div class="busy-indicator" *ngIf="loading()">
+<div class="busy-indicator" data-testid="osc-modal-busy-indicator" *ngIf="loading()">
   <fd-busy-indicator [loading]="true" ariaLabel="loading" title="Please Wait"></fd-busy-indicator>
 </div>
 <ng-template #xMakeHelp>
