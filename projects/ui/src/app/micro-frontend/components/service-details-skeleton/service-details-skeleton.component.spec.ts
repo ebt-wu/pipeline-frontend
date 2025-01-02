@@ -76,6 +76,7 @@ describe('ServiceDetailsSkeletonComponent', () => {
       .mock(APIService, mockAPIService)
   })
   afterEach(() => {
+    ngMocks.reset()
     jest.clearAllMocks()
   })
 
@@ -242,6 +243,162 @@ describe('ServiceDetailsSkeletonComponent', () => {
       })
       // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
       expect(fixture.nativeElement.textContent).toContain('Error')
+    })
+  })
+
+  describe('Retry button', () => {
+    it('clicking the retry button should call onRetryClicked', () => {
+      const ghasRef = {
+        kind: Kinds.GITHUB_ADVANCED_SECURITY,
+        status: ServiceStatus.FAILING_CREATION,
+        name: 'ghas-123',
+        error: 'Some error',
+      }
+      const fixture = MockRender(ServiceDetailsSkeletonComponent, {
+        context,
+        activeCategory: Categories.STATIC_SECURITY_CHECKS,
+        leanIxData: [],
+        pipeline: createPipelineForTests([ghasRef]),
+      })
+
+      const component = fixture.point.componentInstance
+      component.onRetryClicked = jest.fn()
+      component.debugModeService.toggleDebugMode() // enable debug mode
+      fixture.detectChanges()
+      const retryButton = ngMocks.find(fixture, '[data-testid="retry-button"]')
+      ngMocks.click(retryButton)
+      expect(component.onRetryClicked).toHaveBeenCalledWith(ghasRef)
+    })
+    it('should show the retry button for a failing service in debug mode', () => {
+      const fixture = MockRender(ServiceDetailsSkeletonComponent, {
+        context,
+        activeCategory: Categories.STATIC_SECURITY_CHECKS,
+        leanIxData: [],
+        pipeline: createPipelineForTests([
+          {
+            kind: Kinds.GITHUB_ADVANCED_SECURITY,
+            status: ServiceStatus.FAILING_CREATION,
+          },
+        ]),
+      })
+      const component = fixture.point.componentInstance
+      component.debugModeService.toggleDebugMode() // enable debug mode
+      fixture.detectChanges()
+      const retryButton = ngMocks.find(fixture, '[data-testid="retry-button"]')
+      expect(retryButton).toBeDefined()
+    })
+    it('should not show the retry button when debug mode is off', () => {
+      const fixture = MockRender(ServiceDetailsSkeletonComponent, {
+        context,
+        activeCategory: Categories.STATIC_SECURITY_CHECKS,
+        leanIxData: [],
+        pipeline: createPipelineForTests([
+          {
+            kind: Kinds.GITHUB_ADVANCED_SECURITY,
+            status: ServiceStatus.FAILING_CREATION,
+          },
+        ]),
+      })
+
+      fixture.detectChanges()
+
+      expect(() => ngMocks.find(fixture, '[data-testid="retry-button"]')).toThrow()
+    })
+    it('should not show the retry button when the service is not failing', () => {
+      const fixture = MockRender(ServiceDetailsSkeletonComponent, {
+        context,
+        activeCategory: Categories.STATIC_SECURITY_CHECKS,
+        leanIxData: [],
+        pipeline: createPipelineForTests([
+          {
+            kind: Kinds.GITHUB_ADVANCED_SECURITY,
+            status: ServiceStatus.CREATED,
+          },
+        ]),
+      })
+
+      const component = fixture.point.componentInstance
+      component.debugModeService.toggleDebugMode()
+      fixture.detectChanges()
+
+      expect(() => ngMocks.find(fixture, '[data-testid="retry-button"]')).toThrow()
+    })
+  })
+
+  describe('Debug button', () => {
+    it('clicking the debug button should call onDebugClicked', () => {
+      const ghasRef = {
+        kind: Kinds.GITHUB_ADVANCED_SECURITY,
+        name: 'ghas-1234',
+        error: '',
+        status: ServiceStatus.CREATED,
+      }
+      const fixture = MockRender(ServiceDetailsSkeletonComponent, {
+        context,
+        activeCategory: Categories.STATIC_SECURITY_CHECKS,
+        leanIxData: [],
+        pipeline: createPipelineForTests([ghasRef]),
+      })
+      const component = fixture.point.componentInstance
+      component.debugModeService.toggleDebugMode() // enable debug mode
+      component.debugModeService.isHyperspaceAdmin.set(true)
+      fixture.detectChanges()
+      const debugButton = ngMocks.find(fixture, '[data-testid="debug-label-button"]')
+      component.onDebugClicked = jest.fn()
+      ngMocks.click(debugButton)
+      expect(component.onDebugClicked).toHaveBeenCalledWith(ghasRef)
+    })
+    it('should not show debug button for non-hyperspace-admin users', () => {
+      const fixture = MockRender(ServiceDetailsSkeletonComponent, {
+        context,
+        activeCategory: Categories.STATIC_SECURITY_CHECKS,
+        leanIxData: [],
+        pipeline: createPipelineForTests([
+          {
+            kind: Kinds.GITHUB_ADVANCED_SECURITY,
+          },
+        ]),
+      })
+      const component = fixture.point.componentInstance
+      component.debugModeService.toggleDebugMode() // enable debug mode
+      component.debugModeService.isHyperspaceAdmin.set(false)
+      fixture.detectChanges()
+      expect(() => ngMocks.find(fixture, '[data-testid="debug-label-button"]')).toThrow()
+    })
+    it('should show a debug button when debug mode is enabled and user is hyperspace admin', () => {
+      const fixture = MockRender(ServiceDetailsSkeletonComponent, {
+        context,
+        activeCategory: Categories.STATIC_SECURITY_CHECKS,
+        leanIxData: [],
+        pipeline: createPipelineForTests([
+          {
+            kind: Kinds.GITHUB_ADVANCED_SECURITY,
+          },
+        ]),
+      })
+      const component = fixture.point.componentInstance
+      component.debugModeService.toggleDebugMode() // enable debug mode
+      component.debugModeService.isHyperspaceAdmin.set(true)
+      fixture.detectChanges()
+      const debugButton = ngMocks.find(fixture, '[data-testid="debug-label-button"]')
+      expect(debugButton).toBeDefined()
+    })
+    it('should not show debug button if not in debug mode', () => {
+      const fixture = MockRender(ServiceDetailsSkeletonComponent, {
+        context,
+        activeCategory: Categories.STATIC_SECURITY_CHECKS,
+        leanIxData: [],
+        pipeline: createPipelineForTests([
+          {
+            kind: Kinds.GITHUB_ADVANCED_SECURITY,
+          },
+        ]),
+      })
+      const component = fixture.point.componentInstance
+      component.debugModeService.debugModeEnabled.set(false)
+      component.debugModeService.isHyperspaceAdmin.set(true)
+      fixture.detectChanges()
+      expect(() => ngMocks.find(fixture, '[data-testid="debug-label-button"]')).toThrow()
     })
   })
 })

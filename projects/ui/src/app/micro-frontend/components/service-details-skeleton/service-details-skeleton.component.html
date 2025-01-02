@@ -69,6 +69,35 @@
               </span>
             </div>
             <div class="buttons">
+              <div
+                *ngIf="
+                  debugModeService.debugModeEnabled() &&
+                  debugModeService.isHyperspaceAdmin() &&
+                  getResourceStatusFromResourceRefs(serviceKind, pipeline.resourceRefs) !== ServiceStatus.NOT_MANAGED
+                ">
+                <button
+                  (click)="onDebugClicked(getResourceFromResourceRefs(serviceKind, pipeline.resourceRefs))"
+                  fd-button
+                  label="Toggle Debug Label"
+                  glyph="cancel-maintenance"
+                  fdType="transparent"
+                  ariaLabel="Toggle Debug Label"
+                  title="This will toggle the 'automaticd.sap/debug' label with your CDI-User so you can see the resource in your local debugger."
+                  data-testid="debug-label-button"></button>
+              </div>
+              <button
+                *ngIf="
+                  debugModeService.debugModeEnabled() &&
+                  getResourceStatusFromResourceRefs(serviceKind, pipeline.resourceRefs) ===
+                    ServiceStatus.FAILING_CREATION
+                "
+                data-testid="retry-button"
+                fd-button
+                fdType="transparent"
+                glyph="refresh"
+                ariaLabel="Trigger Reconciliation"
+                (click)="onRetryClicked(getResourceFromResourceRefs(serviceKind, pipeline.resourceRefs))"
+                label="Retry"></button>
               <button
                 *ngIf="serviceKind === kinds.GITHUB_ADVANCED_SECURITY && serviceUrls().get(serviceKind)"
                 ariaLabel="Show Options"

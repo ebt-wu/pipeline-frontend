@@ -33,7 +33,6 @@ import { GithubAdvancedSecurityServiceDetailsComponent } from '../service-detail
 import {
   IconTabBarComponent,
   IconTabBarTabComponent,
-  IconTabBarTabContentDirective,
   MenuComponent,
   MenuTriggerDirective,
   PlatformMenuButtonModule,
@@ -58,6 +57,7 @@ import {
   PiperConfig,
   SonarQubeProject,
 } from '@generated/graphql'
+import { ApolloError } from '@apollo/client/core'
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -95,7 +95,6 @@ import {
     MenuComponent,
     IconTabBarComponent,
     IconTabBarTabComponent,
-    IconTabBarTabContentDirective,
   ],
 })
 export class ServiceDetailsSkeletonComponent implements OnInit, OnChanges {
@@ -109,6 +108,7 @@ export class ServiceDetailsSkeletonComponent implements OnInit, OnChanges {
   kindName = KindName
   kinds = Kinds
   stepKeys = StepKey
+  protected readonly ServiceStatus = ServiceStatus
 
   dxpContext$: Observable<DxpContext>
 
@@ -386,6 +386,15 @@ export class ServiceDetailsSkeletonComponent implements OnInit, OnChanges {
     return resource?.name
   }
 
+  getResourceFromResourceRefs(kind: Kinds | StepKey, resourceRefs: ResourceRef[]): ResourceRef {
+    return resourceRefs.find((ref) => ref.kind === kind)
+  }
+
+  getResourceStatusFromResourceRefs(kind: Kinds | StepKey, resourceRefs: ResourceRef[]): string {
+    const resource = resourceRefs.find((ref) => ref.kind === kind)
+    return resource?.status
+  }
+
   getExtensionClass(activeTile: string): ExtensionClass {
     const extensionName = KindExtensionName[activeTile] as string
     return this.leanIxData.find((extensionClass) => extensionClass.name === extensionName)
@@ -433,6 +442,7 @@ The information might be missing in the Hyperspace portal extension backend, Lea
   getAllErrors(): ErrorMessage[] {
     return Array.from(this.errors().values()).flat()
   }
+
   openGHASScannnerResults() {
     window.open(
       this.serviceUrls().get(Kinds.GITHUB_ADVANCED_SECURITY) + '/security/code-scanning',
@@ -474,10 +484,12 @@ The information might be missing in the Hyperspace portal extension backend, Lea
 
     return servicesToShow
   }
+
   isServiceFailingCreation(kind: Kinds | StepKey): boolean {
     const ref = this.pipeline.resourceRefs.find((ref) => ref.kind === kind)
     return ref && ref.status === ServiceStatus.FAILING_CREATION
   }
+
   isServiceNotManaged(kind: Kinds | StepKey): boolean {
     return NotManagedServices.includes(kind as StepKey)
   }
@@ -485,4 +497,48 @@ The information might be missing in the Hyperspace portal extension backend, Lea
   getNeutralColorAccent() {
     return 10 as ColorAccent
   }
+
+  async onRetryClicked(resourceRef: ResourceRef): Promise<void> {
+    try {
+      await firstValueFrom(this.debugModeService.forceDebugReconciliation(resourceRef.kind, resourceRef.name))
+      this.debugModeService.messageToastService.open('Triggered reconciliation')
+    } catch (e) {
+      if (e instanceof ApolloError) {
+        this.debugModeService.messageToastService.open(e.message, {
+          duration: 5000,
+        })
+      }
+    }
+  }
+
+  async onDebugClicked(resourceRef: ResourceRef): Promise<void> {
+    try {
+      if (!isKind(resourceRef.kind)) {
+        return // We don't want to toggle debug label for StepKey
+      }
+      await firstValueFrom(
+        this.debugModeService.toggleDebugLabel(resourceRef.kind, resourceRef.name).pipe(
+          map((result) => {
+            if (result.data?.toggleDebugLabel) {
+              this.debugModeService.messageToastService.open(result.data?.toggleDebugLabel, {
+                duration: 5000,
+              })
+            }
+            return
+          }),
+        ),
+      )
+    } catch (error) {
+      if (error instanceof ApolloError) {
+        this.debugModeService.messageToastService.open(error.message, {
+          duration: 5000,
+        })
+      }
+      return
+    }
+  }
+}
+
+function isKind(value: Kinds | StepKey): value is Kinds {
+  return Object.values(Kinds).includes(value as Kinds)
 }

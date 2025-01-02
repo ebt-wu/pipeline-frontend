@@ -196,7 +196,8 @@
                         }"
                         [isOpenArrowShown]="
                           resourceRef.status === serviceStatus.CREATED ||
-                          resourceRef.status === serviceStatus.NOT_MANAGED
+                          resourceRef.status === serviceStatus.NOT_MANAGED ||
+                          resourceRef.status === serviceStatus.FAILING_CREATION
                         "
                         (detailsOpened)="openDetailsFromCategorySlot($event)"></app-category-slot>
 

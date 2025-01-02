@@ -74,7 +74,11 @@ export class CategorySlotComponent {
   protected readonly serviceStatus = ServiceStatus
 
   onDetailsOpened() {
-    if (!this.statusIconConfig || !this.statusIconConfig.statusIconType) {
+    if (
+      !this.statusIconConfig ||
+      !this.statusIconConfig.statusIconType ||
+      this.statusIconConfig.statusIconType === ServiceStatus.NOT_FOUND
+    ) {
       return
     }
     this.detailsOpened.emit(this.category)
