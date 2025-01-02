@@ -134,6 +134,7 @@ export class ServiceDetailsSkeletonComponent implements OnInit, OnChanges {
   }
 
   async ngOnChanges() {
+    this.errorKinds.set(this.pipeline.resourceRefs.filter((ref) => ref.error).map((ref) => ref.kind))
     this.servicesToShow.set(this.findAndSortServicesFromCategory(this.activeCategory))
 
     this.serviceDetailsLoading.set(true)
