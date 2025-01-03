@@ -253,8 +253,7 @@ export class OldServiceDetailsSkeletonComponent implements OnInit {
           this.serviceDetails.set(oscRegistration)
           break
         case Kinds.SONAR_QUBE_PROJECT:
-          // TODO: call sonarqube service
-          // this.serviceDetails.set(await firstValueFrom(this.api.sonarService.getSonarqubeProject()))
+          this.serviceDetails.set(await firstValueFrom(this.api.sonarService.getSonarqubeProject(name)))
           break
         case StepKey.BLACK_DUCK_HUB:
           const blackduckDetails = this.pipeline.notManagedServices[StepKey.BLACK_DUCK_HUB]
