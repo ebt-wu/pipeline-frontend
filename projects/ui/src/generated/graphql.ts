@@ -571,12 +571,12 @@ export type SecretMetadata = {
 
 export type SonarQubeProject = {
   __typename?: 'SonarQubeProject'
+  configString?: Maybe<Scalars['String']['output']>
   host: Scalars['String']['output']
   name: Scalars['String']['output']
   pullRequest?: Maybe<SonarQubePullRequest>
   repositoryRef: Scalars['String']['output']
   secretPath: Scalars['String']['output']
-  sonarQubeConfigurationCustomValues?: Maybe<Scalars['String']['output']>
 }
 
 export type SonarQubeProjectCreatePayload = {
@@ -681,6 +681,7 @@ export type DeletePipelineMutationVariables = Exact<{
 }>
 
 export type DeletePipelineMutation = { __typename?: 'Mutation'; deletePipeline?: string | null }
+
 export type DeleteNotManagedServiceMutationVariables = Exact<{
   stepKey: Scalars['String']['input']
   projectId: Scalars['String']['input']
@@ -1073,7 +1074,7 @@ export type CreateGithubActionsMutationVariables = Exact<{
   componentId: Scalars['String']['input']
   githubInstance: Scalars['String']['input']
   githubOrganization: Scalars['String']['input']
-  secretPath: Scalars['String']['input']
+  secretPath?: InputMaybe<Scalars['String']['input']>
 }>
 
 export type CreateGithubActionsMutation = { __typename?: 'Mutation'; createGithubActions?: string | null }
@@ -1210,4 +1211,21 @@ export type GetJiraProjectsQuery = {
     jiraInstanceUrl?: string | null
     resourceName?: string | null
   } | null> | null
+}
+
+export type GetSonarQubeProjectQueryVariables = Exact<{
+  projectId: Scalars['String']['input']
+  resourceName: Scalars['String']['input']
+}>
+
+export type GetSonarQubeProjectQuery = {
+  __typename?: 'Query'
+  getSonarQubeProject?: {
+    __typename?: 'SonarQubeProject'
+    host: string
+    name: string
+    repositoryRef: string
+    secretPath: string
+    configString?: string | null
+  } | null
 }

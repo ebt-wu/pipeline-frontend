@@ -22,7 +22,7 @@ export class SonarServiceDetailsComponent implements OnInit {
   @Input() serviceDetails: {
     secretPath: string
     host: string
-    projectKey: string
+    name: string
     creationTimestamp: string
     configString: string
   }
@@ -50,5 +50,9 @@ export class SonarServiceDetailsComponent implements OnInit {
     this.pendingShowInVault.set(true)
     window.open(await this.secretService.getVaultUrlOfSecret(vaultPath), '_blank', 'noopener, noreferrer')
     this.pendingShowInVault.set(false)
+  }
+
+  getSonarProjectLink(serviceDetails: { host: string; name: string }) {
+    return `${serviceDetails.host}/dashboard?id=${serviceDetails.name}`
   }
 }

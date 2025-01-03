@@ -10,12 +10,13 @@
       (click)="openDocumentation()"
       fd-button></button>
   </div>
-  <a [href]="serviceDetails.host" target="_blank" rel="noopener noreferrer">
-    {{ serviceDetails.projectKey }}
+  <a [href]="getSonarProjectLink(serviceDetails)" target="_blank" rel="noopener noreferrer">
+    {{ serviceDetails.name }}
   </a>
+  <div class="top-margin">
+    <b>sonar-project.properties</b>
+  </div>
   <div class="code-box">
-    <div class="code">
-      {{ serviceDetails.configString }}
-    </div>
+    <div class="code">{{ serviceDetails.configString?.trim() }}</div>
   </div>
 </div>

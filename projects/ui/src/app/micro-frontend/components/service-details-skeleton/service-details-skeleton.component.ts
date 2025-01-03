@@ -224,7 +224,6 @@ export class ServiceDetailsSkeletonComponent implements OnInit, OnChanges {
             return `https://${jiraItem.jiraInstanceUrl}/projects/${jiraItem.projectKey}`
           }
         case Kinds.SONAR_QUBE_PROJECT:
-          // TODO check if this is correct
           return `${(serviceDetailsForKind as SonarQubeProject).host}/dashboard?id=${(serviceDetailsForKind as SonarQubeProject).name}`
       }
     } catch (err) {
@@ -295,9 +294,7 @@ export class ServiceDetailsSkeletonComponent implements OnInit, OnChanges {
           return await firstValueFrom(this.api.openSourceComplianceService.getOpenSourceComplianceRegistration())
 
         case Kinds.SONAR_QUBE_PROJECT:
-          // TODO: call sonarqube service
-          return {} as SonarQubeProject
-        // this.serviceDetails.set(await firstValueFrom(this.api.sonarService.getSonarqubeProject()))
+          return await firstValueFrom(this.api.sonarService.getSonarqubeProject(name))
 
         case StepKey.BLACK_DUCK_HUB:
           return this.pipeline.notManagedServices[StepKey.BLACK_DUCK_HUB]

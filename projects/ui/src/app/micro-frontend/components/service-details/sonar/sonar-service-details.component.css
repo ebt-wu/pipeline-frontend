@@ -26,3 +26,7 @@
   overflow-x: auto;
   white-space: pre-wrap;
 }
+
+.top-margin {
+  margin-top: 1rem;
+}

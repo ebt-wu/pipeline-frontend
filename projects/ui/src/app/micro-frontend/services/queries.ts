@@ -578,3 +578,15 @@ export const GET_JIRA_PROJECTS = gql`
     }
   }
 `
+
+export const GET_SONARQUBE_PROJECT = gql`
+  query GetSonarQubeProject($projectId: String!, $resourceName: String!) {
+    getSonarQubeProject(projectId: $projectId, resourceName: $resourceName) {
+      host
+      name
+      repositoryRef
+      secretPath
+      configString
+    }
+  }
+`
