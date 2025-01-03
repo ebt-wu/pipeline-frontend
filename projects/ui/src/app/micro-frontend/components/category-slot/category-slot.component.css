@@ -28,6 +28,12 @@
         gap: 8px;
         font-size: 16px;
 
+        .name-and-label {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
 
         .icon {
             color: var(--sapNeutralColor);
@@ -44,11 +50,6 @@
         .debug-details {
             font-size: 12px;
         }
-    }
-
-    .info-label {
-        margin-left: 0.8rem;
-        margin-top: -1.35rem;
     }
 
     .coming-soon-label {

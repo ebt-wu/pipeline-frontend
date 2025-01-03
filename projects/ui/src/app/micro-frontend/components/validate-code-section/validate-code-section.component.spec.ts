@@ -5,6 +5,9 @@ import { Categories, Kinds, ServiceStatus, StepKey } from '@enums'
 import { KindName } from '@constants'
 import { createPipelineForTests } from '../../../../../test-utils'
 import { PolicyService } from '../../services/policy.service'
+import { ColorAccent } from '@fundamental-ngx/core'
+import { OpenSourceComplianceService } from '../../services/open-source-compliance.service'
+import { MockService } from 'ng-mocks'
 
 describe('ValidateCodeSectionComponent', () => {
   let component: ValidateCodeSectionComponent
@@ -19,6 +22,10 @@ describe('ValidateCodeSectionComponent', () => {
           useValue: {
             canUserSetUpPipeline: () => Promise.resolve(true),
           },
+        },
+        {
+          provide: OpenSourceComplianceService,
+          useValue: MockService(OpenSourceComplianceService),
         },
       ],
     }).compileComponents()
@@ -94,8 +101,8 @@ describe('ValidateCodeSectionComponent', () => {
     })
   })
 
-  describe('isStatusTagShown', () => {
-    it('should show statusTag for Static Security Checks when only Fortify is present', () => {
+  describe('generateStatusTag', () => {
+    it('should show statusTag with Not Managed label for Static Security Checks when only Fortify is present', async () => {
       component = fixture.componentInstance
       component.pipeline = createPipelineForTests([
         { kind: Kinds.CUMULUS_PIPELINE },
@@ -106,49 +113,47 @@ describe('ValidateCodeSectionComponent', () => {
         },
       ])
       fixture.detectChanges()
-      expect(component.isStatusTagShown(Categories.STATIC_SECURITY_CHECKS)).toBeTruthy()
+      const result = await component.generateStatusTag(Categories.STATIC_SECURITY_CHECKS)
+      expect(result.isStatusTagShown).toBeTruthy()
+      expect(result.statusTagText).toEqual('Not Managed')
     })
-    it('should show statusTag for Static Security Checks if GHAS is present', () => {
-      component = fixture.componentInstance
-      component.pipeline = createPipelineForTests([
-        { kind: Kinds.GITHUB_ADVANCED_SECURITY },
-        {
-          kind: StepKey.FORTIFY,
-          status: ServiceStatus.NOT_MANAGED,
-        },
-        { kind: Kinds.CUMULUS_PIPELINE },
-        { kind: Kinds.STAGING_SERVICE_CREDENTIAL },
-      ])
-      fixture.detectChanges()
-      expect(component.isStatusTagShown(Categories.STATIC_SECURITY_CHECKS)).toBeTruthy()
-    })
-
-    it('should not show statusTag for Static Security Checks if no static security checks are present', () => {
+    it('should not show statusTag for Static Security Checks if no static security checks are present', async () => {
       component = fixture.componentInstance
       component.pipeline = createPipelineForTests()
       fixture.detectChanges()
-      expect(component.isStatusTagShown(Categories.STATIC_SECURITY_CHECKS)).toBeFalsy()
+      const result = await component.generateStatusTag(Categories.STATIC_SECURITY_CHECKS)
+      expect(result.isStatusTagShown).toBeFalsy()
+      expect(result.statusTagText).toBeFalsy()
     })
 
-    it('should not show statusTag for Static Code Checks case when SonarQube is not there', () => {
+    it('should not show statusTag for Static Code Checks case when SonarQube is not there', async () => {
       component = fixture.componentInstance
       component.pipeline = createPipelineForTests()
       fixture.detectChanges()
-      expect(component.isStatusTagShown(Categories.STATIC_CODE_CHECKS)).toBeFalsy()
+
+      const result = await component.generateStatusTag(Categories.STATIC_CODE_CHECKS)
+      expect(result.isStatusTagShown).toBeFalsy()
+      expect(result.statusTagText).toBeFalsy()
     })
-    it('should not show statusTag not managed for Static Code Checks case when SonarQube is there, since SonarQube is managed', () => {
+    it('should not show statusTag not managed for Static Code Checks case when SonarQube is there, since SonarQube is managed', async () => {
       component = fixture.componentInstance
       component.pipeline = createPipelineForTests([{ kind: Kinds.SONAR_QUBE_PROJECT }])
       fixture.detectChanges()
-      expect(component.isStatusTagShown(Categories.STATIC_CODE_CHECKS)).toBeFalsy()
+
+      const result = await component.generateStatusTag(Categories.STATIC_CODE_CHECKS)
+      expect(result.isStatusTagShown).toBeFalsy()
+      expect(result.statusTagText).toBeFalsy()
     })
-    it('should show statusTag for Open Source Checks when Mend is present and no OSC', () => {
+    it('should show statusTag for Open Source Checks when Mend is present and no OSC', async () => {
       component = fixture.componentInstance
       component.pipeline = createPipelineForTests([{ kind: StepKey.WHITE_SOURCE, status: ServiceStatus.NOT_MANAGED }])
       fixture.detectChanges()
-      expect(component.isStatusTagShown(Categories.OPEN_SOURCE_CHECKS)).toBeTruthy()
+
+      const result = await component.generateStatusTag(Categories.OPEN_SOURCE_CHECKS)
+      expect(result.isStatusTagShown).toBeTruthy()
+      expect(result.statusTagText).toEqual('Not Managed')
     })
-    it('should show statusTag for Open Source Checks when Mend and OSC are both present', () => {
+    it("shouldn't show statusTag for Open Source Checks when Mend and OSC are both present and PPMS SCV is provided", async () => {
       component = fixture.componentInstance
       component.pipeline = createPipelineForTests([
         {
@@ -157,14 +162,56 @@ describe('ValidateCodeSectionComponent', () => {
         },
         { kind: Kinds.OPEN_SOURCE_COMPLIANCE },
       ])
+      component.isPPMSScvProvided = jest.fn().mockReturnValue(true)
       fixture.detectChanges()
-      expect(component.isStatusTagShown(Categories.OPEN_SOURCE_CHECKS)).toBeTruthy()
+      const result = await component.generateStatusTag(Categories.OPEN_SOURCE_CHECKS)
+      expect(result.isStatusTagShown).toBeFalsy()
+      expect(result.statusTagText).toBeFalsy()
     })
-    it('should not show statusTag for Open Source Checks when no resources present', () => {
+
+    it("should show statusTag with Not Compliant label for Open Source Checks when Mend and OSC are both present and PPMS SCV isn't provided", async () => {
+      component = fixture.componentInstance
+      component.pipeline = createPipelineForTests([
+        {
+          kind: StepKey.WHITE_SOURCE,
+          status: ServiceStatus.NOT_MANAGED,
+        },
+        { kind: Kinds.OPEN_SOURCE_COMPLIANCE },
+      ])
+      component.isPPMSScvProvided = jest.fn().mockReturnValue(false)
+      fixture.detectChanges()
+      const result = await component.generateStatusTag(Categories.OPEN_SOURCE_CHECKS)
+      expect(result.isStatusTagShown).toBeTruthy()
+      expect(result.statusTagText).toEqual('Not Compliant')
+      expect(result.statusTagBackgroundColor).toEqual(1 as ColorAccent)
+    })
+    it('should not show statusTag for Open Source Checks when no resources present', async () => {
       component = fixture.componentInstance
       component.pipeline = createPipelineForTests([])
       fixture.detectChanges()
-      expect(component.isStatusTagShown(Categories.OPEN_SOURCE_CHECKS)).toBeFalsy()
+      expect((await component.generateStatusTag(Categories.OPEN_SOURCE_CHECKS)).isStatusTagShown).toBeFalsy()
+    })
+
+    it('statusTagConfig for OSC should be have text Not Compliant if OSC is setup without SCV', async () => {
+      component = fixture.componentInstance
+      component.pipeline = createPipelineForTests([{ kind: Kinds.OPEN_SOURCE_COMPLIANCE }])
+      component.isPPMSScvProvided = jest.fn().mockReturnValue(false)
+      await component.ngOnChanges()
+      const result = await component.generateStatusTag(Categories.OPEN_SOURCE_CHECKS)
+      expect(result.statusTagText).toEqual('Not Compliant')
+      expect(result.statusTagBackgroundColor).toEqual(1 as ColorAccent)
+      expect(result.statusTagInlineHelpText).toEqual(
+        "Missing PPMS info. You shouldn't release this component to customers.",
+      )
+    })
+    it('statusTagConfig for OSC should be empty if only OSC is set up with SCV', async () => {
+      component = fixture.componentInstance
+      component.pipeline = createPipelineForTests([{ kind: Kinds.OPEN_SOURCE_COMPLIANCE }])
+      component.isPPMSScvProvided = jest.fn().mockReturnValue(true)
+      await component.ngOnChanges()
+      const result = await component.generateStatusTag(Categories.OPEN_SOURCE_CHECKS)
+      expect(result.statusTagText).toBeFalsy()
+      expect(result.statusTagInlineHelpText).toBeFalsy()
     })
   })
   describe('generateConfiguredServicesText', () => {

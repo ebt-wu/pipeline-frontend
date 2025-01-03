@@ -3,6 +3,7 @@ import { AuthorizationModule } from '@dxp/ngx-core/authorization'
 import {
   BusyIndicatorComponent,
   ButtonComponent,
+  ColorAccent,
   IconComponent,
   InfoLabelComponent,
   InlineHelpDirective,
@@ -56,6 +57,8 @@ export class CategorySlotComponent {
   @Input() statusTagConfig?: {
     isStatusTagShown: boolean
     statusTagText: string
+    statusTagBackgroundColor?: ColorAccent
+    statusTagInlineHelpText?: string
   }
   @Input() debugModeConfig? = { isDebugModeEnabled: false, debugModeText: 'Debug Mode' }
   @Input() isLoading?: boolean = false
@@ -73,6 +76,7 @@ export class CategorySlotComponent {
 
   protected readonly serviceStatus = ServiceStatus
 
+  neutralColor = 10 as ColorAccent
   onDetailsOpened() {
     if (
       !this.statusIconConfig ||

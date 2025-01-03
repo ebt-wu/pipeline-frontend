@@ -34,13 +34,23 @@
       </span>
       <div class="category-container">
         <div class="category-name">
-          <div>
-            <strong>{{ category }}</strong>
-            <fd-icon
-              *ngIf="infoIconConfig && infoIconConfig.isIconShown"
-              class="icon"
-              glyph="hint"
-              [fd-inline-help]="infoIconConfig.iconInlineHelpText || null"></fd-icon>
+          <div class="name-and-label">
+            <div>
+              <strong>{{ category }}</strong>
+              <fd-icon
+                *ngIf="infoIconConfig && infoIconConfig.isIconShown"
+                class="icon"
+                glyph="hint"
+                [fd-inline-help]="infoIconConfig.iconInlineHelpText"
+                [disabled]="!infoIconConfig.iconInlineHelpText"></fd-icon>
+            </div>
+            <fd-info-label
+              class="info-label"
+              *ngIf="statusTagConfig && statusTagConfig.isStatusTagShown"
+              [label]="statusTagConfig.statusTagText"
+              [color]="statusTagConfig?.statusTagBackgroundColor || neutralColor"
+              [fd-inline-help]="statusTagConfig.statusTagInlineHelpText"
+              [disabled]="!statusTagConfig.statusTagInlineHelpText"></fd-info-label>
           </div>
           <div *ngIf="configuredServicesText" class="category-details">
             <span *ngIf="isServiceDetailOpen">{{ configuredServicesText | truncate: 28 }}</span>
@@ -50,13 +60,6 @@
             </code>
           </div>
         </div>
-
-        <fd-info-label
-          class="info-label"
-          *ngIf="statusTagConfig && statusTagConfig.isStatusTagShown"
-          [label]="statusTagConfig.statusTagText"
-          [color]="10"
-          data-testid="not-managed-info-label"></fd-info-label>
       </div>
 
       <div class="padding-right flex-container">

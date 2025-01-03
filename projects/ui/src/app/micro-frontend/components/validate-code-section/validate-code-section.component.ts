@@ -10,13 +10,15 @@ import {
   Output,
   signal,
 } from '@angular/core'
-import { FlexibleColumnLayout, FundamentalNgxCoreModule } from '@fundamental-ngx/core'
+import { ColorAccent, FlexibleColumnLayout, FundamentalNgxCoreModule } from '@fundamental-ngx/core'
 import { CategoryConfig, Pipeline, ResourceRef } from '@types'
 import { Categories, Kinds, ServiceStatus, Stages, StepKey } from '@enums'
 import { LuigiClient } from '@dxp/ngx-core/luigi'
 import { KindCategory, KindName, OrderedStepsByCategory } from '@constants'
 import { CategorySlotComponent } from '../category-slot/category-slot.component'
 import { PolicyService } from '../../services/policy.service'
+import { firstValueFrom } from 'rxjs'
+import { OpenSourceComplianceService } from '../../services/open-source-compliance.service'
 
 @Component({
   selector: 'app-validate-code-section',
@@ -40,6 +42,7 @@ export class ValidateCodeSectionComponent implements OnChanges, OnInit {
     private readonly luigiClient: LuigiClient,
     private readonly policyService: PolicyService,
     private readonly changeDetectorRef: ChangeDetectorRef,
+    private readonly openSourceComplianceService: OpenSourceComplianceService,
   ) {}
 
   async ngOnChanges() {
@@ -65,12 +68,7 @@ export class ValidateCodeSectionComponent implements OnChanges, OnInit {
           buttonAction: async () => this.openSetupDialog(Categories.STATIC_SECURITY_CHECKS),
           buttonTestId: 'add-static-security-checks-button',
         },
-        statusTagConfig: {
-          isStatusTagShown: (await this.isButtonShown(Categories.STATIC_SECURITY_CHECKS))
-            ? this.isStatusTagShown(Categories.STATIC_SECURITY_CHECKS)
-            : this.showWhenNoManagedServices(Categories.STATIC_SECURITY_CHECKS),
-          statusTagText: 'Not Managed',
-        },
+        statusTagConfig: await this.generateStatusTag(Categories.STATIC_SECURITY_CHECKS),
         statusIconConfig: {
           statusIconType: this.getStatusIconType(Categories.STATIC_SECURITY_CHECKS),
           statusIconInlineHelpText: null,
@@ -92,10 +90,7 @@ export class ValidateCodeSectionComponent implements OnChanges, OnInit {
           buttonAction: async () => this.openSetupDialog(Categories.STATIC_CODE_CHECKS),
           buttonTestId: 'add-static-code-checks-button',
         },
-        statusTagConfig: {
-          isStatusTagShown: this.isStatusTagShown(Categories.STATIC_CODE_CHECKS),
-          statusTagText: null,
-        },
+        statusTagConfig: await this.generateStatusTag(Categories.STATIC_CODE_CHECKS),
         infoIconConfig: {
           isIconShown: this.pipelineStepsByCategory.get(Categories.STATIC_CODE_CHECKS).length === 0,
           iconInlineHelpText: 'Configure Static Code Check services like SonarQube',
@@ -115,12 +110,7 @@ export class ValidateCodeSectionComponent implements OnChanges, OnInit {
           buttonAction: async () => this.openSetupDialog(Categories.OPEN_SOURCE_CHECKS),
           buttonTestId: 'add-open-source-checks-button',
         },
-        statusTagConfig: {
-          isStatusTagShown: (await this.isButtonShown(Categories.OPEN_SOURCE_CHECKS))
-            ? this.isStatusTagShown(Categories.OPEN_SOURCE_CHECKS)
-            : this.showWhenNoManagedServices(Categories.OPEN_SOURCE_CHECKS),
-          statusTagText: 'Not Managed',
-        },
+        statusTagConfig: await this.generateStatusTag(Categories.OPEN_SOURCE_CHECKS),
         rightSideText:
           (await this.isButtonShown(Categories.OPEN_SOURCE_CHECKS)) &&
           !this.pipelineStepsByCategory.get(Categories.OPEN_SOURCE_CHECKS)
@@ -204,28 +194,46 @@ export class ValidateCodeSectionComponent implements OnChanges, OnInit {
     return false
   }
 
-  isStatusTagShown(category: Categories) {
+  async generateStatusTag(category: Categories) {
     const stepsOfCategory = this.pipelineStepsByCategory.get(category)
 
     switch (category) {
       case Categories.STATIC_SECURITY_CHECKS: {
-        if (stepsOfCategory.some((ref) => ref.status === ServiceStatus.NOT_MANAGED)) {
+        if (
+          stepsOfCategory.some((ref) => ref.status === ServiceStatus.NOT_MANAGED) &&
+          this.showWhenNoManagedServices(Categories.STATIC_SECURITY_CHECKS)
+        ) {
           // if there are any not managed services, show the status tag
-          return true
+          return { isStatusTagShown: true, statusTagText: 'Not Managed', statusTagBackgroundColor: 10 as ColorAccent }
         }
         break
       }
       case Categories.STATIC_CODE_CHECKS:
-        return false
+        return { isStatusTagShown: false, statusTagText: null }
       case Categories.OPEN_SOURCE_CHECKS:
-        if (stepsOfCategory.some((ref) => ref.status === ServiceStatus.NOT_MANAGED)) {
-          // if there are any not managed services, show the status tag
-          return true
+        if (
+          stepsOfCategory.some((ref) => ref.status === ServiceStatus.NOT_MANAGED) &&
+          this.showWhenNoManagedServices(Categories.OPEN_SOURCE_CHECKS)
+        ) {
+          return { isStatusTagShown: true, statusTagText: 'Not Managed', statusTagBackgroundColor: 10 as ColorAccent }
+        } else if (stepsOfCategory.some((ref) => ref.kind === Kinds.OPEN_SOURCE_COMPLIANCE)) {
+          if (!(await this.isPPMSScvProvided())) {
+            return {
+              isStatusTagShown: true,
+              statusTagText: 'Not Compliant',
+              statusTagBackgroundColor: 1 as ColorAccent,
+              statusTagInlineHelpText: "Missing PPMS info. You shouldn't release this component to customers.",
+            }
+          } else {
+            return {
+              isStatusTagShown: false,
+              statusTagText: null,
+            }
+          }
         }
-        break
     }
 
-    return false
+    return { isStatusTagShown: false, statusTagText: null }
   }
   managedNotManagedCount(category: Categories) {
     const stepsOfCategory = this.pipelineStepsByCategory.get(category)
@@ -280,5 +288,10 @@ export class ValidateCodeSectionComponent implements OnChanges, OnInit {
       (a, b) => OrderedStepsByCategory[a.kind] - OrderedStepsByCategory[b.kind],
     )
     return sortedSteps.map((ref: ResourceRef) => KindName[ref.kind as keyof typeof KindName]).join(', ')
+  }
+
+  async isPPMSScvProvided() {
+    const oscDetails = await firstValueFrom(this.openSourceComplianceService.getOpenSourceComplianceRegistration())
+    return !!oscDetails.ppmsScv
   }
 }

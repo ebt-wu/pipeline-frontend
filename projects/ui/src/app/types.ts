@@ -1,5 +1,6 @@
 import { GitHubAdvancedSecurityGetPayload, NotManagedServices, PipelineType } from '@generated/graphql'
 import { GithubInstances, JiraProjectTypes, Kinds, OSCPlatforms, ServiceStatus, StepKey, ValidationTools } from '@enums'
+import { ColorAccent } from '@fundamental-ngx/core'
 
 export type AddPrefixToTypeProperties<T, P extends string> = {
   [K in keyof T as `${P}${Capitalize<string & K>}`]: T[K]
@@ -61,6 +62,8 @@ export interface CategoryConfig {
   statusTagConfig?: {
     isStatusTagShown: boolean
     statusTagText: string
+    statusTagBackgroundColor?: ColorAccent
+    statusTagInlineHelpText?: string
   }
   statusIconConfig?: {
     statusIconType: ServiceStatus

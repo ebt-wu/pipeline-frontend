@@ -2,6 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing'
 import { CategorySlotComponent } from './category-slot.component'
 import { AuthorizationTestingModule } from '@dxp/ngx-core/authorization'
 import { Categories, ServiceStatus } from '@enums'
+import { ColorAccent } from '@fundamental-ngx/core'
 
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 
@@ -88,6 +89,7 @@ describe('CategorySlotComponent', () => {
     component.statusTagConfig = {
       isStatusTagShown: true,
       statusTagText: 'Label Text',
+      statusTagBackgroundColor: 10 as ColorAccent,
     }
     component.category = Categories.COMPLIANCE
     fixture.detectChanges()
@@ -103,5 +105,20 @@ describe('CategorySlotComponent', () => {
     const componentHTML: HTMLElement = fixture.nativeElement
     const label = componentHTML.querySelector('fd-info-label')
     expect(label).toBeFalsy()
+  })
+  it('should have an inline help text with the correct color on status tag if provided', () => {
+    component.statusTagConfig = {
+      isStatusTagShown: true,
+      statusTagText: 'Label Text',
+      statusTagBackgroundColor: 10 as ColorAccent,
+      statusTagInlineHelpText: 'Inline Help Text',
+    }
+    component.category = Categories.COMPLIANCE
+    fixture.detectChanges()
+    const componentHTML: HTMLElement = fixture.nativeElement
+    const label = componentHTML.querySelector('fd-info-label')
+    expect(label).toBeTruthy()
+    expect(label.getAttribute('ng-reflect-inline-help-content')).toEqual('Inline Help Text')
+    expect(label.getAttribute('ng-reflect-color')).toEqual('10')
   })
 })
