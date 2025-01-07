@@ -19,16 +19,21 @@ export type FlagKeys = (typeof Flags)[keyof typeof Flags]
 export class FeatureFlagService {
   constructor(private readonly luigiService: DxpLuigiContextService) {}
 
-  async isGithubActionsEnabled(projectId: string) {
-    return (await this.getFlagValue(Flags.GITHUB_ACTIONS_ENABLED, projectId)) || this.isTestTenant()
+  async isGithubActionsEnabled() {
+    const context = await this.luigiService.getContextAsync()
+    return (await this.getFlagValue(Flags.GITHUB_ACTIONS_ENABLED, context.projectId)) || this.isTestTenant()
   }
 
-  async isOscEnabled(projectId: string) {
-    return (await this.getFlagValue(Flags.OSC_ENABLED, projectId)) || this.isTestTenant()
+  async isOscEnabled() {
+    const context = await this.luigiService.getContextAsync()
+    return (await this.getFlagValue(Flags.OSC_ENABLED, context.projectId)) || this.isTestTenant()
   }
 
-  async isMultipleServiceDetailsUiEnabled(projectId: string): Promise<boolean> {
-    return (await this.getFlagValue(Flags.MULTIPLE_SERVICE_DETAILS_UI_ENABLED, projectId)) || this.isTestTenant()
+  async isMultipleServiceDetailsUiEnabled(): Promise<boolean> {
+    const context = await this.luigiService.getContextAsync()
+    return (
+      (await this.getFlagValue(Flags.MULTIPLE_SERVICE_DETAILS_UI_ENABLED, context.projectId)) || this.isTestTenant()
+    )
   }
 
   isTestTenant() {

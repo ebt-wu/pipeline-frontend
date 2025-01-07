@@ -88,6 +88,8 @@ export class PipelineComponent implements OnInit, OnDestroy {
   @Input() pipeline$!: Observable<Pipeline>
   isGithubActionsEnabledAlready$!: Observable<GithubActionsGetPayload>
 
+  loading = signal(true)
+
   isBuildStageOpen = signal(false)
   isBuildStageSetup = signal(false)
   isBuildPipelineSetupAndCreated = signal(false)
@@ -158,8 +160,6 @@ export class PipelineComponent implements OnInit, OnDestroy {
   }
 
   async ngOnInit() {
-    await this.getExtensionClasses()
-
     this.githubMetadata = await this.api.githubService.getGithubMetadata()
 
     const context = await this.luigiService.getContextAsync()
@@ -169,13 +169,13 @@ export class PipelineComponent implements OnInit, OnDestroy {
     this.canUserEditCredentials = await this.policyService.canUserEditCredentials()
 
     // Only show GHA and GHAS if their feature flags are toggled on
-    this.showGithubActions.set(await this.featureFlagService.isGithubActionsEnabled(context.projectId))
-    this.showOSC.set(await this.featureFlagService.isOscEnabled(context.projectId))
-    this.isMultipleServiceDetailUiEnabled.set(
-      await this.featureFlagService.isMultipleServiceDetailsUiEnabled(context.projectId),
-    )
+    this.showGithubActions.set(await this.featureFlagService.isGithubActionsEnabled())
+    this.showOSC.set(await this.featureFlagService.isOscEnabled())
+    this.isMultipleServiceDetailUiEnabled.set(await this.featureFlagService.isMultipleServiceDetailsUiEnabled())
 
-    await this.checkSugarAppInstallation()
+    this.loading.set(false)
+
+    await Promise.all([this.getExtensionClasses(), this.checkSugarAppInstallation()])
 
     this.isGithubActionsEnabledAlready$ = this.api.githubActionsService.getGithubActionsCrossNamespace(
       this.githubMetadata.githubInstance,

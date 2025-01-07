@@ -340,10 +340,9 @@ export class SetupBuildComponent implements OnInit, OnDestroy {
       name: 'orchestrator',
       message: '',
       choices: async () => {
-        const context = await this.luigiService.getContextAsync()
         const orchestrators: Array<Orchestrators> = []
 
-        if (await this.featureFlagService.isGithubActionsEnabled(context.projectId)) {
+        if (await this.featureFlagService.isGithubActionsEnabled()) {
           orchestrators.push(Orchestrators.GITHUB_ACTIONS_WORKFLOW)
         }
 
@@ -380,8 +379,7 @@ export class SetupBuildComponent implements OnInit, OnDestroy {
       }
     })
 
-    const context = await this.luigiService.getContextAsync()
-    const isGithubActionsEnabled = await this.featureFlagService.isGithubActionsEnabled(context.projectId)
+    const isGithubActionsEnabled = await this.featureFlagService.isGithubActionsEnabled()
     if (isGithubActionsEnabled) {
       this.defaultOrchestrator = Orchestrators.GITHUB_ACTIONS_WORKFLOW
     }

@@ -1,4 +1,4 @@
-<div class="variable-overwrites" *ngIf="pipeline$ | async as pipeline; else skeleton">
+<div class="variable-overwrites" *ngIf="!loading() && pipeline$ | async as pipeline; else skeleton">
   <fdp-dynamic-page ariaLabel="CI/CD Setup">
     <fdp-dynamic-page-title title="CI/CD Setup">
       <fdp-dynamic-page-global-actions>
