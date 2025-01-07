@@ -37,7 +37,7 @@ import { toolsSvg } from 'projects/ui/src/assets/ts-svg/tools'
 import { JiraService } from '../../../services/jira.service'
 import { PlatformFormGeneratorCustomInfoBoxComponent } from '../../../components/form-generator/form-generator-info-box/form-generator-info-box.component'
 import { DxpContext } from '@dxp/ngx-core/common'
-import { JiraProject, NotManagedServices } from '@generated/graphql'
+import { JiraProject, NotManagedServices, PpmsFoss } from '@generated/graphql'
 
 enum OSCSetupSteps {
   PREREQUISITES_INFO = 'PREREQUISITES_INFO',
@@ -91,6 +91,7 @@ export class SetupOSCModalComponent implements OnInit {
   context = signal({} as DxpContext)
   isBuildPipelineSetup = signal(false)
   isxMakePresent = signal(false)
+  ppmsFossData = signal(null as PpmsFoss)
 
   setupPrerequisitesFormGroup = new FormGroup({
     languageSelection: new FormControl(null as ValidationLanguage, Validators.required),
@@ -326,6 +327,7 @@ export class SetupOSCModalComponent implements OnInit {
       name: 'ppmsSoftwareComponentVersion',
       message: 'PPMS Software Component Version',
       placeholder: ' ',
+      default: () => (this.ppmsFossData() ? this.ppmsFossData().scvId : ''),
     },
     {
       type: 'message-strip',
@@ -369,12 +371,12 @@ export class SetupOSCModalComponent implements OnInit {
     this.watch$ = this.pipelineService.combinePipelineWithNotManagedServices(watchPipeline$, watchNotManagedServices$)
 
     const resourceRefs = (await firstValueFrom(this.watch$)).resourceRefs
-
     this.isxMakePresent.set(resourceRefs.some((ref) => ref.kind === StepKey.XMAKE))
     if (this.isxMakePresent()) this.setupPrerequisitesFormGroup.controls.xMakeOption.setValue('Yes')
 
     this.isBuildPipelineSetup.set(this.pipelineService.isBuildPipelineSetup(resourceRefs))
     this.jiraProjects.set(await firstValueFrom(this.jiraService.getJiraProjects()))
+    this.ppmsFossData.set((await firstValueFrom(this.watch$)).notManagedServices?.ppmsFoss)
 
     this.context.set(await this.luigiService.getContextAsync())
     const isRefreshPress = (await this.luigiClient

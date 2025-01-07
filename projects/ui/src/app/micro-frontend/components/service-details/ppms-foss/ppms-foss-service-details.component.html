@@ -18,9 +18,7 @@
       </a>
     </div>
     <div *ngIf="!serviceDetails.ppmsLightSCVURL">
-      <a [href]="serviceDetails.ppmsLightSCVURL" target="_blank" rel="noopener noreferrer">
-        {{ serviceDetails.scvId }} | {{ serviceDetails.scvName }}
-      </a>
+      <span>{{ serviceDetails.scvId }} | {{ serviceDetails.scvName }}</span>
     </div>
   </div>
 </div>

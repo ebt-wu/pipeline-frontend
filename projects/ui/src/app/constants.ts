@@ -92,7 +92,7 @@ export const KindStage = {
   [StepKey.CHECKMARX]: Stages.VALIDATE, // Static Security Check - upgradable to GHAS/CxOne
   [StepKey.FORTIFY]: Stages.VALIDATE, // Static Security Check - upgradable to GHAS/CxOne
   [StepKey.CX_ONE]: Stages.VALIDATE,
-  [StepKey.PPMS_FOSS]: Stages.VALIDATE,
+  [StepKey.PPMS_FOSS]: Stages.BUILD,
   [StepKey.WHITE_SOURCE]: Stages.VALIDATE,
   [StepKey.KUBERNETES]: Stages.DEPLOY,
   [StepKey.CLOUD_FOUNDRY]: Stages.DEPLOY,

@@ -201,7 +201,7 @@ export class PipelineService {
                 name: '',
               }
             })
-          pipeline.resourceRefs = [...notManagedResourceRefs, ...pipeline.resourceRefs]
+          pipeline.resourceRefs = [...pipeline.resourceRefs, ...notManagedResourceRefs]
         }
         // Return the updated pipeline with not managed services
         return { ...pipeline, notManagedServices }
