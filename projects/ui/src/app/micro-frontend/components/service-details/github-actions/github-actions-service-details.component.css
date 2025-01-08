@@ -1,28 +1,4 @@
-a {
-  color: var(--sapLinkColor);
-  text-decoration: none;
-}
-
-.flex-box {
-  display: flex;
-  align-items: center;
-}
-
-.top-margin {
-  margin-top: 1rem;
-}
-
-.bottom-margin {
-  margin-bottom: 0.5rem;
-}
-
-.left-margin {
-  margin-left: 0.4rem;
-}
-
-.auto-left-margin {
-  margin-left: auto;
-}
+@import "../base-service-details.component.css";
 
 .vault-button-padding {
   padding: 0;
@@ -41,9 +17,4 @@ a {
 
 .get-started-list {
   margin: 0;
-}
-
-.heading-margin {
-  margin-bottom: 0.5rem;
-  margin-top: 0.5rem;
 }

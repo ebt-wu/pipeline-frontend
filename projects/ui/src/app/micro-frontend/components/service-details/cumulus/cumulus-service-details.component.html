@@ -1,6 +1,6 @@
 <div *ngIf="!loading()">
   <div class="flex-box">
-    <h3>Cumulus Pipeline</h3>
+    <h3 class="heading-margin">Cumulus Pipeline</h3>
     <button
       class="auto-left-margin"
       role="button"
@@ -11,37 +11,43 @@
       fd-button></button>
   </div>
   <div class="flex-box">
-    <b>Pipeline ID</b>
-    <fd-icon
-      class="left-margin icon"
+    <strong>Pipeline ID</strong>
+    <button
+      fd-button
+      fdType="transparent"
+      class="left-margin"
       glyph="hint"
       placement="top"
       [fd-inline-help]="idHelp"
       [triggers]="['click']"
-      [closeOnOutsideClick]="true"></fd-icon>
+      [closeOnOutsideClick]="true"></button>
   </div>
   {{ serviceDetails.id }}
   <div class="flex-box top-margin">
     <b>Pipeline Key</b>
-    <fd-icon
-      class="left-margin icon"
+    <button
+      fd-button
+      fdType="transparent"
+      class="left-margin"
       glyph="hint"
       placement="top"
       [fd-inline-help]="keyHelp"
       [triggers]="['click']"
-      [closeOnOutsideClick]="true"></fd-icon>
+      [closeOnOutsideClick]="true"></button>
   </div>
   {{ serviceDetails.key }}
   <div *dxpRequiredPolicies="['member', 'owner', 'vault_maintainer']; operator: 'or'">
-    <div class="flex-box top-margin">
-      <h3>Cumulus Credentials</h3>
-      <fd-icon
-        class="left-margin icon"
+    <div class="flex-box">
+      <h3 class="heading-margin">Cumulus Credentials</h3>
+      <button
+        fd-button
+        fdType="transparent"
+        class="left-margin"
         glyph="hint"
         placement="top"
         [fd-inline-help]="credentialsHelp"
         [triggers]="['click']"
-        [closeOnOutsideClick]="true"></fd-icon>
+        [closeOnOutsideClick]="true"></button>
       <br />
     </div>
     <div>
@@ -69,7 +75,6 @@
     <a
       class="link"
       href="https://github.wdf.sap.corp/pages/ContinuousDelivery/piper-doc/steps/sapCumulusUpload/"
-      rel="noopener noreferrer"
       target="_blank"
       rel="noopener noreferrer">
       upload your pipeline's results
@@ -82,12 +87,7 @@
 <ng-template #keyHelp>
   <div>
     Use this key to
-    <a
-      class="link"
-      href="https://wiki.one.int.sap/wiki/x/iK5Yh"
-      rel="noopener noreferrer"
-      target="_blank"
-      rel="noopener noreferrer">
+    <a class="link" href="https://wiki.one.int.sap/wiki/x/iK5Yh" target="_blank" rel="noopener noreferrer">
       add your pipeline to Sirius
     </a>
     <br />

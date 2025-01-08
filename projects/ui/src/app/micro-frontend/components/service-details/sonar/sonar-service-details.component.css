@@ -1,9 +1,5 @@
 @import '../base-service-details.component.css';
 
-.flex-box {
-  align-items: center;
-}
-
 .code-box {
   background: var(--sapBackgroundColor);
   border: 1px solid var(--sapObjectHeader_BorderColor);
@@ -25,8 +21,4 @@
   overflow: auto;
   overflow-x: auto;
   white-space: pre-wrap;
-}
-
-.top-margin {
-  margin-top: 1rem;
 }

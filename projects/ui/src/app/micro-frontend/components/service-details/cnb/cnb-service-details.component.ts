@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common'
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core'
-import { BusyIndicatorComponent, FundamentalNgxCoreModule, InlineHelpDirective } from '@fundamental-ngx/core'
+import { FundamentalNgxCoreModule } from '@fundamental-ngx/core'
 import { AuthorizationModule } from '@dxp/ngx-core/authorization'
 import { Cnb } from '@generated/graphql'
 
@@ -9,7 +9,7 @@ import { Cnb } from '@generated/graphql'
   standalone: true,
   selector: 'app-cnb-service-details',
   templateUrl: './cnb-service-details.component.html',
-  imports: [BusyIndicatorComponent, CommonModule, FundamentalNgxCoreModule, AuthorizationModule, InlineHelpDirective],
+  imports: [CommonModule, FundamentalNgxCoreModule, AuthorizationModule],
   styleUrl: './cnb-service-details.component.css',
 })
 export class CnbServiceDetailsComponent {

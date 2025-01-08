@@ -1,8 +1,8 @@
 <div *ngIf="!loading()">
   <div class="flex-box">
     <div>
-      <h3>Enabled for GitHub Repository</h3>
-      <a [href]="serviceDetails.repoUrl" fd-link rel="noopener noreferrer" target="_blank" rel="noopener noreferrer">
+      <h3 class="heading-margin">Enabled for GitHub Repository</h3>
+      <a [href]="serviceDetails.repoUrl" fd-link rel="noopener noreferrer" target="_blank">
         {{ serviceDetails.githubOrganization }}/{{ serviceDetails.githubRepoName }}
       </a>
     </div>
@@ -18,23 +18,24 @@
   </div>
   <div *dxpRequiredPolicies="['member', 'owner', 'vault_maintainer']; operator: 'or'">
     <div *ngIf="cumulusInfo && cumulusInfo.id">
-      <h3>Cumulus Pipeline</h3>
+      <h3 class="heading-margin">Cumulus Pipeline</h3>
       <div class="flex-box">
         <strong>Pipeline ID</strong>
-        <fd-icon
-          class="icon left-margin"
+        <button
+          [fdType]="'transparent'"
+          fd-button
+          class="left-margin"
           glyph="hint"
           placement="top"
           [fd-inline-help]="pipelineIdPopover"
           [triggers]="['click']"
-          [closeOnOutsideClick]="true"></fd-icon>
+          [closeOnOutsideClick]="true"></button>
         <ng-template #pipelineIdPopover>
           <div>
             Use this ID to
             <a
               class="link"
               href="https://github.wdf.sap.corp/pages/ContinuousDelivery/piper-doc/steps/sapCumulusUpload/"
-              rel="noopener noreferrer"
               target="_blank"
               rel="noopener noreferrer">
               upload your pipeline's results
@@ -53,7 +54,6 @@
             <a
               href="https://pages.github.tools.sap/hyperspace/cicd-setup-documentation/managed-services/validate/ghas.html#enabling-github-advanced-security-without-a-build-pipeline"
               fd-link
-              rel="noopener noreferrer"
               target="_blank"
               rel="noopener noreferrer">
               See how to choose the right Pipeline ID

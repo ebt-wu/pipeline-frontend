@@ -1,29 +1,4 @@
-.flex-box {
-    display: flex;
-    align-items: center;
-}
-
-.auto-left-margin {
-    margin-left: auto;
-}
-
-.icon {
-    color: var(--sapNeutralColor);
-    cursor: pointer;
-}
-
-.left-margin {
-    margin-left: 0.4rem;
-}
-
-a {
-    color: var(--sapLinkColor);
-    text-decoration: none;
-}
-
-h3 {
-    margin-bottom: 4px;
-}
+@import '../base-service-details.component.css';
 
 .divider {
     border-top: 1px solid var(--sapNeutralBorderColor);

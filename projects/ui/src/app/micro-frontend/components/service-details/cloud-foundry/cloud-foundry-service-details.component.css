@@ -1,16 +1,5 @@
 @import "../base-service-details.component.css";
 
-.flex-box {
-    align-items: center;  
-}
-  
-.top-margin {
-    margin-top: 1rem;
-}
-  
-.left-margin {
-    margin-left: 0.4rem;
-}
 
 .heading-margin-h4 {
     margin-bottom: 0.5rem;

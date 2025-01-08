@@ -1,16 +1,9 @@
 import { ChangeDetectionStrategy, Component, Input, OnInit, signal } from '@angular/core'
-import {
-  BusyIndicatorModule,
-  ButtonComponent,
-  FacetModule,
-  IconComponent,
-  InlineHelpDirective,
-  LinkModule,
-} from '@fundamental-ngx/core'
+import { BusyIndicatorModule, ButtonComponent, FacetModule, LinkModule } from '@fundamental-ngx/core'
 import { MessageStripModule } from '@fundamental-ngx/core'
 import { GetOscRegistrationQuery } from '@generated/graphql'
 import { firstValueFrom } from 'rxjs'
-import { AsyncPipe, NgIf } from '@angular/common'
+import { NgIf } from '@angular/common'
 import { AuthorizationModule } from '@dxp/ngx-core/authorization'
 import { PolicyService } from '../../../services/policy.service'
 import { APIService } from '../../../services/api.service'
@@ -27,12 +20,9 @@ import { BaseServiceDetailsComponent } from '../base-service-details.component'
     BusyIndicatorModule,
     FacetModule,
     LinkModule,
-    AsyncPipe,
     NgIf,
     AuthorizationModule,
     ButtonComponent,
-    IconComponent,
-    InlineHelpDirective,
     MessageStripModule,
   ],
 })
@@ -43,8 +33,6 @@ export class OpenSourceComplianceDetailsComponent extends BaseServiceDetailsComp
   issuetrackerProjectName: string
   issuetrackerProjectUrl: string
   ppmsScv: string
-  addScvLink =
-    'https://pages.github.tools.sap/hyperspace/cicd-setup-documentation/use-cases/validate-your-code-OSCS.html'
 
   loading = signal(false)
   error: string
