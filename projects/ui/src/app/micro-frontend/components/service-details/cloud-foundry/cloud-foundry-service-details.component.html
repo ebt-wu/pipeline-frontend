@@ -23,12 +23,12 @@
         <p>{{ serviceDetails.acceptance.space }}</p>
       </div>
 
-      <div>
+      <div *ngIf="serviceDetails.acceptance.manifest">
         <h4 class="heading-margin-h4">Manifest</h4>
         <p>{{ serviceDetails.acceptance.manifest }}</p>
       </div>
 
-      <div>
+      <div *ngIf="serviceDetails.acceptance.testServerUrl">
         <h4 class="heading-margin-h4">Test server URL</h4>
         <p>{{ serviceDetails.acceptance.testServerUrl }}</p>
       </div>
@@ -86,12 +86,12 @@
       </div>
 
       <div>
-        <h4 class="heading-margin-h4">Manifest</h4>
+        <h4 class="heading-margin-h4" *ngIf="serviceDetails.performance.manifest">Manifest</h4>
         <p>{{ serviceDetails.performance.manifest }}</p>
       </div>
 
       <div>
-        <h4 class="heading-margin-h4">Test server URL</h4>
+        <h4 class="heading-margin-h4" *ngIf="serviceDetails.performance.testServerUrl">Test server URL</h4>
         <p>{{ serviceDetails.performance.testServerUrl }}</p>
       </div>
     </div>
@@ -149,12 +149,12 @@
       </div>
 
       <div>
-        <h4 class="heading-margin-h4">Manifest</h4>
+        <h4 class="heading-margin-h4" *ngIf="serviceDetails.release.manifest">Manifest</h4>
         <p>{{ serviceDetails.release.manifest }}</p>
       </div>
 
       <div>
-        <h4 class="heading-margin-h4">Test server URL</h4>
+        <h4 class="heading-margin-h4" *ngIf="serviceDetails.release.testServerUrl">Test server URL</h4>
         <p>{{ serviceDetails.release.testServerUrl }}</p>
       </div>
     </div>

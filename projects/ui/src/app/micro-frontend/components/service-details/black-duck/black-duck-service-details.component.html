@@ -15,11 +15,12 @@
     {{ serviceDetails.pipelineName }}
   </a>
 
-  <div class="flex-box">
-    <h3 class="heading-margin">PPMS Object ID</h3>
+  <div *ngIf="serviceDetails.ppmsId">
+    <div class="flex-box">
+      <h3 class="heading-margin">PPMS Object ID</h3>
+    </div>
+    <p class="p-tag-remove-margin">{{ serviceDetails.ppmsId }}</p>
   </div>
-
-  <p class="p-tag-remove-margin">{{ serviceDetails.ppmsId }}</p>
 
   <div *ngIf="serviceDetails.secretPath">
     <div *dxpRequiredPolicies="['member', 'owner', 'vault_maintainer']; operator: 'or'">
