@@ -11,9 +11,16 @@
       fd-button></button>
   </div>
 
-  <a [href]="serviceDetails.applicationUrl" target="_blank" rel="noopener noreferrer">
+  <a
+    *ngIf="serviceDetails.applicationUrl"
+    [href]="serviceDetails.applicationUrl"
+    target="_blank"
+    rel="noopener noreferrer">
     {{ serviceDetails.applicationName }}
   </a>
+  <span *ngIf="!serviceDetails.applicationUrl">
+    {{ serviceDetails.applicationName }}
+  </span>
 
   <div class="flex-box">
     <h3 class="heading-margin">Project Name</h3>
