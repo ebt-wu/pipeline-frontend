@@ -173,8 +173,6 @@ export class PipelineComponent implements OnInit, OnDestroy {
     this.showOSC.set(await this.featureFlagService.isOscEnabled())
     this.isMultipleServiceDetailUiEnabled.set(await this.featureFlagService.isMultipleServiceDetailsUiEnabled())
 
-    this.loading.set(false)
-
     await Promise.all([this.getExtensionClasses(), this.checkSugarAppInstallation()])
 
     this.isGithubActionsEnabledAlready$ = this.api.githubActionsService.getGithubActionsCrossNamespace(
@@ -296,6 +294,7 @@ export class PipelineComponent implements OnInit, OnDestroy {
           this.isValidationStageOpen.set(true)
         }
       })
+    this.loading.set(false)
   }
 
   private async checkSugarAppInstallation() {
