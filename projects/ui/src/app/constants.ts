@@ -240,3 +240,54 @@ export const OrderedStepsByCategory = {
   // Product Management System
   [StepKey.PPMS_FOSS]: 1,
 }
+
+export const StepsOverallOrder = {
+  [Kinds.FREESTYLE_PIPELINE]: 0,
+  // BUILD
+  // Orchestrators
+  [Kinds.JENKINS_PIPELINE]: 1,
+  [Kinds.GITHUB_ACTION]: 2,
+  [Kinds.GITHUB_ACTIONS_WORKFLOW]: 3,
+  [StepKey.AZURE_DEV_OPS]: 4,
+
+  // Code build
+  [Kinds.PIPER_CONFIG]: 5,
+  [StepKey.XMAKE]: 6,
+
+  // Source Code Management
+  [Kinds.GITHUB_REPOSITORY]: 7,
+
+  // Code Transportation
+  [Kinds.STAGING_SERVICE_CREDENTIAL]: 8,
+
+  // Compliance
+  [Kinds.CUMULUS_PIPELINE]: 9,
+
+  // Container Image Creation
+  [StepKey.CNB]: 10,
+
+  // Binary Management
+  [StepKey.COMMON_REPOSITORY]: 11,
+
+  // Product Management System
+  [StepKey.PPMS_FOSS]: 12,
+
+  // VALIDATION
+  // Static Security Checks
+  [Kinds.GITHUB_ADVANCED_SECURITY]: 13,
+  [StepKey.CX_ONE]: 14,
+  [StepKey.CHECKMARX]: 15,
+  [StepKey.FORTIFY]: 16,
+
+  // Static Code Checks
+  [Kinds.SONAR_QUBE_PROJECT]: 17,
+
+  // Open Source Checks
+  [Kinds.OPEN_SOURCE_COMPLIANCE]: 18,
+  [StepKey.WHITE_SOURCE]: 19,
+  [StepKey.BLACK_DUCK_HUB]: 20,
+
+  // Deployment
+  [StepKey.KUBERNETES]: 21,
+  [StepKey.CLOUD_FOUNDRY]: 22,
+}

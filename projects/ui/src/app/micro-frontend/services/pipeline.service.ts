@@ -26,6 +26,7 @@ import {
   WatchPipelineSubscriptionVariables,
 } from '@generated/graphql'
 import { Kinds, ServiceStatus, StepKey } from '@enums'
+import { StepsOverallOrder } from '@constants'
 
 @Injectable({ providedIn: 'root' })
 export class PipelineService {
@@ -202,6 +203,7 @@ export class PipelineService {
               }
             })
           pipeline.resourceRefs = [...pipeline.resourceRefs, ...notManagedResourceRefs]
+          pipeline.resourceRefs.sort((a, b) => StepsOverallOrder[a.kind] - StepsOverallOrder[b.kind])
         }
         // Return the updated pipeline with not managed services
         return { ...pipeline, notManagedServices }
