@@ -117,7 +117,7 @@ describe('ServiceDetailsSkeletonComponent', () => {
     expect(headerElements[0].nativeElement.textContent.trim()).toEqual('Orchestration')
   })
 
-  it('should render GHAS, CxOne and Fortify', () => {
+  it('should render GHAS, CxOne and Fortify HSOBRD-117', () => {
     const fixture = MockRender(ServiceDetailsSkeletonComponent, {
       context,
       activeCategory: Categories.STATIC_SECURITY_CHECKS,
@@ -140,7 +140,7 @@ describe('ServiceDetailsSkeletonComponent', () => {
   describe('findAndSortServicesFromCategory', () => {
     it(
       'should return the correct resources for the category when ' +
-        'resources are some resourceRefs and some NotManagedServices',
+        'resources are some resourceRefs and some NotManagedServices HSOBRD-117',
       () => {
         const fixture = MockRender(ServiceDetailsSkeletonComponent, {
           context,

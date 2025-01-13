@@ -6,7 +6,7 @@ import { ColorAccent } from '@fundamental-ngx/core'
 
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 
-describe('CategorySlotComponent', () => {
+describe('CategorySlotComponent HSOBRD-117', () => {
   let component: CategorySlotComponent
   let fixture: ComponentFixture<CategorySlotComponent>
 

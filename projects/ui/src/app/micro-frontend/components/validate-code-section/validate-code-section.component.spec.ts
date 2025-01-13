@@ -102,7 +102,7 @@ describe('ValidateCodeSectionComponent', () => {
   })
 
   describe('generateStatusTag', () => {
-    it('should show statusTag with Not Managed label for Static Security Checks when only Fortify is present', async () => {
+    it('should show statusTag with Not Managed label for Static Security Checks when only Fortify is present HSOBRD-117', async () => {
       component = fixture.componentInstance
       component.pipeline = createPipelineForTests([
         { kind: Kinds.CUMULUS_PIPELINE },
@@ -117,7 +117,7 @@ describe('ValidateCodeSectionComponent', () => {
       expect(result.isStatusTagShown).toBeTruthy()
       expect(result.statusTagText).toEqual('Not Managed')
     })
-    it('should not show statusTag for Static Security Checks if no static security checks are present', async () => {
+    it('should not show statusTag for Static Security Checks if no static security checks are present HSOBRD-117', async () => {
       component = fixture.componentInstance
       component.pipeline = createPipelineForTests()
       fixture.detectChanges()
@@ -126,7 +126,7 @@ describe('ValidateCodeSectionComponent', () => {
       expect(result.statusTagText).toBeFalsy()
     })
 
-    it('should not show statusTag for Static Code Checks case when SonarQube is not there', async () => {
+    it('should not show statusTag for Static Code Checks case when SonarQube is not there HSOBRD-117', async () => {
       component = fixture.componentInstance
       component.pipeline = createPipelineForTests()
       fixture.detectChanges()
@@ -135,7 +135,7 @@ describe('ValidateCodeSectionComponent', () => {
       expect(result.isStatusTagShown).toBeFalsy()
       expect(result.statusTagText).toBeFalsy()
     })
-    it('should not show statusTag not managed for Static Code Checks case when SonarQube is there, since SonarQube is managed', async () => {
+    it('should not show statusTag not managed for Static Code Checks case when SonarQube is there, since SonarQube is managed HSOBRD-117', async () => {
       component = fixture.componentInstance
       component.pipeline = createPipelineForTests([{ kind: Kinds.SONAR_QUBE_PROJECT }])
       fixture.detectChanges()
@@ -144,7 +144,7 @@ describe('ValidateCodeSectionComponent', () => {
       expect(result.isStatusTagShown).toBeFalsy()
       expect(result.statusTagText).toBeFalsy()
     })
-    it('should show statusTag for Open Source Checks when Mend is present and no OSC', async () => {
+    it('should show statusTag for Open Source Checks when Mend is present and no OSC HSOBRD-117', async () => {
       component = fixture.componentInstance
       component.pipeline = createPipelineForTests([{ kind: StepKey.WHITE_SOURCE, status: ServiceStatus.NOT_MANAGED }])
       fixture.detectChanges()
@@ -169,7 +169,7 @@ describe('ValidateCodeSectionComponent', () => {
       expect(result.statusTagText).toBeFalsy()
     })
 
-    it("should show statusTag with Not Compliant label for Open Source Checks when Mend and OSC are both present and PPMS SCV isn't provided", async () => {
+    it("should show statusTag with Not Compliant label for Open Source Checks when Mend and OSC are both present and PPMS SCV isn't provided HSOBRD-117", async () => {
       component = fixture.componentInstance
       component.pipeline = createPipelineForTests([
         {
@@ -250,7 +250,7 @@ describe('ValidateCodeSectionComponent', () => {
   })
 
   describe('getStatusIconType', () => {
-    it('should return NOT_MANAGED if all services in the category are in NOT_MANAGED status', () => {
+    it('should return NOT_MANAGED if all services in the category are in NOT_MANAGED status HSOBRD-117', () => {
       component = fixture.componentInstance
       component.pipeline = createPipelineForTests([
         {
