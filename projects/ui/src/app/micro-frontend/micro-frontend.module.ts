@@ -20,7 +20,6 @@ import { CumulusInfoModalComponent } from './pages/modals/cumulus-info-modal/cum
 import { GithubActionsServiceDetailsComponent } from './components/service-details/github-actions/github-actions-service-details.component'
 import { GithubAdvancedSecurityServiceDetailsComponent } from './components/service-details/github-advanced-security/github-advanced-security-service-details.component'
 import { ResourceStagePipe } from './pipes/resource-stage.pipe'
-import { SetupServiceListItemComponent } from './components/setup-service-list-item/setup-service-list-item.component'
 import { CategorySlotComponent } from './components/category-slot/category-slot.component'
 import { SonarServiceDetailsComponent } from './components/service-details/sonar/sonar-service-details.component'
 import { AzureServiceDetailsComponent } from './components/service-details/azure/azure-service-details.component'
@@ -52,7 +51,6 @@ import { provideHttpClient } from '@angular/common/http'
     PlatformFormGeneratorCustomInfoBoxComponent,
     ResourceStagePipe,
     SetupBuildComponent,
-    SetupServiceListItemComponent,
     SonarServiceDetailsComponent,
     StagingServiceServiceDetailsComponent,
     ValidateCodeSectionComponent,

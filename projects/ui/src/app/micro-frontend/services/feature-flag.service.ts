@@ -8,7 +8,6 @@ export const Flags = {
   GITHUB_ACTIONS_ENABLED: 'GITHUB_ACTIONS_ENABLED',
   GHAS_ENABLED: 'GHAS_ENABLED',
   OSC_ENABLED: 'OSC_ENABLED',
-  MULTIPLE_SERVICE_DETAILS_UI_ENABLED: 'MULTIPLE_SERVICE_DETAILS_UI_ENABLED',
 } as const
 
 const TEST_TENANT_ID = '01ezesr3cgghmhgpbny04hv8qn'
@@ -27,13 +26,6 @@ export class FeatureFlagService {
   async isOscEnabled() {
     const context = await this.luigiService.getContextAsync()
     return (await this.getFlagValue(Flags.OSC_ENABLED, context.projectId)) || this.isTestTenant()
-  }
-
-  async isMultipleServiceDetailsUiEnabled(): Promise<boolean> {
-    const context = await this.luigiService.getContextAsync()
-    return (
-      (await this.getFlagValue(Flags.MULTIPLE_SERVICE_DETAILS_UI_ENABLED, context.projectId)) || this.isTestTenant()
-    )
   }
 
   isTestTenant() {

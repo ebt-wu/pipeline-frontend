@@ -174,7 +174,6 @@
                   <ng-container *ngIf="isBuildStageOpen()">
                     <div *ngFor="let resourceRef of pipeline.resourceRefs | resourceStage: stages.BUILD">
                       <app-category-slot
-                        *ngIf="isMultipleServiceDetailUiEnabled()"
                         [category]="kindCategory[resourceRef.kind]"
                         [configuredServicesText]="kindName[resourceRef.kind]"
                         [attr.data-testid]="'setup-build-step-' + resourceRef.kind"
@@ -199,82 +198,15 @@
                           resourceRef.status === serviceStatus.NOT_MANAGED ||
                           resourceRef.status === serviceStatus.FAILING_CREATION
                         "
-                        (detailsOpened)="openDetailsFromCategorySlot($event)"></app-category-slot>
-
-                      <app-service-list-item
-                        *ngIf="!isMultipleServiceDetailUiEnabled()"
-                        (openDetailsEvent)="openDetails($event)"
-                        [activeTile]="activeTile"
-                        [localLayout]="localLayout"
-                        [resourceRef]="resourceRef"
-                        [attr.data-testid]="'setup-build-step-' + resourceRef.kind"></app-service-list-item>
+                        (detailsOpened)="openDetails($event)"></app-category-slot>
                     </div>
                   </ng-container>
                 </fd-card-content>
               </fd-card>
               <app-validate-code-section
-                *ngIf="isMultipleServiceDetailUiEnabled()"
                 [pipeline]="pipeline"
                 [localLayout]="localLayout"
-                (detailsOpened)="openDetailsFromCategorySlot($event)"></app-validate-code-section>
-              <fd-card cardType="linkList" class="stage-card" *ngIf="!isMultipleServiceDetailUiEnabled()">
-                <fd-card-content class="card-content-padding">
-                  <div
-                    (click)="openValidationStage()"
-                    class="card-content stage-headline-padding"
-                    data-testid="validation-stage-arrow">
-                    <div class="icons">
-                      <fd-icon *ngIf="!isValidationStageOpen()" class="icon" glyph="slim-arrow-right"></fd-icon>
-                      <fd-icon *ngIf="isValidationStageOpen()" class="icon" glyph="slim-arrow-down"></fd-icon>
-                      <fd-avatar [colorAccent]="10" glyph="shield" size="xs"></fd-avatar>
-                    </div>
-                    <div class="card-description">
-                      <div class="card-description-stage-headline">
-                        <h1>Validate Code</h1>
-                        <p *ngIf="localLayout === 'OneColumnStartFullScreen'">
-                          Add checks to evaluate the compliance of your code
-                        </p>
-                      </div>
-                    </div>
-                  </div>
-                  <ng-container *ngIf="isValidationStageOpen()">
-                    <div *ngFor="let resourceRef of pipeline.resourceRefs | resourceStage: stages.VALIDATE">
-                      <app-service-list-item
-                        (openDetailsEvent)="openDetails($event)"
-                        [activeTile]="activeTile"
-                        [localLayout]="localLayout"
-                        [resourceRef]="resourceRef"
-                        [attr.data-testid]="'setup-validation-step-' + resourceRef.kind"></app-service-list-item>
-                    </div>
-                    <!--If there are no pipeline refs for the items we use dummy items to allow them to be set up-->
-                    <div *ngIf="!isStaticSecurityChecksSetup()">
-                      <app-setup-service-list-item
-                        [setupDialogType]="categories.STATIC_SECURITY_CHECKS"
-                        infoPopoverText="Configure Static Security services like GitHub Advanced Security and CxONE"
-                        serviceName="Static Security Checks"></app-setup-service-list-item>
-                    </div>
-                    <div *ngIf="!isOpenSourceChecksSetup() && !showOSC()">
-                      <app-setup-service-list-item
-                        infoPopoverText="Configure the new Open-Source Compliance Service"
-                        labelText="coming soon"
-                        serviceName="Open Source Checks"></app-setup-service-list-item>
-                    </div>
-                    <div *ngIf="!isOpenSourceChecksSetup() && showOSC()">
-                      <app-setup-service-list-item
-                        [setupDialogType]="categories.OPEN_SOURCE_CHECKS"
-                        infoPopoverText="Configure the new Open-Source Compliance Service"
-                        serviceName="Open Source Checks"></app-setup-service-list-item>
-                    </div>
-                    <div *ngIf="!isStaticCodeChecksSetup()">
-                      <app-setup-service-list-item
-                        infoPopoverText="Configure Static Code Check services like SonarQube"
-                        labelText="coming soon"
-                        serviceName="Static Code Checks"></app-setup-service-list-item>
-                    </div>
-                  </ng-container>
-                </fd-card-content>
-              </fd-card>
-
+                (detailsOpened)="openDetails($event)"></app-validate-code-section>
               <div *ngIf="(pipeline.resourceRefs | resourceStage: stages.DEPLOY).length > 0">
                 <fd-card cardType="linkList" class="stage-card">
                   <fd-card-content class="card-content-padding">
@@ -299,7 +231,6 @@
                     <ng-container *ngIf="isDeployStageOpen()">
                       <div *ngFor="let resourceRef of pipeline.resourceRefs | resourceStage: stages.DEPLOY">
                         <app-category-slot
-                          *ngIf="isMultipleServiceDetailUiEnabled()"
                           [category]="kindCategory[resourceRef.kind]"
                           [configuredServicesText]="kindName[resourceRef.kind]"
                           [attr.data-testid]="'setup-deployment-step-' + resourceRef.kind"
@@ -323,14 +254,7 @@
                             resourceRef.status === serviceStatus.CREATED ||
                             resourceRef.status === serviceStatus.NOT_MANAGED
                           "
-                          (detailsOpened)="openDetailsFromCategorySlot($event)"></app-category-slot>
-                        <app-service-list-item
-                          *ngIf="!isMultipleServiceDetailUiEnabled()"
-                          (openDetailsEvent)="openDetails($event)"
-                          [activeTile]="activeTile"
-                          [localLayout]="localLayout"
-                          [resourceRef]="resourceRef"
-                          [attr.data-testid]="'setup-deployment-step-' + resourceRef.kind"></app-service-list-item>
+                          (detailsOpened)="openDetails($event)"></app-category-slot>
                       </div>
                     </ng-container>
                   </fd-card-content>
@@ -391,23 +315,7 @@
                     class="stage-card github-actions-enabled-card">
                     <fd-card-content class="card-content-padding">
                       <ul [byline]="true" [noBorder]="true" fd-list>
-                        <li
-                          (click)="
-                            isMultipleServiceDetailUiEnabled()
-                              ? openDetailsFromCategorySlot(Categories.ORCHESTRATION)
-                              : openDetails({
-                                  name: '',
-                                  kind: kinds.GITHUB_ACTION,
-                                  status: 'Created',
-                                  pipeline: pipeline,
-                                })
-                          "
-                          [ngClass]="
-                            activeTile === kinds.GITHUB_ACTION && localLayout !== 'OneColumnStartFullScreen'
-                              ? 'list-item-selected'
-                              : ''
-                          "
-                          fd-list-item>
+                        <li (click)="openDetails(Categories.ORCHESTRATION)" fd-list-item>
                           <a fd-list-link>
                             <span class="thumbnail-margin" fd-list-thumbnail>
                               <ng-container *ngIf="isGithubActionsEnabledInSameComponent()">
@@ -538,14 +446,8 @@
         </ng-template>
         <ng-template #midColumn>
           <div class="scrollable-container">
-            <app-old-service-details-skeleton
-              *ngIf="!isMultipleServiceDetailUiEnabled()"
-              (localLayoutEvent)="updateLocalLayout($event)"
-              [activeTile]="activeTile"
-              [localLayout]="localLayout"
-              [pipeline]="pipeline"></app-old-service-details-skeleton>
             <app-service-details-skeleton
-              *ngIf="localLayout !== 'OneColumnStartFullScreen' && isMultipleServiceDetailUiEnabled()"
+              *ngIf="localLayout !== 'OneColumnStartFullScreen'"
               (localLayoutEvent)="updateLocalLayout($event)"
               [activeCategory]="activeCategory"
               [localLayout]="localLayout"

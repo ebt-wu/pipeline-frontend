@@ -19,7 +19,6 @@ import { Pipeline } from '@types'
 import { DeleteBuildModalComponent } from '../modals/delete-build-modal/delete-build-modal.component'
 import { DismissibleMessageComponent } from '../../components/dismissible-message/dismissible-message.component'
 import { ErrorMessageComponent } from '../../components/error-message/error-message.component'
-import { ServiceData, ServiceListItemComponent } from '../../components/service-list-item/service-list-item.component'
 import { UpgradeBannerComponent } from '../../components/upgrade-banner/upgrade-banner.component'
 import { APIService } from '../../services/api.service'
 import { DebugModeService } from '../../services/debug-mode.service'
@@ -27,10 +26,8 @@ import { ExtensionService } from '../../services/extension.service'
 import { ExtensionClass } from '../../services/extension.types'
 import { FeatureFlagService } from '../../services/feature-flag.service'
 import { GithubMetadata } from '../../services/github.service'
-import { SharedDataService } from '../../services/shared-data.service'
 import { AuthorizationModule } from '@dxp/ngx-core/authorization'
 import { ResourceStagePipe } from '../../pipes/resource-stage.pipe'
-import { SetupServiceListItemComponent } from '../../components/setup-service-list-item/setup-service-list-item.component'
 import {
   DynamicPageComponent,
   DynamicPageContentComponent,
@@ -44,7 +41,6 @@ import { map } from 'rxjs/operators'
 import { CategorySlotComponent } from '../../components/category-slot/category-slot.component'
 import { ValidateCodeSectionComponent } from '../../components/validate-code-section/validate-code-section.component'
 import { GitHubIssueLinkService } from '../../services/github-issue-link.service'
-import { OldServiceDetailsSkeletonComponent } from '../../components/old-service-details-skeleton/old-service-details-skeleton.component'
 import { ServiceDetailsSkeletonComponent } from '../../components/service-details-skeleton/service-details-skeleton.component'
 import { GithubActionsService } from '../../services/github-actions.service'
 
@@ -68,13 +64,10 @@ type Error = {
     InlineHelpModule,
     ErrorMessageComponent,
     DismissibleMessageComponent,
-    OldServiceDetailsSkeletonComponent,
     ServiceDetailsSkeletonComponent,
-    ServiceListItemComponent,
     UpgradeBannerComponent,
     AuthorizationModule,
     ResourceStagePipe,
-    SetupServiceListItemComponent,
     DynamicPageTitleComponent,
     DynamicPageHeaderComponent,
     DynamicPageComponent,
@@ -113,7 +106,6 @@ export class PipelineComponent implements OnInit, OnDestroy {
   // Feature flags
   showGithubActions = signal(false)
   showOSC = signal(false)
-  isMultipleServiceDetailUiEnabled = signal(false)
 
   canUserEditCredentials = false
 
@@ -121,8 +113,6 @@ export class PipelineComponent implements OnInit, OnDestroy {
   isSugarAppInstalled = signal(false)
 
   localLayout: FlexibleColumnLayout = 'OneColumnStartFullScreen'
-  // TODO replace activeTile with activeCategory
-  activeTile: string = ''
   activeCategory: Categories = null
   githubMetadata: GithubMetadata
   projectId: string
@@ -148,7 +138,6 @@ export class PipelineComponent implements OnInit, OnDestroy {
     private readonly luigiDialogUtil: LuigiDialogUtil,
     private readonly featureFlagService: FeatureFlagService,
     readonly debugModeService: DebugModeService,
-    private readonly sharedResourceDataService: SharedDataService,
     private readonly githubIssueLinkService: GitHubIssueLinkService,
     private readonly policyService: PolicyService,
     private readonly pipelineService: PipelineService,
@@ -171,7 +160,6 @@ export class PipelineComponent implements OnInit, OnDestroy {
     // Only show GHA and GHAS if their feature flags are toggled on
     this.showGithubActions.set(await this.featureFlagService.isGithubActionsEnabled())
     this.showOSC.set(await this.featureFlagService.isOscEnabled())
-    this.isMultipleServiceDetailUiEnabled.set(await this.featureFlagService.isMultipleServiceDetailsUiEnabled())
 
     await Promise.all([this.getExtensionClasses(), this.checkSugarAppInstallation()])
 
@@ -451,7 +439,6 @@ export class PipelineComponent implements OnInit, OnDestroy {
     }
 
     this.localLayout = 'OneColumnStartFullScreen'
-    this.activeTile = ''
 
     this.pendingDeletion.set(true)
     setTimeout(() => {
@@ -504,8 +491,7 @@ export class PipelineComponent implements OnInit, OnDestroy {
     }
   }
 
-  // Todo rename this when the other openDetails isn't used anymore
-  openDetailsFromCategorySlot(event: Categories) {
+  openDetails(event: Categories) {
     if (!this.activeCategory) {
       this.localLayout = 'TwoColumnsMidExpanded'
     }
@@ -529,39 +515,6 @@ export class PipelineComponent implements OnInit, OnDestroy {
       'Pipeline is not displayed in the Hyperspace Portal.',
     )
     window.open(issueURL, '_blank', 'noopener, noreferrer')
-  }
-
-  openDetails(event: ServiceData) {
-    if (event.status !== ServiceStatus.CREATED.toString() && event.status !== ServiceStatus.NOT_MANAGED.toString()) {
-      return
-    }
-
-    // Need to check GitHub Action status separately since no event status is given (pipeline.component.html:186)
-    if (event.kind === Kinds.GITHUB_ACTION && event.pipeline) {
-      for (let i = 0; i < event.pipeline?.resourceRefs?.length; i++) {
-        const ref = event.pipeline?.resourceRefs[i]
-        if (ref.kind === Kinds.GITHUB_ACTION && ref.status != ServiceStatus.CREATED) {
-          return
-        }
-      }
-    }
-
-    this.sharedResourceDataService.publishResourceData(event.kind, event.name)
-
-    if (!this.activeTile) {
-      this.localLayout = 'TwoColumnsMidExpanded'
-    }
-
-    if (this.activeTile === event.kind.toString()) {
-      this.localLayout =
-        this.localLayout === 'OneColumnStartFullScreen' ? 'TwoColumnsMidExpanded' : 'OneColumnStartFullScreen'
-    }
-
-    if (this.activeTile !== event.kind.toString()) {
-      this.localLayout = 'TwoColumnsMidExpanded'
-    }
-
-    this.activeTile = event.kind
   }
 
   updateLocalLayout(layoutEvent: FlexibleColumnLayout) {
