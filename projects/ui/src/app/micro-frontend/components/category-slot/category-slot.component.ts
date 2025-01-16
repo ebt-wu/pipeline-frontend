@@ -51,7 +51,7 @@ export class CategorySlotComponent {
     isButtonDisabled?: boolean
     disabledButtonInlineHelpText?: string
     buttonText?: string
-    buttonAction?: () => void
+    buttonAction?: (e: Event) => void
     buttonTestId?: string
   }
   @Input() statusTagConfig?: {

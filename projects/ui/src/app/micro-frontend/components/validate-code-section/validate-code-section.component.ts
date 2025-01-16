@@ -65,7 +65,7 @@ export class ValidateCodeSectionComponent implements OnChanges, OnInit {
         buttonConfig: {
           isButtonShown: await this.isButtonShown(Categories.STATIC_SECURITY_CHECKS),
           buttonText: 'Add',
-          buttonAction: async () => this.openSetupDialog(Categories.STATIC_SECURITY_CHECKS),
+          buttonAction: async (e) => this.openSetupDialog(e, Categories.STATIC_SECURITY_CHECKS),
           buttonTestId: 'add-static-security-checks-button',
         },
         statusTagConfig: await this.generateStatusTag(Categories.STATIC_SECURITY_CHECKS),
@@ -87,7 +87,7 @@ export class ValidateCodeSectionComponent implements OnChanges, OnInit {
         buttonConfig: {
           isButtonShown: await this.isButtonShown(Categories.STATIC_CODE_CHECKS),
           buttonText: 'Add',
-          buttonAction: async () => this.openSetupDialog(Categories.STATIC_CODE_CHECKS),
+          buttonAction: async (e: Event) => this.openSetupDialog(e, Categories.STATIC_CODE_CHECKS),
           buttonTestId: 'add-static-code-checks-button',
         },
         statusTagConfig: await this.generateStatusTag(Categories.STATIC_CODE_CHECKS),
@@ -107,7 +107,7 @@ export class ValidateCodeSectionComponent implements OnChanges, OnInit {
         buttonConfig: {
           isButtonShown: await this.isButtonShown(Categories.OPEN_SOURCE_CHECKS),
           buttonText: 'Add',
-          buttonAction: async () => this.openSetupDialog(Categories.OPEN_SOURCE_CHECKS),
+          buttonAction: async (e: Event) => this.openSetupDialog(e, Categories.OPEN_SOURCE_CHECKS),
           buttonTestId: 'add-open-source-checks-button',
         },
         statusTagConfig: await this.generateStatusTag(Categories.OPEN_SOURCE_CHECKS),
@@ -146,7 +146,8 @@ export class ValidateCodeSectionComponent implements OnChanges, OnInit {
     )
   }
 
-  async openSetupDialog(category: Categories) {
+  async openSetupDialog(e: Event, category: Categories) {
+    e.stopPropagation()
     switch (category) {
       case Categories.STATIC_SECURITY_CHECKS:
         await this.luigiClient

@@ -71,7 +71,7 @@
             fd-button
             [attr.data-testid]="buttonConfig.buttonTestId"
             [label]="buttonConfig.buttonText"
-            (click)="buttonConfig.buttonAction()"></button>
+            (click)="buttonConfig.buttonAction($event)"></button>
           <button
             *ngIf="buttonConfig && buttonConfig.isButtonDisabled && !isServiceDetailOpen"
             [aria-disabled]="buttonConfig.isButtonDisabled"

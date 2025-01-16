@@ -53,7 +53,7 @@ export interface CategoryConfig {
     disabledButtonInlineHelpText?: string
     buttonTestId?: string
     buttonText?: string
-    buttonAction?: () => void | Promise<void>
+    buttonAction?: (e: Event) => void | Promise<void>
   }
   infoIconConfig?: {
     isIconShown?: boolean
