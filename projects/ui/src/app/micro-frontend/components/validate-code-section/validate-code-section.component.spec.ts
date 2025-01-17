@@ -249,18 +249,31 @@ describe('ValidateCodeSectionComponent', () => {
     })
   })
 
-  describe('getStatusIconType', () => {
-    it('should return NOT_MANAGED if all services in the category are in NOT_MANAGED status HSOBRD-117', () => {
+  describe('getStatusIconConfig', () => {
+    it('should return NOT_MANAGED if all services in the category are in NOT_MANAGED status and they arent fortify or checkmarxHSOBRD-117', () => {
+      component = fixture.componentInstance
+      component.pipeline = createPipelineForTests([
+        {
+          kind: StepKey.BLACK_DUCK_HUB,
+          status: ServiceStatus.NOT_MANAGED,
+        },
+      ])
+      fixture.detectChanges()
+      expect(component.getStatusIconConfig(Categories.OPEN_SOURCE_CHECKS).statusIconType).toEqual(
+        ServiceStatus.NOT_MANAGED,
+      )
+    })
+
+    it('should return ALERT if only Fortify is present HSOBRD-117', () => {
       component = fixture.componentInstance
       component.pipeline = createPipelineForTests([
         {
           kind: StepKey.FORTIFY,
           status: ServiceStatus.NOT_MANAGED,
         },
-        { kind: StepKey.CHECKMARX, status: ServiceStatus.NOT_MANAGED },
       ])
       fixture.detectChanges()
-      expect(component.getStatusIconType(Categories.STATIC_SECURITY_CHECKS)).toEqual(ServiceStatus.NOT_MANAGED)
+      expect(component.getStatusIconConfig(Categories.STATIC_SECURITY_CHECKS).statusIconType).toEqual('ALERT')
     })
 
     it('should return CREATED if at least one service in the category is in CREATED status and none in FAILING_CREATION', () => {
@@ -273,7 +286,9 @@ describe('ValidateCodeSectionComponent', () => {
         { kind: StepKey.CHECKMARX, status: ServiceStatus.NOT_MANAGED },
       ])
       fixture.detectChanges()
-      expect(component.getStatusIconType(Categories.STATIC_SECURITY_CHECKS)).toEqual(ServiceStatus.CREATED)
+      expect(component.getStatusIconConfig(Categories.STATIC_SECURITY_CHECKS).statusIconType).toEqual(
+        ServiceStatus.CREATED,
+      )
     })
     it('should return FAILING_CREATION if at least one service in the category is in FAILING_CREATION status', () => {
       component = fixture.componentInstance
@@ -285,13 +300,15 @@ describe('ValidateCodeSectionComponent', () => {
         { kind: Kinds.GITHUB_ADVANCED_SECURITY, status: ServiceStatus.FAILING_CREATION },
       ])
       fixture.detectChanges()
-      expect(component.getStatusIconType(Categories.STATIC_SECURITY_CHECKS)).toEqual(ServiceStatus.FAILING_CREATION)
+      expect(component.getStatusIconConfig(Categories.STATIC_SECURITY_CHECKS).statusIconType).toEqual(
+        ServiceStatus.FAILING_CREATION,
+      )
     })
     it('should return undefined if no resourceRefs are in the category', () => {
       component = fixture.componentInstance
       component.pipeline = createPipelineForTests()
       fixture.detectChanges()
-      expect(component.getStatusIconType(Categories.STATIC_SECURITY_CHECKS)).toBeUndefined()
+      expect(component.getStatusIconConfig(Categories.STATIC_SECURITY_CHECKS)).toBeUndefined()
     })
     it('should return status UNKNOWN if there is at least one resource with unknown status', () => {
       component = fixture.componentInstance
@@ -302,7 +319,9 @@ describe('ValidateCodeSectionComponent', () => {
         },
       ])
       fixture.detectChanges()
-      expect(component.getStatusIconType(Categories.OPEN_SOURCE_CHECKS)).toEqual(ServiceStatus.UN_KNOWN)
+      expect(component.getStatusIconConfig(Categories.OPEN_SOURCE_CHECKS).statusIconType).toEqual(
+        ServiceStatus.UN_KNOWN,
+      )
     })
     it('should return status NOT_FOUND if there is at least one resource with not found status in the category', () => {
       component = fixture.componentInstance
@@ -313,7 +332,9 @@ describe('ValidateCodeSectionComponent', () => {
         },
       ])
       fixture.detectChanges()
-      expect(component.getStatusIconType(Categories.OPEN_SOURCE_CHECKS)).toEqual(ServiceStatus.NOT_FOUND)
+      expect(component.getStatusIconConfig(Categories.OPEN_SOURCE_CHECKS).statusIconType).toEqual(
+        ServiceStatus.NOT_FOUND,
+      )
     })
 
     it('should return status PENDING_CREATION if there is at least one resource in the category with PENDING_CREATION status', () => {
@@ -326,7 +347,61 @@ describe('ValidateCodeSectionComponent', () => {
         { kind: Kinds.PIPER_CONFIG, status: ServiceStatus.CREATED },
       ])
       fixture.detectChanges()
-      expect(component.getStatusIconType(Categories.OPEN_SOURCE_CHECKS)).toEqual(ServiceStatus.PENDING_CREATION)
+      expect(component.getStatusIconConfig(Categories.OPEN_SOURCE_CHECKS).statusIconType).toEqual(
+        ServiceStatus.PENDING_CREATION,
+      )
+    })
+  })
+  describe('generateRightSideConfig', () => {
+    it('should have "Add a compliant service" if the only service is fortify', () => {
+      component = fixture.componentInstance
+      component.pipeline = createPipelineForTests([{ kind: StepKey.FORTIFY, status: ServiceStatus.NOT_MANAGED }])
+      fixture.detectChanges()
+      expect(
+        component.generateRightSideConfig(Categories.STATIC_SECURITY_CHECKS, component.pipeline.resourceRefs)
+          .rightSideText,
+      ).toEqual('Add a compliant service')
+    })
+    it('should have "Add a compliant service" if the only service is checkmarx', () => {
+      component = fixture.componentInstance
+      component.pipeline = createPipelineForTests([{ kind: StepKey.CHECKMARX, status: ServiceStatus.NOT_MANAGED }])
+      fixture.detectChanges()
+      expect(
+        component.generateRightSideConfig(Categories.STATIC_SECURITY_CHECKS, component.pipeline.resourceRefs)
+          .rightSideText,
+      ).toEqual('Add a compliant service')
+    })
+
+    it('should have `1 Not Managed.` and a tooltip text if there is only one not managed service and a managed one', () => {
+      component = fixture.componentInstance
+      component.pipeline = createPipelineForTests([
+        { kind: StepKey.FORTIFY, status: ServiceStatus.NOT_MANAGED },
+        { kind: Kinds.GITHUB_ADVANCED_SECURITY },
+      ])
+      fixture.detectChanges()
+      expect(
+        component.generateRightSideConfig(Categories.STATIC_SECURITY_CHECKS, component.pipeline.resourceRefs),
+      ).toEqual({
+        rightSideText: '1 Not Managed.',
+        rightSideTextInlineHelpText:
+          "Fortify is not available in the Hyperspace Portal. Your setup can't be managed or edited from here.",
+      })
+    })
+    it('should return null when only managed services present', () => {
+      component = fixture.componentInstance
+      component.pipeline = createPipelineForTests([{ kind: Kinds.GITHUB_ADVANCED_SECURITY }])
+      fixture.detectChanges()
+      expect(
+        component.generateRightSideConfig(Categories.STATIC_SECURITY_CHECKS, component.pipeline.resourceRefs),
+      ).toBeNull()
+    })
+    it('should return null when only not-managed services present', () => {
+      component = fixture.componentInstance
+      component.pipeline = createPipelineForTests([{ kind: StepKey.BLACK_DUCK_HUB, status: ServiceStatus.NOT_MANAGED }])
+      fixture.detectChanges()
+      expect(
+        component.generateRightSideConfig(Categories.OPEN_SOURCE_CHECKS, component.pipeline.resourceRefs),
+      ).toBeNull()
     })
   })
 })

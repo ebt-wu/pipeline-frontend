@@ -43,6 +43,7 @@ import { ValidateCodeSectionComponent } from '../../components/validate-code-sec
 import { GitHubIssueLinkService } from '../../services/github-issue-link.service'
 import { ServiceDetailsSkeletonComponent } from '../../components/service-details-skeleton/service-details-skeleton.component'
 import { GithubActionsService } from '../../services/github-actions.service'
+import { CategorySlotConfigService } from '../../services/category-slot-config.service'
 
 type Error = {
   title: string
@@ -531,4 +532,5 @@ export class PipelineComponent implements OnInit, OnDestroy {
   protected readonly Kinds = Kinds
   protected readonly StepKey = StepKey
   protected readonly Categories = Categories
+  protected readonly CategorySlotConfigService = CategorySlotConfigService
 }

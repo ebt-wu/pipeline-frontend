@@ -1,6 +1,6 @@
 import { GitHubAdvancedSecurityGetPayload, NotManagedServices, PipelineType } from '@generated/graphql'
 import { GithubInstances, JiraProjectTypes, Kinds, OSCPlatforms, ServiceStatus, StepKey, ValidationTools } from '@enums'
-import { ColorAccent } from '@fundamental-ngx/core'
+import { ButtonType, ColorAccent } from '@fundamental-ngx/core'
 
 export type AddPrefixToTypeProperties<T, P extends string> = {
   [K in keyof T as `${P}${Capitalize<string & K>}`]: T[K]
@@ -54,6 +54,7 @@ export interface CategoryConfig {
     buttonTestId?: string
     buttonText?: string
     buttonAction?: (e: Event) => void | Promise<void>
+    buttonType?: ButtonType
   }
   infoIconConfig?: {
     isIconShown?: boolean
@@ -66,10 +67,13 @@ export interface CategoryConfig {
     statusTagInlineHelpText?: string
   }
   statusIconConfig?: {
-    statusIconType: ServiceStatus
+    statusIconType: string
     statusIconInlineHelpText?: string
   }
-  rightSideText?: string
+  rightSideTextConfig?: {
+    rightSideText?: string
+    rightSideTextInlineHelpText?: string
+  }
   isOpenArrowShown?: boolean
 }
 

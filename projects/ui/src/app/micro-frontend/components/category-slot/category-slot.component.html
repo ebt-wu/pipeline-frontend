@@ -2,9 +2,14 @@
   <li fd-list-item class="list-item-border">
     <a fd-list-link (click)="onDetailsOpened()" [attr.data-testid]="testId">
       <span fd-list-thumbnail class="list-item-icon">
-        <ng-container *ngIf="statusIconConfig && statusIconConfig.statusIconType === serviceStatus.CREATED">
-          <span fd-object-status class="status-icon" size="m" [glyph]="'status-completed'" status="positive"></span>
-        </ng-container>
+        <span
+          *ngIf="statusIconConfig && statusIconConfig.statusIconType === serviceStatus.CREATED"
+          [fd-inline-help]="statusIconConfig.statusIconInlineHelpText || 'Setup Completed'"
+          fd-object-status
+          class="status-icon"
+          size="m"
+          [glyph]="'status-completed'"
+          status="positive"></span>
         <fd-busy-indicator
           [loading]="true"
           *ngIf="
@@ -21,8 +26,17 @@
           *ngIf="statusIconConfig && statusIconConfig.statusIconType === serviceStatus.FAILING_CREATION"
           status="negative"
           glyph="message-error"></span>
+        <span
+          *ngIf="statusIconConfig && statusIconConfig.statusIconType === 'ALERT'"
+          fd-object-status
+          [fd-inline-help]="statusIconConfig.statusIconInlineHelpText || 'Action Required'"
+          status="critical"
+          glyph="alert"
+          glyphAriaLabel="Critical"
+          class="status-icon"
+          title="Critical"></span>
         <fd-icon
-          [title]="statusIconConfig.statusIconInlineHelpText || null"
+          [fd-inline-help]="statusIconConfig.statusIconInlineHelpText || 'Status Unclear'"
           *ngIf="statusIconConfig && statusIconConfig.statusIconType === serviceStatus.NOT_MANAGED"
           glyph="question-mark"
           class="status-icon"></fd-icon>
@@ -63,7 +77,13 @@
       </div>
 
       <div class="padding-right flex-container">
-        <span *ngIf="rightSideText && !isServiceDetailOpen" class="status-text">{{ rightSideText }}</span>
+        <span
+          *ngIf="rightSideTextConfig && rightSideTextConfig.rightSideText && !isServiceDetailOpen"
+          [fd-inline-help]="rightSideTextConfig.rightSideTextInlineHelpText"
+          [disabled]="!rightSideTextConfig.rightSideTextInlineHelpText"
+          class="status-text">
+          {{ rightSideTextConfig.rightSideText }}
+        </span>
         <div *dxpRequiredPolicies="['member', 'owner', 'vault_maintainer']; operator: 'or'">
           <button
             *ngIf="isAddButtonVisible && !isServiceDetailOpen"
@@ -71,6 +91,7 @@
             fd-button
             [attr.data-testid]="buttonConfig.buttonTestId"
             [label]="buttonConfig.buttonText"
+            [fdType]="buttonConfig.buttonType || null"
             (click)="buttonConfig.buttonAction($event)"></button>
           <button
             *ngIf="buttonConfig && buttonConfig.isButtonDisabled && !isServiceDetailOpen"

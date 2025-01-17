@@ -15,6 +15,16 @@
           <p *ngIf="localLayout === 'OneColumnStartFullScreen'">Add checks to evaluate the compliance of your code</p>
         </div>
       </div>
+      <div class="flex-grow"></div>
+      <span
+        *ngIf="isActionRequired()"
+        class="action-required"
+        fd-object-status
+        status="critical"
+        glyph="alert"
+        [label]="localLayout === 'OneColumnStartFullScreen' ? '1 Action Required' : null"
+        [inverted]="true"
+        aria-label="Action Required"></span>
     </div>
 
     <ng-container *ngIf="isValidationStageOpen()">
@@ -27,7 +37,7 @@
         [statusTagConfig]="staticSecurityChecksConfig.statusTagConfig"
         [statusIconConfig]="staticSecurityChecksConfig.statusIconConfig"
         [isOpenArrowShown]="staticSecurityChecksConfig.isOpenArrowShown"
-        [rightSideText]="staticSecurityChecksConfig.rightSideText"
+        [rightSideTextConfig]="staticSecurityChecksConfig.rightSideTextConfig"
         [isServiceDetailOpen]="localLayout !== 'OneColumnStartFullScreen'"
         (detailsOpened)="onDetailsOpened(Categories.STATIC_SECURITY_CHECKS)"></app-category-slot>
       <app-category-slot
@@ -40,7 +50,7 @@
         [statusIconConfig]="openSourceChecksConfig.statusIconConfig"
         [isOpenArrowShown]="openSourceChecksConfig.isOpenArrowShown"
         [isServiceDetailOpen]="localLayout !== 'OneColumnStartFullScreen'"
-        [rightSideText]="openSourceChecksConfig.rightSideText"
+        [rightSideTextConfig]="openSourceChecksConfig.rightSideTextConfig"
         (detailsOpened)="onDetailsOpened(Categories.OPEN_SOURCE_CHECKS)"></app-category-slot>
       <app-category-slot
         *ngIf="categoryMap[Categories.STATIC_CODE_CHECKS] as staticCodeChecksConfig"
@@ -50,7 +60,7 @@
         [infoIconConfig]="staticCodeChecksConfig.infoIconConfig"
         [statusTagConfig]="staticCodeChecksConfig.statusTagConfig"
         [statusIconConfig]="staticCodeChecksConfig.statusIconConfig"
-        [rightSideText]="staticCodeChecksConfig.rightSideText"
+        [rightSideTextConfig]="staticCodeChecksConfig.rightSideTextConfig"
         [isOpenArrowShown]="staticCodeChecksConfig.isOpenArrowShown"
         [isServiceDetailOpen]="localLayout !== 'OneColumnStartFullScreen'"
         (detailsOpened)="onDetailsOpened(Categories.STATIC_CODE_CHECKS)"></app-category-slot>

@@ -13,6 +13,8 @@ import { AuthorizationModule } from '@dxp/ngx-core/authorization'
 import { DxpLuigiContextService, LuigiClient } from '@dxp/ngx-core/luigi'
 import { NotManagedServices, PipelineType } from '@generated/graphql'
 import { PolicyService } from '../../services/policy.service'
+import { map } from 'rxjs/operators'
+import { StepsOverallOrder } from '@constants'
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -61,7 +63,15 @@ export class HomePageComponent implements OnInit {
       .watchNotManagedServicesInPipeline()
       .pipe(debounceTime(50)) as Observable<NotManagedServices>
 
-    this.watch$ = this.pipelineService.combinePipelineWithNotManagedServices(watchPipeline$, watchNotManagedServices$)
+    this.watch$ = this.pipelineService
+      .combinePipelineWithNotManagedServices(watchPipeline$, watchNotManagedServices$)
+      .pipe(
+        debounceTime(50),
+        map((pipeline) => {
+          pipeline.resourceRefs.sort((a, b) => StepsOverallOrder[a.kind] - StepsOverallOrder[b.kind])
+          return pipeline
+        }),
+      )
   }
 
   navigateToProjectMembers() {

@@ -164,12 +164,6 @@
                       [loading]="true"
                       ariaLabel="loading"
                       label="Pending Deletion"></fd-busy-indicator>
-                    <span
-                      *ngIf="isBuildStageSetup()"
-                      [label]="localLayout === 'TwoColumnsMidExpanded' ? '' : 'setup compliant'"
-                      fd-object-status
-                      glyph="status-completed"
-                      status="positive"></span>
                   </div>
                   <ng-container *ngIf="isBuildStageOpen()">
                     <div *ngFor="let resourceRef of pipeline.resourceRefs | resourceStage: stages.BUILD">
@@ -183,15 +177,14 @@
                         }"
                         [statusIconConfig]="{
                           statusIconType: resourceRef.status,
-                          statusIconInlineHelpText:
-                            resourceRef.status === serviceStatus.NOT_MANAGED
-                              ? kindName[resourceRef.kind] +
-                                ' is not available in the Hyperspace Portal. The Portal will not manage your setup or allow for edits.'
-                              : null,
                         }"
                         [statusTagConfig]="{
                           isStatusTagShown: resourceRef.status === serviceStatus.NOT_MANAGED,
                           statusTagText: resourceRef.status === serviceStatus.NOT_MANAGED ? 'Not Managed' : null,
+                          statusTagInlineHelpText:
+                            resourceRef.status === serviceStatus.NOT_MANAGED
+                              ? CategorySlotConfigService.generateNotManagedTooltip([resourceRef])
+                              : null,
                         }"
                         [isOpenArrowShown]="
                           resourceRef.status === serviceStatus.CREATED ||
@@ -240,15 +233,14 @@
                           }"
                           [statusIconConfig]="{
                             statusIconType: resourceRef.status,
-                            statusIconInlineHelpText:
-                              resourceRef.status === serviceStatus.NOT_MANAGED
-                                ? kindName[resourceRef.kind] +
-                                  ' is not available in the Hyperspace Portal. The Portal will not manage your setup or allow for edits.'
-                                : null,
                           }"
                           [statusTagConfig]="{
                             isStatusTagShown: resourceRef.status === serviceStatus.NOT_MANAGED,
                             statusTagText: resourceRef.status === serviceStatus.NOT_MANAGED ? 'Not Managed' : null,
+                            statusTagInlineHelpText:
+                              resourceRef.status === serviceStatus.NOT_MANAGED
+                                ? CategorySlotConfigService.generateNotManagedTooltip([resourceRef])
+                                : null,
                           }"
                           [isOpenArrowShown]="
                             resourceRef.status === serviceStatus.CREATED ||

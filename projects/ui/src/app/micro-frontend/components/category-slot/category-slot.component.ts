@@ -3,6 +3,7 @@ import { AuthorizationModule } from '@dxp/ngx-core/authorization'
 import {
   BusyIndicatorComponent,
   ButtonComponent,
+  ButtonType,
   ColorAccent,
   IconComponent,
   InfoLabelComponent,
@@ -53,6 +54,7 @@ export class CategorySlotComponent {
     buttonText?: string
     buttonAction?: (e: Event) => void
     buttonTestId?: string
+    buttonType?: ButtonType
   }
   @Input() statusTagConfig?: {
     isStatusTagShown: boolean
@@ -63,14 +65,17 @@ export class CategorySlotComponent {
   @Input() debugModeConfig? = { isDebugModeEnabled: false, debugModeText: 'Debug Mode' }
   @Input() isLoading?: boolean = false
   @Input() statusIconConfig?: {
-    statusIconType: ServiceStatus
+    statusIconType: string
     statusIconInlineHelpText?: string
   }
   @Input() isOpenArrowShown?: boolean = false
 
   @Input() isServiceDetailOpen?: boolean = false
 
-  @Input() rightSideText?: string
+  @Input() rightSideTextConfig?: {
+    rightSideText?: string
+    rightSideTextInlineHelpText?: string
+  }
 
   @Output() readonly detailsOpened = new EventEmitter<Categories>()
 
@@ -81,7 +86,7 @@ export class CategorySlotComponent {
     if (
       !this.statusIconConfig ||
       !this.statusIconConfig.statusIconType ||
-      this.statusIconConfig.statusIconType === ServiceStatus.NOT_FOUND
+      this.statusIconConfig.statusIconType === ServiceStatus.NOT_FOUND.toString()
     ) {
       return
     }

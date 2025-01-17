@@ -12,7 +12,7 @@ export const KindName = {
   [Kinds.GITHUB_ACTIONS_WORKFLOW]: 'GitHub Actions',
   [Kinds.GITHUB_ADVANCED_SECURITY]: 'GitHub Advanced Security',
   [StepKey.CX_ONE]: 'Checkmarx ONE',
-  [Kinds.SONAR_QUBE_PROJECT]: 'SonarQube Project',
+  [Kinds.SONAR_QUBE_PROJECT]: 'SonarQube',
   [Kinds.OPEN_SOURCE_COMPLIANCE]: 'Hyperspace Open-Source Compliance Service',
   [StepKey.AZURE_DEV_OPS]: 'Azure Pipelines',
   [StepKey.CNB]: 'Cloud Native Buildpacks',

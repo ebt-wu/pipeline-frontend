@@ -52,6 +52,8 @@
         gap: 1rem;
         align-items: center;
         padding-right: 1rem;
+        cursor: pointer;
+
 
         .icons {
             height: 4rem;
@@ -78,6 +80,13 @@
             padding: 0;
         }
 
+        .flex-grow {
+            flex-grow: 1;
+        }
+        .action-required {
+            height: fit-content;
+            
+        }
         .card-description {
             display: flex;
             flex-direction: column;
