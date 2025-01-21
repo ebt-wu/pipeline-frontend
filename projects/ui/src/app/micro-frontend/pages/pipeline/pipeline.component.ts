@@ -101,7 +101,7 @@ export class PipelineComponent implements OnInit, OnDestroy {
   pendingShowCredentials = signal(false)
   pendingExtensionClass = signal(false)
   catalogUrl = signal('')
-  errors = signal<Error[]>([])
+  errors = signal<Map<string, Error>>(new Map())
   extensionClasses = signal<ExtensionClass[]>([])
 
   // Feature flags
@@ -162,7 +162,16 @@ export class PipelineComponent implements OnInit, OnDestroy {
     this.showGithubActions.set(await this.featureFlagService.isGithubActionsEnabled())
     this.showOSC.set(await this.featureFlagService.isOscEnabled())
 
-    await Promise.all([this.getExtensionClasses(), this.checkSugarAppInstallation()])
+    try {
+      await Promise.all([this.getExtensionClasses(), this.checkSugarAppInstallation()])
+    } catch (e: unknown) {
+      const error: Error = {
+        title: 'Error retrieving CI/CD setup data',
+        message: `Unable to load Sugar App installation or extension classes: ${e instanceof Error ? e.message : ''}`,
+        resourceName: '-',
+      }
+      this.errors.update((errors) => errors.set(error.message, error))
+    }
 
     this.isGithubActionsEnabledAlready$ = this.api.githubActionsService.getGithubActionsCrossNamespace(
       this.githubMetadata.githubInstance,
@@ -182,8 +191,6 @@ export class PipelineComponent implements OnInit, OnDestroy {
         }),
       )
       .subscribe((pipeline: Pipeline) => {
-        // error reporting
-        this.errors.set([])
         this.isBuildPipelineSetupAndCreated.set(false)
         this.jenkinsPipelineError = false
 
@@ -230,37 +237,32 @@ export class PipelineComponent implements OnInit, OnDestroy {
 
             // Needed customized error message for Freestyle Pipeline
             if (ref.kind === Kinds.FREESTYLE_PIPELINE) {
-              this.errors.update((errors) => {
-                errors.push({
-                  title: `Configuration of CI/CD setup failed`,
-                  resourceName: ref.name,
-                  message: `<strong>Resource: </strong>${ref.name}<br><strong>Status:</strong> ${ref.status}<br><strong>Error: </strong> ${ref.error}`,
-                })
-                return errors
-              })
+              const error = {
+                title: `Configuration of CI/CD setup failed`,
+                resourceName: ref.name,
+                message: `<strong>Resource: </strong>${ref.name}<br><strong>Status:</strong> ${ref.status}<br><strong>Error: </strong> ${ref.error}`,
+              }
+              this.errors.update((errors) => errors.set(error.message, error))
               continue
             }
 
             // Needed customized error message for GitHub Actions
             if (ref.kind === Kinds.GITHUB_ACTION) {
-              this.errors.update((errors) => {
-                errors.push({
-                  title: `Configuration of ${KindName[ref.kind]} failed`,
-                  resourceName: ref.name,
-                  message: `The GitHub Actions configuration may have failed due to an expired token.<br>Please ensure that the GitHub credential stored in the vault is valid.<br><strong>Resource:</strong> ${ref.name}<br><strong>Status:</strong> ${ref.status}<br><strong>Error: </strong> ${ref.error}.`,
-                })
-                return errors
-              })
-              continue
-            }
-            this.errors.update((errors) => {
-              errors.push({
+              const error = {
                 title: `Configuration of ${KindName[ref.kind]} failed`,
                 resourceName: ref.name,
-                message: `<strong>Resource: </strong>${ref.name}<br><strong>Status:</strong> ${ref.status}<br><strong>Error: </strong> ${ref.error}`,
-              })
-              return errors
-            })
+                message: `The GitHub Actions configuration may have failed due to an expired token.<br>Please ensure that the GitHub credential stored in the vault is valid.<br><strong>Resource:</strong> ${ref.name}<br><strong>Status:</strong> ${ref.status}<br><strong>Error: </strong> ${ref.error}.`,
+              }
+              this.errors.update((errors) => errors.set(error.message, error))
+              continue
+            }
+
+            const error = {
+              title: `Configuration of ${KindName[ref.kind]} failed`,
+              resourceName: ref.name,
+              message: `<strong>Resource: </strong>${ref.name}<br><strong>Status:</strong> ${ref.status}<br><strong>Error: </strong> ${ref.error}`,
+            }
+            this.errors.update((errors) => errors.set(error.message, error))
             this.localLayout = 'OneColumnStartFullScreen'
           }
 
@@ -461,14 +463,12 @@ export class PipelineComponent implements OnInit, OnDestroy {
       }
     } catch (e) {
       const errorMessage = (e as Error).message
-      this.errors.update((errors) => {
-        errors.push({
-          title: `Delete build stage failed`,
-          resourceName: pipeline.name,
-          message: `${errorMessage}`,
-        })
-        return errors
-      })
+      const error = {
+        title: `Delete build stage failed`,
+        resourceName: pipeline.name,
+        message: `${errorMessage}`,
+      }
+      this.errors.update((errors) => errors.set(error.message, error))
     }
   }
 
@@ -479,14 +479,12 @@ export class PipelineComponent implements OnInit, OnDestroy {
       window.open(vaultInfo.vaultUrl, '_blank', 'noopener, noreferrer')
     } catch (e) {
       const errorMessage = (e as Error).message
-      this.errors.update((errors) => {
-        errors.push({
-          title: `Show Credentials failed`,
-          resourceName: undefined,
-          message: `${errorMessage}`,
-        })
-        return errors
-      })
+      const error = {
+        title: `Show Credentials failed`,
+        resourceName: undefined,
+        message: `${errorMessage}`,
+      }
+      this.errors.update((errors) => errors.set(error.message, error))
     } finally {
       this.pendingShowCredentials.set(false)
     }

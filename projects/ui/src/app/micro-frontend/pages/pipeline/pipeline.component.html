@@ -62,12 +62,12 @@
                   </button>
                 </div>
               </div>
-              <div *ngFor="let error of errors()">
+              <div *ngFor="let error of errors() | keyvalue">
                 <app-error-message
                   [automaticdNamespace]="pipeline.namespace"
-                  [automaticdResourceName]="error.resourceName"
-                  [message]="error.message"
-                  [title]="error.title"
+                  [automaticdResourceName]="error.value.resourceName"
+                  [message]="error.value.message"
+                  [title]="error.value.title"
                   [tracesUrl]="debugModeService.getTracesURL(pipeline.namespace)"
                   [attr.data-testid]="'pipeline-screen-error-banner'"></app-error-message>
               </div>
