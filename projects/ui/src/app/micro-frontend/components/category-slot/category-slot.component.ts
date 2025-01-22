@@ -86,7 +86,8 @@ export class CategorySlotComponent {
     if (
       !this.statusIconConfig ||
       !this.statusIconConfig.statusIconType ||
-      this.statusIconConfig.statusIconType === ServiceStatus.NOT_FOUND.toString()
+      this.statusIconConfig.statusIconType === ServiceStatus.NOT_FOUND.toString() ||
+      this.statusIconConfig.statusIconType === ServiceStatus.PENDING_CREATION.toString()
     ) {
       return
     }
