@@ -324,7 +324,7 @@ export class SetupBuildComponent implements OnInit, OnDestroy {
       guiOptions: {
         additionalData: <FormGeneratorHeaderAdditionalData>{
           header: 'Select an orchestrator',
-          buttonText: 'Decision Help',
+          buttonText: 'Need Help?',
           buttonAction: () =>
             window.open(
               'https://pages.github.tools.sap/hyperspace/academy/tools/decisionhelp/Orchestrators/',
