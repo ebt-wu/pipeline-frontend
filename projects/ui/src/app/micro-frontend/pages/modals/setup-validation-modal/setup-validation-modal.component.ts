@@ -171,9 +171,6 @@ export class SetupValidationModalComponent implements OnInit, OnDestroy {
 
       await firstValueFrom(
         this.githubAdvancedSecurityService.createGithubAdvancedSecurity({
-          githubInstance: metadata.githubInstance,
-          githubOrganization: metadata.githubOrganization,
-          githubRepository: metadata.githubRepository,
           codeScanJobOrchestrator: metadata.codeScanJobOrchestrator,
           buildTool: assumedBuildTool,
           labels: labels,

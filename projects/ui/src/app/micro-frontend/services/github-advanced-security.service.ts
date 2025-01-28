@@ -31,16 +31,10 @@ export class GithubAdvancedSecurityService {
   ) {}
 
   createGithubAdvancedSecurity({
-    githubInstance,
-    githubOrganization,
-    githubRepository,
     codeScanJobOrchestrator,
     buildTool,
     labels,
   }: {
-    githubInstance: string
-    githubOrganization: string
-    githubRepository: string
     codeScanJobOrchestrator?: Orchestrators
     buildTool?: BuildTool
     labels?: Array<LabelInput>
@@ -54,9 +48,6 @@ export class GithubAdvancedSecurityService {
             variables: {
               projectId: ctx.context.projectId,
               componentId: ctx.context.componentId,
-              githubInstance,
-              githubOrganization,
-              githubRepository,
               codeScanJobOrchestrator,
               buildTool,
               labels,

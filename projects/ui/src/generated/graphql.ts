@@ -105,9 +105,6 @@ export type Fortify = {
 export type GitHubAdvancedSecurityCreatePayload = {
   buildTool?: InputMaybe<BuildTool>
   codeScanJobOrchestrator?: InputMaybe<Orchestrators>
-  githubInstance: Scalars['String']['input']
-  githubOrganization: Scalars['String']['input']
-  githubRepository: Scalars['String']['input']
   labels?: InputMaybe<Array<LabelInput>>
 }
 
@@ -1121,9 +1118,6 @@ export type GetGithubActionsCrossNamespaceQuery = {
 export type CreateGitHubAdvancedSecurityMutationVariables = Exact<{
   projectId: Scalars['String']['input']
   componentId: Scalars['String']['input']
-  githubInstance: Scalars['String']['input']
-  githubOrganization: Scalars['String']['input']
-  githubRepository: Scalars['String']['input']
   codeScanJobOrchestrator?: InputMaybe<Orchestrators>
   buildTool?: InputMaybe<BuildTool>
   labels?: InputMaybe<Array<LabelInput> | LabelInput>

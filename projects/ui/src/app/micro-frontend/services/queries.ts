@@ -477,9 +477,6 @@ export const CREATE_GITHUB_ADVANCED_SECURITY = gql`
   mutation CreateGitHubAdvancedSecurity(
     $projectId: String!
     $componentId: String!
-    $githubInstance: String!
-    $githubOrganization: String!
-    $githubRepository: String!
     $codeScanJobOrchestrator: Orchestrators
     $buildTool: BuildTool
     $labels: [LabelInput!]
@@ -487,14 +484,7 @@ export const CREATE_GITHUB_ADVANCED_SECURITY = gql`
     createGitHubAdvancedSecurity(
       projectId: $projectId
       componentId: $componentId
-      params: {
-        githubInstance: $githubInstance
-        githubOrganization: $githubOrganization
-        githubRepository: $githubRepository
-        codeScanJobOrchestrator: $codeScanJobOrchestrator
-        buildTool: $buildTool
-        labels: $labels
-      }
+      params: { codeScanJobOrchestrator: $codeScanJobOrchestrator, buildTool: $buildTool, labels: $labels }
     )
   }
 `
