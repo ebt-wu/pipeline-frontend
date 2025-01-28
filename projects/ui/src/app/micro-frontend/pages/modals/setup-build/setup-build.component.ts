@@ -447,7 +447,6 @@ export class SetupBuildComponent implements OnInit, OnDestroy {
           githubMetadata.githubOrgName,
           githubMetadata.githubRepoName,
           isGithubActions,
-          githubSecretPath,
         ),
       )
 
@@ -482,6 +481,7 @@ export class SetupBuildComponent implements OnInit, OnDestroy {
             buildFormValue.jenkinsUrl.trim(),
             jenkinsCredentialPath,
             repositoryResource,
+            githubSecretPath,
             labels,
           ),
         )

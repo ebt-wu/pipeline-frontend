@@ -118,7 +118,6 @@ export type GitHubAdvancedSecurityGetPayload = {
 export type GithubActionsCreatePayload = {
   githubInstance: Scalars['String']['input']
   githubOrganization: Scalars['String']['input']
-  secretPath?: InputMaybe<Scalars['String']['input']>
 }
 
 export type GithubActionsGetPayload = {
@@ -137,7 +136,6 @@ export type GithubCreationRequest = {
   isGithubActionsGPP?: InputMaybe<Scalars['Boolean']['input']>
   org: Scalars['String']['input']
   repo: Scalars['String']['input']
-  secretPath?: InputMaybe<Scalars['String']['input']>
 }
 
 export type GithubRepository = {
@@ -157,6 +155,7 @@ export type Group = {
 
 export type JenkinsCreationRequest = {
   githubRepositoryResource: Scalars['String']['input']
+  githubRepositorySecretPath: Scalars['String']['input']
   jenkinsSecretPath: Scalars['String']['input']
   jenkinsUrl: Scalars['String']['input']
   labels?: InputMaybe<Array<LabelInput>>
@@ -887,7 +886,6 @@ export type CreateGithubRepositoryMutationVariables = Exact<{
   org: Scalars['String']['input']
   repo: Scalars['String']['input']
   isGithubActionsGPP: Scalars['Boolean']['input']
-  secretPath?: InputMaybe<Scalars['String']['input']>
 }>
 
 export type CreateGithubRepositoryMutation = { __typename?: 'Mutation'; createGithubRepository?: string | null }
@@ -973,6 +971,7 @@ export type CreateJenkinsPipelineMutationVariables = Exact<{
   jenkinsUrl: Scalars['String']['input']
   jenkinsSecretPath: Scalars['String']['input']
   githubRepositoryResource: Scalars['String']['input']
+  githubRepositorySecretPath: Scalars['String']['input']
   labels?: InputMaybe<Array<LabelInput> | LabelInput>
 }>
 
@@ -1071,7 +1070,6 @@ export type CreateGithubActionsMutationVariables = Exact<{
   componentId: Scalars['String']['input']
   githubInstance: Scalars['String']['input']
   githubOrganization: Scalars['String']['input']
-  secretPath?: InputMaybe<Scalars['String']['input']>
 }>
 
 export type CreateGithubActionsMutation = { __typename?: 'Mutation'; createGithubActions?: string | null }
@@ -1161,7 +1159,6 @@ export type CreateOscRegistrationMutationVariables = Exact<{
   githubBaseUrl: Scalars['String']['input']
   githubOrg: Scalars['String']['input']
   githubRepo: Scalars['String']['input']
-  githubSecretPath: Scalars['String']['input']
   isGithubActionsGPP: Scalars['Boolean']['input']
 }>
 

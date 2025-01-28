@@ -25,7 +25,7 @@ export class GithubActionsService {
     private readonly luigiService: DxpLuigiContextService,
   ) {}
 
-  createGithubActions(githubInstance: string, githubOrganization: string, secretPath?: string): Observable<string> {
+  createGithubActions(githubInstance: string, githubOrganization: string): Observable<string> {
     return combineLatest([this.apiService.apollo(), this.luigiService.contextObservable()]).pipe(
       first(),
       mergeMap(([client, ctx]) => {
@@ -37,7 +37,6 @@ export class GithubActionsService {
               componentId: ctx.context.componentId,
               githubInstance,
               githubOrganization,
-              secretPath: secretPath,
             },
           })
           .pipe(map((res) => res.data?.createGithubActions ?? ''))

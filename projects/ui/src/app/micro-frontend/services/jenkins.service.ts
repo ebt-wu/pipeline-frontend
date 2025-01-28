@@ -23,6 +23,7 @@ export class JenkinsService {
     jenkinsUrl: string,
     secretPath: string,
     githubRepositoryResource: string,
+    githubRepositorySecretPath: string,
     labels: Array<LabelInput> = [],
   ): Observable<string> {
     return combineLatest([this.apiService.apollo(), this.luigiService.contextObservable()]).pipe(
@@ -37,6 +38,7 @@ export class JenkinsService {
               jenkinsUrl: jenkinsUrl,
               jenkinsSecretPath: secretPath,
               githubRepositoryResource: githubRepositoryResource,
+              githubRepositorySecretPath: githubRepositorySecretPath,
               labels: labels,
             },
           })

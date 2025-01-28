@@ -118,13 +118,7 @@ export class GithubService {
     }
   }
 
-  createGithubRepository(
-    baseUrl: string,
-    org: string,
-    repo: string,
-    isGithubActionsGPP: boolean,
-    secretPath?: string,
-  ): Observable<string> {
+  createGithubRepository(baseUrl: string, org: string, repo: string, isGithubActionsGPP: boolean): Observable<string> {
     return combineLatest([this.apiService.apollo(), this.luigiService.contextObservable()]).pipe(
       first(),
       mergeMap(([client, ctx]) => {
@@ -137,7 +131,6 @@ export class GithubService {
               baseUrl: baseUrl,
               org: org,
               repo: repo,
-              secretPath: secretPath,
               isGithubActionsGPP: isGithubActionsGPP,
             },
           })

@@ -443,7 +443,6 @@ export class SetupOSCModalComponent implements OnInit {
       githubBaseUrl: githubMetadata.githubInstance,
       githubOrg: githubMetadata.githubOrgName,
       githubRepo: githubMetadata.githubRepoName,
-      githubSecretPath: '',
       isGithubActionsGPP: false,
     }
 

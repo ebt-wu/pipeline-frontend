@@ -218,18 +218,11 @@ export const CREATE_GITHUB_REPOSITORY = gql`
     $org: String!
     $repo: String!
     $isGithubActionsGPP: Boolean!
-    $secretPath: String
   ) {
     createGithubRepository(
       projectId: $projectId
       componentId: $componentId
-      params: {
-        baseUrl: $baseUrl
-        org: $org
-        repo: $repo
-        secretPath: $secretPath
-        isGithubActionsGPP: $isGithubActionsGPP
-      }
+      params: { baseUrl: $baseUrl, org: $org, repo: $repo, isGithubActionsGPP: $isGithubActionsGPP }
     )
   }
 `
@@ -306,6 +299,7 @@ export const CREATE_JENKINS_PIPELINE = gql`
     $jenkinsUrl: String!
     $jenkinsSecretPath: String!
     $githubRepositoryResource: String!
+    $githubRepositorySecretPath: String!
     $labels: [LabelInput!]
   ) {
     createJenkinsPipeline(
@@ -315,6 +309,7 @@ export const CREATE_JENKINS_PIPELINE = gql`
         jenkinsUrl: $jenkinsUrl
         jenkinsSecretPath: $jenkinsSecretPath
         githubRepositoryResource: $githubRepositoryResource
+        githubRepositorySecretPath: $githubRepositorySecretPath
         labels: $labels
       }
     )
@@ -433,12 +428,11 @@ export const CREATE_GITHUB_ACTIONS = gql`
     $componentId: String!
     $githubInstance: String!
     $githubOrganization: String!
-    $secretPath: String
   ) {
     createGithubActions(
       projectId: $projectId
       componentId: $componentId
-      params: { githubInstance: $githubInstance, githubOrganization: $githubOrganization, secretPath: $secretPath }
+      params: { githubInstance: $githubInstance, githubOrganization: $githubOrganization }
     )
   }
 `
@@ -518,7 +512,6 @@ export const CREATE_OPEN_SOURCE_COMPLIANCE = gql`
     $githubBaseUrl: String!
     $githubOrg: String!
     $githubRepo: String!
-    $githubSecretPath: String!
     $isGithubActionsGPP: Boolean!
   ) {
     createOscRegistration(
@@ -531,7 +524,6 @@ export const CREATE_OPEN_SOURCE_COMPLIANCE = gql`
           baseUrl: $githubBaseUrl
           org: $githubOrg
           repo: $githubRepo
-          secretPath: $githubSecretPath
           isGithubActionsGPP: $isGithubActionsGPP
         }
       }

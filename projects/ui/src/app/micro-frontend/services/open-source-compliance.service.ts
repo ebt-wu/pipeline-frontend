@@ -29,7 +29,6 @@ export class OpenSourceComplianceService {
     githubBaseUrl,
     githubOrg,
     githubRepo,
-    githubSecretPath,
     isGithubActionsGPP,
   }: {
     jira?: string
@@ -37,7 +36,6 @@ export class OpenSourceComplianceService {
     githubBaseUrl?: string
     githubOrg?: string
     githubRepo?: string
-    githubSecretPath?: string
     isGithubActionsGPP?: boolean
   }): Observable<string> {
     return combineLatest([this.apiService.apollo(), this.luigiService.contextObservable()]).pipe(
@@ -54,7 +52,6 @@ export class OpenSourceComplianceService {
               githubBaseUrl: githubBaseUrl,
               githubOrg: githubOrg,
               githubRepo: githubRepo,
-              githubSecretPath: githubSecretPath,
               isGithubActionsGPP: isGithubActionsGPP,
             },
           })
