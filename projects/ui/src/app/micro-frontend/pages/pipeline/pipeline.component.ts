@@ -246,17 +246,6 @@ export class PipelineComponent implements OnInit, OnDestroy {
               continue
             }
 
-            // Needed customized error message for GitHub Actions
-            if (ref.kind === Kinds.GITHUB_ACTION) {
-              const error = {
-                title: `Configuration of ${KindName[ref.kind]} failed`,
-                resourceName: ref.name,
-                message: `The GitHub Actions configuration may have failed due to an expired token.<br>Please ensure that the GitHub credential stored in the vault is valid.<br><strong>Resource:</strong> ${ref.name}<br><strong>Status:</strong> ${ref.status}<br><strong>Error: </strong> ${ref.error}.`,
-              }
-              this.errors.update((errors) => errors.set(error.message, error))
-              continue
-            }
-
             const error = {
               title: `Configuration of ${KindName[ref.kind]} failed`,
               resourceName: ref.name,
