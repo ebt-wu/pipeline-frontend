@@ -1,5 +1,5 @@
 import { ServiceDetailsSkeletonComponent } from './service-details-skeleton.component'
-import { MockBuilder, MockedDebugElement, MockRender, ngMocks } from 'ng-mocks'
+import { MockBuilder, MockedDebugElement, MockProvider, MockRender, ngMocks } from 'ng-mocks'
 import { DebugModeService } from '../../services/debug-mode.service'
 import { Categories, Kinds, ServiceStatus, StepKey } from '@enums'
 import { DxpLuigiContextService } from '@dxp/ngx-core/luigi'
@@ -7,6 +7,8 @@ import { of } from 'rxjs'
 import { APIService } from '../../services/api.service'
 import { GithubService } from '../../services/github.service'
 import { createPipelineForTests } from '../../../../../test-utils'
+import { PolicyService } from '../../services/policy.service'
+import { signal } from '@angular/core'
 
 const context = {
   frameContext: undefined,
@@ -74,6 +76,7 @@ describe('ServiceDetailsSkeletonComponent', () => {
         getContextAsync: jest.fn().mockResolvedValue(context),
       })
       .mock(APIService, mockAPIService)
+      .mock(PolicyService, { isUserStaffed: jest.fn().mockResolvedValue(true) })
   })
   afterEach(() => {
     ngMocks.reset()
@@ -399,6 +402,96 @@ describe('ServiceDetailsSkeletonComponent', () => {
       component.debugModeService.isHyperspaceAdmin.set(true)
       fixture.detectChanges()
       expect(() => ngMocks.find(fixture, '[data-testid="debug-label-button"]')).toThrow()
+    })
+  })
+
+  describe('Removal button', () => {
+    it('should not show the removal button for a service that is not managed when prerequisite service is not available', async () => {
+      const fixture = MockRender(ServiceDetailsSkeletonComponent, {
+        context,
+        activeCategory: Categories.OPEN_SOURCE_CHECKS,
+        leanIxData: [],
+        pipeline: createPipelineForTests([
+          {
+            kind: StepKey.WHITE_SOURCE,
+            status: ServiceStatus.NOT_MANAGED,
+          },
+        ]),
+      })
+
+      await fixture.whenStable()
+      fixture.detectChanges()
+
+      expect(() => ngMocks.find(fixture, '[data-testid="removal-button"]')).toThrow()
+    })
+
+    it('should show the removal button for a service that is not managed when prerequisite service is available', async () => {
+      const fixture = MockRender(
+        ServiceDetailsSkeletonComponent,
+        {
+          context,
+          activeCategory: Categories.OPEN_SOURCE_CHECKS,
+          leanIxData: [],
+          pipeline: createPipelineForTests([
+            {
+              kind: StepKey.WHITE_SOURCE,
+              status: ServiceStatus.NOT_MANAGED,
+            },
+            {
+              kind: Kinds.OPEN_SOURCE_COMPLIANCE,
+              status: ServiceStatus.CREATED,
+            },
+          ]),
+        },
+        {
+          providers: [
+            MockProvider(DebugModeService, {
+              getTier: jest.fn().mockReturnValue('dev'),
+              debugModeEnabled: signal(false),
+            }),
+          ],
+        },
+      )
+
+      fixture.point.componentInstance.hasPermissions = signal(true)
+      await fixture.whenStable()
+      fixture.detectChanges()
+
+      const removalButton = ngMocks.find(fixture, '[data-testid="removal-button"]')
+      expect(removalButton).toBeDefined()
+    })
+    it('should not show the removal button for a service that is not managed when prerequisite service is available and the user is not staffed', async () => {
+      const fixture = MockRender(
+        ServiceDetailsSkeletonComponent,
+        {
+          context,
+          activeCategory: Categories.OPEN_SOURCE_CHECKS,
+          leanIxData: [],
+          pipeline: createPipelineForTests([
+            {
+              kind: StepKey.WHITE_SOURCE,
+              status: ServiceStatus.NOT_MANAGED,
+            },
+            {
+              kind: Kinds.OPEN_SOURCE_COMPLIANCE,
+              status: ServiceStatus.CREATED,
+            },
+          ]),
+        },
+        {
+          providers: [
+            MockProvider(DebugModeService, {
+              getTier: jest.fn().mockReturnValue('dev'),
+              debugModeEnabled: signal(false),
+            }),
+          ],
+        },
+      )
+      await fixture.whenStable()
+
+      fixture.detectChanges()
+
+      expect(() => ngMocks.find(fixture, '[data-testid="removal-button"]')).toThrow()
     })
   })
 })

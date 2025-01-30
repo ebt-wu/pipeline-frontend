@@ -15,7 +15,7 @@ export class PolicyService {
     return userPolicies.includes('vault_maintainer') || userPolicies.includes('owner')
   }
 
-  async canUserSetUpPipeline(): Promise<boolean> {
+  async isUserStaffed(): Promise<boolean> {
     const userPolicies = await this.getUserPolicies()
     return (
       userPolicies.includes('member') || userPolicies.includes('vault_maintainer') || userPolicies.includes('owner')

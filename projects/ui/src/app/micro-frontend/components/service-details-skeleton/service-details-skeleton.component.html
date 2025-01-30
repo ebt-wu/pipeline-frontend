@@ -118,17 +118,23 @@
               </fdp-menu>
               <button
                 *ngIf="serviceKind !== kinds.GITHUB_ADVANCED_SECURITY && serviceUrls().get(serviceKind)"
-                class="open-service-button"
                 fd-button
                 fdType="emphasized"
                 label="Open"
                 (click)="openService(serviceKind)"
                 ariaLabel="Open"></button>
               <button
+                *ngIf="canUnmanagedServiceBeRemoved(serviceKind)"
+                fd-button
+                fdType="emphasized"
+                data-testid="removal-button"
+                label="Remove"
+                (click)="openDialog(serviceKind)"
+                ariaLabel="Remove"></button>
+              <button
                 *ngIf="serviceKind === kinds.GITHUB_ADVANCED_SECURITY"
                 [fdMenuTrigger]="menuShortcut"
                 [fdMenu]="true"
-                class="open-service-button"
                 fd-button
                 fdType="emphasized"
                 label="Open"></button>

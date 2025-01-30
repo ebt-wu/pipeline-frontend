@@ -40,7 +40,7 @@ export class CumulusInfoModalComponent implements OnInit {
     this.canUserEditCredentials = await this.policyService.canUserEditCredentials()
 
     // If there is no pipeline we create one on-the-fly
-    if (await this.policyService.canUserSetUpPipeline()) {
+    if (await this.policyService.isUserStaffed()) {
       await firstValueFrom(
         this.pipelineService
           .createPipeline({

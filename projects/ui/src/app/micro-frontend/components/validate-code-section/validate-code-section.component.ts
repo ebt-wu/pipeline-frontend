@@ -180,7 +180,7 @@ export class ValidateCodeSectionComponent implements OnChanges, OnInit {
   }
 
   async isButtonShown(category: Categories) {
-    if (!(await this.policyService.canUserSetUpPipeline())) {
+    if (!(await this.policyService.isUserStaffed())) {
       return false
     }
     const stepsOfCategory = this.pipelineStepsByCategory.get(category)

@@ -1,3 +1,4 @@
+import { CommonModule } from '@angular/common'
 import {
   ChangeDetectionStrategy,
   Component,
@@ -8,28 +9,14 @@ import {
   Output,
   signal,
 } from '@angular/core'
-import { ColorAccent, FlexibleColumnLayout, FundamentalNgxCoreModule } from '@fundamental-ngx/core'
-import { CommonModule } from '@angular/common'
+import { FormsModule } from '@angular/forms'
+import { ApolloError } from '@apollo/client/core'
 import { KindCategory, KindExtensionName, KindName, NotManagedServices, OrderedStepsByCategory } from '@constants'
-import { Categories, Kinds, ServiceStatus, StepKey } from '@enums'
-import { firstValueFrom, map, Observable } from 'rxjs'
-import { APIService } from '../../services/api.service'
-import { CumlusServiceDetailsComponent } from '../service-details/cumulus/cumulus-service-details.component'
-import { GithubServiceDetailsComponent } from '../service-details/github/github-service-details.component'
-import { JenkinServiceDetailsComponent } from '../service-details/jenkins/jenkins-service-details.component'
-import { PiperServiceDetailsComponent } from '../service-details/piper/piper-service-details.component'
-import { StagingServiceServiceDetailsComponent } from '../service-details/staging-service/staging-service-service-details.component'
-import { GithubActionsServiceDetailsComponent } from '../service-details/github-actions/github-actions-service-details.component'
-import { OpenSourceComplianceDetailsComponent } from '../service-details/open-source-compliance/open-source-compliance-details.component'
-import { ExtensionClass, ServiceLevel } from '../../services/extension.types'
-import { GitHubIssueLinkService } from '../../services/github-issue-link.service'
-import { ExtensionService } from '../../services/extension.service'
-import { DebugModeService } from '../../services/debug-mode.service'
-import { DxpLuigiContextService, LuigiClient } from '@dxp/ngx-core/luigi'
+import { AuthorizationModule } from '@dxp/ngx-core/authorization'
 import { DxpContext } from '@dxp/ngx-core/common'
-import { ErrorMessageComponent } from '../error-message/error-message.component'
-import { ErrorMessage, Pipeline, ResourceRef, ServiceDetails } from '@types'
-import { GithubAdvancedSecurityServiceDetailsComponent } from '../service-details/github-advanced-security/github-advanced-security-service-details.component'
+import { DxpLuigiContextService, LuigiClient } from '@dxp/ngx-core/luigi'
+import { Categories, Kinds, ServiceStatus, StepKey } from '@enums'
+import { ColorAccent, FlexibleColumnLayout, FundamentalNgxCoreModule } from '@fundamental-ngx/core'
 import {
   IconTabBarComponent,
   IconTabBarTabComponent,
@@ -37,19 +24,6 @@ import {
   MenuTriggerDirective,
   PlatformMenuButtonModule,
 } from '@fundamental-ngx/platform'
-import { SonarServiceDetailsComponent } from '../service-details/sonar/sonar-service-details.component'
-import { AzureServiceDetailsComponent } from '../service-details/azure/azure-service-details.component'
-import { XMakeServiceDetailsComponent } from '../service-details/xmake/xmake-service-details.component'
-import { CnbServiceDetailsComponent } from '../service-details/cnb/cnb-service-details.component'
-import { CommonRepositoryServiceDetailsComponent } from '../service-details/commonrepository/common-repository-service-details.component'
-import { BlackDuckServiceDetailsComponent } from '../service-details/black-duck/black-duck-service-details.component'
-import { CheckmarxServiceDetailsComponent } from '../service-details/checkmarx/checkmarx-service-details.component'
-import { CXOneServiceDetailsComponent } from '../service-details/cx-one/cx-one-service-details.component'
-import { FortifyServiceDetailsComponent } from '../service-details/fortify/fortify-service-details.component'
-import { WhiteSourceServiceDetailsComponent } from '../service-details/whitesource/whitesource-service-details.component'
-import { PpmsFossServiceDetailsComponent } from '../service-details/ppms-foss/ppms-foss-service-details.component'
-import { KubernetesServiceDetailsComponent } from '../service-details/kubernetes/kubernetes-service-details.component'
-import { CloudFoundryServiceDetailsComponent } from '../service-details/cloud-foundry/cloud-foundry-service-details.component'
 import {
   GithubRepository,
   JenkinsPipeline,
@@ -57,7 +31,37 @@ import {
   PiperConfig,
   SonarQubeProject,
 } from '@generated/graphql'
-import { ApolloError } from '@apollo/client/core'
+import { ErrorMessage, Pipeline, ResourceRef, ServiceDetails } from '@types'
+import { firstValueFrom, map, Observable } from 'rxjs'
+import { APIService } from '../../services/api.service'
+import { DebugModeService } from '../../services/debug-mode.service'
+import { ExtensionService } from '../../services/extension.service'
+import { ExtensionClass, ServiceLevel } from '../../services/extension.types'
+import { GitHubIssueLinkService } from '../../services/github-issue-link.service'
+import { PipelineService } from '../../services/pipeline.service'
+import { ErrorMessageComponent } from '../error-message/error-message.component'
+import { AzureServiceDetailsComponent } from '../service-details/azure/azure-service-details.component'
+import { BlackDuckServiceDetailsComponent } from '../service-details/black-duck/black-duck-service-details.component'
+import { CheckmarxServiceDetailsComponent } from '../service-details/checkmarx/checkmarx-service-details.component'
+import { CloudFoundryServiceDetailsComponent } from '../service-details/cloud-foundry/cloud-foundry-service-details.component'
+import { CnbServiceDetailsComponent } from '../service-details/cnb/cnb-service-details.component'
+import { CommonRepositoryServiceDetailsComponent } from '../service-details/commonrepository/common-repository-service-details.component'
+import { CumlusServiceDetailsComponent } from '../service-details/cumulus/cumulus-service-details.component'
+import { CXOneServiceDetailsComponent } from '../service-details/cx-one/cx-one-service-details.component'
+import { FortifyServiceDetailsComponent } from '../service-details/fortify/fortify-service-details.component'
+import { GithubActionsServiceDetailsComponent } from '../service-details/github-actions/github-actions-service-details.component'
+import { GithubAdvancedSecurityServiceDetailsComponent } from '../service-details/github-advanced-security/github-advanced-security-service-details.component'
+import { GithubServiceDetailsComponent } from '../service-details/github/github-service-details.component'
+import { JenkinServiceDetailsComponent } from '../service-details/jenkins/jenkins-service-details.component'
+import { KubernetesServiceDetailsComponent } from '../service-details/kubernetes/kubernetes-service-details.component'
+import { OpenSourceComplianceDetailsComponent } from '../service-details/open-source-compliance/open-source-compliance-details.component'
+import { PiperServiceDetailsComponent } from '../service-details/piper/piper-service-details.component'
+import { PpmsFossServiceDetailsComponent } from '../service-details/ppms-foss/ppms-foss-service-details.component'
+import { SonarServiceDetailsComponent } from '../service-details/sonar/sonar-service-details.component'
+import { StagingServiceServiceDetailsComponent } from '../service-details/staging-service/staging-service-service-details.component'
+import { WhiteSourceServiceDetailsComponent } from '../service-details/whitesource/whitesource-service-details.component'
+import { XMakeServiceDetailsComponent } from '../service-details/xmake/xmake-service-details.component'
+import { PolicyService } from '../../services/policy.service'
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -66,6 +70,7 @@ import { ApolloError } from '@apollo/client/core'
   standalone: true,
   styleUrl: './service-details-skeleton.component.css',
   imports: [
+    AuthorizationModule,
     CommonModule,
     FundamentalNgxCoreModule,
     CumlusServiceDetailsComponent,
@@ -95,6 +100,7 @@ import { ApolloError } from '@apollo/client/core'
     MenuComponent,
     IconTabBarComponent,
     IconTabBarTabComponent,
+    FormsModule,
   ],
 })
 export class ServiceDetailsSkeletonComponent implements OnInit, OnChanges {
@@ -119,6 +125,7 @@ export class ServiceDetailsSkeletonComponent implements OnInit, OnChanges {
   errors = signal<Map<Kinds | StepKey, ErrorMessage[]>>(new Map())
   errorKinds = signal<(Kinds | StepKey)[]>([])
   catalogUrl = signal('')
+  hasPermissions = signal(false)
 
   constructor(
     private readonly api: APIService,
@@ -126,6 +133,8 @@ export class ServiceDetailsSkeletonComponent implements OnInit, OnChanges {
     private readonly luigiService: DxpLuigiContextService,
     private readonly luigiClient: LuigiClient,
     private readonly githubIssueLinkService: GitHubIssueLinkService,
+    private readonly pipelineService: PipelineService,
+    private readonly policyService: PolicyService,
     readonly debugModeService: DebugModeService,
   ) {}
 
@@ -153,6 +162,7 @@ export class ServiceDetailsSkeletonComponent implements OnInit, OnChanges {
     this.dxpContext$ = this.luigiService.contextObservable().pipe(map((value) => value.context))
     const context = await this.luigiService.getContextAsync()
     this.catalogUrl.set(context.frameBaseUrl + '/catalog')
+    this.hasPermissions.set(await this.checkPermission())
   }
 
   expandDetails() {
@@ -496,6 +506,70 @@ The information might be missing in the Hyperspace portal extension backend, Lea
     return 10 as ColorAccent
   }
 
+  canUnmanagedServiceBeRemoved(serviceToCheck: Kinds | StepKey): boolean {
+    if (!this.hasPermissions()) {
+      return false
+    }
+
+    switch (serviceToCheck) {
+      case this.stepKeys.CHECKMARX:
+      case this.stepKeys.FORTIFY:
+        return this.isAnyServicePresent([this.kinds.GITHUB_ADVANCED_SECURITY, this.stepKeys.CX_ONE])
+      case this.stepKeys.BLACK_DUCK_HUB:
+      case this.stepKeys.WHITE_SOURCE:
+        return this.isAnyServicePresent([this.kinds.OPEN_SOURCE_COMPLIANCE])
+      default:
+        return false
+    }
+  }
+
+  isAnyServicePresent(servicesToCheck: (Kinds | StepKey)[]): boolean {
+    return servicesToCheck.some((service) => this.servicesToShow().includes(service))
+  }
+
+  async removeUnmanagedService(value: Kinds | StepKey): Promise<void> {
+    if (isStepKey(value)) {
+      await firstValueFrom(this.pipelineService.deleteNotManagedService(value))
+    }
+  }
+
+  async openDialog(serviceKind: Kinds | StepKey): Promise<void> {
+    await this.luigiClient
+      .uxManager()
+      .showConfirmationModal({
+        header: `Remove ${this.kindName[serviceKind]}`,
+        body: 'Please clean up existing data if you plan to remove and not use this service anymore. This includes for example products, projects, group or other service entities. More information and links are found in the service detail view.',
+        buttonConfirm: 'Remove',
+        buttonDismiss: 'Cancel',
+      })
+      .then(() => {
+        this.removeUnmanagedService(serviceKind)
+          .then(() => {
+            this.luigiClient
+              .uxManager()
+              .showAlert({
+                text: `${this.kindName[serviceKind]} removed`,
+                type: 'success',
+                closeAfter: 3000,
+              })
+              .catch((error) => {
+                console.error('Error while showing alert', error)
+              })
+          })
+          .catch((error) => {
+            this.luigiClient
+              .uxManager()
+              .showAlert({
+                text: `Error while removing service ${this.kindName[serviceKind]}: ${error}`,
+                type: 'error',
+              })
+              .catch((error) => {
+                console.error('Error while showing alert', error)
+              })
+          })
+      })
+  }
+
   async onRetryClicked(resourceRef: ResourceRef): Promise<void> {
     try {
       await firstValueFrom(this.debugModeService.forceDebugReconciliation(resourceRef.kind, resourceRef.name))
@@ -535,8 +609,16 @@ The information might be missing in the Hyperspace portal extension backend, Lea
       return
     }
   }
+
+  async checkPermission() {
+    return await this.policyService.isUserStaffed()
+  }
 }
 
 function isKind(value: Kinds | StepKey): value is Kinds {
   return Object.values(Kinds).includes(value as Kinds)
+}
+
+function isStepKey(value: Kinds | StepKey): value is StepKey {
+  return Object.values(StepKey).includes(value as StepKey)
 }

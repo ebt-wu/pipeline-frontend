@@ -20,7 +20,7 @@ describe('ValidateCodeSectionComponent', () => {
         {
           provide: PolicyService,
           useValue: {
-            canUserSetUpPipeline: () => Promise.resolve(true),
+            isUserStaffed: () => Promise.resolve(true),
           },
         },
         {

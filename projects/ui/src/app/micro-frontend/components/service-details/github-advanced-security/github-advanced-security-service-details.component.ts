@@ -78,7 +78,7 @@ export class GithubAdvancedSecurityServiceDetailsComponent extends BaseServiceDe
       this.cumulusInfo = await firstValueFrom(this.cumulusService.getCumulusPipeline(cumulusRef.name))
     }
 
-    if (await this.policyService.canUserSetUpPipeline()) {
+    if (await this.policyService.isUserStaffed()) {
       const secrets = await firstValueFrom(this.secretService.getPipelineSecrets())
 
       // Try to get a secret from the list that matches the instance

@@ -43,20 +43,20 @@ describe('PolicyService', () => {
   describe('canUserSetUpPipeline', () => {
     it('vault maintainer should be able to set up pipeline', async () => {
       policyService.getUserPolicies = jest.fn().mockResolvedValue(['vault_maintainer'])
-      expect(await policyService.canUserSetUpPipeline()).toEqual(true)
+      expect(await policyService.isUserStaffed()).toEqual(true)
     })
     it('project member should be able to set up pipeline', async () => {
       policyService.getUserPolicies = jest.fn().mockResolvedValue(['member'])
-      expect(await policyService.canUserSetUpPipeline()).toEqual(true)
+      expect(await policyService.isUserStaffed()).toEqual(true)
     })
 
     it('project owner should be able to set up pipeline', async () => {
       policyService.getUserPolicies = jest.fn().mockResolvedValue(['owner'])
-      expect(await policyService.canUserSetUpPipeline()).toEqual(true)
+      expect(await policyService.isUserStaffed()).toEqual(true)
     })
     it('user with no policies should NOT be able to set up pipeline', async () => {
       policyService.getUserPolicies = jest.fn().mockResolvedValue([])
-      expect(await policyService.canUserSetUpPipeline()).toEqual(false)
+      expect(await policyService.isUserStaffed()).toEqual(false)
     })
   })
 })

@@ -84,7 +84,7 @@ export class HomePageComponent implements OnInit {
   }
 
   private async initializePipeline(): Promise<void> {
-    if (await this.policyService.canUserSetUpPipeline()) {
+    if (await this.policyService.isUserStaffed()) {
       await firstValueFrom(
         this.pipelineService
           .createPipeline({
