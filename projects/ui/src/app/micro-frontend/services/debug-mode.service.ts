@@ -14,7 +14,7 @@ const ENV_MAPPING = {
 }
 
 export interface DxpToken extends JwtPayload {
-  groups: string[]
+  groups: string | string[]
 }
 
 @Injectable({ providedIn: 'root' })
@@ -37,7 +37,8 @@ export class DebugModeService {
       .subscribe((ctx) => {
         const ADMIN_ARM_GROUP = `HyperCluster_Onboarding_${ENV_MAPPING[this.getTier()]}_Admin`.toLowerCase()
         const token = jwtDecode<DxpToken>(ctx.token)
-        const isAdmin = token.groups?.map((group) => group.toLowerCase())?.includes(ADMIN_ARM_GROUP)
+        const groups = Array.isArray(token.groups) ? token.groups : [token.groups]
+        const isAdmin = groups?.map((group) => group.toLowerCase())?.includes(ADMIN_ARM_GROUP)
         this.isHyperspaceAdmin.set(isAdmin)
       })
   }
