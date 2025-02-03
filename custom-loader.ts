@@ -1,63 +1,60 @@
 import http from 'http'
 import open from 'open'
-import { CallbackParamsType, generators, Issuer } from 'openid-client'
-import { buildClientSchema, getIntrospectionQuery } from 'graphql'
-import type { IntrospectionQuery } from 'graphql/utilities/getIntrospectionQuery'
+import * as OIDC from 'openid-client'
+import { buildClientSchema, getIntrospectionQuery, IntrospectionQuery } from 'graphql'
 
 const API_URL = process.env.API_URL || 'https://api.portal.d1.hyperspace.tools.sap/pipeline/query'
+const issuerUrl = 'https://hyperspacedev.accounts.ondemand.com'
+const clientId = 'f2cf17ca-5599-46f9-866b-fee5e8af96e8'
+const port = 8000
+const redirectUri = `http://localhost:${port}/`
 
 export default async function customLoader() {
-  const issuer = await Issuer.discover('https://hyperspacedev.accounts.ondemand.com')
+  const code_verifier = OIDC.randomPKCECodeVerifier()
+  const code_challenge = await OIDC.calculatePKCECodeChallenge(code_verifier)
+  const code_challenge_method = 'S256'
+  const issuer = await OIDC.discovery(new URL(issuerUrl), clientId)
 
-  const client = new issuer.Client({
-    client_id: 'f2cf17ca-5599-46f9-866b-fee5e8af96e8',
-    redirect_uris: ['http://localhost:8000'],
-    response_types: ['code'],
-    token_endpoint_auth_method: 'none',
-  })
-
-  // Generate code challenge
-  const code_verifier = generators.codeVerifier()
-  const code_challenge = generators.codeChallenge(code_verifier)
-
-  // Generate authorization url, that we will open for the user
-  const authorizationUrl = client.authorizationUrl({
-    scope: 'openid',
+  const parameters: Record<string, string> = {
+    redirect_uri: redirectUri,
     code_challenge,
-    code_challenge_method: 'S256',
-  })
-
-  let params: CallbackParamsType | undefined
-
-  // Very simple webserver, using Nodes standard http module
-  const server = http
-    .createServer((req, res) => {
-      // In here when the server gets a request
-      if (req.url.startsWith('/?')) {
-        // The parameters could be parsed manually, but the openid-client offers a function for it
-        params = client.callbackParams(req)
-        res.setHeader('Content-Type', 'text/html')
-        res.end('You can close this browser now.<script>window.close()</script>')
-      } else {
-        res.end('Unsupported')
-      }
-    })
-    .listen(8000) // static local port
-
-  // Open authorization url in preferred browser, works cross-platform using import open
-  await open(authorizationUrl)
-
-  // Recheck every 500ms if we received any parameters
-  // This is a simple example without a timeout
-  while (params === undefined) {
-    await new Promise((resolve) => setTimeout(resolve, 500))
+    code_challenge_method,
+    scope: 'openid',
   }
 
-  const tokenSet = await client.callback('http://localhost:8000', params, { code_verifier })
-  server.close()
+  return new Promise((resolve, reject) => {
+    const server = http.createServer((req, res) => {
+      try {
+        const currentURL = new URL(req.url, redirectUri)
+        const tokenSet = OIDC.authorizationCodeGrant(issuer, currentURL, {
+          pkceCodeVerifier: code_verifier,
+        })
 
+        res.writeHead(200, { 'Content-Type': 'text/html' })
+        res.end(`<html lang="trash"><head><title></title></head>
+<body>Authentication successful! You can close this window.<script>window.close()</script></body></html>`)
+        server.close()
+        resolve(tokenSet.then((x) => tokenResponse(x)))
+      } catch (e) {
+        res.writeHead(500, { 'Content-Type': 'text/plain' })
+        res.end(`Authentication failed. Server return an error.`)
+        server.close()
+        reject(e)
+      }
+    })
+
+    server.listen(port, () => {
+      const authUrl = OIDC.buildAuthorizationUrl(issuer, parameters)
+
+      void open(authUrl.href)
+    })
+  })
+}
+
+type ResponseData = { data: IntrospectionQuery }
+
+async function tokenResponse(tokenSet: OIDC.TokenEndpointResponse) {
   const introspectionQuery = getIntrospectionQuery()
-
   const response = await fetch(API_URL, {
     method: 'POST',
     headers: {
@@ -67,7 +64,6 @@ export default async function customLoader() {
     body: JSON.stringify({ query: introspectionQuery }),
   })
 
-  const data = (await response.json()) as { data: IntrospectionQuery }
-
-  return buildClientSchema(data.data)
+  const result = (await response.json()) as ResponseData
+  return buildClientSchema(result.data)
 }
