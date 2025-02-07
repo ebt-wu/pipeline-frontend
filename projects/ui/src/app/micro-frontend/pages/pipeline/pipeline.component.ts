@@ -191,6 +191,9 @@ export class PipelineComponent implements OnInit, OnDestroy {
         }),
       )
       .subscribe((pipeline: Pipeline) => {
+        const errors: Map<string, Error> = new Map()
+        const errorKeyPrefix = 'pipeline_subscription'
+
         this.isBuildPipelineSetupAndCreated.set(false)
         this.jenkinsPipelineError = false
 
@@ -242,7 +245,7 @@ export class PipelineComponent implements OnInit, OnDestroy {
                 resourceName: ref.name,
                 message: `<strong>Resource: </strong>${ref.name}<br><strong>Status:</strong> ${ref.status}<br><strong>Error: </strong> ${ref.error}`,
               }
-              this.errors.update((errors) => errors.set(error.message, error))
+              errors.set(`${errorKeyPrefix}${error.message}`, error)
               continue
             }
 
@@ -251,9 +254,21 @@ export class PipelineComponent implements OnInit, OnDestroy {
               resourceName: ref.name,
               message: `<strong>Resource: </strong>${ref.name}<br><strong>Status:</strong> ${ref.status}<br><strong>Error: </strong> ${ref.error}`,
             }
-            this.errors.update((errors) => errors.set(error.message, error))
+            errors.set(`${errorKeyPrefix}${error.message}`, error)
             this.localLayout = 'OneColumnStartFullScreen'
           }
+
+          this.errors.update((errs) => {
+            errs.forEach((_, key) => {
+              if (key.startsWith(errorKeyPrefix)) {
+                errs.delete(key)
+              }
+            })
+            errors.forEach((error, key) => {
+              errs.set(key, error)
+            })
+            return errs
+          })
 
           if (!this.pipelineService.isBuildPipelineSetup(pipeline.resourceRefs)) {
             this.isBuildStageSetup.set(false)
