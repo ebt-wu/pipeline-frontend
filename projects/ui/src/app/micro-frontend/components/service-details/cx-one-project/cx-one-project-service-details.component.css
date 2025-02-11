@@ -1,0 +1,47 @@
+@import "../base-service-details.component.css";
+
+.content {
+	margin-top: 16px;
+	display: flex;
+	flex-direction: column;
+	justify-content: flex-start;
+	gap: 16px;
+}
+
+.main {
+	display: flex;
+	flex-direction: row;
+	justify-content: space-between;
+}
+
+.fields {
+	display: flex;
+	flex-direction: column;
+	justify-content: flex-start;
+	gap: 16px;
+}
+
+.field {
+	display: flex;
+	flex-direction: column;
+	justify-content: flex-start;
+	gap: 4px;
+}
+
+.field-title {
+	color: var(--sapContent_LabelColor);
+	font-family: var(--sapFontFamily);
+	font-size: 14px;
+	line-height: 16.1px;
+}
+
+.field-value {
+	color: var(--sapTextColor);
+	font-family: var(--sapFontFamily);
+	font-size: 14px;
+	line-height: 16.1px;
+}
+
+.field-value--link {
+	color: var(--sapLinkColor);
+}

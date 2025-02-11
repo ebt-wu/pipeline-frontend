@@ -10,6 +10,7 @@ import { GithubAdvancedSecurityService } from './github-advanced-security.servic
 import { OpenSourceComplianceService } from './open-source-compliance.service'
 import { SonarService } from './sonar.service'
 import { JiraService } from './jira.service'
+import { CxOneService } from './cxone.service'
 
 @Injectable({ providedIn: 'root' })
 export class APIService {
@@ -25,5 +26,6 @@ export class APIService {
     public readonly openSourceComplianceService: OpenSourceComplianceService,
     public readonly sonarService: SonarService,
     public readonly jiraService: JiraService,
+    public readonly cxOneService: CxOneService,
   ) {}
 }

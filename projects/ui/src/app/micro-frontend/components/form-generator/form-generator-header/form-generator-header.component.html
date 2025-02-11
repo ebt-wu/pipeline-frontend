@@ -6,19 +6,37 @@
         'bottom-margin': !formItem.guiOptions?.additionalData?.ignoreBottomMargin,
       }">
       <h2 class="header" [ngClass]="formItem.guiOptions?.additionalData?.ignoreTopMargin ? '' : 'top-margin'">
-        {{ formItem.guiOptions?.additionalData?.header }}
+        {{ headerText() }}
         <button
           fd-button
-          *ngIf="formItem.guiOptions?.additionalData?.buttonText !== undefined"
+          *ngIf="
+            formItem.guiOptions?.additionalData?.buttonText !== undefined &&
+            formItem.guiOptions?.additionalData?.buttonInlineHelpHtml === undefined
+          "
           [label]="formItem.guiOptions?.additionalData?.buttonText"
           fdType="transparent"
           (click)="formItem.guiOptions?.additionalData?.buttonAction()"></button>
+        <button
+          fd-button
+          *ngIf="
+            formItem.guiOptions?.additionalData?.buttonText !== undefined &&
+            formItem.guiOptions?.additionalData?.buttonInlineHelpHtml !== undefined
+          "
+          [label]="formItem.guiOptions?.additionalData?.buttonText"
+          fdType="transparent"
+          [fd-inline-help]="buttonInlineHelp"
+          [triggers]="['click']"
+          [closeOnOutsideClick]="true"></button>
       </h2>
       <p
-        *ngIf="subheader"
+        *ngIf="subheaderHtml()"
         class="subheader"
-        [innerHTML]="subheader | async"
+        [innerHTML]="subheaderHtml()"
         [style]="formItem.guiOptions?.additionalData?.subheaderStyle"></p>
     </div>
   </ng-container>
 </ng-container>
+
+<ng-template #buttonInlineHelp>
+  <div [innerHTML]="formItem.guiOptions?.additionalData?.buttonInlineHelpHtml"></div>
+</ng-template>

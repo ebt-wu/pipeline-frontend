@@ -8,6 +8,7 @@ export const Flags = {
   GITHUB_ACTIONS_ENABLED: 'GITHUB_ACTIONS_ENABLED',
   GHAS_ENABLED: 'GHAS_ENABLED',
   OSC_ENABLED: 'OSC_ENABLED',
+  CX_ONE_INSTALLATION_ENABLED: 'CX_ONE_INSTALLATION_ENABLED',
 } as const
 
 const TEST_TENANT_ID = '01ezesr3cgghmhgpbny04hv8qn'
@@ -26,6 +27,11 @@ export class FeatureFlagService {
   async isOscEnabled() {
     const context = await this.luigiService.getContextAsync()
     return (await this.getFlagValue(Flags.OSC_ENABLED, context.projectId)) || this.isTestTenant()
+  }
+
+  async isCxOneInstallationEnabled() {
+    const context = await this.luigiService.getContextAsync()
+    return (await this.getFlagValue(Flags.CX_ONE_INSTALLATION_ENABLED, context.projectId)) || this.isTestTenant()
   }
 
   isTestTenant() {

@@ -53,7 +53,7 @@ export class GithubCredentialFormService {
         message: '',
         guiOptions: {
           additionalData: <FormGeneratorHeaderAdditionalData>{
-            header: 'Github credentials',
+            headerText: 'Github credentials',
             ignoreBottomMargin: true,
           },
         },

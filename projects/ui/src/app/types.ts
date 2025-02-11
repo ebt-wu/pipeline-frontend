@@ -1,5 +1,5 @@
 import { GitHubAdvancedSecurityGetPayload, NotManagedServices, PipelineType } from '@generated/graphql'
-import { GithubInstances, JiraProjectTypes, Kinds, OSCPlatforms, ServiceStatus, StepKey, ValidationTools } from '@enums'
+import { GithubInstances, JiraProjectTypes, Kinds, Languages, OSCPlatforms, ServiceStatus, StepKey } from '@enums'
 import { ButtonType, ColorAccent } from '@fundamental-ngx/core'
 
 export type AddPrefixToTypeProperties<T, P extends string> = {
@@ -77,12 +77,9 @@ export interface CategoryConfig {
   isOpenArrowShown?: boolean
 }
 
-export type ValidationLanguage = {
-  id: string
+export type ProgrammingLanguage = {
+  id: Languages
   displayName: string
-  githubLinguistNames: string[]
-  order: number
-  validationTool?: ValidationTools
 }
 
 export type GithubTokenMessage = {

@@ -5,8 +5,8 @@ import { FormModule, FundamentalNgxCoreModule } from '@fundamental-ngx/core'
 import { FundamentalNgxPlatformModule } from '@fundamental-ngx/platform'
 import { DynamicFormItem, FormGeneratorComponent, FormGeneratorService } from '@fundamental-ngx/platform/form'
 import { DxpLuigiContextService, LuigiClient } from '@dxp/ngx-core/luigi'
-import { CredentialTypes, Orchestrators } from '@enums'
-import { Pipeline, ValidationLanguage } from '@types'
+import { CredentialTypes, Languages, Orchestrators } from '@enums'
+import { Pipeline, ProgrammingLanguage } from '@types'
 import { SecretData, SecretService } from '../../../services/secret.service'
 import { debounceTime, firstValueFrom, lastValueFrom, Observable, Subscription } from 'rxjs'
 import { GithubService } from '../../../services/github.service'
@@ -19,7 +19,7 @@ import { getNodeParams } from '@luigi-project/client'
 import { FeatureFlagService } from '../../../services/feature-flag.service'
 import { PolicyService } from '../../../services/policy.service'
 import { PipelineService } from '../../../services/pipeline.service'
-import { ValidationLanguages } from '@constants'
+import { ProgrammingLanguages } from '@constants'
 import {
   FormGeneratorHeaderAdditionalData,
   PlatformFormGeneratorCustomHeaderElementComponent,
@@ -105,8 +105,8 @@ export class SetupBuildComponent implements OnInit, OnDestroy {
       message: '',
       guiOptions: {
         additionalData: <FormGeneratorHeaderAdditionalData>{
-          header: 'Jenkins instance',
-          subheader: () =>
+          headerText: 'Jenkins instance',
+          subheaderHtml: () =>
             Promise.resolve(
               `Don't have an instance yet? Create an account in the Jenkins as a Service extension to get one.`,
             ),
@@ -138,8 +138,8 @@ export class SetupBuildComponent implements OnInit, OnDestroy {
       message: '',
       guiOptions: {
         additionalData: <FormGeneratorHeaderAdditionalData>{
-          header: 'Jenkins credentials',
-          subheader: () =>
+          headerText: 'Jenkins credentials',
+          subheaderHtml: () =>
             Promise.resolve(
               `Your credentials are stored in Vault and needed to create a pipeline
             in your Jenkins instance. Technical user is preferred, you can find out how
@@ -266,7 +266,7 @@ export class SetupBuildComponent implements OnInit, OnDestroy {
       message: '',
       guiOptions: {
         additionalData: <FormGeneratorHeaderAdditionalData>{
-          header: 'Select your build tool',
+          headerText: 'Select your build tool',
           ignoreTopMargin: true,
           ignoreBottomMargin: true,
         },
@@ -278,10 +278,10 @@ export class SetupBuildComponent implements OnInit, OnDestroy {
       message: '',
       default: async () => {
         let languages: { Name: string; Bytes: number }[]
-        let mostUsedLanguage: ValidationLanguage
+        let mostUsedLanguage: ProgrammingLanguage
         try {
           languages = await firstValueFrom(this.githubService.getRepositoryLanguages())
-          mostUsedLanguage = this.githubService.getMostUsedLanguage(languages, ValidationLanguages)
+          mostUsedLanguage = this.githubService.getMostUsedLanguage(languages, ProgrammingLanguages)
         } catch (error) {
           this.errorMessage.set((error as Error).message)
         }
@@ -289,16 +289,15 @@ export class SetupBuildComponent implements OnInit, OnDestroy {
         if (!languages || !mostUsedLanguage || !mostUsedLanguage.displayName) {
           return BuildTool.Docker
         }
-        switch (mostUsedLanguage.displayName) {
-          case 'Java':
+        switch (mostUsedLanguage.id) {
+          case Languages.JAVA:
             return BuildTool.Maven
-          case 'Golang':
+          case Languages.GO:
             return BuildTool.Golang
-          case 'Javascript/Typescript':
+          case Languages.JAVASCRIPT:
             return BuildTool.Npm
-          case 'Python':
+          case Languages.PYTHON:
             return BuildTool.Python
-          case 'Other':
           default:
             return BuildTool.Docker
         }
@@ -323,8 +322,8 @@ export class SetupBuildComponent implements OnInit, OnDestroy {
       message: '',
       guiOptions: {
         additionalData: <FormGeneratorHeaderAdditionalData>{
-          header: 'Select an orchestrator',
-          buttonText: 'Need Help?',
+          headerText: 'Select an orchestrator',
+          buttonText: 'Decision Help',
           buttonAction: () =>
             window.open(
               'https://pages.github.tools.sap/hyperspace/academy/tools/decisionhelp/Orchestrators/',
@@ -361,7 +360,7 @@ export class SetupBuildComponent implements OnInit, OnDestroy {
       message: '',
       guiOptions: {
         additionalData: <FormGeneratorHeaderAdditionalData>{
-          header: '',
+          headerText: '',
           ignoreTopMargin: true,
           ignoreBottomMargin: true,
         },

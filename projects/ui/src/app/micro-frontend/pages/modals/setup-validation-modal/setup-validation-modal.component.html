@@ -1,5 +1,5 @@
 <div *ngIf="!loading()">
-  <div class="setup-validation-margin">
+  <div>
     <app-error-message
       title="Setup validation could not be completed"
       [message]="errorMessage()"
@@ -7,171 +7,26 @@
       *ngIf="errorMessage()"
       data-testid="setup-validation-dialog-error-banner"></app-error-message>
   </div>
-  <div class="setup-validation-margin-top">
-    <div>
-      <div class="validation-language-content">
-        <section class="section-margin-bottom setup-validation-margin-sides">
-          <div class="headline">Select your programming language</div>
-          <fd-select [formControl]="languageSelection" class="select-box">
-            <li
-              fd-option
-              *ngFor="let language of selectionOptions()"
-              [value]="language"
-              [attr.data-testid]="'select-language-' + language.id">
-              <span *ngIf="recommendedLanguage().id === language.id">
-                {{ language.displayName }} (found in your repository)
-              </span>
-              <span *ngIf="recommendedLanguage().id !== language.id">{{ language.displayName }}</span>
-            </li>
-          </fd-select>
-        </section>
-        <section class="setup-validation-margin-sides">
-          <div *ngIf="languageSelection.getRawValue()?.id !== 'other'" class="headline">
-            Because you use {{ languageSelection.getRawValue()?.displayName }}
-          </div>
-          <div
-            *ngIf="languageSelection.getRawValue()?.validationTool === validationTools.GHAS"
-            class="recommendation-item"
-            data-testid="recommended-service-ghas">
-            <img src="./assets/ghas-logo.svg" alt="GitHub Logo" />
-            GitHub Advanced Security
-            <fd-icon
-              class="info-icon"
-              glyph="hint"
-              [fd-inline-help]="learnMoreGHAS"
-              [triggers]="['click']"
-              [closeOnOutsideClick]="true"></fd-icon>
-            <ng-template #learnMoreGHAS>
-              <a fd-link (click)="onButtonLearnMore(validationTools.GHAS)">Learn more</a>
-            </ng-template>
-          </div>
-          <div
-            *ngIf="languageSelection.getRawValue()?.validationTool === validationTools.CX"
-            class="recommendation-item"
-            data-testid="recommended-service-cx-one">
-            <img alt="CxONE Logo" src="./assets/cx-one-logo.svg" />
-            CxONE (coming soon)
-            <fd-icon
-              class="info-icon"
-              glyph="hint"
-              [fd-inline-help]="learnMoreCxONE"
-              [triggers]="['click']"
-              [closeOnOutsideClick]="true"></fd-icon>
-            <ng-template #learnMoreCxONE>
-              <a fd-link (click)="onButtonLearnMore(validationTools.CX)">Learn more</a>
-            </ng-template>
-          </div>
-        </section>
-
-        <section class="setup-validation-margin-sides">
-          <div *ngIf="!languageSelection.getRawValue()?.validationTool" class="select-a-service-box">
-            <div class="flexbox">
-              <div class="service-headline">Select a Service</div>
-              <fd-icon
-                glyph="hint"
-                class="info-icon"
-                placement="top"
-                [fd-inline-help]="showServiceInfo"
-                [triggers]="['click']"
-                [closeOnOutsideClick]="true"></fd-icon>
-            </div>
-            <ng-template #showServiceInfo>
-              <a
-                fd-link
-                href="https://github.wdf.sap.corp/pages/Security-Testing/doc/security%20testing/tools/#sast-tools"
-                target="_blank"
-                rel="noopener noreferrer">
-                See recommendations
-              </a>
-            </ng-template>
-            <fieldset fd-fieldset>
-              <fd-form-group>
-                <div *ngFor="let validationTool of validationToolsArray" fd-form-item>
-                  <fd-radio-button
-                    [formControl]="toolSelection"
-                    [id]="validationTool"
-                    [name]="validationTool"
-                    [selectedValue]="toolSelection.value"
-                    [value]="validationTools[validationTool]"
-                    [attr.data-testid]="'radio-button-' + validationTool">
-                    {{ validationTools[validationTool] }}
-                  </fd-radio-button>
-                </div>
-              </fd-form-group>
-            </fieldset>
-          </div>
-        </section>
-        <div
-          *ngIf="
-            languageSelection.getRawValue()?.validationTool === validationTools.CX ||
-            toolSelection.getRawValue() === validationTools.CX
-          ">
-          <div class="separator setup-validation-margin-sides"></div>
-          <div class="cx-one-not-available-message">
-            <img alt="Illustration of a tent" src="./assets/tent.svg" />
-            <figure [noSvg]="true" fd-illustrated-message type="spot">
-              <figcaption fd-illustrated-message-figcaption id="tent-description">
-                <h3 fd-illustrated-message-title>CxONE is not yet available</h3>
-                <p fd-illustrated-message-text>
-                  We are working on providing this service in the future. In the meantime, you can add CxONE manually.
-                </p>
-              </figcaption>
-              <fd-illustrated-message-actions>
-                <button
-                  fd-button
-                  fdCompact
-                  fdType="ghost"
-                  (click)="onButtonClickInstallManually()"
-                  label="Add Manually"></button>
-              </fd-illustrated-message-actions>
-            </figure>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div
-      *ngIf="
-        languageSelection.getRawValue()?.validationTool === validationTools.GHAS ||
-        toolSelection.getRawValue() === validationTools.GHAS
-      ">
-      <div *ngIf="!githubResourceExists()">
-        <div class="separator setup-validation-margin-sides"></div>
-        <div>
-          <fdp-message-popover-form-wrapper [forms]="formGenerator?.formGroup" [formFields]="formGenerator?.formFields">
-            <fdp-form-generator [formItems]="formItems"></fdp-form-generator>
-          </fdp-message-popover-form-wrapper>
-        </div>
-      </div>
-    </div>
+  <div>
+    <fdp-message-popover-form-wrapper [forms]="formGenerator?.formGroup" [formFields]="formGenerator?.formFields">
+      <fdp-form-generator [formItems]="formItems"></fdp-form-generator>
+    </fdp-message-popover-form-wrapper>
   </div>
 
   <div fd-bar barDesign="footer" class="actions-footer">
     <div fd-bar-left></div>
     <div fd-bar-right class="footer-buttons-gap">
       <button
-        (click)="submit()"
         fd-button
-        *ngIf="
-          languageSelection.getRawValue()?.validationTool !== validationTools.CX &&
-          toolSelection.getRawValue() !== validationTools.CX
-        "
-        [disabled]="
-          !languageSelection.value ||
-          (formGenerator?.formGroup?.form && !formGenerator?.formGroup?.form?.valid) ||
-          (languageSelection.getRawValue()?.id === 'other' && !toolSelection.value)
-        "
-        label="Add"
+        (click)="submit()"
+        [disabled]="formGenerator?.formGroup?.form && !formGenerator?.formGroup?.form?.valid"
+        [label]="submitButtonText()"
         fdType="emphasized"
         data-testid="setup-validation-dialog-submit-button"></button>
       <button
-        (click)="cancel()"
-        [label]="
-          languageSelection.getRawValue()?.validationTool !== validationTools.CX &&
-          toolSelection.getRawValue() !== validationTools.CX
-            ? 'Cancel'
-            : 'Close'
-        "
         fd-button
+        (click)="cancel()"
+        label="Cancel"
         fdType="transparent"
         data-testid="setup-validation-dialog-cancel-button"></button>
     </div>

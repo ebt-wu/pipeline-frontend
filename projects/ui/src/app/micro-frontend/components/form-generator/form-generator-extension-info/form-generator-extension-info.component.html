@@ -1,0 +1,28 @@
+<ng-container [formGroup]="form">
+  <ng-container [formGroupName]="formGroupName">
+    <div *ngIf="extensionClass()" class="extension-info-container">
+      <div class="extension-info">
+        <fd-avatar
+          size="xs"
+          image="{{ extensionImage() }}"
+          [label]="extensionClass().displayName"
+          [colorAccent]="10"></fd-avatar>
+        <span class="extension-name">
+          {{ extensionClass().displayName }}
+        </span>
+      </div>
+      <fd-icon
+        *ngIf="popoverHtml()"
+        class="extension-info-icon"
+        glyph="hint"
+        placement="top"
+        color="information"
+        [fd-inline-help]="extensionInfoPopover"
+        [triggers]="['click']"
+        [closeOnOutsideClick]="true"></fd-icon>
+      <ng-template #extensionInfoPopover>
+        <div [innerHTML]="popoverHtml()"></div>
+      </ng-template>
+    </div>
+  </ng-container>
+</ng-container>

@@ -17,8 +17,8 @@ import {
   FundamentalNgxPlatformModule,
 } from '@fundamental-ngx/platform'
 import { PlatformMessagePopoverModule } from '@fundamental-ngx/platform/message-popover'
-import { EntityContext, Pipeline, SetupOSCFormValue, ValidationLanguage } from '@types'
-import { JiraProjectTypes, Kinds, OSCPlatforms, StepKey } from '@enums'
+import { EntityContext, Pipeline, SetupOSCFormValue, ProgrammingLanguage } from '@types'
+import { JiraProjectTypes, Kinds, Languages, OSCPlatforms, StepKey } from '@enums'
 import { debounceTime, firstValueFrom, Observable } from 'rxjs'
 import { ErrorMessageComponent } from '../../../components/error-message/error-message.component'
 import {
@@ -30,7 +30,7 @@ import { OpenSourceComplianceService } from '../../../services/open-source-compl
 import { PlatformFormGeneratorCustomReadOnlyInputComponent } from '../../../components/form-generator/form-generator-read-only-input/form-generator-read-only-input.component'
 import { GithubService } from '../../../services/github.service'
 import { ExtensionService } from '../../../services/extension.service'
-import { KindExtensionName, ValidationLanguages } from '@constants'
+import { KindExtensionName, ProgrammingLanguages } from '@constants'
 import { ExtensionClass } from '../../../services/extension.types'
 import { PipelineService } from '../../../services/pipeline.service'
 import { toolsSvg } from 'projects/ui/src/assets/ts-svg/tools'
@@ -85,7 +85,7 @@ export class SetupOSCModalComponent implements OnInit {
   watchNotManagedServices$: Observable<NotManagedServices>
 
   jiraProjects = signal<JiraProject[]>([])
-  prerequisitesRecommendedLanguage = signal({} as ValidationLanguage)
+  prerequisitesRecommendedLanguage = signal({} as ProgrammingLanguage)
   prerequisitesAvailableLanguages = signal([])
   prerequisitesXmakeChoices = signal(['Yes', 'No'])
   context = signal({} as DxpContext)
@@ -94,7 +94,7 @@ export class SetupOSCModalComponent implements OnInit {
   ppmsFossData = signal(null as PpmsFoss)
 
   setupPrerequisitesFormGroup = new FormGroup({
-    languageSelection: new FormControl(null as ValidationLanguage, Validators.required),
+    languageSelection: new FormControl(null as ProgrammingLanguage, Validators.required),
     xMakeOption: new FormControl(null, Validators.required),
   })
 
@@ -124,8 +124,8 @@ export class SetupOSCModalComponent implements OnInit {
       name: 'platformSelectionHeader',
       message: '',
       guiOptions: {
-        additionalData: {
-          header: 'Select where to report issues',
+        additionalData: <FormGeneratorHeaderAdditionalData>{
+          headerText: 'Select where to report issues',
           ignoreTopMargin: true,
         },
       },
@@ -153,8 +153,8 @@ export class SetupOSCModalComponent implements OnInit {
       name: 'jiraNewInstanceHeader',
       message: '',
       guiOptions: {
-        additionalData: {
-          header: 'Connect your Jira project:',
+        additionalData: <FormGeneratorHeaderAdditionalData>{
+          headerText: 'Connect your Jira project:',
           ignoreTopMargin: true,
         },
       },
@@ -188,8 +188,8 @@ export class SetupOSCModalComponent implements OnInit {
       name: 'jiraExistingProjectHeader',
       message: '',
       guiOptions: {
-        additionalData: {
-          header: 'Select your Jira project:',
+        additionalData: <FormGeneratorHeaderAdditionalData>{
+          headerText: 'Select your Jira project:',
           ignoreTopMargin: true,
         },
       },
@@ -291,7 +291,7 @@ export class SetupOSCModalComponent implements OnInit {
       message: '',
       guiOptions: {
         additionalData: <FormGeneratorHeaderAdditionalData>{
-          header: '',
+          headerText: '',
           ignoreBottomMargin: true,
         },
       },
@@ -316,8 +316,8 @@ export class SetupOSCModalComponent implements OnInit {
       name: 'trackComplianceHeader',
       message: '',
       guiOptions: {
-        additionalData: {
-          header: 'Track compliance',
+        additionalData: <FormGeneratorHeaderAdditionalData>{
+          headerText: 'Track compliance',
           doubleTopMargin: true,
         },
       },
@@ -411,9 +411,9 @@ export class SetupOSCModalComponent implements OnInit {
 
   async recommendLanguage() {
     const githubLanguages = await firstValueFrom(this.githubService.getRepositoryLanguages())
-    const recommendedLanguage = this.githubService.getMostUsedLanguage(githubLanguages, ValidationLanguages)
+    const recommendedLanguage = this.githubService.getMostUsedLanguage(githubLanguages, ProgrammingLanguages)
     this.prerequisitesRecommendedLanguage.set(recommendedLanguage)
-    this.prerequisitesAvailableLanguages.set(ValidationLanguages)
+    this.prerequisitesAvailableLanguages.set(ProgrammingLanguages)
   }
 
   onFormCreated(): void {
@@ -530,7 +530,7 @@ export class SetupOSCModalComponent implements OnInit {
 
   isLanguageUnsupported(): boolean {
     const languageSelected = this.setupPrerequisitesFormGroup.controls.languageSelection.value.id
-    return languageSelected == 'python' || languageSelected == 'golang'
+    return languageSelected == Languages.PYTHON || languageSelected == Languages.GO
   }
 
   moveToOscPrerequisitesSetupStep() {

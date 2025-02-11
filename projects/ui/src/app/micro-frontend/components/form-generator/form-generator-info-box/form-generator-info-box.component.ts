@@ -13,6 +13,8 @@ export type FormGeneratorInfoBoxAdditionalData = {
   instructions?: () => Promise<string>
   showRefreshButton?: boolean
   callBeforeRefresh?: () => Promise<void>
+
+  ignoreTopMargin?: boolean
 }
 
 @Component({

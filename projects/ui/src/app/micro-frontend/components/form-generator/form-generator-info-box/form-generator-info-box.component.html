@@ -1,6 +1,6 @@
 <ng-container [formGroup]="form">
   <ng-container [formGroupName]="formGroupName">
-    <div class="info-box">
+    <div class="info-box" [ngClass]="formItem.guiOptions?.additionalData?.ignoreTopMargin ? '' : 'top-margin'">
       <h3 class="headline">💡 {{ formItem.guiOptions?.additionalData?.header }}</h3>
       <p class="instructions" *ngIf="instructions" class="instructions" [innerHTML]="instructions | async"></p>
       <button

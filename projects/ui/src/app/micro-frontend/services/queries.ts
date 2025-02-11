@@ -498,6 +498,44 @@ export const DELETE_GITHUB_ADVANCED_SECURITY = gql`
     deleteGitHubAdvancedSecurity(projectId: $projectId, resourceName: $resourceName)
   }
 `
+/**
+ * CXONE
+ */
+export const GET_CX_ONE_PROJECT = gql`
+  query GetCxOneProject($portalProjectId: String!, $resourceName: String!) {
+    getCxOneProject(portalProjectId: $portalProjectId, resourceName: $resourceName) {
+      projectName
+      applicationName
+      applicationUrl
+    }
+  }
+`
+
+export const GET_CX_ONE_APPLICATION = gql`
+  query GetCxOneApplication($portalProjectId: String!) {
+    getCxOneApplication(portalProjectId: $portalProjectId) {
+      applicationId
+      applicationName
+      applicationUrl
+    }
+  }
+`
+
+export const CREATE_CX_ONE_PROJECT = gql`
+  mutation CreateCxOneProject($portalProjectId: String!, $portalComponentId: String!, $preset: String!) {
+    createCxOneProject(portalProjectId: $portalProjectId, portalComponentId: $portalComponentId, preset: $preset)
+  }
+`
+
+export const DELETE_CX_ONE_PROJECT = gql`
+  mutation DeleteCxOneProject($portalProjectId: String!, $portalComponentId: String!, $resourceName: String!) {
+    deleteCxOneProject(
+      portalProjectId: $portalProjectId
+      portalComponentId: $portalComponentId
+      resourceName: $resourceName
+    )
+  }
+`
 
 /**
  * OPEN SOURCE COMPLIANCE QUERIES

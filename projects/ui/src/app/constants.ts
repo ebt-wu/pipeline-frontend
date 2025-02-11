@@ -1,6 +1,6 @@
-import { Categories, Kinds, Stages, StepKey, ValidationTools } from '@enums'
+import { Categories, Kinds, Languages, Stages, StepKey } from '@enums'
 import { Extensions } from './micro-frontend/services/extension.types'
-import { ValidationLanguage } from '@types'
+import { ProgrammingLanguage } from '@types'
 
 export const KindName = {
   [Kinds.CUMULUS_PIPELINE]: 'Cumulus',
@@ -11,6 +11,7 @@ export const KindName = {
   [Kinds.GITHUB_ACTION]: 'GitHub Actions',
   [Kinds.GITHUB_ACTIONS_WORKFLOW]: 'GitHub Actions',
   [Kinds.GITHUB_ADVANCED_SECURITY]: 'GitHub Advanced Security',
+  [Kinds.CX_ONE_PROJECT]: 'Checkmarx ONE',
   [StepKey.CX_ONE]: 'Checkmarx ONE',
   [Kinds.SONAR_QUBE_PROJECT]: 'SonarQube',
   [Kinds.OPEN_SOURCE_COMPLIANCE]: 'Hyperspace Open-Source Compliance Service',
@@ -36,6 +37,7 @@ export const KindCategory = {
   [Kinds.PIPER_CONFIG]: Categories.CODE_BUILD,
   [Kinds.GITHUB_ACTIONS_WORKFLOW]: Categories.ORCHESTRATION,
   [Kinds.GITHUB_ADVANCED_SECURITY]: Categories.STATIC_SECURITY_CHECKS,
+  [Kinds.CX_ONE_PROJECT]: Categories.STATIC_SECURITY_CHECKS,
   [StepKey.CX_ONE]: Categories.STATIC_SECURITY_CHECKS,
   [Kinds.OPEN_SOURCE_COMPLIANCE]: Categories.OPEN_SOURCE_CHECKS,
   [Kinds.SONAR_QUBE_PROJECT]: Categories.STATIC_CODE_CHECKS,
@@ -63,6 +65,7 @@ export const KindExtensionName = {
   [Kinds.GITHUB_ADVANCED_SECURITY]: Extensions.GITHUB_ADVANCED_SECURITY,
   [Kinds.OPEN_SOURCE_COMPLIANCE]: Extensions.OPEN_SOURCE_COMPLIANCE,
   [Kinds.SONAR_QUBE_PROJECT]: Extensions.SONARQUBE,
+  [Kinds.CX_ONE_PROJECT]: Extensions.CHECKMARX_ONE,
   [StepKey.CX_ONE]: Extensions.CHECKMARX_ONE,
   [StepKey.AZURE_DEV_OPS]: Extensions.AZURE_PIPELINES,
   [StepKey.XMAKE]: Extensions.XMAKE,
@@ -82,6 +85,7 @@ export const KindStage = {
   [Kinds.JENKINS_PIPELINE]: Stages.BUILD,
   [Kinds.GITHUB_ACTIONS_WORKFLOW]: Stages.BUILD,
   [Kinds.GITHUB_ADVANCED_SECURITY]: Stages.VALIDATE,
+  [Kinds.CX_ONE_PROJECT]: Stages.VALIDATE,
   [Kinds.OPEN_SOURCE_COMPLIANCE]: Stages.VALIDATE,
   [Kinds.SONAR_QUBE_PROJECT]: Stages.VALIDATE,
   [StepKey.AZURE_DEV_OPS]: Stages.BUILD,
@@ -113,83 +117,50 @@ export const NotManagedServices = [
   StepKey.CLOUD_FOUNDRY,
 ]
 
-export const ValidationLanguages: ValidationLanguage[] = [
+export const ProgrammingLanguages: ProgrammingLanguage[] = [
   {
-    id: 'java',
+    id: Languages.JAVA,
     displayName: 'Java',
-    githubLinguistNames: ['Java'],
-    order: 1,
-    validationTool: ValidationTools.GHAS,
   },
   {
-    id: 'javascript',
+    id: Languages.JAVA_NODE_CAP,
+    displayName: 'Java + Node CAP',
+  },
+  {
+    id: Languages.JAVASCRIPT,
     displayName: 'JavaScript/TypeScript',
-    githubLinguistNames: ['JavaScript', 'TypeScript'],
-    order: 2,
-    validationTool: ValidationTools.CX,
   },
   {
-    id: 'python',
+    id: Languages.PYTHON,
     displayName: 'Python',
-    githubLinguistNames: ['Python'],
-    order: 3,
-    validationTool: ValidationTools.GHAS,
   },
   {
-    id: 'golang',
+    id: Languages.GO,
     displayName: 'Golang',
-    githubLinguistNames: ['Go'],
-    order: 4,
-    validationTool: ValidationTools.CX,
-  },
-  // removed, see https://github.tools.sap/hyperspace/yggdrasil/issues/36#issuecomment-5601426
-  // {
-  //   id: 'csharp',
-  //   displayName: 'C#',
-  //   githubLinguistName: 'C#',
-  //   order: 5,
-  //   validationTool: ValidationTools.GHAS,
-  // },
-  {
-    id: 'groovy',
-    displayName: 'Groovy',
-    githubLinguistNames: ['Groovy'],
-    order: 6,
-    validationTool: ValidationTools.CX,
   },
   {
-    id: 'ruby',
+    id: Languages.RUBY,
     displayName: 'Ruby',
-    githubLinguistNames: ['Ruby'],
-    order: 7,
-    validationTool: ValidationTools.CX,
   },
   {
-    id: 'scala',
+    id: Languages.GROOVY,
+    displayName: 'Groovy',
+  },
+  {
+    id: Languages.SCALA,
     displayName: 'Scala',
-    githubLinguistNames: ['Scala'],
-    order: 8,
-    validationTool: ValidationTools.CX,
   },
   {
-    id: 'swift',
+    id: Languages.SWIFT,
     displayName: 'Swift',
-    githubLinguistNames: ['Swift'],
-    order: 9,
-    validationTool: ValidationTools.CX,
   },
   {
-    id: 'php',
+    id: Languages.PHP,
     displayName: 'PHP',
-    githubLinguistNames: ['PHP'],
-    order: 10,
-    validationTool: ValidationTools.CX,
   },
   {
-    id: 'other',
+    id: Languages.OTHER,
     displayName: 'Other',
-    githubLinguistNames: [''],
-    order: 11,
   },
 ]
 
@@ -206,9 +177,10 @@ export const OrderedStepsByCategory = {
 
   // Static Security Checks
   [Kinds.GITHUB_ADVANCED_SECURITY]: 1,
-  [StepKey.CX_ONE]: 2,
-  [StepKey.CHECKMARX]: 3,
-  [StepKey.FORTIFY]: 4,
+  [Kinds.CX_ONE_PROJECT]: 2,
+  [StepKey.CX_ONE]: 3,
+  [StepKey.CHECKMARX]: 4,
+  [StepKey.FORTIFY]: 5,
 
   // Static Code Checks
   [Kinds.SONAR_QUBE_PROJECT]: 1,
@@ -275,19 +247,20 @@ export const StepsOverallOrder = {
   // VALIDATION
   // Static Security Checks
   [Kinds.GITHUB_ADVANCED_SECURITY]: 13,
-  [StepKey.CX_ONE]: 14,
-  [StepKey.CHECKMARX]: 15,
-  [StepKey.FORTIFY]: 16,
+  [Kinds.CX_ONE_PROJECT]: 14,
+  [StepKey.CX_ONE]: 15,
+  [StepKey.CHECKMARX]: 16,
+  [StepKey.FORTIFY]: 17,
 
   // Static Code Checks
-  [Kinds.SONAR_QUBE_PROJECT]: 17,
+  [Kinds.SONAR_QUBE_PROJECT]: 18,
 
   // Open Source Checks
-  [Kinds.OPEN_SOURCE_COMPLIANCE]: 18,
-  [StepKey.WHITE_SOURCE]: 19,
-  [StepKey.BLACK_DUCK_HUB]: 20,
+  [Kinds.OPEN_SOURCE_COMPLIANCE]: 19,
+  [StepKey.WHITE_SOURCE]: 20,
+  [StepKey.BLACK_DUCK_HUB]: 21,
 
   // Deployment
-  [StepKey.KUBERNETES]: 21,
-  [StepKey.CLOUD_FOUNDRY]: 22,
+  [StepKey.KUBERNETES]: 22,
+  [StepKey.CLOUD_FOUNDRY]: 23,
 }

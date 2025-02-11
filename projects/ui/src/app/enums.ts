@@ -11,6 +11,7 @@ export enum Kinds {
   OPEN_SOURCE_COMPLIANCE = 'OscRegistration',
   SONAR_QUBE_PROJECT = 'SonarQubeProject',
   FREESTYLE_PIPELINE = 'FreestylePipeline',
+  CX_ONE_PROJECT = 'CxoneProject',
 }
 
 export enum StepKey {
@@ -63,12 +64,18 @@ export enum ServiceStatus {
 }
 
 export enum Languages {
-  JAVA = 'Java',
-  GO = 'Go',
-  TYPESCRIPT = 'TypeScript',
-  JAVASCRIPT = 'JavaScript',
-  PYTHON = 'Python',
   DOCKERFILE = 'Dockerfile',
+  GO = 'Go',
+  GROOVY = 'Groovy',
+  JAVA = 'Java',
+  JAVA_NODE_CAP = 'Java + Node CAP',
+  JAVASCRIPT = 'JavaScript/TypeScript',
+  PHP = 'PHP',
+  PYTHON = 'Python',
+  RUBY = 'Ruby',
+  SCALA = 'Scala',
+  SWIFT = 'Swift',
+  OTHER = 'Other',
 }
 
 export enum Orchestrators {

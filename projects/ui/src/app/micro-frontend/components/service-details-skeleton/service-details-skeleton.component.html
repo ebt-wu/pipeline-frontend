@@ -227,6 +227,9 @@
                       [serviceDetails]="
                         serviceDetails().get(serviceKind)
                       "></app-github-advanced-security-service-details>
+                    <app-cx-one-project-service-details
+                      *ngSwitchCase="kinds.CX_ONE_PROJECT"
+                      [serviceDetails]="serviceDetails().get(serviceKind)"></app-cx-one-project-service-details>
                     <app-cx-one-service-details
                       *ngSwitchCase="stepKeys.CX_ONE"
                       [serviceDetails]="serviceDetails().get(serviceKind)"></app-cx-one-service-details>

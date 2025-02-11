@@ -20,6 +20,7 @@ import { PolicyService } from '../../services/policy.service'
 import { firstValueFrom } from 'rxjs'
 import { OpenSourceComplianceService } from '../../services/open-source-compliance.service'
 import { CategorySlotConfigService } from '../../services/category-slot-config.service'
+import { FeatureFlagService } from '../../services/feature-flag.service'
 
 @Component({
   selector: 'app-validate-code-section',
@@ -43,6 +44,7 @@ export class ValidateCodeSectionComponent implements OnChanges, OnInit {
   constructor(
     private readonly luigiClient: LuigiClient,
     private readonly policyService: PolicyService,
+    private readonly featureFlagService: FeatureFlagService,
     private readonly changeDetectorRef: ChangeDetectorRef,
     private readonly openSourceComplianceService: OpenSourceComplianceService,
   ) {}
@@ -155,10 +157,17 @@ export class ValidateCodeSectionComponent implements OnChanges, OnInit {
     e.stopPropagation()
     switch (category) {
       case Categories.STATIC_SECURITY_CHECKS:
-        await this.luigiClient
-          .linkManager()
-          .fromVirtualTreeRoot()
-          .openAsModal('setup-validation', { title: 'Add Static Security Checks', width: '600px', height: '780px' })
+        if (await this.featureFlagService.isCxOneInstallationEnabled()) {
+          await this.luigiClient
+            .linkManager()
+            .fromVirtualTreeRoot()
+            .openAsModal('setup-validation', { title: 'Add Static Security Checks', width: '420px', height: '630px' })
+        } else {
+          await this.luigiClient
+            .linkManager()
+            .fromVirtualTreeRoot()
+            .openAsModal('setup-ghas', { title: 'Add Static Security Checks', width: '600px', height: '780px' })
+        }
         break
       case Categories.OPEN_SOURCE_CHECKS:
         await this.luigiClient

@@ -1,0 +1,41 @@
+<div class="content">
+  <fd-message-strip type="information">
+    Run your workflow to complete the creation of your CxOne project.
+  </fd-message-strip>
+  <div class="main">
+    <div class="fields">
+      <div class="field">
+        <div class="field-title">CxOne Application:</div>
+        <a
+          *ngIf="serviceDetails.applicationUrl"
+          class="field-value field-value--link"
+          [href]="serviceDetails.applicationUrl"
+          target="_blank"
+          rel="noopener noreferrer">
+          {{ serviceDetails.applicationName }}
+        </a>
+        <span *ngIf="!serviceDetails.applicationUrl" class="field-value">
+          {{ serviceDetails.applicationName }}
+        </span>
+      </div>
+      <div class="field">
+        <div class="field-title">CxOne Project Name:</div>
+        <span class="field-value">
+          {{ serviceDetails.projectName }}
+        </span>
+      </div>
+      <div class="field">
+        <div class="field-title">Runs On:</div>
+        <span class="field-value">GitHub Actions</span>
+      </div>
+    </div>
+    <button
+      class="auto-left-margin"
+      role="button"
+      fdType="transparent"
+      glyph="question-mark"
+      label="Learn More"
+      (click)="openDocumentation()"
+      fd-button></button>
+  </div>
+</div>

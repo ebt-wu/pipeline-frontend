@@ -62,6 +62,7 @@ import { StagingServiceServiceDetailsComponent } from '../service-details/stagin
 import { WhiteSourceServiceDetailsComponent } from '../service-details/whitesource/whitesource-service-details.component'
 import { XMakeServiceDetailsComponent } from '../service-details/xmake/xmake-service-details.component'
 import { PolicyService } from '../../services/policy.service'
+import { CxOneProjectServiceDetailsComponent } from '../service-details/cx-one-project/cx-one-project-service-details.component'
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -85,6 +86,7 @@ import { PolicyService } from '../../services/policy.service'
     SonarServiceDetailsComponent,
     BlackDuckServiceDetailsComponent,
     CheckmarxServiceDetailsComponent,
+    CxOneProjectServiceDetailsComponent,
     CXOneServiceDetailsComponent,
     CnbServiceDetailsComponent,
     FortifyServiceDetailsComponent,
@@ -300,6 +302,10 @@ export class ServiceDetailsSkeletonComponent implements OnInit, OnChanges {
             githubRepoName,
             repoUrl: githubRepoUrl,
           }
+
+        case Kinds.CX_ONE_PROJECT:
+          return await firstValueFrom(this.api.cxOneService.getCxOneProject(name))
+
         case Kinds.OPEN_SOURCE_COMPLIANCE:
           return await firstValueFrom(this.api.openSourceComplianceService.getOpenSourceComplianceRegistration())
 

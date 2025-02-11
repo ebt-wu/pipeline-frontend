@@ -91,6 +91,20 @@ export type CumulusPipeline = {
   key?: Maybe<Scalars['String']['output']>
 }
 
+export type CxOneApplication = {
+  __typename?: 'CxOneApplication'
+  applicationId?: Maybe<Scalars['String']['output']>
+  applicationName?: Maybe<Scalars['String']['output']>
+  applicationUrl?: Maybe<Scalars['String']['output']>
+}
+
+export type CxOneProject = {
+  __typename?: 'CxOneProject'
+  applicationName?: Maybe<Scalars['String']['output']>
+  applicationUrl?: Maybe<Scalars['String']['output']>
+  projectName?: Maybe<Scalars['String']['output']>
+}
+
 export enum DeletionPolicy {
   Delete = 'DELETE',
   Orphan = 'ORPHAN',
@@ -198,6 +212,7 @@ export type LabelInput = {
 export type Mutation = {
   __typename?: 'Mutation'
   createCumulusPipeline?: Maybe<Scalars['String']['output']>
+  createCxOneProject?: Maybe<Scalars['String']['output']>
   createGitHubAdvancedSecurity?: Maybe<Scalars['String']['output']>
   createGithubActions?: Maybe<Scalars['String']['output']>
   createGithubRepository?: Maybe<Scalars['String']['output']>
@@ -207,6 +222,7 @@ export type Mutation = {
   createPiperConfig?: Maybe<Scalars['String']['output']>
   createSonarQubeProject?: Maybe<Scalars['String']['output']>
   deleteCumulusPipeline?: Maybe<Scalars['String']['output']>
+  deleteCxOneProject?: Maybe<Scalars['String']['output']>
   deleteGitHubAdvancedSecurity?: Maybe<Scalars['String']['output']>
   deleteGithubActions?: Maybe<Scalars['String']['output']>
   deleteGithubRepository?: Maybe<Scalars['String']['output']>
@@ -226,6 +242,12 @@ export type Mutation = {
 export type MutationCreateCumulusPipelineArgs = {
   componentId: Scalars['String']['input']
   projectId: Scalars['String']['input']
+}
+
+export type MutationCreateCxOneProjectArgs = {
+  portalComponentId: Scalars['String']['input']
+  portalProjectId: Scalars['String']['input']
+  preset: Scalars['String']['input']
 }
 
 export type MutationCreateGitHubAdvancedSecurityArgs = {
@@ -280,6 +302,12 @@ export type MutationDeleteCumulusPipelineArgs = {
   componentId: Scalars['String']['input']
   deletionPolicy?: InputMaybe<DeletionPolicy>
   projectId: Scalars['String']['input']
+  resourceName: Scalars['String']['input']
+}
+
+export type MutationDeleteCxOneProjectArgs = {
+  portalComponentId: Scalars['String']['input']
+  portalProjectId: Scalars['String']['input']
   resourceName: Scalars['String']['input']
 }
 
@@ -466,6 +494,8 @@ export type PpmsFoss = {
 export type Query = {
   __typename?: 'Query'
   getCumulusPipeline?: Maybe<CumulusPipeline>
+  getCxOneApplication?: Maybe<CxOneApplication>
+  getCxOneProject?: Maybe<CxOneProject>
   getGitHubAdvancedSecurity?: Maybe<GitHubAdvancedSecurityGetPayload>
   getGithubActionsCrossNamespace?: Maybe<GithubActionsGetPayload>
   getGithubActionsSolinasVerification: Scalars['Boolean']['output']
@@ -482,6 +512,15 @@ export type Query = {
 
 export type QueryGetCumulusPipelineArgs = {
   projectId: Scalars['String']['input']
+  resourceName: Scalars['String']['input']
+}
+
+export type QueryGetCxOneApplicationArgs = {
+  portalProjectId: Scalars['String']['input']
+}
+
+export type QueryGetCxOneProjectArgs = {
+  portalProjectId: Scalars['String']['input']
   resourceName: Scalars['String']['input']
 }
 
@@ -1150,6 +1189,51 @@ export type DeleteGitHubAdvancedSecurityMutation = {
   __typename?: 'Mutation'
   deleteGitHubAdvancedSecurity?: string | null
 }
+
+export type GetCxOneProjectQueryVariables = Exact<{
+  portalProjectId: Scalars['String']['input']
+  resourceName: Scalars['String']['input']
+}>
+
+export type GetCxOneProjectQuery = {
+  __typename?: 'Query'
+  getCxOneProject?: {
+    __typename?: 'CxOneProject'
+    projectName?: string | null
+    applicationName?: string | null
+    applicationUrl?: string | null
+  } | null
+}
+
+export type GetCxOneApplicationQueryVariables = Exact<{
+  portalProjectId: Scalars['String']['input']
+}>
+
+export type GetCxOneApplicationQuery = {
+  __typename?: 'Query'
+  getCxOneApplication?: {
+    __typename?: 'CxOneApplication'
+    applicationId?: string | null
+    applicationName?: string | null
+    applicationUrl?: string | null
+  } | null
+}
+
+export type CreateCxOneProjectMutationVariables = Exact<{
+  portalProjectId: Scalars['String']['input']
+  portalComponentId: Scalars['String']['input']
+  preset: Scalars['String']['input']
+}>
+
+export type CreateCxOneProjectMutation = { __typename?: 'Mutation'; createCxOneProject?: string | null }
+
+export type DeleteCxOneProjectMutationVariables = Exact<{
+  portalProjectId: Scalars['String']['input']
+  portalComponentId: Scalars['String']['input']
+  resourceName: Scalars['String']['input']
+}>
+
+export type DeleteCxOneProjectMutation = { __typename?: 'Mutation'; deleteCxOneProject?: string | null }
 
 export type CreateOscRegistrationMutationVariables = Exact<{
   projectId: Scalars['String']['input']

@@ -9,6 +9,7 @@ import { GithubActionsComponent } from './pages/modals/setup-github-actions/setu
 import { SetupValidationModalComponent } from './pages/modals/setup-validation-modal/setup-validation-modal.component'
 import { SetupOSCModalComponent } from './pages/modals/setup-osc-modal/setup-osc-modal.component'
 import { CumulusInfoModalComponent } from './pages/modals/cumulus-info-modal/cumulus-info-modal.component'
+import { SetupGhasModalComponent } from './pages/modals/setup-ghas-modal/setup-ghas-modal.component'
 
 const routes: Routes = [
   {
@@ -26,6 +27,10 @@ const routes: Routes = [
       {
         path: 'setup-validation',
         component: SetupValidationModalComponent,
+      },
+      {
+        path: 'setup-ghas',
+        component: SetupGhasModalComponent,
       },
       {
         path: 'setup-osc',

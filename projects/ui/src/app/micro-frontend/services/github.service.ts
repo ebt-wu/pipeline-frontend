@@ -12,9 +12,9 @@ import {
   GetGithubRepositoryQuery,
   GetGithubRepositoryQueryVariables,
 } from '@generated/graphql'
-import { CredentialTypes, GithubInstances } from '@enums'
+import { CredentialTypes, GithubInstances, Languages } from '@enums'
 import { SecretData, SecretService } from './secret.service'
-import { EntityContext, ValidationLanguage } from '@types'
+import { EntityContext, ProgrammingLanguage } from '@types'
 import { MetadataApolloClientService } from '@dxp/ngx-core/apollo'
 import { ApolloQueryResult } from '@apollo/client/core'
 import { GET_REPO_LANGUAGES, GET_REPO_PULLS } from './external-queries'
@@ -205,10 +205,10 @@ export class GithubService {
    */
   getMostUsedLanguage(
     languages: { Name: string; Bytes: number }[],
-    allowedLanguages: ValidationLanguage[],
-  ): ValidationLanguage {
+    allowedLanguages: ProgrammingLanguage[],
+  ): ProgrammingLanguage {
     if (!languages) {
-      return allowedLanguages.find((lang) => lang.id === 'other')
+      return allowedLanguages.find((lang) => lang.id === Languages.OTHER)
     }
 
     let mostUsedLanguage = { Name: 'other', Bytes: 0 }
@@ -218,8 +218,8 @@ export class GithubService {
       }
     }
     return (
-      allowedLanguages.find((lang) => lang.id === mostUsedLanguage.Name.toLowerCase()) ??
-      allowedLanguages.find((lang) => lang.id === 'other')
+      allowedLanguages.find((lang) => lang.id.toLowerCase() === mostUsedLanguage.Name.toLowerCase()) ??
+      allowedLanguages.find((lang) => lang.id === Languages.OTHER)
     )
   }
 

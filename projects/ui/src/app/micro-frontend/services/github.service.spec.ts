@@ -4,7 +4,7 @@ import { BaseAPIService } from './base.service'
 import { SecretService } from './secret.service'
 import { MetadataApolloClientService } from '@dxp/ngx-core/apollo'
 import { MockService } from 'ng-mocks'
-import { ValidationLanguages } from '@constants'
+import { ProgrammingLanguages } from '@constants'
 
 describe('GitHubService', () => {
   let githubService: GithubService
@@ -28,9 +28,9 @@ describe('GitHubService', () => {
 
   describe('getMostUsedLanguage', () => {
     it('should return other for a language that is not in ValidationLanguages', () => {
-      expect(githubService.getMostUsedLanguage([{ Name: 'FORTRAN', Bytes: 200 }], ValidationLanguages)).toMatchObject({
+      expect(githubService.getMostUsedLanguage([{ Name: 'FORTRAN', Bytes: 200 }], ProgrammingLanguages)).toMatchObject({
         displayName: 'Other',
-        id: 'other',
+        id: 'Other',
       })
     })
     it('should return the most used language', () => {
@@ -41,11 +41,11 @@ describe('GitHubService', () => {
             { Name: 'Java', Bytes: 20 },
             { Name: 'Golang', Bytes: 300 },
           ],
-          ValidationLanguages,
+          ProgrammingLanguages,
         ),
       ).toMatchObject({
         displayName: 'Python',
-        id: 'python',
+        id: 'Python',
       })
     })
     it('should return other if the most used language isnt in validationLanguages', () => {
@@ -56,17 +56,17 @@ describe('GitHubService', () => {
             { Name: 'Fortran', Bytes: 2000 },
             { Name: 'Golang', Bytes: 300 },
           ],
-          ValidationLanguages,
+          ProgrammingLanguages,
         ),
       ).toMatchObject({
         displayName: 'Other',
-        id: 'other',
+        id: 'Other',
       })
     })
     it('should return other if the languages array is empty', () => {
-      expect(githubService.getMostUsedLanguage([], ValidationLanguages)).toMatchObject({
+      expect(githubService.getMostUsedLanguage([], ProgrammingLanguages)).toMatchObject({
         displayName: 'Other',
-        id: 'other',
+        id: 'Other',
       })
     })
   })
