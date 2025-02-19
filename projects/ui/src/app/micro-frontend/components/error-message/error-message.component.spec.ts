@@ -54,4 +54,25 @@ describe('ErrorMessageComponent', () => {
     component.ngOnInit()
     expect(component.troubleshootContext()).toBeUndefined()
   })
+  it('should have a link to stackOverflow for GITHUB-ACTION-19', () => {
+    const errorCode = 'GITHUB-ACTION-19'
+    const fixture = MockRender(ErrorMessageComponent, { message: `${errorCode}: Error message` })
+    const component = fixture.point.componentInstance
+    component.ngOnInit()
+    expect(component.troubleshootContext()).toEqual({
+      docUrl: 'https://sap.stackenterprise.co/articles/67842',
+      showTicketButton: false,
+    })
+  })
+
+  it('should have a link for GITHUB-13', () => {
+    const errorCode = 'GITHUB-13: failed to fetch repository public key:'
+    const fixture = MockRender(ErrorMessageComponent, { message: `${errorCode}: Error message` })
+    const component = fixture.point.componentInstance
+    component.ngOnInit()
+    expect(component.troubleshootContext()).toEqual({
+      docUrl: 'https://sap.stackenterprise.co/articles/67844',
+      showTicketButton: false,
+    })
+  })
 })

@@ -12,6 +12,14 @@ type ErrorContext = {
 }
 
 const knownErrorCodeMappings: Record<string, ErrorContext> = {
+  'GITHUB-13': {
+    docUrl: 'https://sap.stackenterprise.co/articles/67844',
+    showTicketButton: false,
+  },
+  'GITHUB-ACTION-19': {
+    docUrl: 'https://sap.stackenterprise.co/articles/67842',
+    showTicketButton: false,
+  },
   'GITHUB-ACTION-6': {
     docUrl:
       'https://pages.github.tools.sap/hyperspace/cicd-setup-documentation/how-tos/use-github-PAT.html#replacing-an-invalid-personal-access-token',
@@ -59,7 +67,7 @@ export class ErrorMessageComponent implements OnInit {
 
   ngOnInit() {
     // check messages for error codes to link to troubleshooting instructions instead of offering the option to create a ticket
-    const errorKey = Object.keys(knownErrorCodeMappings).find((s) => this.message.includes(`${s}:`))
+    const errorKey = Object.keys(knownErrorCodeMappings).find((s) => this.message.includes(`${s}`))
     if (this.message && errorKey) {
       this.troubleshootContext.set(knownErrorCodeMappings[errorKey])
     }
