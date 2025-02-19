@@ -98,8 +98,15 @@ export class ValidateCodeSectionComponent implements OnChanges, OnInit {
         configuredServicesText: this.generateConfiguredServicesText(Categories.STATIC_CODE_CHECKS),
         buttonConfig: {
           isButtonShown: await this.isButtonShown(Categories.STATIC_CODE_CHECKS),
-          buttonText: 'Add',
-          buttonAction: async (e: Event) => this.openSetupDialog(e, Categories.STATIC_CODE_CHECKS),
+          buttonText: 'Add Manually',
+          // buttonAction: async (e: Event) => this.openSetupDialog(e, Categories.STATIC_CODE_CHECKS),
+          buttonAction: () => {
+            window.open(
+              'https://pages.github.tools.sap/hyperspace/academy/bestpractice/CorpReq_FC1_CodingRules/v1.1/#setup',
+              '_blank',
+              'noopener, noreferrer',
+            )
+          },
           buttonTestId: 'add-static-code-checks-button',
         },
         statusTagConfig: await this.generateStatusTag(Categories.STATIC_CODE_CHECKS),
@@ -109,7 +116,7 @@ export class ValidateCodeSectionComponent implements OnChanges, OnInit {
         },
         statusIconConfig: this.getStatusIconConfig(Categories.STATIC_CODE_CHECKS),
         rightSideTextConfig: {
-          rightSideText: !this.isCategoryConfigured(Categories.STATIC_CODE_CHECKS) ? 'Coming soon' : null,
+          rightSideText: !this.isCategoryConfigured(Categories.STATIC_CODE_CHECKS) ? '' : null, // No right side text for now
         },
         isOpenArrowShown: this.isCategoryConfigured(Categories.STATIC_CODE_CHECKS),
       },
@@ -201,8 +208,8 @@ export class ValidateCodeSectionComponent implements OnChanges, OnInit {
         )
 
       case Categories.STATIC_CODE_CHECKS:
-        // Always false since sonar cant be added yet
-        return false
+        // Always true since sonar cant be added yet
+        return true
       case Categories.OPEN_SOURCE_CHECKS:
         // show the button if there is no OSC step (also the case when no steps are set up)
         return !stepsOfCategory.some((ref) => ref.kind === Kinds.OPEN_SOURCE_COMPLIANCE)
