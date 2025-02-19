@@ -208,8 +208,8 @@ export class ValidateCodeSectionComponent implements OnChanges, OnInit {
         )
 
       case Categories.STATIC_CODE_CHECKS:
-        // Always true since sonar cant be added yet
-        return true
+        // Returns false when SonarQube is a step in the pipeline
+        return !stepsOfCategory.some((ref) => ref.kind === Kinds.SONAR_QUBE_PROJECT)
       case Categories.OPEN_SOURCE_CHECKS:
         // show the button if there is no OSC step (also the case when no steps are set up)
         return !stepsOfCategory.some((ref) => ref.kind === Kinds.OPEN_SOURCE_COMPLIANCE)
