@@ -153,7 +153,7 @@ export class PipelineComponent implements OnInit, OnDestroy {
     this.githubMetadata = await this.api.githubService.getGithubMetadata()
 
     const context = await this.luigiService.getContextAsync()
-    this.catalogUrl.set(context.frameBaseUrl + '/catalog')
+    this.catalogUrl.set(context.frameBaseUrl + '/marketplace')
     this.projectId = context.projectId
 
     this.canUserEditCredentials = await this.policyService.canUserEditCredentials()

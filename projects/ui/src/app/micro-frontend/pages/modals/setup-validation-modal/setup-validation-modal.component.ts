@@ -86,8 +86,6 @@ const CxOnePresets = new Map<Languages, string[]>([
       'SAP_Corp_JavaScript_Client_UI5',
       'SAP_Corp_JavaScript_Server',
       'SAP_Corp_JavaScript_Server_XSJS',
-      'SAP_Corp_Mobile',
-      'SAP_Corp_Mobile_UI5',
       'SAP_Corp_Microservice_Backend',
       'SAP_Default_JavaScript_Python',
       'SAP_Default_PHP_JavaScript',
@@ -104,10 +102,6 @@ const CxOnePresets = new Map<Languages, string[]>([
     ],
   ],
   [Languages.GO, ['SAP_Corp_Microservice_Backend', 'SAP_Default_Go', 'SAP_Default_Go_JavaScript']],
-  [Languages.GROOVY, ['SAP_Default_Groovy']],
-  [Languages.RUBY, ['SAP_Default_Ruby']],
-  [Languages.SCALA, ['SAP_Default_Scala']],
-  [Languages.SWIFT, ['SAP_Corp_Mobile', 'SAP_Corp_Mobile_UI5']],
   [
     Languages.OTHER,
     [
@@ -119,12 +113,21 @@ const CxOnePresets = new Map<Languages, string[]>([
       'SAP_Default_Perl',
       'SAP_Default_PHP_JavaScript',
       'SAP_Default_Python',
+      'SAP_Default_Groovy',
+      'SAP_Default_Scala',
       'SAP_Default_Ruby',
       'SAP_Default_Rust',
       'SAP_Corp_Microservice_Backend',
     ],
   ],
 ])
+
+function getCxOnePresets(language: Languages): string[] {
+  if (!CxOnePresets.has(language)) {
+    return CxOnePresets.get(Languages.OTHER)
+  }
+  return CxOnePresets.get(language)
+}
 
 function getBuidTool(language: Languages): BuildTool {
   switch (language) {
@@ -289,7 +292,10 @@ export class SetupValidationModalComponent implements OnInit, OnDestroy {
           buttonText: 'Need Help?',
           buttonInlineHelpHtml: `
 						Unsure which service to choose?<br/>
-						Open Recommendations<br/><br/>
+						<a
+							href="https://github.wdf.sap.corp/pages/Security-Testing/doc/security%20testing/tools/#sast-tools"
+							target="_blank"
+							rel="noopener noreferred">Open Recommendations</a><br/><br/>
 						
 						Need more service info?<br/>
 						<a
@@ -341,9 +347,6 @@ export class SetupValidationModalComponent implements OnInit, OnDestroy {
         if (!formValue.validationTools) {
           return false
         }
-        if (getRequiredValidationTools(formValue.language).length > 0) {
-          return false
-        }
         if (!formValue.validationTools.includes(ValidationTools.CX)) {
           return false
         }
@@ -357,7 +360,7 @@ export class SetupValidationModalComponent implements OnInit, OnDestroy {
       message: '',
       guiOptions: {
         additionalData: <FormGeneratorHeaderAdditionalData<SetupValidationFormValue>>{
-          subheaderHtml: () => 'No application found',
+          subheaderHtml: () => 'No account found',
           subheaderStyle: 'margin: 0.5rem 0; color: var(--sapTextColor);',
           ignoreTopMargin: true,
           ignoreBottomMargin: true,
@@ -378,20 +381,39 @@ export class SetupValidationModalComponent implements OnInit, OnDestroy {
       },
     },
     {
+      type: 'validator',
+      name: 'cxOneApplicationMissingValidator',
+      message: '',
+      when: (formValue: SetupValidationFormValue) => {
+        if (this.formStep() !== 1) {
+          return false
+        }
+        if (!formValue.validationTools) {
+          return false
+        }
+        if (!formValue.validationTools.includes(ValidationTools.CX)) {
+          return false
+        }
+
+        return formValue.cxOneApplicationName === null
+      },
+      validators: [Validators.required],
+    },
+    {
       type: 'info',
       name: 'cxOneApplicationNote',
       message: '',
       guiOptions: {
         additionalData: <FormGeneratorInfoBoxAdditionalData>{
-          header: 'Add CxOne application',
+          header: 'Add CxOne account',
           instructions: async () => {
             const context = await this.luigiService.getContextAsync()
             return `
 							<ol>
 								<li>
-									Install the CxOne extension from the <a href="${context.frameBaseUrl}/projects/${context.projectId}/catalog" target="_blank" rel="noopener noreferrer">catalog</a>
+									Install the CxOne extension from the <a href="${context.frameBaseUrl}/projects/${context.projectId}/marketplace" target="_blank" rel="noopener noreferrer">catalog</a>
 								</li>
-								<li>Create a CxOne application</li>
+								<li>Create a CxOne account</li>
 							</ol>
 						`
           },
@@ -415,7 +437,7 @@ export class SetupValidationModalComponent implements OnInit, OnDestroy {
     {
       type: 'read-only-input',
       name: 'cxOneApplicationName',
-      message: 'CxOne Application',
+      message: 'CxOne Account',
       default: () => null,
       when: (formValue: SetupValidationFormValue) => {
         if (this.formStep() !== 1) {
@@ -436,6 +458,10 @@ export class SetupValidationModalComponent implements OnInit, OnDestroy {
       type: 'input',
       name: 'cxOneProjectName',
       message: 'CxOne Project Name',
+      default: async () => {
+        const context = await this.luigiService.getContextAsync()
+        return context.componentId
+      },
       when: (formValue: SetupValidationFormValue) => {
         if (this.formStep() !== 1) {
           return false
@@ -455,7 +481,8 @@ export class SetupValidationModalComponent implements OnInit, OnDestroy {
       type: 'select',
       name: 'cxOnePreset',
       message: 'Checkmarx Preset',
-      choices: (formValue: SetupValidationFormValue) => CxOnePresets.get(formValue.language),
+      placeholder: 'Select',
+      choices: (formValue: SetupValidationFormValue) => getCxOnePresets(formValue.language),
       when: (formValue: SetupValidationFormValue) => {
         if (this.formStep() !== 1) {
           return false
@@ -484,7 +511,7 @@ export class SetupValidationModalComponent implements OnInit, OnDestroy {
           ignoreBottomMargin: true,
           subheaderHtml: () => `
 						<a
-							href="https://github.wdf.sap.corp/pages/Security-Testing/doc/cxone/Presets/"
+							href="https://github.wdf.sap.corp/pages/Security-Testing/doc/cxone/Presets/#javascript-and-typescript-presets"
 							target="_blank" rel="noopener noreferrer">
 							Need help selecting the right preset?
 						</a>`,
@@ -739,6 +766,7 @@ export class SetupValidationModalComponent implements OnInit, OnDestroy {
         type: 'select',
         name: 'language',
         message: '',
+        placeholder: 'Select',
         default: recommendedLanguage.id,
         choices: languageChoices,
         validators: [Validators.required],
@@ -777,6 +805,10 @@ export class SetupValidationModalComponent implements OnInit, OnDestroy {
   setValidationToolsValue(value: ValidationTools[]): void {
     if (!this.formGenerator) return
     const validationToolsControl = this.formGenerator.formControlItems[0].get('validationTools')
+    if (value.length === 0) {
+      validationToolsControl.reset()
+      return
+    }
     validationToolsControl.setValue(value)
   }
 
@@ -786,7 +818,7 @@ export class SetupValidationModalComponent implements OnInit, OnDestroy {
     // we have to update them directry
     const formItems = this.formGenerator.formControlItems[0].formItem as DynamicFormFieldGroupMap
     const cxOnePresetFormItem = formItems.items.get('cxOnePreset') as SelectDynamicFormFieldItem
-    cxOnePresetFormItem.choices = CxOnePresets.get(language)
+    cxOnePresetFormItem.choices = getCxOnePresets(language)
 
     const cxOnePresetControl = this.formGenerator.formControlItems[0].get('cxOnePreset')
     cxOnePresetControl.setValue(undefined)
@@ -877,8 +909,8 @@ export class SetupValidationModalComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Creates a subscrition which queries backend for CxOne application every 5 seconds
-   * Query is sent only when 'No application found' message is shown
+   * Creates a subscription which queries backend for CxOne application every 5 seconds
+   * Query is sent only when 'No account found' message is shown
    */
   watchCxOneApplication(): Subscription {
     const queryCxOneApplicationFunc = async () => {

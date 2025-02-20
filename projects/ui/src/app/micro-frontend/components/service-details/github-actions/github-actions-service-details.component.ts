@@ -58,7 +58,7 @@ export class GithubActionsServiceDetailsComponent extends BaseServiceDetailsComp
     }
 
     const context = await this.luigiService.getContextAsync()
-    this.catalogUrl.set(context.frameBaseUrl + '/catalog')
+    this.catalogUrl.set(context.frameBaseUrl + '/marketplace')
 
     if (!this.serviceDetails.secretPath) {
       this.showCredentialInfo.set(false)

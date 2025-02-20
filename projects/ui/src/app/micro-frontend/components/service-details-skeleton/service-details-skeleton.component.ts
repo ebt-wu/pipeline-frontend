@@ -163,7 +163,7 @@ export class ServiceDetailsSkeletonComponent implements OnInit, OnChanges {
   async ngOnInit() {
     this.dxpContext$ = this.luigiService.contextObservable().pipe(map((value) => value.context))
     const context = await this.luigiService.getContextAsync()
-    this.catalogUrl.set(context.frameBaseUrl + '/catalog')
+    this.catalogUrl.set(context.frameBaseUrl + '/marketplace')
     this.hasPermissions.set(await this.checkPermission())
   }
 
