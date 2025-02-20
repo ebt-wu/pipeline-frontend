@@ -149,7 +149,7 @@
       <button
         (click)="submit()"
         fd-button
-        *ngIf="recommendedValidationTool() === validationTools.CX && toolSelection.getRawValue() !== validationTools.CX"
+        *ngIf="recommendedValidationTool() !== validationTools.CX && toolSelection.getRawValue() !== validationTools.CX"
         [disabled]="
           !languageSelection.value ||
           (formGenerator?.formGroup?.form && !formGenerator?.formGroup?.form?.valid) ||
@@ -161,7 +161,7 @@
       <button
         (click)="cancel()"
         [label]="
-          recommendedValidationTool() === validationTools.CX && toolSelection.getRawValue() !== validationTools.CX
+          recommendedValidationTool() !== validationTools.CX && toolSelection.getRawValue() !== validationTools.CX
             ? 'Cancel'
             : 'Close'
         "
