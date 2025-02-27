@@ -15,6 +15,7 @@ import { NotManagedServices, PipelineType } from '@generated/graphql'
 import { PolicyService } from '../../services/policy.service'
 import { map } from 'rxjs/operators'
 import { StepsOverallOrder } from '@constants'
+import { GithubService } from '../../services/github.service'
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -46,6 +47,7 @@ export class HomePageComponent implements OnInit {
 
   constructor(
     private readonly pipelineService: PipelineService,
+    private readonly githubService: GithubService,
     private readonly debugModeService: DebugModeService,
     private readonly luigiClient: LuigiClient,
     private readonly context: DxpLuigiContextService,
@@ -93,6 +95,9 @@ export class HomePageComponent implements OnInit {
           .pipe(debounceTime(100)),
       )
     }
+
+    // Call for github metadata here to be able to catch an error that comes up and show the failed to load screen
+    await this.githubService.getGithubMetadata()
 
     this.pipelineAvail.next(true)
   }
