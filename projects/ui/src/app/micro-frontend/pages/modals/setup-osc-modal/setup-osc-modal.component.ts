@@ -224,7 +224,7 @@ export class SetupOSCModalComponent implements OnInit {
           // eslint-disable-next-line @typescript-eslint/require-await
           instructions: async () => {
             return `<ol>
-              <li><a href='${this.context().frameBaseUrl}/projects/${this.context().projectId}/marketplace?~extClassName=jira&~layout=TwoColumnsMidExpanded&modal=%2Fprojects%2F${this.context().projectId}%2Fcatalog%2Fcreate-res%2Fglobal%2Fjira%2Faccount%2Fjira-tools%3F~type%3Djira-tools&modalParams=%7B%22title%22%3A%22Create%20an%20account%22%2C%22size%22%3A%22s%22%7D', target="_blank">
+              <li><a href='${this.context().frameBaseUrl}/projects/${this.context().projectId}/jira?modal=%2Fprojects%2F${this.context().projectId}%2Fcatalog%2Fcreate-res%2Fglobal%2Fjira%2Fjira-tools%3F~type%3Djira-tools&modalParams=%7B%22title%22%3A%22Add%22%2C%22size%22%3A%22s%22%7D', target="_blank">
                  Create an account
               </a> and fill in your Jira project configuration details.
               </li>
