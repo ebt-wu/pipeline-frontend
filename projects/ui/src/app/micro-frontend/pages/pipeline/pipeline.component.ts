@@ -12,14 +12,13 @@ import {
   MessageBoxService,
   MessageToastService,
 } from '@fundamental-ngx/core'
-import { DeletionPolicy, GithubActionsGetPayload } from '@generated/graphql'
+import { DeletionPolicy } from '@generated/graphql'
 import { debounceTime, firstValueFrom, Observable, Subscription, tap } from 'rxjs'
 import { KindCategory, KindExtensionName, KindName } from '@constants'
 import { Pipeline } from '@types'
 import { DeleteBuildModalComponent } from '../modals/delete-build-modal/delete-build-modal.component'
 import { DismissibleMessageComponent } from '../../components/dismissible-message/dismissible-message.component'
 import { ErrorMessageComponent } from '../../components/error-message/error-message.component'
-import { UpgradeBannerComponent } from '../../components/upgrade-banner/upgrade-banner.component'
 import { APIService } from '../../services/api.service'
 import { DebugModeService } from '../../services/debug-mode.service'
 import { ExtensionService } from '../../services/extension.service'
@@ -42,8 +41,8 @@ import { CategorySlotComponent } from '../../components/category-slot/category-s
 import { ValidateCodeSectionComponent } from '../../components/validate-code-section/validate-code-section.component'
 import { GitHubIssueLinkService } from '../../services/github-issue-link.service'
 import { ServiceDetailsSkeletonComponent } from '../../components/service-details-skeleton/service-details-skeleton.component'
-import { GithubActionsService } from '../../services/github-actions.service'
 import { CategorySlotConfigService } from '../../services/category-slot-config.service'
+import { AutomateWorkflowsComponent } from '../../components/automate-workflows/automate-workflows.component'
 
 type Error = {
   title: string
@@ -66,7 +65,6 @@ type Error = {
     ErrorMessageComponent,
     DismissibleMessageComponent,
     ServiceDetailsSkeletonComponent,
-    UpgradeBannerComponent,
     AuthorizationModule,
     ResourceStagePipe,
     DynamicPageTitleComponent,
@@ -76,11 +74,11 @@ type Error = {
     DynamicPageGlobalActionsComponent,
     CategorySlotComponent,
     ValidateCodeSectionComponent,
+    AutomateWorkflowsComponent,
   ],
 })
 export class PipelineComponent implements OnInit, OnDestroy {
   @Input() pipeline$!: Observable<Pipeline>
-  isGithubActionsEnabledAlready$!: Observable<GithubActionsGetPayload>
 
   loading = signal(true)
 
@@ -94,7 +92,6 @@ export class PipelineComponent implements OnInit, OnDestroy {
 
   isValidationStageOpen = signal(false)
   isDeployStageOpen = signal(false)
-  isGithubActionsEnabledInSameComponent = signal(false)
   // hacky workaround solution
   pendingDeletion = signal(false)
   pendingOpenPipeline = signal(false)
@@ -142,7 +139,6 @@ export class PipelineComponent implements OnInit, OnDestroy {
     private readonly githubIssueLinkService: GitHubIssueLinkService,
     private readonly policyService: PolicyService,
     private readonly pipelineService: PipelineService,
-    private readonly githubActionsService: GithubActionsService,
   ) {}
 
   get showOpenPipelineURL(): boolean {
@@ -173,10 +169,6 @@ export class PipelineComponent implements OnInit, OnDestroy {
       this.errors.update((errors) => errors.set(error.message, error))
     }
 
-    this.isGithubActionsEnabledAlready$ = this.api.githubActionsService.getGithubActionsCrossNamespace(
-      this.githubMetadata.githubInstance,
-      this.githubMetadata.githubOrgName,
-    )
     this.openPrCount$ = this.api.githubService.getPullRequestInfo().pipe(
       map((prInfo) => {
         return this.calculateOpenPRCount(prInfo)
@@ -191,7 +183,7 @@ export class PipelineComponent implements OnInit, OnDestroy {
         }),
       )
       .subscribe((pipeline: Pipeline) => {
-        const errors: Map<string, Error> = new Map()
+        const errorMap: Map<string, Error> = new Map()
         const errorKeyPrefix = 'pipeline_subscription'
 
         this.isBuildPipelineSetupAndCreated.set(false)
@@ -201,13 +193,26 @@ export class PipelineComponent implements OnInit, OnDestroy {
           this.isTransferredTemplatePipeline.set(true)
         }
 
+        if (
+          pipeline.githubActionsDetails &&
+          pipeline.githubActionsDetails.enablementRef &&
+          pipeline.githubActionsDetails.enablementRef.error
+        ) {
+          let message = ''
+          // only print automaticd error number if it is present
+          if (!!pipeline.githubActionsDetails.enablementRef.automaticdErrorNumber) {
+            message += pipeline.githubActionsDetails.enablementRef.automaticdErrorNumber
+          }
+          message += pipeline.githubActionsDetails.enablementRef.error
+          const error = {
+            title: 'Configuration of GitHub Actions failed',
+            resourceName: pipeline.githubActionsDetails.enablementRef.name,
+            message: `<strong>Error: </strong> ${message}`,
+          }
+          errorMap.set(`${errorKeyPrefix}${error.message}`, error)
+        }
         if (pipeline?.resourceRefs) {
           for (const ref of pipeline.resourceRefs) {
-            if (ref.kind === Kinds.GITHUB_ACTION) {
-              // GitHub Actions is enabled from the same component
-              this.isGithubActionsEnabledInSameComponent.set(true)
-            }
-
             // Handle validation stage
             if (
               ref.kind === Kinds.GITHUB_ADVANCED_SECURITY ||
@@ -249,7 +254,7 @@ export class PipelineComponent implements OnInit, OnDestroy {
                 resourceName: ref.name,
                 message: `<strong>Resource: </strong>${ref.name}<br><strong>Status:</strong> ${ref.status}<br><strong>Error: </strong> ${ref.error}`,
               }
-              errors.set(`${errorKeyPrefix}${error.message}`, error)
+              errorMap.set(`${errorKeyPrefix}${error.message}`, error)
               continue
             }
 
@@ -258,7 +263,7 @@ export class PipelineComponent implements OnInit, OnDestroy {
               resourceName: ref.name,
               message: `<strong>Resource: </strong>${ref.name}<br><strong>Status:</strong> ${ref.status}<br><strong>Error: </strong> ${ref.error}`,
             }
-            errors.set(`${errorKeyPrefix}${error.message}`, error)
+            errorMap.set(`${errorKeyPrefix}${error.message}`, error)
             this.localLayout = 'OneColumnStartFullScreen'
           }
 
@@ -268,7 +273,7 @@ export class PipelineComponent implements OnInit, OnDestroy {
                 errs.delete(key)
               }
             })
-            errors.forEach((error, key) => {
+            errorMap.forEach((error, key) => {
               errs.set(key, error)
             })
             return errs
@@ -299,7 +304,7 @@ export class PipelineComponent implements OnInit, OnDestroy {
   private async checkSugarAppInstallation() {
     this.isSugarAppInstalled.set(
       await firstValueFrom(
-        this.githubActionsService.getGithubActionSolinasVerification(
+        this.api.githubActionsService.getGithubActionSolinasVerification(
           this.githubMetadata.githubOrgName,
           this.githubMetadata.githubRepoUrl,
         ),
@@ -423,7 +428,7 @@ export class PipelineComponent implements OnInit, OnDestroy {
     const componentId = (await this.luigiService.getContextAsync()).componentId
 
     const orchestratorKind = pipeline.resourceRefs.find((ref) =>
-      ([Kinds.GITHUB_ACTIONS_WORKFLOW, Kinds.JENKINS_PIPELINE] as Array<Kinds | StepKey>).includes(ref.kind),
+      ([Kinds.GITHUB_ACTIONS_PIPELINE, Kinds.JENKINS_PIPELINE] as Array<Kinds | StepKey>).includes(ref.kind),
     )?.kind
 
     const mb = this.messageBoxService.open(DeleteBuildModalComponent, {
@@ -468,6 +473,9 @@ export class PipelineComponent implements OnInit, OnDestroy {
         }
         const jenkinsRef = pipeline.resourceRefs.find((ref) => ref.kind == Kinds.JENKINS_PIPELINE)
         await firstValueFrom(this.api.jenkinsService.deleteJenkinsPipeline(jenkinsRef.name, jenkinsDeletionPolicy))
+      } else if (orchestratorKind === Kinds.GITHUB_ACTIONS_PIPELINE) {
+        const ghap = pipeline.resourceRefs.find((ref) => ref.kind == Kinds.GITHUB_ACTIONS_PIPELINE)
+        await firstValueFrom(this.api.githubActionsService.deleteGithubActionsPipeline(ghap.name))
       }
     } catch (e) {
       const errorMessage = (e as Error).message

@@ -7,6 +7,7 @@ import { Pipeline } from '@types'
 import { LuigiClient } from '@dxp/ngx-core/luigi'
 import { AuthorizationModule } from '@dxp/ngx-core/authorization'
 import { NotManagedServices } from '@generated/graphql'
+import { GithubActionsService } from '../../services/github-actions.service'
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -19,6 +20,7 @@ import { NotManagedServices } from '@generated/graphql'
 export class PipelineDebugModalComponent implements OnInit {
   constructor(
     private readonly pipelineService: PipelineService,
+    private readonly githubActionsService: GithubActionsService,
     private luigiClient: LuigiClient,
   ) {}
 
@@ -31,11 +33,12 @@ export class PipelineDebugModalComponent implements OnInit {
     const watchNotManagedServices$ = this.pipelineService
       .watchNotManagedServicesInPipeline()
       .pipe(debounceTime(50)) as Observable<NotManagedServices>
+    const watchGHAE = this.githubActionsService.watchGithubActionsEnablement().pipe(debounceTime(50))
 
     this.watch$ = watchPipeline$.pipe(
-      combineLatestWith(watchNotManagedServices$),
-      map(([pipeline, notManaged]) => {
-        return { ...pipeline, notManagedServices: notManaged }
+      combineLatestWith(watchNotManagedServices$, watchGHAE),
+      map(([pipeline, notManaged, ghae]) => {
+        return { ...pipeline, notManagedServices: notManaged, githubActionsDetails: ghae }
       }),
     )
   }

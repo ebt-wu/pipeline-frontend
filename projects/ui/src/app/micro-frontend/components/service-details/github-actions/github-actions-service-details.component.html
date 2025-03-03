@@ -5,7 +5,9 @@
     (byDismiss)="dismissErrorMessage()"
     *ngIf="errorMessage()"></app-error-message>
   <div class="flex-box">
-    <h3 class="bottom-margin">Enabled for GitHub Organization</h3>
+    <div class="flex-box">
+      <h3 class="heading-margin">Enabled for GitHub Organization</h3>
+    </div>
     <button
       class="auto-left-margin"
       role="button"
@@ -15,12 +17,15 @@
       (click)="openDocumentation()"
       fd-button></button>
   </div>
-  <a [href]="githubOrganizationUrl" target="_blank" rel="noopener noreferrer">
-    {{ serviceDetails.githubOrganization }}
+  <a *ngIf="githubOrganizationUrl()" [href]="githubOrganizationUrl()" target="_blank" rel="noopener noreferrer">
+    {{ serviceDetails.githubOrgName }}
   </a>
-  <ng-container *ngIf="responsibleProjectUrl()">
-    <div class="flex-box top-margin">
-      <h3 class="heading-margin">Responsible Project</h3>
+  <span *ngIf="!githubOrganizationUrl()">
+    {{ serviceDetails.githubOrgName }}
+  </span>
+  <div *dxpRequiredPolicies="['member', 'owner', 'vault_maintainer']; operator: 'or'">
+    <div class="flex-box" *ngIf="githubActionsRunnerGroupUrl()">
+      <h3 class="heading-margin">SUGAR Runners</h3>
       <button
         class="left-margin"
         role="button"
@@ -28,48 +33,11 @@
         glyph="hint"
         fd-button
         placement="top"
-        [fd-inline-help]="responsibleProjectHelp"
+        [fd-inline-help]="sugarServiceHelp"
         [triggers]="['click']"
         [closeOnOutsideClick]="true"></button>
     </div>
-    <a [href]="responsibleProjectUrl()" target="_blank" rel="noopener noreferrer">
-      {{ serviceDetails.responsibleProject }}
-    </a>
-  </ng-container>
-  <div class="flex-box top-margin">
-    <h3 class="heading-margin">SUGAR Customer ID</h3>
-    <button
-      class="left-margin"
-      role="button"
-      fdType="transparent"
-      glyph="hint"
-      fd-button
-      placement="top"
-      [fd-inline-help]="sugarServiceHelp"
-      [triggers]="['click']"
-      [closeOnOutsideClick]="true"></button>
-  </div>
-  <div>{{ serviceDetails.solinasCustomerID }}</div>
-  <div *dxpRequiredPolicies="['member', 'owner', 'vault_maintainer']; operator: 'or'">
-    <a [href]="githubActionsRunnerGroupUrl" target="_blank" rel="noopener noreferrer">Open Runners Group</a>
-    <div *ngIf="showCredentialInfo()">
-      <div class="flex-box top-margin">
-        <h3>GitHub Actions Credentials</h3>
-      </div>
-      <div>
-        <b>Vault Path</b>
-      </div>
-      <fd-busy-indicator [loading]="pendingShowInVault()" size="s">
-        <div [fd-inline-help]="insufficientVaultPermissions" [disabled]="canUserEditCredentials()">
-          <a
-            fd-link
-            [disabled]="pendingShowInVault() || !canUserEditCredentials()"
-            (click)="showInVault(serviceDetails.secretPath)">
-            {{ serviceDetails.secretPath }}
-          </a>
-        </div>
-      </fd-busy-indicator>
-    </div>
+    <a [href]="githubActionsRunnerGroupUrl()" target="_blank" rel="noopener noreferrer">Open Runners Group</a>
   </div>
   <div class="divider"></div>
   <h3 class="get-started-heading">Get started with GitHub Actions</h3>
@@ -114,13 +82,4 @@
     <a [href]="SUGAR_DOCU_URL" target="_blank" rel="noopener noreferrer">SUGAR</a>
     service creates a GitHub Actions Runner Group in your GitHub Organization.
   </div>
-</ng-template>
-<ng-template #responsibleProjectHelp>
-  <div>The project which initially enabled GitHub Actions for the GitHub organization your component lives in.</div>
-</ng-template>
-
-<ng-template #insufficientVaultPermissions>
-  You need to be 'Vault Maintainer' to see credentials.
-  <br />
-  Go to the members list to contact a project owner.
 </ng-template>

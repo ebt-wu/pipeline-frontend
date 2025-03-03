@@ -1,10 +1,7 @@
-<fd-card cardType="list">
+<fd-card cardType="list" class="banner-card">
   <fd-card-content>
     <div class="banner">
       <div class="banner-content">
-        <div class="pipelines-info-label">
-          <fd-info-label fdCozy color="6" label="Pipelines"></fd-info-label>
-        </div>
         <div class="banner-heading"><b>Get more out of GitHub Actions</b></div>
         <div class="banner-subheading">
           Use Actions for a compliant build pipeline.
@@ -17,13 +14,19 @@
           </a>
         </div>
       </div>
-      <img src="./assets/balloons.svg" *ngIf="showBalloons" class="banner-balloons" />
+      <img
+        src="./assets/balloons.svg"
+        *ngIf="!isServiceDetailOpen"
+        class="banner-balloons"
+        alt="background image of balloons" />
       <div class="spacer"></div>
-      <button
-        fd-button
-        label="Use in Pipeline"
-        (click)="openSetupWizard($event)"
-        *dxpRequiredPolicies="['member', 'owner', 'vault_maintainer']; operator: 'or'"></button>
+      <ng-container *dxpRequiredPolicies="['member', 'owner', 'vault_maintainer']; operator: 'or'">
+        <button
+          *ngIf="!isServiceDetailOpen"
+          fd-button
+          label="Use in Pipeline"
+          (click)="openSetupWizard($event)"></button>
+      </ng-container>
     </div>
   </fd-card-content>
 </fd-card>

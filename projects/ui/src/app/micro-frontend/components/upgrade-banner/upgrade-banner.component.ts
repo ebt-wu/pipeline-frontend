@@ -14,16 +14,14 @@ import { AuthorizationModule } from '@dxp/ngx-core/authorization'
   imports: [CommonModule, FundamentalNgxCoreModule, AuthorizationModule],
 })
 export class UpgradeBannerComponent {
-  @Input()
-  showBalloons = true
-
+  @Input() isServiceDetailOpen: boolean
   constructor(private readonly luigiClient: LuigiClient) {}
 
   async openSetupWizard(e: Event) {
     e.stopPropagation()
     await this.luigiClient
       .linkManager()
-      .withParams({ orchestrator: Orchestrators.GITHUB_ACTIONS_WORKFLOW })
+      .withParams({ orchestrator: Orchestrators.GITHUB_ACTIONS_PIPELINE })
       .openAsModal('setup', { title: 'Set up Build Pipeline', width: '27rem', height: '33rem' })
   }
 }

@@ -120,6 +120,7 @@ export type GitHubAdvancedSecurityCreatePayload = {
   buildTool?: InputMaybe<BuildTool>
   codeScanJobOrchestrator?: InputMaybe<Orchestrators>
   labels?: InputMaybe<Array<LabelInput>>
+  language?: InputMaybe<Languages>
 }
 
 export type GitHubAdvancedSecurityGetPayload = {
@@ -131,7 +132,17 @@ export type GitHubAdvancedSecurityGetPayload = {
 
 export type GithubActionsCreatePayload = {
   githubInstance: Scalars['String']['input']
-  githubOrganization: Scalars['String']['input']
+  githubOrgID: Scalars['Int']['input']
+  githubOrgName: Scalars['String']['input']
+}
+
+export type GithubActionsDetails = {
+  __typename?: 'GithubActionsDetails'
+  creationTimestamp?: Maybe<Scalars['String']['output']>
+  enablementRef?: Maybe<ResourceRef>
+  githubInstance: Scalars['String']['output']
+  githubOrgID: Scalars['Int']['output']
+  githubOrgName: Scalars['String']['output']
 }
 
 export type GithubActionsGetPayload = {
@@ -209,22 +220,29 @@ export type LabelInput = {
   value: Scalars['String']['input']
 }
 
+export enum Languages {
+  Golang = 'Golang',
+  Java = 'Java',
+  Python = 'Python',
+}
+
 export type Mutation = {
   __typename?: 'Mutation'
   createCumulusPipeline?: Maybe<Scalars['String']['output']>
   createCxOneProject?: Maybe<Scalars['String']['output']>
   createGitHubAdvancedSecurity?: Maybe<Scalars['String']['output']>
-  createGithubActions?: Maybe<Scalars['String']['output']>
+  createGithubActionsPipeline?: Maybe<Scalars['String']['output']>
   createGithubRepository?: Maybe<Scalars['String']['output']>
   createJenkinsPipeline?: Maybe<Scalars['String']['output']>
   createOscRegistration?: Maybe<Scalars['String']['output']>
   createPipeline: Scalars['String']['output']
   createPiperConfig?: Maybe<Scalars['String']['output']>
   createSonarQubeProject?: Maybe<Scalars['String']['output']>
+  createStandaloneGithubActionsClaim?: Maybe<Scalars['String']['output']>
   deleteCumulusPipeline?: Maybe<Scalars['String']['output']>
   deleteCxOneProject?: Maybe<Scalars['String']['output']>
   deleteGitHubAdvancedSecurity?: Maybe<Scalars['String']['output']>
-  deleteGithubActions?: Maybe<Scalars['String']['output']>
+  deleteGithubActionsPipeline?: Maybe<Scalars['String']['output']>
   deleteGithubRepository?: Maybe<Scalars['String']['output']>
   deleteJenkinsPipeline?: Maybe<Scalars['String']['output']>
   deleteNotManagedService?: Maybe<Scalars['String']['output']>
@@ -256,9 +274,8 @@ export type MutationCreateGitHubAdvancedSecurityArgs = {
   projectId: Scalars['String']['input']
 }
 
-export type MutationCreateGithubActionsArgs = {
+export type MutationCreateGithubActionsPipelineArgs = {
   componentId: Scalars['String']['input']
-  params: GithubActionsCreatePayload
   projectId: Scalars['String']['input']
 }
 
@@ -298,6 +315,11 @@ export type MutationCreateSonarQubeProjectArgs = {
   projectId: Scalars['String']['input']
 }
 
+export type MutationCreateStandaloneGithubActionsClaimArgs = {
+  componentId: Scalars['String']['input']
+  projectId: Scalars['String']['input']
+}
+
 export type MutationDeleteCumulusPipelineArgs = {
   componentId: Scalars['String']['input']
   deletionPolicy?: InputMaybe<DeletionPolicy>
@@ -317,7 +339,7 @@ export type MutationDeleteGitHubAdvancedSecurityArgs = {
   resourceName: Scalars['String']['input']
 }
 
-export type MutationDeleteGithubActionsArgs = {
+export type MutationDeleteGithubActionsPipelineArgs = {
   componentId: Scalars['String']['input']
   deletionPolicy?: InputMaybe<DeletionPolicy>
   projectId: Scalars['String']['input']
@@ -497,7 +519,6 @@ export type Query = {
   getCxOneApplication?: Maybe<CxOneApplication>
   getCxOneProject?: Maybe<CxOneProject>
   getGitHubAdvancedSecurity?: Maybe<GitHubAdvancedSecurityGetPayload>
-  getGithubActionsCrossNamespace?: Maybe<GithubActionsGetPayload>
   getGithubActionsSolinasVerification: Scalars['Boolean']['output']
   getGithubRepository?: Maybe<GithubRepository>
   getJenkinsPipeline?: Maybe<JenkinsPipeline>
@@ -527,12 +548,6 @@ export type QueryGetCxOneProjectArgs = {
 export type QueryGetGitHubAdvancedSecurityArgs = {
   projectId: Scalars['String']['input']
   resourceName: Scalars['String']['input']
-}
-
-export type QueryGetGithubActionsCrossNamespaceArgs = {
-  githubInstance: Scalars['String']['input']
-  githubOrg: Scalars['String']['input']
-  projectId: Scalars['String']['input']
 }
 
 export type QueryGetGithubActionsSolinasVerificationArgs = {
@@ -666,8 +681,14 @@ export type StepConfigKubernetesDeployStage = {
 
 export type Subscription = {
   __typename?: 'Subscription'
+  watchGithubActionsEnablement?: Maybe<GithubActionsDetails>
   watchNotManagedServices: NotManagedServices
   watchPipeline: Pipeline
+}
+
+export type SubscriptionWatchGithubActionsEnablementArgs = {
+  componentId: Scalars['String']['input']
+  projectId: Scalars['String']['input']
 }
 
 export type SubscriptionWatchNotManagedServicesArgs = {
@@ -1104,22 +1125,25 @@ export type ToggleDebugLabelMutationVariables = Exact<{
 
 export type ToggleDebugLabelMutation = { __typename?: 'Mutation'; toggleDebugLabel?: string | null }
 
-export type CreateGithubActionsMutationVariables = Exact<{
+export type CreateGithubActionsPipelineMutationVariables = Exact<{
   projectId: Scalars['String']['input']
   componentId: Scalars['String']['input']
-  githubInstance: Scalars['String']['input']
-  githubOrganization: Scalars['String']['input']
 }>
 
-export type CreateGithubActionsMutation = { __typename?: 'Mutation'; createGithubActions?: string | null }
+export type CreateGithubActionsPipelineMutation = {
+  __typename?: 'Mutation'
+  createGithubActionsPipeline?: string | null
+}
 
-export type DeleteGithubActionsMutationVariables = Exact<{
+export type CreateStandaloneGithubActionsClaimMutationVariables = Exact<{
   projectId: Scalars['String']['input']
   componentId: Scalars['String']['input']
-  resourceName: Scalars['String']['input']
 }>
 
-export type DeleteGithubActionsMutation = { __typename?: 'Mutation'; deleteGithubActions?: string | null }
+export type CreateStandaloneGithubActionsClaimMutation = {
+  __typename?: 'Mutation'
+  createStandaloneGithubActionsClaim?: string | null
+}
 
 export type GetGithubActionsSolinasVerificationQueryVariables = Exact<{
   projectId: Scalars['String']['input']
@@ -1132,24 +1156,39 @@ export type GetGithubActionsSolinasVerificationQuery = {
   getGithubActionsSolinasVerification: boolean
 }
 
-export type GetGithubActionsCrossNamespaceQueryVariables = Exact<{
+export type WatchGithubActionsEnablementSubscriptionVariables = Exact<{
   projectId: Scalars['String']['input']
-  githubOrg: Scalars['String']['input']
-  githubInstance: Scalars['String']['input']
+  componentId: Scalars['String']['input']
 }>
 
-export type GetGithubActionsCrossNamespaceQuery = {
-  __typename?: 'Query'
-  getGithubActionsCrossNamespace?: {
-    __typename?: 'GithubActionsGetPayload'
-    solinasCustomerID?: string | null
-    githubOrganization?: string | null
-    githubInstance?: string | null
-    secretPath?: string | null
+export type WatchGithubActionsEnablementSubscription = {
+  __typename?: 'Subscription'
+  watchGithubActionsEnablement?: {
+    __typename?: 'GithubActionsDetails'
+    githubInstance: string
+    githubOrgID: number
+    githubOrgName: string
     creationTimestamp?: string | null
-    isAlreadyManaged: boolean
-    responsibleProject?: string | null
+    enablementRef?: {
+      __typename?: 'ResourceRef'
+      automaticdErrorNumber: string
+      error: string
+      status: string
+      name: string
+      kind: string
+    } | null
   } | null
+}
+
+export type DeleteGithubActionsPipelineMutationVariables = Exact<{
+  projectId: Scalars['String']['input']
+  componentId: Scalars['String']['input']
+  resourceName: Scalars['String']['input']
+}>
+
+export type DeleteGithubActionsPipelineMutation = {
+  __typename?: 'Mutation'
+  deleteGithubActionsPipeline?: string | null
 }
 
 export type CreateGitHubAdvancedSecurityMutationVariables = Exact<{

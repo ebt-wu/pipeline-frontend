@@ -1,0 +1,79 @@
+upgrade-github-actions-banner {
+    margin-bottom: 1rem;
+}
+
+.stage-card {
+    margin-top: 4rem;
+
+    .card-content-padding {
+        padding: 0;
+    }
+
+    .stage-headline-padding {
+        padding: 2px 2px 2px 8px;
+    }
+
+    .card-content {
+        display: flex;
+        gap: 1rem;
+        align-items: center;
+        padding-right: 2rem;
+        cursor: pointer;
+
+
+        .icons {
+            height: 4rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+
+            .icon {
+                margin-left: 1rem;
+                width: 32px;
+                font-size: 20px;
+            }
+        }
+
+        .card-description {
+            display: flex;
+            flex-direction: column;
+
+            .card-description-stage-headline {
+                display: flex;
+                flex-direction: row;
+                gap: 0.5rem;
+                align-items: center;
+                .smaller-text {
+                    font-size: 16px;
+                }
+                .bigger-text {
+                    font-size: 18px;
+                }
+
+                h1 {
+                    margin: 0;
+                }
+
+                p {
+                    font-size: 14px;
+                    color: var(--sapNeutralColor);
+                }
+            }
+            .configured-services-text {
+                color: var(--sapNeutralColor);
+            }
+        }
+
+        .spacer {
+            flex-grow: 1;
+        }
+
+
+        .details-icon {
+            font-size: 20px;
+            color: var(--sapNeutralColor);
+
+        }
+    }
+}

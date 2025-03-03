@@ -193,10 +193,10 @@
                       *ngSwitchCase="kinds.JENKINS_PIPELINE"
                       [serviceDetails]="serviceDetails().get(serviceKind)"></app-jenkins-service-details>
                     <app-github-actions-service-details
-                      *ngSwitchCase="kinds.GITHUB_ACTION"
+                      *ngSwitchCase="kinds.GITHUB_ACTIONS_ENABLEMENT"
                       [serviceDetails]="serviceDetails().get(serviceKind)"></app-github-actions-service-details>
                     <app-github-actions-service-details
-                      *ngSwitchCase="kinds.GITHUB_ACTIONS_WORKFLOW"
+                      *ngSwitchCase="kinds.GITHUB_ACTIONS_PIPELINE"
                       [serviceDetails]="serviceDetails().get(serviceKind)"></app-github-actions-service-details>
                     <app-azure-service-details
                       *ngSwitchCase="stepKeys.AZURE_DEV_OPS"

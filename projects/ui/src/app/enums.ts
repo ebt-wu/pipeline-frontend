@@ -1,12 +1,12 @@
 export enum Kinds {
-  GITHUB_ACTION = 'GithubAction',
+  GITHUB_ACTIONS_ENABLEMENT = 'GithubActionsEnablement',
+  GITHUB_ACTIONS_PIPELINE = 'GithubActionsPipeline',
   GITHUB_REPOSITORY = 'GithubRepository',
   STAGING_SERVICE_CREDENTIAL = 'StagingServiceCredential',
   CUMULUS_PIPELINE = 'CumulusPipeline',
   PIPER_CONFIG = 'PiperConfig',
   JENKINS_PIPELINE = 'JenkinsPipeline',
   CUMULUS_GROUP = 'CumulusGroup',
-  GITHUB_ACTIONS_WORKFLOW = 'GithubActionsWorkflow',
   GITHUB_ADVANCED_SECURITY = 'GitHubAdvancedSecurity',
   OPEN_SOURCE_COMPLIANCE = 'OscRegistration',
   SONAR_QUBE_PROJECT = 'SonarQubeProject',
@@ -42,6 +42,7 @@ export enum Categories {
   BINARY_MANAGEMENT = 'Binary Management',
   PRODUCT_MGMT_SYSTEM = 'Product Management System',
   DEPLOY = 'Deployment',
+  AUTOMATE_WORKFLOWS = 'Workflow Automation',
 }
 export enum Stages {
   BUILD = 'BUILD',
@@ -81,7 +82,7 @@ export enum Languages {
 export enum Orchestrators {
   JENKINS = 'Jenkins',
   AZURE_PIPELINES = 'Azure Pipelines',
-  GITHUB_ACTIONS_WORKFLOW = 'GitHub Actions',
+  GITHUB_ACTIONS_PIPELINE = 'GitHub Actions',
 }
 
 export enum CredentialTypes {

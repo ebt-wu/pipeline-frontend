@@ -1,0 +1,29 @@
+<fd-card cardType="linkList" class="stage-card">
+  <fd-card-content class="card-content-padding">
+    <div (click)="openDetails(Categories.AUTOMATE_WORKFLOWS)" class="card-content stage-headline-padding">
+      <div class="icons">
+        <app-status-icon class="icon" [statusIconConfig]="statusIconConfig"></app-status-icon>
+        <fd-avatar [image]="getIcon()" size="xs"></fd-avatar>
+      </div>
+      <div class="card-description">
+        <div class="card-description-stage-headline">
+          <h1 [class]="configuredServicesText ? 'smaller-text' : 'bigger-text'">{{ Categories.AUTOMATE_WORKFLOWS }}</h1>
+          <p *ngIf="true">{{ rightSideTextConfig.rightSideText }}</p>
+        </div>
+        <span *ngIf="configuredServicesText" class="configured-services-text">{{ configuredServicesText }}</span>
+      </div>
+      <div class="spacer"></div>
+      <button
+        *ngIf="buttonConfig.isButtonShown && !isServiceDetailOpen"
+        fd-button
+        ariaLabel="Enable"
+        [label]="buttonConfig.buttonText"
+        [fdType]="buttonConfig.buttonType || null"
+        (click)="buttonConfig.buttonAction($event)"></button>
+      <fd-icon *ngIf="isOpenArrowShown" glyph="slim-arrow-right" class="details-icon"></fd-icon>
+    </div>
+  </fd-card-content>
+</fd-card>
+<app-upgrade-banner
+  *ngIf="isGetMoreOutOfActionsBannerShown"
+  [isServiceDetailOpen]="isServiceDetailOpen"></app-upgrade-banner>

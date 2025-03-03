@@ -8,8 +8,8 @@ export const KindName = {
   [Kinds.PIPER_CONFIG]: 'Piper Native Build',
   [Kinds.STAGING_SERVICE_CREDENTIAL]: 'Staging Service',
   [Kinds.JENKINS_PIPELINE]: 'Jenkins Pipeline',
-  [Kinds.GITHUB_ACTION]: 'GitHub Actions',
-  [Kinds.GITHUB_ACTIONS_WORKFLOW]: 'GitHub Actions',
+  [Kinds.GITHUB_ACTIONS_ENABLEMENT]: 'GitHub Actions',
+  [Kinds.GITHUB_ACTIONS_PIPELINE]: 'GitHub Actions',
   [Kinds.GITHUB_ADVANCED_SECURITY]: 'GitHub Advanced Security',
   [Kinds.CX_ONE_PROJECT]: 'Checkmarx ONE',
   [StepKey.CX_ONE]: 'Checkmarx ONE',
@@ -33,9 +33,9 @@ export const KindCategory = {
   [Kinds.GITHUB_REPOSITORY]: Categories.SOURCE_CODE_MANAGEMENT,
   [Kinds.STAGING_SERVICE_CREDENTIAL]: Categories.CODE_TRANSPORTATION,
   [Kinds.JENKINS_PIPELINE]: Categories.ORCHESTRATION,
-  [Kinds.GITHUB_ACTION]: Categories.ORCHESTRATION,
   [Kinds.PIPER_CONFIG]: Categories.CODE_BUILD,
-  [Kinds.GITHUB_ACTIONS_WORKFLOW]: Categories.ORCHESTRATION,
+  [Kinds.GITHUB_ACTIONS_ENABLEMENT]: Categories.AUTOMATE_WORKFLOWS,
+  [Kinds.GITHUB_ACTIONS_PIPELINE]: Categories.ORCHESTRATION,
   [Kinds.GITHUB_ADVANCED_SECURITY]: Categories.STATIC_SECURITY_CHECKS,
   [Kinds.CX_ONE_PROJECT]: Categories.STATIC_SECURITY_CHECKS,
   [StepKey.CX_ONE]: Categories.STATIC_SECURITY_CHECKS,
@@ -57,11 +57,11 @@ export const KindCategory = {
 export const KindExtensionName = {
   [Kinds.CUMULUS_PIPELINE]: Extensions.CUMULUS,
   [Kinds.GITHUB_REPOSITORY]: Extensions.GITHUB_TOOLS,
-  [Kinds.GITHUB_ACTION]: Extensions.GITHUB_ACTIONS_TOOLS_SAP,
   [Kinds.PIPER_CONFIG]: Extensions.PIPER,
   [Kinds.STAGING_SERVICE_CREDENTIAL]: Extensions.STAGING_SERVICE_EXTERNAL,
   [Kinds.JENKINS_PIPELINE]: Extensions.JAAS,
-  [Kinds.GITHUB_ACTIONS_WORKFLOW]: Extensions.GITHUB_ACTIONS_TOOLS_SAP,
+  [Kinds.GITHUB_ACTIONS_ENABLEMENT]: Extensions.GITHUB_ACTIONS_TOOLS_SAP,
+  [Kinds.GITHUB_ACTIONS_PIPELINE]: Extensions.GITHUB_ACTIONS_TOOLS_SAP,
   [Kinds.GITHUB_ADVANCED_SECURITY]: Extensions.GITHUB_ADVANCED_SECURITY,
   [Kinds.OPEN_SOURCE_COMPLIANCE]: Extensions.OPEN_SOURCE_COMPLIANCE,
   [Kinds.SONAR_QUBE_PROJECT]: Extensions.SONARQUBE,
@@ -83,7 +83,7 @@ export const KindStage = {
   [Kinds.PIPER_CONFIG]: Stages.BUILD,
   [Kinds.STAGING_SERVICE_CREDENTIAL]: Stages.BUILD,
   [Kinds.JENKINS_PIPELINE]: Stages.BUILD,
-  [Kinds.GITHUB_ACTIONS_WORKFLOW]: Stages.BUILD,
+  [Kinds.GITHUB_ACTIONS_PIPELINE]: Stages.BUILD,
   [Kinds.GITHUB_ADVANCED_SECURITY]: Stages.VALIDATE,
   [Kinds.CX_ONE_PROJECT]: Stages.VALIDATE,
   [Kinds.OPEN_SOURCE_COMPLIANCE]: Stages.VALIDATE,
@@ -167,9 +167,8 @@ export const ProgrammingLanguages: ProgrammingLanguage[] = [
 export const OrderedStepsByCategory = {
   // Orchestrators
   [Kinds.JENKINS_PIPELINE]: 1,
-  [Kinds.GITHUB_ACTION]: 2,
+  [Kinds.GITHUB_ACTIONS_PIPELINE]: 2,
   [StepKey.AZURE_DEV_OPS]: 3,
-  [Kinds.GITHUB_ACTIONS_WORKFLOW]: 4,
 
   // Code build
   [Kinds.PIPER_CONFIG]: 1,
@@ -218,9 +217,8 @@ export const StepsOverallOrder = {
   // BUILD
   // Orchestrators
   [Kinds.JENKINS_PIPELINE]: 1,
-  [Kinds.GITHUB_ACTION]: 2,
-  [Kinds.GITHUB_ACTIONS_WORKFLOW]: 3,
-  [StepKey.AZURE_DEV_OPS]: 4,
+  [Kinds.GITHUB_ACTIONS_PIPELINE]: 2,
+  [StepKey.AZURE_DEV_OPS]: 3,
 
   // Code build
   [Kinds.PIPER_CONFIG]: 5,

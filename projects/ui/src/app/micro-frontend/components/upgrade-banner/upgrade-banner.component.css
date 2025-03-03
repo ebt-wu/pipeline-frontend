@@ -1,38 +1,39 @@
-.banner {
-  padding: 1rem 2rem;
-  display: flex;
-  align-items: center;
-  background-color: var(--sapList_SelectionBackgroundColor);
+.banner-card {
+  margin-top: 1rem;
 
-  .banner-content {
+  .banner {
+    padding: 19px 2rem;
     display: flex;
-    flex-direction: column;
+    align-items: center;
+    background-color: var(--sapList_SelectionBackgroundColor);
+
+    .banner-content {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .banner-heading {
+      margin-bottom: -2px;
+      z-index: 1;
+    }
+
+    .banner-subheading {
+      color: var(--sapNeutralColor);
+      z-index: 1;
+    }
+
+    .banner-balloons {
+      height: 68px;
+      position: absolute;
+      bottom: 0;
+      z-index: 0;
+      opacity: 80%;
+      right: 11rem;
+    }
+
+    .spacer {
+      flex-grow: 1;
+    }
   }
 
-  .pipelines-info-label {
-    margin-bottom: 0.3rem;
-    z-index: 1;
-  }
-
-  .banner-heading {
-    margin-bottom: -2px;
-    z-index: 1;
-  }
-
-  .banner-subheading {
-    color: var(--sapNeutralColor);
-    z-index: 1;
-  }
-
-  .banner-balloons {
-    position: absolute;
-    bottom: 0;
-    z-index: 0;
-    opacity: 80%;
-    right: 11rem;
-  }
-
-  .spacer {
-    flex-grow: 1;
-  }
 }

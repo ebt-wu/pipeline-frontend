@@ -38,6 +38,7 @@ import { JiraService } from '../../../services/jira.service'
 import { PlatformFormGeneratorCustomInfoBoxComponent } from '../../../components/form-generator/form-generator-info-box/form-generator-info-box.component'
 import { DxpContext } from '@dxp/ngx-core/common'
 import { JiraProject, NotManagedServices, PpmsFoss } from '@generated/graphql'
+import { GithubActionsService } from '../../../services/github-actions.service'
 
 enum OSCSetupSteps {
   PREREQUISITES_INFO = 'PREREQUISITES_INFO',
@@ -351,6 +352,7 @@ export class SetupOSCModalComponent implements OnInit {
     private readonly extensionService: ExtensionService,
     private readonly pipelineService: PipelineService,
     private readonly githubService: GithubService,
+    private readonly ghaService: GithubActionsService,
     private readonly openSourceComplianceService: OpenSourceComplianceService,
     private readonly jiraService: JiraService,
     private luigiClient: LuigiClient,
@@ -367,8 +369,13 @@ export class SetupOSCModalComponent implements OnInit {
       .pipe(debounceTime(50)) as Observable<NotManagedServices>
 
     const watchPipeline$ = this.pipelineService.watchPipeline().pipe(debounceTime(50))
+    const watchGHAE$ = this.ghaService.watchGithubActionsEnablement().pipe(debounceTime(50))
 
-    this.watch$ = this.pipelineService.combinePipelineWithNotManagedServices(watchPipeline$, watchNotManagedServices$)
+    this.watch$ = this.pipelineService.combinePipelineWithNotManagedServicesAndGithubWatch(
+      watchPipeline$,
+      watchNotManagedServices$,
+      watchGHAE$,
+    )
 
     const resourceRefs = (await firstValueFrom(this.watch$)).resourceRefs
     this.isxMakePresent.set(resourceRefs.some((ref) => ref.kind === StepKey.XMAKE))

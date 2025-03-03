@@ -18,6 +18,10 @@
     margin-top: 1rem;
 }
 
+.bottom-margin {
+    margin-bottom: 1rem;
+}
+
 a {
     color: var(--sapLinkColor);
     text-decoration: none;

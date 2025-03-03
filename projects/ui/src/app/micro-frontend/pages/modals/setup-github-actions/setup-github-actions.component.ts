@@ -3,8 +3,7 @@ import { DynamicFormItem, FormGeneratorComponent, FormGeneratorService } from '@
 import { NgIf } from '@angular/common'
 import { FundamentalNgxPlatformModule, PlatformMessagePopoverModule } from '@fundamental-ngx/platform'
 import { firstValueFrom } from 'rxjs'
-import { DxpLuigiContextService, LuigiClient } from '@dxp/ngx-core/luigi'
-import { SecretService } from '../../../services/secret.service'
+import { LuigiClient } from '@dxp/ngx-core/luigi'
 import { PlatformFormGeneratorCustomHeaderElementComponent } from '../../../components/form-generator/form-generator-header/form-generator-header.component'
 import { FundamentalNgxCoreModule } from '@fundamental-ngx/core'
 import { ErrorMessageComponent } from '../../../components/error-message/error-message.component'
@@ -18,7 +17,6 @@ import {
 import { PlatformFormGeneratorCustomValidatorComponent } from '../../../components/form-generator/form-generator-validator/form-generator-validator.component'
 import { PlatformFormGeneratorCustomButtonComponent } from '../../../components/form-generator/form-generator-button/form-generator-button.component'
 import { PlatformFormGeneratorCustomObjectStatusComponent } from '../../../components/form-generator/form-generator-object-status/form-generator-object-status.component'
-import { FeatureFlagService } from '../../../services/feature-flag.service'
 import { GithubActionsFormService } from '../../../services/forms/github-actions-form.service'
 
 @Component({
@@ -49,10 +47,7 @@ export class GithubActionsComponent implements OnInit {
 
   constructor(
     private luigiClient: LuigiClient,
-    private luigiService: DxpLuigiContextService,
-    private readonly featureFlagService: FeatureFlagService,
     private readonly formGeneratorService: FormGeneratorService,
-    private readonly secretService: SecretService,
     private readonly githubService: GithubService,
     private readonly githubActionsService: GithubActionsService,
     private readonly githubActionsFormService: GithubActionsFormService,
@@ -109,12 +104,7 @@ export class GithubActionsComponent implements OnInit {
     this.loading.set(true)
 
     try {
-      await firstValueFrom(
-        this.githubActionsService.createGithubActions(
-          this.githubMetadata.githubInstance,
-          this.githubMetadata.githubOrgName,
-        ),
-      )
+      await firstValueFrom(this.githubActionsService.createStandaloneGithubActionsClaim())
       this.luigiClient.uxManager().closeCurrentModal()
     } catch (error) {
       const errorMessage = (error as Error).message ?? 'Unknown error'

@@ -16,6 +16,7 @@ import { PolicyService } from '../../services/policy.service'
 import { map } from 'rxjs/operators'
 import { StepsOverallOrder } from '@constants'
 import { GithubService } from '../../services/github.service'
+import { GithubActionsService } from '../../services/github-actions.service'
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -47,6 +48,7 @@ export class HomePageComponent implements OnInit {
 
   constructor(
     private readonly pipelineService: PipelineService,
+    private readonly githubActionsService: GithubActionsService,
     private readonly githubService: GithubService,
     private readonly debugModeService: DebugModeService,
     private readonly luigiClient: LuigiClient,
@@ -65,8 +67,13 @@ export class HomePageComponent implements OnInit {
       .watchNotManagedServicesInPipeline()
       .pipe(debounceTime(50)) as Observable<NotManagedServices>
 
+    const watchGhActionsEnablement$ = this.githubActionsService.watchGithubActionsEnablement()
     this.watch$ = this.pipelineService
-      .combinePipelineWithNotManagedServices(watchPipeline$, watchNotManagedServices$)
+      .combinePipelineWithNotManagedServicesAndGithubWatch(
+        watchPipeline$,
+        watchNotManagedServices$,
+        watchGhActionsEnablement$,
+      )
       .pipe(
         debounceTime(50),
         map((pipeline) => {

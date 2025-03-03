@@ -34,6 +34,7 @@ import {
   GithubCredentialFormService,
   GithubCredentialFormValueP,
 } from '../../../services/forms/github-credential-form.service'
+import { GithubActionsService } from '../../../services/github-actions.service'
 
 // All the form fields excluding headers, message-strips, and validators
 type SetupBuildFormValue = {
@@ -67,11 +68,12 @@ type JenkinsGithubCredentialFormValue = GithubCredentialFormValueP<JenkinsGithub
 })
 export class SetupBuildComponent implements OnInit, OnDestroy {
   constructor(
-    private luigiClient: LuigiClient,
+    private readonly luigiClient: LuigiClient,
     private readonly luigiService: DxpLuigiContextService,
     private readonly formGeneratorService: FormGeneratorService,
     private readonly secretService: SecretService,
     private readonly githubService: GithubService,
+    private readonly githubActionsService: GithubActionsService,
     private readonly jenkinsService: JenkinsService,
     private readonly pipelineService: PipelineService,
     private readonly piperService: PiperService,
@@ -342,7 +344,7 @@ export class SetupBuildComponent implements OnInit, OnDestroy {
         const orchestrators: Array<Orchestrators> = []
 
         if (await this.featureFlagService.isGithubActionsEnabled()) {
-          orchestrators.push(Orchestrators.GITHUB_ACTIONS_WORKFLOW)
+          orchestrators.push(Orchestrators.GITHUB_ACTIONS_PIPELINE)
         }
 
         orchestrators.push(Orchestrators.JENKINS)
@@ -380,7 +382,7 @@ export class SetupBuildComponent implements OnInit, OnDestroy {
 
     const isGithubActionsEnabled = await this.featureFlagService.isGithubActionsEnabled()
     if (isGithubActionsEnabled) {
-      this.defaultOrchestrator = Orchestrators.GITHUB_ACTIONS_WORKFLOW
+      this.defaultOrchestrator = Orchestrators.GITHUB_ACTIONS_PIPELINE
     }
 
     const jenkinsGithubCredentialFormItems = this.githubCredentialFormService.buildFormItems<
@@ -389,7 +391,7 @@ export class SetupBuildComponent implements OnInit, OnDestroy {
     >('jenkinsGithub', (formValue) => formValue.orchestrator === Orchestrators.JENKINS)
     const githubActionsFormItems = await this.githubActionsFormService.buildFormItems<SetupBuildFormValue>(
       this.refreshStepsVisibility.bind(this) as () => Promise<void>,
-      (formValue) => formValue.orchestrator === Orchestrators.GITHUB_ACTIONS_WORKFLOW,
+      (formValue) => formValue.orchestrator === Orchestrators.GITHUB_ACTIONS_PIPELINE,
     )
 
     this.formItems = this.formItems.concat(jenkinsGithubCredentialFormItems, githubActionsFormItems)
@@ -398,7 +400,9 @@ export class SetupBuildComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    this.contextSubscription.unsubscribe()
+    if (this.contextSubscription) {
+      this.contextSubscription.unsubscribe()
+    }
   }
 
   onFormCreated(): void {
@@ -436,11 +440,11 @@ export class SetupBuildComponent implements OnInit, OnDestroy {
 
       // Github repository and Github Actions
       let isGithubActions = false
-      if (buildFormValue.orchestrator === Orchestrators.GITHUB_ACTIONS_WORKFLOW) {
+      if (buildFormValue.orchestrator === Orchestrators.GITHUB_ACTIONS_PIPELINE) {
         isGithubActions = true
       }
 
-      const repositoryResource = await firstValueFrom(
+      const repositoryResourceName = await firstValueFrom(
         this.githubService.createGithubRepository(
           githubRepoUrl.origin,
           githubMetadata.githubOrgName,
@@ -449,9 +453,10 @@ export class SetupBuildComponent implements OnInit, OnDestroy {
         ),
       )
 
-      // Jenkins
-      let jenkinsCredentialPath: string
-      if (buildFormValue.orchestrator === Orchestrators.JENKINS) {
+      if (buildFormValue.orchestrator === Orchestrators.GITHUB_ACTIONS_PIPELINE) {
+        await firstValueFrom(this.githubActionsService.createGithubActionsPipeline())
+      } else if (buildFormValue.orchestrator === Orchestrators.JENKINS) {
+        let jenkinsCredentialPath: string
         // Jenkins credential
 
         if (buildFormValue.jenkinsCredentialType === CredentialTypes.NEW) {
@@ -479,7 +484,7 @@ export class SetupBuildComponent implements OnInit, OnDestroy {
           this.jenkinsService.createJenkinsPipeline(
             buildFormValue.jenkinsUrl.trim(),
             jenkinsCredentialPath,
-            repositoryResource,
+            repositoryResourceName,
             githubSecretPath,
             labels,
           ),
@@ -495,14 +500,13 @@ export class SetupBuildComponent implements OnInit, OnDestroy {
       await firstValueFrom(
         this.piperService.createPiperConfig(
           githubSecretPath,
-          repositoryResource,
+          repositoryResourceName,
           buildFormValue.buildTool,
           false,
           dockerImageName,
           labels,
         ),
       )
-
       this.luigiClient.uxManager().closeCurrentModal()
     } catch (error) {
       const errorMessage = (error as Error).message ?? 'Unknown error'

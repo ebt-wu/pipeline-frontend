@@ -422,24 +422,14 @@ export const TOGGLE_DEBUG_LABEL = gql<ToggleDebugLabelMutation, MutationToggleDe
  * GITHUB ACTIONS QUERIES
  */
 
-export const CREATE_GITHUB_ACTIONS = gql`
-  mutation CreateGithubActions(
-    $projectId: String!
-    $componentId: String!
-    $githubInstance: String!
-    $githubOrganization: String!
-  ) {
-    createGithubActions(
-      projectId: $projectId
-      componentId: $componentId
-      params: { githubInstance: $githubInstance, githubOrganization: $githubOrganization }
-    )
+export const CREATE_GITHUB_ACTIONS_PIPELINE = gql`
+  mutation CreateGithubActionsPipeline($projectId: String!, $componentId: String!) {
+    createGithubActionsPipeline(projectId: $projectId, componentId: $componentId)
   }
 `
-
-export const DELETE_GITHUB_ACTIONS = gql`
-  mutation DeleteGithubActions($projectId: String!, $componentId: String!, $resourceName: String!) {
-    deleteGithubActions(projectId: $projectId, componentId: $componentId, resourceName: $resourceName)
+export const CREATE_STANDALONE_GITHUB_ACTIONS_CLAIM = gql`
+  mutation CreateStandaloneGithubActionsClaim($projectId: String!, $componentId: String!) {
+    createStandaloneGithubActionsClaim(projectId: $projectId, componentId: $componentId)
   }
 `
 
@@ -449,23 +439,33 @@ export const GET_GITHUB_ACTONS_SOLINAS_VERIFICATION = gql`
   }
 `
 
-/**
- * GITHUB ADVANCED SECURITY QUERIES
- */
-
-export const GET_GITHUB_ACTIONS_CROSS_NAMESPACE = gql`
-  query GetGithubActionsCrossNamespace($projectId: String!, $githubOrg: String!, $githubInstance: String!) {
-    getGithubActionsCrossNamespace(projectId: $projectId, githubOrg: $githubOrg, githubInstance: $githubInstance) {
-      solinasCustomerID
-      githubOrganization
+export const WATCH_GITHUB_ACTIONS_ENABLEMENT = gql`
+  subscription WatchGithubActionsEnablement($projectId: String!, $componentId: String!) {
+    watchGithubActionsEnablement(projectId: $projectId, componentId: $componentId) {
+      enablementRef {
+        automaticdErrorNumber
+        error
+        status
+        name
+        kind
+      }
       githubInstance
-      secretPath
+      githubOrgID
+      githubOrgName
       creationTimestamp
-      isAlreadyManaged
-      responsibleProject
     }
   }
 `
+
+export const DELETE_GITHUB_ACTIONS_PIPELINE = gql`
+  mutation DeleteGithubActionsPipeline($projectId: String!, $componentId: String!, $resourceName: String!) {
+    deleteGithubActionsPipeline(projectId: $projectId, componentId: $componentId, resourceName: $resourceName)
+  }
+`
+
+/**
+ * GITHUB ADVANCED SECURITY QUERIES
+ */
 
 export const CREATE_GITHUB_ADVANCED_SECURITY = gql`
   mutation CreateGitHubAdvancedSecurity(

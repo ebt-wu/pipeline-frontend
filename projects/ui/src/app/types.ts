@@ -1,5 +1,10 @@
-import { GitHubAdvancedSecurityGetPayload, NotManagedServices, PipelineType } from '@generated/graphql'
-import { GithubInstances, JiraProjectTypes, Kinds, Languages, OSCPlatforms, ServiceStatus, StepKey } from '@enums'
+import {
+  GithubActionsDetails,
+  GitHubAdvancedSecurityGetPayload,
+  NotManagedServices,
+  PipelineType,
+} from '@generated/graphql'
+import { GithubInstances, JiraProjectTypes, Kinds, OSCPlatforms, ServiceStatus, StepKey, Languages } from '@enums'
 import { ButtonType, ColorAccent } from '@fundamental-ngx/core'
 
 export type AddPrefixToTypeProperties<T, P extends string> = {
@@ -27,6 +32,7 @@ export type Pipeline = {
   resourceRefs?: ResourceRef[]
   labels?: Label[]
   notManagedServices?: NotManagedServices
+  githubActionsDetails?: GithubActionsDetails
 }
 
 export type Label = {

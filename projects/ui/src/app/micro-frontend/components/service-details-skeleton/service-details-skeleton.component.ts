@@ -219,8 +219,8 @@ export class ServiceDetailsSkeletonComponent implements OnInit, OnChanges {
         case Kinds.PIPER_CONFIG:
           return (serviceDetailsForKind as PiperConfig).pullRequestURL
 
-        case Kinds.GITHUB_ACTION:
-        case Kinds.GITHUB_ACTIONS_WORKFLOW: {
+        case Kinds.GITHUB_ACTIONS_ENABLEMENT:
+        case Kinds.GITHUB_ACTIONS_PIPELINE: {
           return githubRepoUrl + '/actions'
         }
         case Kinds.GITHUB_ADVANCED_SECURITY:
@@ -257,8 +257,7 @@ export class ServiceDetailsSkeletonComponent implements OnInit, OnChanges {
   }
 
   async getDetails(kind: Kinds | StepKey): Promise<ServiceDetails> {
-    const { githubRepoUrl, githubInstance, githubOrgName, githubRepoName } =
-      await this.api.githubService.getGithubMetadata()
+    const { githubRepoUrl, githubRepoName } = await this.api.githubService.getGithubMetadata()
 
     const name = this.getResourceNameFromResourceRefs(kind, this.pipeline.resourceRefs)
     try {
@@ -290,11 +289,9 @@ export class ServiceDetailsSkeletonComponent implements OnInit, OnChanges {
         case StepKey.COMMON_REPOSITORY:
           return this.pipeline.notManagedServices[StepKey.COMMON_REPOSITORY]
 
-        case Kinds.GITHUB_ACTION:
-        case Kinds.GITHUB_ACTIONS_WORKFLOW:
-          return await firstValueFrom(
-            this.api.githubActionsService.getGithubActionsCrossNamespace(githubInstance, githubOrgName),
-          )
+        case Kinds.GITHUB_ACTIONS_ENABLEMENT:
+        case Kinds.GITHUB_ACTIONS_PIPELINE:
+          return this.pipeline.githubActionsDetails
 
         case Kinds.GITHUB_ADVANCED_SECURITY:
           return {
@@ -474,11 +471,16 @@ The information might be missing in the Hyperspace portal extension backend, Lea
   }
 
   findAndSortServicesFromCategory(category: Categories): (Kinds | StepKey)[] {
+    const servicesToShow: (Kinds | StepKey)[] = []
+
+    if (category === Categories.AUTOMATE_WORKFLOWS && this.pipeline.githubActionsDetails) {
+      servicesToShow.push(Kinds.GITHUB_ACTIONS_ENABLEMENT)
+    }
+
     const kindsStepKeys = Object.keys(KindCategory).filter((key) => KindCategory[key] === category)
-    const matchingResourceRefs = this.pipeline.resourceRefs
+    const matchingKindsStepKeys = this.pipeline.resourceRefs
       .filter((ref) => kindsStepKeys.includes(ref.kind))
       .map((ref) => ref.kind)
-    let servicesToShow: (Kinds | StepKey)[]
 
     if (this.pipeline.notManagedServices) {
       const matchingNotManagedServices = Object.entries(this.pipeline.notManagedServices)
@@ -486,9 +488,9 @@ The information might be missing in the Hyperspace portal extension backend, Lea
           return kindsStepKeys.includes(key) && value !== null
         })
         .map(([key]) => key as StepKey)
-      servicesToShow = Array.from(new Set([...matchingResourceRefs, ...matchingNotManagedServices]))
+      servicesToShow.push(...Array.from(new Set([...matchingKindsStepKeys, ...matchingNotManagedServices])))
     } else {
-      servicesToShow = matchingResourceRefs
+      servicesToShow.push(...matchingKindsStepKeys)
     }
 
     // Sort the services if there's more than 1

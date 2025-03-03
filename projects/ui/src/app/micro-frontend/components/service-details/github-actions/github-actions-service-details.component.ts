@@ -2,12 +2,12 @@ import { CommonModule } from '@angular/common'
 import { Component, Input, OnInit, signal, ChangeDetectionStrategy } from '@angular/core'
 import { FundamentalNgxCoreModule, InlineHelpDirective } from '@fundamental-ngx/core'
 import { SecretService } from '../../../../micro-frontend/services/secret.service'
-import { GetGithubActionsCrossNamespaceQuery } from '@generated/graphql'
 import { ErrorMessageComponent } from '../../error-message/error-message.component'
-import { DxpLuigiContextService, LuigiClient } from '@dxp/ngx-core/luigi'
+import { LuigiClient } from '@dxp/ngx-core/luigi'
 import { AuthorizationModule } from '@dxp/ngx-core/authorization'
 import { PolicyService } from '../../../services/policy.service'
 import { BaseServiceDetailsComponent } from '../base-service-details.component'
+import { GithubActionsDetails } from '@generated/graphql'
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -21,13 +21,12 @@ export class GithubActionsServiceDetailsComponent extends BaseServiceDetailsComp
   constructor(
     protected override readonly secretService: SecretService,
     protected override readonly policyService: PolicyService,
-    private readonly luigiService: DxpLuigiContextService,
     private readonly luigiClient: LuigiClient,
   ) {
     super(policyService, secretService)
   }
 
-  @Input() serviceDetails: GetGithubActionsCrossNamespaceQuery['getGithubActionsCrossNamespace']
+  @Input() serviceDetails: GithubActionsDetails
 
   readonly ACTIONS_GET_STARTED_URL =
     'https://pages.github.tools.sap/github/features-and-usecases/features/actions/usage'
@@ -36,19 +35,23 @@ export class GithubActionsServiceDetailsComponent extends BaseServiceDetailsComp
   readonly ACTIONS_CATALOG_URL = 'https://github.tools.sap/github/actions-mirror'
   readonly SUGAR_DOCU_URL = 'https://wiki.one.int.sap/wiki/display/DevFw/SUGAR'
 
-  githubOrganizationUrl: string
-  githubActionsRunnerGroupUrl: string
-  catalogUrl = signal('')
-  isCurrentProjectResponsible = signal(false)
-  responsibleProjectUrl = signal('')
+  githubActionsRunnerGroupUrl = signal('')
+  githubOrganizationUrl = signal('')
   pendingShowInVault = signal(false)
   showActionsGetStartedWarning = signal(false)
   showCredentialInfo = signal(true)
 
   async ngOnInit() {
-    this.githubOrganizationUrl = `${this.serviceDetails.githubInstance}/${this.serviceDetails.githubOrganization}`
-    this.githubActionsRunnerGroupUrl = `${this.serviceDetails.githubInstance}/organizations/${this.serviceDetails.githubOrganization}/settings/actions/runner-groups`
+    await super.ngOnInit()
+    this.githubOrganizationUrl.set(
+      new URL(`${this.serviceDetails.githubInstance}/${this.serviceDetails.githubOrgName}`).href,
+    )
 
+    this.githubActionsRunnerGroupUrl.set(
+      new URL(
+        `${this.serviceDetails.githubInstance}/organizations/${this.serviceDetails.githubOrgName}/settings/actions/runner-groups`,
+      ).href,
+    )
     const actionsGetStartedWarningDismissed = await this.luigiClient
       .storageManager()
       .getItem(`actions-get-started-warning`)
@@ -57,20 +60,8 @@ export class GithubActionsServiceDetailsComponent extends BaseServiceDetailsComp
       this.showActionsGetStartedWarning.set(true)
     }
 
-    const context = await this.luigiService.getContextAsync()
-    this.catalogUrl.set(context.frameBaseUrl + '/marketplace')
-
-    if (!this.serviceDetails.secretPath) {
-      this.showCredentialInfo.set(false)
-    }
-
     if (!(await this.policyService.canUserEditCredentials())) {
       this.showCredentialInfo.set(false)
-    }
-
-    await super.ngOnInit()
-    if (context.projectId != this.serviceDetails.responsibleProject) {
-      this.responsibleProjectUrl.set(`${context.frameBaseUrl}/projects/${this.serviceDetails.responsibleProject}`)
     }
   }
 

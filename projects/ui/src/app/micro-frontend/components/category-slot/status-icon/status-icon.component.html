@@ -1,0 +1,50 @@
+<div
+  *ngIf="statusIconConfig && statusIconConfig.statusIconType === serviceStatus.CREATED"
+  data-testid="status-icon-green-check">
+  <span
+    [fd-inline-help]="statusIconConfig.statusIconInlineHelpText || 'Setup Completed'"
+    fd-object-status
+    class="status-icon"
+    size="m"
+    [inverted]="false"
+    [indicationColor]="4"
+    [glyph]="'status-completed'"
+    status="positive"></span>
+</div>
+<div
+  *ngIf="
+    statusIconConfig &&
+    (statusIconConfig.statusIconType === serviceStatus.PENDING_CREATION ||
+      statusIconConfig.statusIconType === serviceStatus.UN_KNOWN)
+  "
+  data-testid="status-icon-loading">
+  <fd-busy-indicator [loading]="true" ariaLabel="loading" size="s" title="Please Wait"></fd-busy-indicator>
+</div>
+<div
+  *ngIf="statusIconConfig && statusIconConfig.statusIconType === serviceStatus.FAILING_CREATION"
+  data-testid="status-icon-red-x">
+  <span fd-object-status class="status-icon" status="negative" glyph="message-error"></span>
+</div>
+<div *ngIf="statusIconConfig && statusIconConfig.statusIconType === 'ALERT'" data-testid="status-icon-alert">
+  <span
+    fd-object-status
+    [fd-inline-help]="statusIconConfig.statusIconInlineHelpText || 'Action Required'"
+    status="critical"
+    glyph="alert"
+    glyphAriaLabel="Critical"
+    class="status-icon"
+    title="Critical"></span>
+</div>
+<div
+  *ngIf="statusIconConfig && statusIconConfig.statusIconType === serviceStatus.NOT_MANAGED"
+  data-testid="status-icon-question-mark">
+  <fd-icon
+    [fd-inline-help]="statusIconConfig.statusIconInlineHelpText || 'Status Unclear'"
+    glyph="question-mark"
+    class="status-icon"></fd-icon>
+</div>
+<div
+  *ngIf="statusIconConfig && statusIconConfig.statusIconType === serviceStatus.NOT_FOUND"
+  data-testid="status-icon-circle">
+  <span fd-object-status class="status-icon" glyph="circle-task"></span>
+</div>

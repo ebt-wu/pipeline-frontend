@@ -1,7 +1,6 @@
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from '@angular/core'
 import { AuthorizationModule } from '@dxp/ngx-core/authorization'
 import {
-  BusyIndicatorComponent,
   ButtonComponent,
   ButtonType,
   ColorAccent,
@@ -12,11 +11,11 @@ import {
   ListItemComponent,
   ListLinkDirective,
   ListThumbnailDirective,
-  ObjectStatusComponent,
   TruncatePipe,
 } from '@fundamental-ngx/core'
 import { Categories, ServiceStatus } from '@enums'
 import { NgIf } from '@angular/common'
+import { StatusIconComponent } from './status-icon/status-icon.component'
 
 @Component({
   selector: 'app-category-slot',
@@ -33,9 +32,8 @@ import { NgIf } from '@angular/common'
     InlineHelpDirective,
     ListThumbnailDirective,
     NgIf,
-    BusyIndicatorComponent,
-    ObjectStatusComponent,
     TruncatePipe,
+    StatusIconComponent,
   ],
   templateUrl: './category-slot.component.html',
   styleUrl: './category-slot.component.css',

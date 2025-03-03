@@ -830,12 +830,10 @@ export class SetupValidationModalComponent implements OnInit, OnDestroy {
     const cxOneApplicationNameControl = this.formGenerator.formControlItems[0].get('cxOneApplicationName')
     cxOneApplicationNameControl.setValue(cxOneApplicationName)
   }
-
   async submitForm(formValue: SetupValidationFormValue) {
     this.loading.set(true)
 
     try {
-      const githubMetadata = await this.githubService.getGithubMetadata()
       const { resourceRefs, labels } = await firstValueFrom(
         this.watch$.pipe(
           // Trying to get a non-null response for 5 seconds
@@ -856,8 +854,7 @@ export class SetupValidationModalComponent implements OnInit, OnDestroy {
             case Kinds.JENKINS_PIPELINE:
               orchestrator = Orchestrators.Jenkins
               break
-            case Kinds.GITHUB_ACTIONS_WORKFLOW:
-            case Kinds.GITHUB_ACTION:
+            case Kinds.GITHUB_ACTIONS_PIPELINE:
               orchestrator = Orchestrators.GitHubActions
               break
           }
@@ -867,10 +864,6 @@ export class SetupValidationModalComponent implements OnInit, OnDestroy {
       if (githubResourceNotExist) {
         await this.createGithubResource()
       }
-
-      await firstValueFrom(
-        this.githubActionsService.createGithubActions(githubMetadata.githubInstance, githubMetadata.githubOrgName),
-      )
 
       for (const validationTool of formValue.validationTools) {
         if (validationTool === ValidationTools.CX) {

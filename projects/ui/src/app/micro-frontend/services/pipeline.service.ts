@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core'
 import { BaseAPIService } from './base.service'
-import { catchError, combineLatestWith, first, map, mergeMap } from 'rxjs/operators'
-import { Observable, combineLatest, of } from 'rxjs'
+import { catchError, first, map, mergeMap } from 'rxjs/operators'
 import { DxpLuigiContextService } from '@dxp/ngx-core/luigi'
 import {
   CREATE_PIPELINE,
@@ -18,6 +17,7 @@ import {
   DeleteNotManagedServiceMutationVariables,
   DeletePipelineMutation,
   DeletePipelineMutationVariables,
+  GithubActionsDetails,
   NotManagedServices,
   PipelineCreationRequest,
   Subscription,
@@ -26,6 +26,7 @@ import {
   WatchPipelineSubscriptionVariables,
 } from '@generated/graphql'
 import { Kinds, ServiceStatus, StepKey } from '@enums'
+import { combineLatest, Observable, of } from 'rxjs'
 
 @Injectable({ providedIn: 'root' })
 export class PipelineService {
@@ -139,7 +140,7 @@ export class PipelineService {
     let isGithubRepositoryPresent = false
     let isPiperConfigPresent = false
     let isJenkinsPipelinePresent = false
-    let isGithubActionsWorkflowPresent = false
+    let isGithubActionsPipelinePresent = false
     let isAzureDevOpsPresent = false
 
     for (const ref of resourceRefs) {
@@ -156,8 +157,9 @@ export class PipelineService {
           isJenkinsPipelinePresent = true
           break
         }
-        case Kinds.GITHUB_ACTIONS_WORKFLOW: {
-          isGithubActionsWorkflowPresent = true
+
+        case Kinds.GITHUB_ACTIONS_PIPELINE: {
+          isGithubActionsPipelinePresent = true
           break
         }
         case StepKey.AZURE_DEV_OPS: {
@@ -168,7 +170,7 @@ export class PipelineService {
     }
 
     const areRequiredResourcesPresent = isGithubRepositoryPresent && isPiperConfigPresent
-    const isOrchestratorPresent = isJenkinsPipelinePresent || isGithubActionsWorkflowPresent || isAzureDevOpsPresent
+    const isOrchestratorPresent = isJenkinsPipelinePresent || isGithubActionsPipelinePresent || isAzureDevOpsPresent
 
     return areRequiredResourcesPresent && isOrchestratorPresent
   }
@@ -178,14 +180,14 @@ export class PipelineService {
     return !isThereNotCreatedResource
   }
 
-  combinePipelineWithNotManagedServices(
+  combinePipelineWithNotManagedServicesAndGithubWatch(
     watchPipeline$: Observable<Pipeline>,
     watchNotMangedServices$: Observable<NotManagedServices>,
+    watchGithubActionsEnablement$: Observable<GithubActionsDetails>,
   ): Observable<Pipeline> {
-    return watchPipeline$.pipe(
-      combineLatestWith(watchNotMangedServices$),
-      map(([pipeline, notManagedServices]) => {
-        if (pipeline.resourceRefs) {
+    return combineLatest([watchPipeline$, watchNotMangedServices$, watchGithubActionsEnablement$]).pipe(
+      map(([pipeline, notManagedServices, ghaDetails]) => {
+        if (pipeline && pipeline.resourceRefs) {
           // Remove existing not managed services from pipeline resourceRefs
           pipeline.resourceRefs = pipeline.resourceRefs.filter(
             (element) => element.status !== ServiceStatus.NOT_MANAGED,
@@ -204,7 +206,7 @@ export class PipelineService {
           pipeline.resourceRefs = [...pipeline.resourceRefs, ...notManagedResourceRefs]
         }
         // Return the updated pipeline with not managed services
-        return { ...pipeline, notManagedServices }
+        return { ...pipeline, notManagedServices, githubActionsDetails: ghaDetails }
       }),
     )
   }

@@ -152,7 +152,7 @@ export class SetupGhasModalComponent implements OnInit, OnDestroy {
   getOrchestrator(kinds: Array<Kinds | StepKey>) {
     if (kinds.includes(Kinds.JENKINS_PIPELINE)) {
       return Orchestrators.Jenkins
-    } else if (kinds.includes(Kinds.GITHUB_ACTION)) {
+    } else if (kinds.includes(Kinds.GITHUB_ACTIONS_PIPELINE)) {
       return Orchestrators.GitHubActions
     }
   }
@@ -185,11 +185,6 @@ export class SetupGhasModalComponent implements OnInit, OnDestroy {
     const labels = (await firstValueFrom(this.watch$)).labels
 
     try {
-      const githubMetadata = await this.githubService.getGithubMetadata()
-      await firstValueFrom(
-        this.githubActionsService.createGithubActions(githubMetadata.githubInstance, githubMetadata.githubOrgName),
-      )
-
       await firstValueFrom(
         this.githubAdvancedSecurityService.createGithubAdvancedSecurity({
           codeScanJobOrchestrator: metadata.codeScanJobOrchestrator,
