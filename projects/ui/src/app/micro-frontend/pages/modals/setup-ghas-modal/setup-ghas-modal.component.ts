@@ -128,7 +128,7 @@ export class SetupGhasModalComponent implements OnInit, OnDestroy {
   }
 
   async recommendLanguage() {
-    const githubLanguages = await firstValueFrom(this.githubService.getRepositoryLanguages())
+    const githubLanguages = (await firstValueFrom(this.githubService.getComponentExtensions())).languages.Languages
     const recommendedLanguage = this.githubService.getMostUsedLanguage(githubLanguages, ProgrammingLanguages)
     this.recommendedLanguage.set(recommendedLanguage)
     this.selectionOptions.set(ProgrammingLanguages)

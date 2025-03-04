@@ -733,7 +733,7 @@ export class SetupValidationModalComponent implements OnInit, OnDestroy {
   }
 
   async buildLanguageFormItems(): Promise<DynamicFormItem[]> {
-    const githubLanguages = await firstValueFrom(this.githubService.getRepositoryLanguages())
+    const githubLanguages = (await firstValueFrom(this.githubService.getComponentExtensions())).languages.Languages
     const recommendedLanguage = this.githubService.getMostUsedLanguage(githubLanguages, ProgrammingLanguages)
 
     const languageChoices: SelectItem<Languages>[] = ProgrammingLanguages.map((lang) => {

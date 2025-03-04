@@ -9,6 +9,9 @@ export const GET_REPO_LANGUAGES = gql`
   query GetRepoLanguages($tenantId: String!, $projectId: String!, $componentId: String!) {
     component(tenantId: $tenantId, projectId: $projectId, componentId: $componentId) {
       extensions {
+        repository {
+          url
+        }
         languages {
           Languages {
             Name
@@ -25,6 +28,7 @@ export const GET_REPO_PULLS = gql`
     watchComponent(tenantId: $tenantId, projectId: $projectId, componentId: $componentId) {
       extensions {
         repository {
+          url
           openPullRequests {
             title
           }

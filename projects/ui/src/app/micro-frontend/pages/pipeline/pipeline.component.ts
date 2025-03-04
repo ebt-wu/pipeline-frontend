@@ -169,9 +169,9 @@ export class PipelineComponent implements OnInit, OnDestroy {
       this.errors.update((errors) => errors.set(error.message, error))
     }
 
-    this.openPrCount$ = this.api.githubService.getPullRequestInfo().pipe(
-      map((prInfo) => {
-        return this.calculateOpenPRCount(prInfo)
+    this.openPrCount$ = this.api.githubService.watchComponentExtensions().pipe(
+      map((componentExtensionData) => {
+        return this.calculateOpenPRCount(componentExtensionData.repository.openPullRequests)
       }),
     )
 

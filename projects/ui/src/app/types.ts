@@ -104,3 +104,36 @@ export type GithubAdvancedSecurityServiceDetails = GitHubAdvancedSecurityGetPayl
 }
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export type ServiceDetails = any
+
+export interface LanguageDetails {
+  Name: string
+  Bytes: number
+}
+export interface PullRequestData {
+  title: string
+}
+export interface LanguageExtensionData {
+  Languages: LanguageDetails[]
+}
+
+export interface RepositoryExtensionData {
+  url: string
+  openPullRequests: PullRequestData[]
+}
+
+export interface WatchComponentMetaResult {
+  watchComponent: {
+    extensions: {
+      repository: RepositoryExtensionData
+      languages: LanguageExtensionData
+    }
+  }
+}
+export interface ComponentMetaResult {
+  component: {
+    extensions: {
+      repository: RepositoryExtensionData
+      languages: LanguageExtensionData
+    }
+  }
+}

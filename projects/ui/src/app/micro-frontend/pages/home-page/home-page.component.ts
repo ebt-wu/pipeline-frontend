@@ -103,9 +103,6 @@ export class HomePageComponent implements OnInit {
       )
     }
 
-    // Call for github metadata here to be able to catch an error that comes up and show the failed to load screen
-    await this.githubService.getGithubMetadata()
-
     this.pipelineAvail.next(true)
   }
 }

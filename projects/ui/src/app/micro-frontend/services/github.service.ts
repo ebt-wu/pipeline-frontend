@@ -11,7 +11,7 @@ import {
   GetGithubRepositoryQuery,
   GetGithubRepositoryQueryVariables,
 } from '@generated/graphql'
-import { EntityContext, ProgrammingLanguage } from '@types'
+import { ComponentMetaResult, ProgrammingLanguage, WatchComponentMetaResult } from '@types'
 import { combineLatest, firstValueFrom, Observable } from 'rxjs'
 import { first, map, mergeMap } from 'rxjs/operators'
 import { BaseAPIService } from './base.service'
@@ -27,28 +27,6 @@ export interface GithubMetadata {
   githubRepoUrl: string
   githubOrgName: string
   githubTechnicalUserSelfServiceUrl: string
-}
-
-export interface LanguageQueryResult {
-  component: {
-    extensions: {
-      languages: {
-        Languages: { Name: string; Bytes: number }[]
-      }
-    }
-  }
-}
-
-export interface PullRequestQueryResult {
-  watchComponent: {
-    extensions: {
-      repository: {
-        openPullRequests: {
-          title: string
-        }[]
-      }
-    }
-  }
 }
 
 export const REQUIRED_SCOPES = ['repo', 'admin:org', 'admin:org_hook', 'admin:repo_hook', 'workflow']
@@ -94,12 +72,24 @@ export class GithubService {
   }
 
   async getGithubMetadata(): Promise<GithubMetadata> {
-    const context = await this.luigiService.getContextAsync()
-    const entityContext = context.entityContext as unknown as EntityContext
-    const githubRepoUrl = entityContext?.component.annotations['github.dxp.sap.com/repo-url'] ?? null
-    const githubRepoName = entityContext?.component?.annotations['github.dxp.sap.com/repo-name'] ?? null
+    const componentMeta = await firstValueFrom(this.getComponentExtensions())
+
+    const githubRepoUrl = componentMeta?.repository?.url ?? null
+    if (!githubRepoUrl) {
+      console.error('No github repository url found in component extensions')
+      return {
+        githubInstance: '',
+        githubHostName: '',
+        githubRepoUrl: '',
+        githubRepoName: '',
+        githubOrgName: '',
+        githubTechnicalUserSelfServiceUrl: '',
+      }
+    }
+
     const url = new URL(githubRepoUrl)
-    const githubOrgName = entityContext?.component?.annotations['github.dxp.sap.com/login'] ?? null
+    const githubOrgName = url.pathname.split('/')[1]
+    const githubRepoName = url.pathname.split('/')[2]
 
     let githubTechnicalUserSelfServiceUrl: string
     if ((url.hostname as GithubInstances) === GithubInstances.TOOLS) {
@@ -175,7 +165,7 @@ export class GithubService {
     )
   }
 
-  getRepositoryLanguages() {
+  getComponentExtensions(): Observable<ComponentMetaResult['component']['extensions']> {
     // see metadata schema here: https://github.tools.sap/dxp/metadata-registry-service/blob/main/graph/schema.graphql
     return combineLatest([this.metadataService.apollo(), this.luigiService.contextObservable()]).pipe(
       first(),
@@ -189,12 +179,7 @@ export class GithubService {
               tenantId: ctx.context.tenantid,
             },
           })
-          .pipe(
-            map(
-              (res: ApolloQueryResult<LanguageQueryResult>) =>
-                res.data.component?.extensions?.languages?.Languages ?? undefined,
-            ),
-          )
+          .pipe(map((res: ApolloQueryResult<ComponentMetaResult>) => res.data.component?.extensions ?? undefined))
       }),
     )
   }
@@ -223,7 +208,7 @@ export class GithubService {
     )
   }
 
-  getPullRequestInfo() {
+  watchComponentExtensions(): Observable<WatchComponentMetaResult['watchComponent']['extensions']> {
     // see metadata schema here: https://github.tools.sap/dxp/metadata-registry-service/blob/main/graph/schema.graphql
     return combineLatest([this.metadataService.apollo(), this.luigiService.contextObservable()]).pipe(
       first(),
@@ -238,10 +223,8 @@ export class GithubService {
             },
           })
           .pipe(
-            map((res: ApolloQueryResult<PullRequestQueryResult>) => {
-              return (
-                (res.data.watchComponent.extensions?.repository?.openPullRequests as { title: string }[]) ?? undefined
-              )
+            map((res: ApolloQueryResult<WatchComponentMetaResult>) => {
+              return res.data.watchComponent.extensions ?? undefined
             }),
           )
       }),

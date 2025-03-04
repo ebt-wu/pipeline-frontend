@@ -1,7 +1,7 @@
 import http from 'http'
+import { buildClientSchema, getIntrospectionQuery, IntrospectionQuery } from 'graphql'
 import open from 'open'
 import * as OIDC from 'openid-client'
-import { buildClientSchema, getIntrospectionQuery, IntrospectionQuery } from 'graphql'
 
 const API_URL = process.env.API_URL || 'https://api.portal.d1.hyperspace.tools.sap/pipeline/query'
 const issuerUrl = 'https://hyperspacedev.accounts.ondemand.com'
