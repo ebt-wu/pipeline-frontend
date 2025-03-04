@@ -1,13 +1,12 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing'
-
-import { ValidateCodeSectionComponent } from './validate-code-section.component'
-import { Categories, Kinds, ServiceStatus, StepKey } from '@enums'
 import { KindName } from '@constants'
-import { createPipelineForTests } from '../../../../../test-utils'
-import { PolicyService } from '../../services/policy.service'
+import { Categories, Kinds, ServiceStatus, StepKey } from '@enums'
 import { ColorAccent } from '@fundamental-ngx/core'
-import { OpenSourceComplianceService } from '../../services/open-source-compliance.service'
 import { MockService } from 'ng-mocks'
+import { createPipelineForTests } from '../../../../../test-utils'
+import { OpenSourceComplianceService } from '../../services/open-source-compliance.service'
+import { PolicyService } from '../../services/policy.service'
+import { ValidateCodeSectionComponent } from './validate-code-section.component'
 
 describe('ValidateCodeSectionComponent', () => {
   let component: ValidateCodeSectionComponent

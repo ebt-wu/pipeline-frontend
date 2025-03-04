@@ -1,5 +1,9 @@
-import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, Output, signal } from '@angular/core'
 import { NgIf } from '@angular/common'
+import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, Output, signal } from '@angular/core'
+import { KindName } from '@constants'
+import { AuthorizationModule } from '@dxp/ngx-core/authorization'
+import { LuigiClient } from '@dxp/ngx-core/luigi'
+import { Categories, Kinds, ServiceStatus } from '@enums'
 import {
   AvatarComponent,
   ButtonComponent,
@@ -7,17 +11,13 @@ import {
   CardContentComponent,
   IconComponent,
 } from '@fundamental-ngx/core'
-import { Categories, Kinds, ServiceStatus } from '@enums'
-import { KindName } from '@constants'
-import { UpgradeBannerComponent } from '../upgrade-banner/upgrade-banner.component'
-import { CategoryConfig } from '@types'
-import { AuthorizationModule } from '@dxp/ngx-core/authorization'
 import { GithubActionsDetails } from '@generated/graphql'
-import { PolicyService } from '../../services/policy.service'
-import { LuigiClient } from '@dxp/ngx-core/luigi'
-import { StatusIconComponent } from '../category-slot/status-icon/status-icon.component'
+import { CategoryConfig } from '@types'
 import { ExtensionService } from '../../services/extension.service'
 import { ExtensionClass } from '../../services/extension.types'
+import { PolicyService } from '../../services/policy.service'
+import { StatusIconComponent } from '../category-slot/status-icon/status-icon.component'
+import { UpgradeBannerComponent } from '../upgrade-banner/upgrade-banner.component'
 
 @Component({
   selector: 'app-automate-workflows',

@@ -1,12 +1,12 @@
+import { NgIf } from '@angular/common'
 import { ChangeDetectionStrategy, Component, Input, OnInit, signal } from '@angular/core'
+import { AuthorizationModule } from '@dxp/ngx-core/authorization'
 import { BusyIndicatorModule, ButtonComponent, FacetModule, LinkModule } from '@fundamental-ngx/core'
 import { MessageStripModule } from '@fundamental-ngx/core'
 import { GetOscRegistrationQuery } from '@generated/graphql'
 import { firstValueFrom } from 'rxjs'
-import { NgIf } from '@angular/common'
-import { AuthorizationModule } from '@dxp/ngx-core/authorization'
-import { PolicyService } from '../../../services/policy.service'
 import { APIService } from '../../../services/api.service'
+import { PolicyService } from '../../../services/policy.service'
 import { SecretService } from '../../../services/secret.service'
 import { BaseServiceDetailsComponent } from '../base-service-details.component'
 
@@ -68,7 +68,7 @@ export class OpenSourceComplianceDetailsComponent extends BaseServiceDetailsComp
             `/projects/${jiraProject.projectKey}`,
             `https://${jiraProject.jiraInstanceUrl}`,
           ).href
-        } catch (e) {
+        } catch {
           this.error = 'failed to construct Jira project URL'
         }
       }

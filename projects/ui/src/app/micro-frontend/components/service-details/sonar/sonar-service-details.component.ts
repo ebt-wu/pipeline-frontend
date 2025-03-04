@@ -1,9 +1,9 @@
 import { CommonModule } from '@angular/common'
 import { ChangeDetectionStrategy, Component, Input, OnInit, signal } from '@angular/core'
-import { BusyIndicatorComponent, FundamentalNgxCoreModule, InlineHelpDirective } from '@fundamental-ngx/core'
-import { SecretService } from '../../../services/secret.service'
-import { PolicyService } from '../../../services/policy.service'
 import { AuthorizationModule } from '@dxp/ngx-core/authorization'
+import { BusyIndicatorComponent, FundamentalNgxCoreModule, InlineHelpDirective } from '@fundamental-ngx/core'
+import { PolicyService } from '../../../services/policy.service'
+import { SecretService } from '../../../services/secret.service'
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,

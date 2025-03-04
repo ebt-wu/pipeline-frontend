@@ -1,6 +1,6 @@
-import { PolicyService } from './policy.service'
-import { MockService } from 'ng-mocks'
 import { DxpLuigiContextService } from '@dxp/ngx-core/luigi'
+import { MockService } from 'ng-mocks'
+import { PolicyService } from './policy.service'
 
 describe('PolicyService', () => {
   let policyService: PolicyService

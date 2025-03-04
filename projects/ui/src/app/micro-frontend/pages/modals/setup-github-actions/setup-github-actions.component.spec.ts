@@ -1,11 +1,11 @@
-import { GithubActionsService } from '../../../services/github-actions.service'
-import { GithubActionsComponent } from './setup-github-actions.component'
 import { LuigiClient } from '@dxp/ngx-core/luigi'
-import { MockBuilder, MockInstance, MockRender, ngMocks } from 'ng-mocks'
 import { FormGeneratorService } from '@fundamental-ngx/platform/form'
-import { GithubActionsFormService } from '../../../services/forms/github-actions-form.service'
-import { GithubService } from '../../../services/github.service'
+import { MockBuilder, MockInstance, MockRender, ngMocks } from 'ng-mocks'
 import { of } from 'rxjs'
+import { GithubActionsFormService } from '../../../services/forms/github-actions-form.service'
+import { GithubActionsService } from '../../../services/github-actions.service'
+import { GithubService } from '../../../services/github.service'
+import { GithubActionsComponent } from './setup-github-actions.component'
 
 describe('Set Up Github Actions Component', () => {
   const luigiCloseCurrentModalMock = jest.fn()

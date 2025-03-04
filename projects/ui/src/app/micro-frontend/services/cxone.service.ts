@@ -1,8 +1,6 @@
 import { Injectable } from '@angular/core'
-import { BaseAPIService } from './base.service'
+import { ApolloError } from '@apollo/client/errors'
 import { DxpLuigiContextService } from '@dxp/ngx-core/luigi'
-import { catchError, combineLatest, first, map, mergeMap, of } from 'rxjs'
-import { CREATE_CX_ONE_PROJECT, DELETE_CX_ONE_PROJECT, GET_CX_ONE_APPLICATION, GET_CX_ONE_PROJECT } from './queries'
 import {
   CreateCxOneProjectMutation,
   CreateCxOneProjectMutationVariables,
@@ -13,7 +11,9 @@ import {
   GetCxOneProjectQuery,
   GetCxOneProjectQueryVariables,
 } from '@generated/graphql'
-import { ApolloError } from '@apollo/client/errors'
+import { catchError, combineLatest, first, map, mergeMap, of } from 'rxjs'
+import { BaseAPIService } from './base.service'
+import { CREATE_CX_ONE_PROJECT, DELETE_CX_ONE_PROJECT, GET_CX_ONE_APPLICATION, GET_CX_ONE_PROJECT } from './queries'
 
 @Injectable({ providedIn: 'root' })
 export class CxOneService {

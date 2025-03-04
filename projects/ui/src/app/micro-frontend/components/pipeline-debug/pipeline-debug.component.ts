@@ -1,13 +1,13 @@
 import { CommonModule } from '@angular/common'
 import { Component, signal, ChangeDetectionStrategy, OnInit } from '@angular/core'
-import { FormattedTextModule, FundamentalNgxCoreModule } from '@fundamental-ngx/core'
-import { PipelineService } from '../../services/pipeline.service'
-import { Observable, combineLatestWith, debounceTime, firstValueFrom, map } from 'rxjs'
-import { Pipeline } from '@types'
-import { LuigiClient } from '@dxp/ngx-core/luigi'
 import { AuthorizationModule } from '@dxp/ngx-core/authorization'
+import { LuigiClient } from '@dxp/ngx-core/luigi'
+import { FormattedTextModule, FundamentalNgxCoreModule } from '@fundamental-ngx/core'
 import { NotManagedServices } from '@generated/graphql'
+import { Pipeline } from '@types'
+import { Observable, combineLatestWith, debounceTime, firstValueFrom, map } from 'rxjs'
 import { GithubActionsService } from '../../services/github-actions.service'
+import { PipelineService } from '../../services/pipeline.service'
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,

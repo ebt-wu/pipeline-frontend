@@ -1,11 +1,11 @@
 import { Injectable, signal } from '@angular/core'
-import { MessageToastService } from '@fundamental-ngx/core'
 import { DxpLuigiContextService } from '@dxp/ngx-core/luigi'
-import { combineLatest, filter, first, map, mergeMap } from 'rxjs'
-import { jwtDecode, JwtPayload } from 'jwt-decode'
 import { Kinds } from '@enums'
-import { FORCE_DEBUG_RECONCILIATION, TOGGLE_DEBUG_LABEL } from './queries'
+import { MessageToastService } from '@fundamental-ngx/core'
+import { jwtDecode, JwtPayload } from 'jwt-decode'
+import { combineLatest, filter, first, map, mergeMap } from 'rxjs'
 import { BaseAPIService } from './base.service'
+import { FORCE_DEBUG_RECONCILIATION, TOGGLE_DEBUG_LABEL } from './queries'
 
 const ENV_MAPPING = {
   dev: 'dev',

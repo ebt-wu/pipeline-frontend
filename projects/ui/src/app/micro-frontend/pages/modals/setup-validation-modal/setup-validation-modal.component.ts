@@ -29,9 +29,14 @@ import { BuildTool, Orchestrators } from '@generated/graphql'
 import { EntityContext, Pipeline } from '@types'
 import { debounceTime, first, firstValueFrom, interval, Observable, skipWhile, Subscription, timeout } from 'rxjs'
 import { ErrorMessageComponent } from '../../../components/error-message/error-message.component'
-import { GithubAdvancedSecurityService } from '../../../services/github-advanced-security.service'
-import { GithubService } from '../../../services/github.service'
-import { PipelineService } from '../../../services/pipeline.service'
+import {
+  FormGeneratorExtensionInfoAdditionalData,
+  PlatformFormGeneratorCustomExtensionInfoComponent,
+} from '../../../components/form-generator/form-generator-extension-info/form-generator-extension-info.component'
+import {
+  FormGeneratorHeaderAdditionalData,
+  PlatformFormGeneratorCustomHeaderElementComponent,
+} from '../../../components/form-generator/form-generator-header/form-generator-header.component'
 import {
   FormGeneratorInfoBoxAdditionalData,
   PlatformFormGeneratorCustomInfoBoxComponent,
@@ -40,23 +45,18 @@ import {
   FormGeneratorMessageStripAdditionalData,
   PlatformFormGeneratorCustomMessageStripComponent,
 } from '../../../components/form-generator/form-generator-message-strip/form-generator-message-strip.component'
+import { PlatformFormGeneratorCustomReadOnlyInputComponent } from '../../../components/form-generator/form-generator-read-only-input/form-generator-read-only-input.component'
 import { PlatformFormGeneratorCustomValidatorComponent } from '../../../components/form-generator/form-generator-validator/form-generator-validator.component'
+import { CxOneService } from '../../../services/cxone.service'
+import { Extensions } from '../../../services/extension.types'
+import { FeatureFlagService } from '../../../services/feature-flag.service'
 import { GithubActionsFormService } from '../../../services/forms/github-actions-form.service'
 import { GithubActionsService } from '../../../services/github-actions.service'
-import {
-  FormGeneratorHeaderAdditionalData,
-  PlatformFormGeneratorCustomHeaderElementComponent,
-} from '../../../components/form-generator/form-generator-header/form-generator-header.component'
-import {
-  FormGeneratorExtensionInfoAdditionalData,
-  PlatformFormGeneratorCustomExtensionInfoComponent,
-} from '../../../components/form-generator/form-generator-extension-info/form-generator-extension-info.component'
-import { Extensions } from '../../../services/extension.types'
-import { PlatformFormGeneratorCustomReadOnlyInputComponent } from '../../../components/form-generator/form-generator-read-only-input/form-generator-read-only-input.component'
-import { CxOneService } from '../../../services/cxone.service'
-import { FeatureFlagService } from '../../../services/feature-flag.service'
+import { GithubAdvancedSecurityService } from '../../../services/github-advanced-security.service'
+import { GithubService } from '../../../services/github.service'
+import { PipelineService } from '../../../services/pipeline.service'
 
-type SetupValidationFormValue = {
+interface SetupValidationFormValue {
   language?: Languages
   validationTools?: ValidationTools[]
   cxOneApplicationName?: string
@@ -201,14 +201,14 @@ export class SetupValidationModalComponent implements OnInit, OnDestroy {
       name: 'recommendationHeader',
       message: '',
       guiOptions: {
-        additionalData: <FormGeneratorHeaderAdditionalData<SetupValidationFormValue>>{
+        additionalData: {
           headerText: (formValue) => {
             const language = ProgrammingLanguages.find((language) => language.id == formValue.language)
 
             return `Because you use ${language.displayName}`
           },
           ignoreBottomMargin: true,
-        },
+        } as FormGeneratorHeaderAdditionalData<SetupValidationFormValue>,
       },
       when: (formValue: SetupValidationFormValue) => {
         if (this.formStep() !== 1) return false
@@ -221,7 +221,7 @@ export class SetupValidationModalComponent implements OnInit, OnDestroy {
       name: 'recommendationExtensionInfo1',
       message: '',
       guiOptions: {
-        additionalData: <FormGeneratorExtensionInfoAdditionalData<SetupValidationFormValue>>{
+        additionalData: {
           extensionName: (formValue) => {
             const requiredValidationTools = getRequiredValidationTools(formValue.language)
             if (requiredValidationTools.length === 0) {
@@ -241,7 +241,7 @@ export class SetupValidationModalComponent implements OnInit, OnDestroy {
 								target="_blank"
 								rel="noopener noreferrer">Learn more.</a>`
           },
-        },
+        } as FormGeneratorExtensionInfoAdditionalData<SetupValidationFormValue>,
       },
       when: (formValue: SetupValidationFormValue) => {
         if (this.formStep() !== 1) return false
@@ -254,7 +254,7 @@ export class SetupValidationModalComponent implements OnInit, OnDestroy {
       name: 'recommendationExtensionInfo2',
       message: '',
       guiOptions: {
-        additionalData: <FormGeneratorExtensionInfoAdditionalData<SetupValidationFormValue>>{
+        additionalData: {
           extensionName: (formValue) => {
             const requiredValidationTools = getRequiredValidationTools(formValue.language)
             if (requiredValidationTools.length !== 2) {
@@ -274,7 +274,7 @@ export class SetupValidationModalComponent implements OnInit, OnDestroy {
 								target="_blank"
 								rel="noopener noreferrer">Learn more.</a>`
           },
-        },
+        } as FormGeneratorExtensionInfoAdditionalData<SetupValidationFormValue>,
       },
       when: (formValue: SetupValidationFormValue) => {
         if (this.formStep() !== 1) return false
@@ -287,7 +287,7 @@ export class SetupValidationModalComponent implements OnInit, OnDestroy {
       name: 'validationToolsHeader',
       message: '',
       guiOptions: {
-        additionalData: <FormGeneratorHeaderAdditionalData<SetupValidationFormValue>>{
+        additionalData: {
           headerText: 'Select services',
           buttonText: 'Need Help?',
           buttonInlineHelpHtml: `
@@ -308,7 +308,7 @@ export class SetupValidationModalComponent implements OnInit, OnDestroy {
 							rel="noopener noreferrer">CxOne Documentation</a>
 					`,
           ignoreBottomMargin: true,
-        },
+        } as FormGeneratorHeaderAdditionalData<SetupValidationFormValue>,
       },
       when: (formValue: SetupValidationFormValue) => {
         if (this.formStep() !== 1) return false
@@ -335,10 +335,10 @@ export class SetupValidationModalComponent implements OnInit, OnDestroy {
       name: 'cxOneSectionHeader',
       message: '',
       guiOptions: {
-        additionalData: <FormGeneratorHeaderAdditionalData<SetupValidationFormValue>>{
+        additionalData: {
           headerText: 'Set up CxOne',
           ignoreBottomMargin: true,
-        },
+        } as FormGeneratorHeaderAdditionalData<SetupValidationFormValue>,
       },
       when: (formValue: SetupValidationFormValue) => {
         if (this.formStep() !== 1) {
@@ -359,12 +359,12 @@ export class SetupValidationModalComponent implements OnInit, OnDestroy {
       name: 'cxOneApplicationMissing',
       message: '',
       guiOptions: {
-        additionalData: <FormGeneratorHeaderAdditionalData<SetupValidationFormValue>>{
+        additionalData: {
           subheaderHtml: () => 'No account found',
           subheaderStyle: 'margin: 0.5rem 0; color: var(--sapTextColor);',
           ignoreTopMargin: true,
           ignoreBottomMargin: true,
-        },
+        } as FormGeneratorHeaderAdditionalData<SetupValidationFormValue>,
       },
       when: (formValue: SetupValidationFormValue) => {
         if (this.formStep() !== 1) {
@@ -404,7 +404,7 @@ export class SetupValidationModalComponent implements OnInit, OnDestroy {
       name: 'cxOneApplicationNote',
       message: '',
       guiOptions: {
-        additionalData: <FormGeneratorInfoBoxAdditionalData>{
+        additionalData: {
           header: 'Add CxOne account',
           instructions: async () => {
             const context = await this.luigiService.getContextAsync()
@@ -418,7 +418,7 @@ export class SetupValidationModalComponent implements OnInit, OnDestroy {
 						`
           },
           ignoreTopMargin: true,
-        },
+        } as FormGeneratorInfoBoxAdditionalData,
       },
       when: (formValue: SetupValidationFormValue) => {
         if (this.formStep() !== 1) {
@@ -505,7 +505,7 @@ export class SetupValidationModalComponent implements OnInit, OnDestroy {
       name: 'cxOnePresetSupportLink',
       message: '',
       guiOptions: {
-        additionalData: <FormGeneratorHeaderAdditionalData<SetupValidationFormValue>>{
+        additionalData: {
           headerText: '',
           ignoreTopMargin: true,
           ignoreBottomMargin: true,
@@ -519,7 +519,7 @@ export class SetupValidationModalComponent implements OnInit, OnDestroy {
 						margin-top: -0.7rem;
 						font-size: 12px;
 					`,
-        },
+        } as FormGeneratorHeaderAdditionalData<SetupValidationFormValue>,
       },
       when: (formValue: SetupValidationFormValue) => {
         if (this.formStep() !== 1) {
@@ -543,7 +543,7 @@ export class SetupValidationModalComponent implements OnInit, OnDestroy {
       name: 'githubActionsDisclaimerGhas',
       message: '',
       guiOptions: {
-        additionalData: <FormGeneratorMessageStripAdditionalData>{
+        additionalData: {
           message: () =>
             Promise.resolve(`
 							GitHub Advanced Security will run on a <b>GitHub Actions workflow.</b>
@@ -554,7 +554,7 @@ export class SetupValidationModalComponent implements OnInit, OnDestroy {
 							</a>
 						`),
           addMargins: true,
-        },
+        } as FormGeneratorMessageStripAdditionalData,
       },
       when: (formValue: SetupValidationFormValue) => {
         if (!formValue.validationTools) {
@@ -577,7 +577,7 @@ export class SetupValidationModalComponent implements OnInit, OnDestroy {
       name: 'githubActionsDisclaimerCxOne',
       message: '',
       guiOptions: {
-        additionalData: <FormGeneratorMessageStripAdditionalData>{
+        additionalData: {
           message: () =>
             Promise.resolve(`
 							CxOne will run on a <b>GitHub Actions workflow.</b>
@@ -588,7 +588,7 @@ export class SetupValidationModalComponent implements OnInit, OnDestroy {
 							</a>
 						`),
           addMargins: true,
-        },
+        } as FormGeneratorMessageStripAdditionalData,
       },
       when: (formValue: SetupValidationFormValue) => {
         if (!formValue.validationTools) {
@@ -611,7 +611,7 @@ export class SetupValidationModalComponent implements OnInit, OnDestroy {
       name: 'githubActionsDisclaimerGhasAndCxOne',
       message: '',
       guiOptions: {
-        additionalData: <FormGeneratorMessageStripAdditionalData>{
+        additionalData: {
           message: () =>
             Promise.resolve(`
 							GitHub Advanced Security and CxOne will run as <b>GitHub Actions workflows.</b>
@@ -622,7 +622,7 @@ export class SetupValidationModalComponent implements OnInit, OnDestroy {
 							</a>
 						`),
           addMargins: true,
-        },
+        } as FormGeneratorMessageStripAdditionalData,
       },
       when: (formValue: SetupValidationFormValue) => {
         if (!formValue.validationTools) {
@@ -754,11 +754,11 @@ export class SetupValidationModalComponent implements OnInit, OnDestroy {
         name: 'languageHeader',
         message: '',
         guiOptions: {
-          additionalData: <FormGeneratorHeaderAdditionalData<SetupValidationFormValue>>{
+          additionalData: {
             headerText: 'Select your programming language',
             ignoreTopMargin: true,
             ignoreBottomMargin: true,
-          },
+          } as FormGeneratorHeaderAdditionalData<SetupValidationFormValue>,
         },
         when: () => this.formStep() === 1,
       },

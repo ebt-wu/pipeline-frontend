@@ -1,5 +1,7 @@
+import { NgIf } from '@angular/common'
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from '@angular/core'
 import { AuthorizationModule } from '@dxp/ngx-core/authorization'
+import { Categories, ServiceStatus } from '@enums'
 import {
   ButtonComponent,
   ButtonType,
@@ -13,8 +15,6 @@ import {
   ListThumbnailDirective,
   TruncatePipe,
 } from '@fundamental-ngx/core'
-import { Categories, ServiceStatus } from '@enums'
-import { NgIf } from '@angular/common'
 import { StatusIconComponent } from './status-icon/status-icon.component'
 
 @Component({

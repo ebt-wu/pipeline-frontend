@@ -1,10 +1,7 @@
 import { enableProdMode, importProvidersFrom } from '@angular/core'
-import { environment } from './environments/environment'
-import { AppComponent } from './app/app-component/app.component'
-import { provideNoopAnimations } from '@angular/platform-browser/animations'
-import { MicroFrontendModule } from './app/micro-frontend/micro-frontend.module'
 import { BrowserModule, bootstrapApplication } from '@angular/platform-browser'
-import { AppRoutingModule } from './app/app-routing.module'
+import { provideNoopAnimations } from '@angular/platform-browser/animations'
+import { AnalyticsTrackerService } from '@dxp/ngx-core/analytics-tracker'
 import {
   ContentDensityService,
   ThemingModule,
@@ -12,7 +9,10 @@ import {
   ContentDensityMode,
   FundamentalNgxCoreModule,
 } from '@fundamental-ngx/core'
-import { AnalyticsTrackerService } from '@dxp/ngx-core/analytics-tracker'
+import { AppComponent } from './app/app-component/app.component'
+import { AppRoutingModule } from './app/app-routing.module'
+import { MicroFrontendModule } from './app/micro-frontend/micro-frontend.module'
+import { environment } from './environments/environment'
 
 if (environment.production) {
   enableProdMode()

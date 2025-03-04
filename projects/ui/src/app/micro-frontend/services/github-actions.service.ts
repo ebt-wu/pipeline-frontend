@@ -1,8 +1,14 @@
 import { Injectable } from '@angular/core'
-import { BaseAPIService } from './base.service'
-import { first, map, mergeMap, startWith } from 'rxjs/operators'
-import { combineLatest, Observable } from 'rxjs'
 import { DxpLuigiContextService } from '@dxp/ngx-core/luigi'
+import {
+  GetGithubActionsSolinasVerificationQuery,
+  GetGithubActionsSolinasVerificationQueryVariables,
+  GithubActionsDetails,
+  WatchGithubActionsEnablementSubscription,
+} from '@generated/graphql'
+import { combineLatest, Observable } from 'rxjs'
+import { first, map, mergeMap, startWith } from 'rxjs/operators'
+import { BaseAPIService } from './base.service'
 import {
   CREATE_GITHUB_ACTIONS_PIPELINE,
   CREATE_STANDALONE_GITHUB_ACTIONS_CLAIM,
@@ -10,12 +16,6 @@ import {
   GET_GITHUB_ACTONS_SOLINAS_VERIFICATION,
   WATCH_GITHUB_ACTIONS_ENABLEMENT,
 } from './queries'
-import {
-  GetGithubActionsSolinasVerificationQuery,
-  GetGithubActionsSolinasVerificationQueryVariables,
-  GithubActionsDetails,
-  WatchGithubActionsEnablementSubscription,
-} from '@generated/graphql'
 
 @Injectable({ providedIn: 'root' })
 export class GithubActionsService {

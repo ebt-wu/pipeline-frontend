@@ -1,7 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing'
-import { StatusIconComponent } from './status-icon.component'
 import { By } from '@angular/platform-browser'
 import { ServiceStatus } from '@enums'
+import { StatusIconComponent } from './status-icon.component'
 
 describe('StatusIconComponent', () => {
   let component: StatusIconComponent

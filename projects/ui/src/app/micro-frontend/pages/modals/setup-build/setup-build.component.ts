@@ -1,25 +1,18 @@
 import { CommonModule } from '@angular/common'
 import { ChangeDetectionStrategy, Component, OnDestroy, OnInit, signal, ViewChild } from '@angular/core'
 import { Validators } from '@angular/forms'
+import { ProgrammingLanguages } from '@constants'
+import { DxpLuigiContextService, LuigiClient } from '@dxp/ngx-core/luigi'
+import { CredentialTypes, Languages, Orchestrators } from '@enums'
 import { FormModule, FundamentalNgxCoreModule } from '@fundamental-ngx/core'
 import { FundamentalNgxPlatformModule } from '@fundamental-ngx/platform'
 import { DynamicFormItem, FormGeneratorComponent, FormGeneratorService } from '@fundamental-ngx/platform/form'
-import { DxpLuigiContextService, LuigiClient } from '@dxp/ngx-core/luigi'
-import { CredentialTypes, Languages, Orchestrators } from '@enums'
-import { Pipeline, ProgrammingLanguage } from '@types'
-import { SecretData, SecretService } from '../../../services/secret.service'
-import { debounceTime, firstValueFrom, lastValueFrom, Observable, Subscription } from 'rxjs'
-import { GithubService } from '../../../services/github.service'
-import { JenkinsService } from '../../../services/jenkins.service'
-import { ErrorMessageComponent } from '../../../components/error-message/error-message.component'
 import { PlatformMessagePopoverModule } from '@fundamental-ngx/platform/message-popover'
-import { PiperService } from '../../../services/piper.service'
 import { BuildTool } from '@generated/graphql'
 import { getNodeParams } from '@luigi-project/client'
-import { FeatureFlagService } from '../../../services/feature-flag.service'
-import { PolicyService } from '../../../services/policy.service'
-import { PipelineService } from '../../../services/pipeline.service'
-import { ProgrammingLanguages } from '@constants'
+import { Pipeline, ProgrammingLanguage } from '@types'
+import { debounceTime, firstValueFrom, lastValueFrom, Observable, Subscription } from 'rxjs'
+import { ErrorMessageComponent } from '../../../components/error-message/error-message.component'
 import {
   FormGeneratorHeaderAdditionalData,
   PlatformFormGeneratorCustomHeaderElementComponent,
@@ -29,12 +22,19 @@ import {
   PlatformFormGeneratorCustomMessageStripComponent,
 } from '../../../components/form-generator/form-generator-message-strip/form-generator-message-strip.component'
 import { PlatformFormGeneratorCustomValidatorComponent } from '../../../components/form-generator/form-generator-validator/form-generator-validator.component'
+import { FeatureFlagService } from '../../../services/feature-flag.service'
 import { GithubActionsFormService } from '../../../services/forms/github-actions-form.service'
 import {
   GithubCredentialFormService,
   GithubCredentialFormValueP,
 } from '../../../services/forms/github-credential-form.service'
 import { GithubActionsService } from '../../../services/github-actions.service'
+import { GithubService } from '../../../services/github.service'
+import { JenkinsService } from '../../../services/jenkins.service'
+import { PipelineService } from '../../../services/pipeline.service'
+import { PiperService } from '../../../services/piper.service'
+import { PolicyService } from '../../../services/policy.service'
+import { SecretData, SecretService } from '../../../services/secret.service'
 
 // All the form fields excluding headers, message-strips, and validators
 type SetupBuildFormValue = {
@@ -106,14 +106,14 @@ export class SetupBuildComponent implements OnInit, OnDestroy {
       name: 'jenkinsInstanceHeader',
       message: '',
       guiOptions: {
-        additionalData: <FormGeneratorHeaderAdditionalData>{
+        additionalData: {
           headerText: 'Jenkins instance',
           subheaderHtml: () =>
             Promise.resolve(
               `Don't have an instance yet? Create an account in the Jenkins as a Service extension to get one.`,
             ),
           ignoreTopMargin: true,
-        },
+        } as FormGeneratorHeaderAdditionalData,
       },
       when: (formValue: SetupBuildFormValue) => formValue.orchestrator === Orchestrators.JENKINS,
     },
@@ -125,7 +125,7 @@ export class SetupBuildComponent implements OnInit, OnDestroy {
       validate: (value: string) => {
         // validate if the provided URL is a valid one
         const urlValidation =
-          /https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)?/gi
+          /https?:\/\/(www\.)?[-a-zA-Z0-9@:%._+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_+.~#?&//=]*)?/gi
         const regex = new RegExp(urlValidation)
         return regex.test(value) ? null : 'Please provide a valid URL'
       },
@@ -139,7 +139,7 @@ export class SetupBuildComponent implements OnInit, OnDestroy {
       name: 'jenkinsCredentialHeader',
       message: '',
       guiOptions: {
-        additionalData: <FormGeneratorHeaderAdditionalData>{
+        additionalData: {
           headerText: 'Jenkins credentials',
           subheaderHtml: () =>
             Promise.resolve(
@@ -148,7 +148,7 @@ export class SetupBuildComponent implements OnInit, OnDestroy {
             to set up one in the <a href="https://pages.github.tools.sap/hyperspace/jaas-documentation/faqs_and_troubleshooting/faq/#how-can-i-get-a-service-user" target="_blank" rel="noopener noreferrer">JaaS documentation.</a>`,
             ),
           ignoreBottomMargin: true,
-        },
+        } as FormGeneratorHeaderAdditionalData,
       },
       when: (formValue: SetupBuildFormValue) => {
         return formValue.orchestrator === Orchestrators.JENKINS
@@ -219,10 +219,10 @@ export class SetupBuildComponent implements OnInit, OnDestroy {
         return formValue.jenkinsCredentialType === CredentialTypes.NEW && !canUserEditCredentials
       },
       guiOptions: {
-        additionalData: <FormGeneratorMessageStripAdditionalData>{
+        additionalData: {
           type: 'error',
           message: this.policyService.getCantAddCredentialsErrorMessage,
-        },
+        } as FormGeneratorMessageStripAdditionalData,
       },
     },
     {
@@ -267,11 +267,11 @@ export class SetupBuildComponent implements OnInit, OnDestroy {
       name: 'buildToolHeader',
       message: '',
       guiOptions: {
-        additionalData: <FormGeneratorHeaderAdditionalData>{
+        additionalData: {
           headerText: 'Select your build tool',
           ignoreTopMargin: true,
           ignoreBottomMargin: true,
-        },
+        } as FormGeneratorHeaderAdditionalData,
       },
     },
     {
@@ -323,7 +323,7 @@ export class SetupBuildComponent implements OnInit, OnDestroy {
       name: 'orchestratorHeader',
       message: '',
       guiOptions: {
-        additionalData: <FormGeneratorHeaderAdditionalData>{
+        additionalData: {
           headerText: 'Select an orchestrator',
           buttonText: 'Decision Help',
           buttonAction: () =>
@@ -333,7 +333,7 @@ export class SetupBuildComponent implements OnInit, OnDestroy {
               'noopener, noreferrer',
             ),
           ignoreBottomMargin: true,
-        },
+        } as FormGeneratorHeaderAdditionalData,
       },
     },
     {
@@ -341,7 +341,7 @@ export class SetupBuildComponent implements OnInit, OnDestroy {
       name: 'orchestrator',
       message: '',
       choices: async () => {
-        const orchestrators: Array<Orchestrators> = []
+        const orchestrators: Orchestrators[] = []
 
         if (await this.featureFlagService.isGithubActionsEnabled()) {
           orchestrators.push(Orchestrators.GITHUB_ACTIONS_PIPELINE)
@@ -361,11 +361,11 @@ export class SetupBuildComponent implements OnInit, OnDestroy {
       name: 'orchestratorSpacer',
       message: '',
       guiOptions: {
-        additionalData: <FormGeneratorHeaderAdditionalData>{
+        additionalData: {
           headerText: '',
           ignoreTopMargin: true,
           ignoreBottomMargin: true,
-        },
+        } as FormGeneratorHeaderAdditionalData,
       },
     },
     ...this.jenkinsFormItems,

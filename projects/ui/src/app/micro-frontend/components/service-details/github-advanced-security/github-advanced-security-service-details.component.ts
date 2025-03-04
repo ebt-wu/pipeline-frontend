@@ -1,4 +1,7 @@
+import { AsyncPipe, NgIf } from '@angular/common'
 import { ChangeDetectionStrategy, Component, Input, OnInit, signal } from '@angular/core'
+import { AuthorizationModule } from '@dxp/ngx-core/authorization'
+import { Kinds } from '@enums'
 import {
   BusyIndicatorModule,
   ButtonComponent,
@@ -8,17 +11,14 @@ import {
   LinkModule,
 } from '@fundamental-ngx/core'
 import { CumulusPipeline } from '@generated/graphql'
-import { PipelineService } from '../../../services/pipeline.service'
-import { debounceTime, firstValueFrom, Observable } from 'rxjs'
-import { Kinds } from '@enums'
 import { GithubAdvancedSecurityServiceDetails, Pipeline } from '@types'
+import { debounceTime, firstValueFrom, Observable } from 'rxjs'
 import { CumulusService } from '../../../services/cumulus.service'
-import { AsyncPipe, NgIf } from '@angular/common'
-import { AuthorizationModule } from '@dxp/ngx-core/authorization'
-import { Secret, SecretService } from '../../../services/secret.service'
-import { PolicyService } from '../../../services/policy.service'
-import { BaseServiceDetailsComponent } from '../base-service-details.component'
 import { GithubService } from '../../../services/github.service'
+import { PipelineService } from '../../../services/pipeline.service'
+import { PolicyService } from '../../../services/policy.service'
+import { Secret, SecretService } from '../../../services/secret.service'
+import { BaseServiceDetailsComponent } from '../base-service-details.component'
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -64,7 +64,6 @@ export class GithubAdvancedSecurityServiceDetailsComponent extends BaseServiceDe
     super(policyService, secretService)
   }
 
-  // eslint-disable-next-line @angular-eslint/no-async-lifecycle-method
   async ngOnInit() {
     this.loading.set(true)
     await super.ngOnInit()

@@ -1,12 +1,12 @@
 import { CommonModule } from '@angular/common'
 import { ChangeDetectionStrategy, Component, Input, OnInit, signal } from '@angular/core'
-import { FundamentalNgxCoreModule } from '@fundamental-ngx/core'
 import { AuthorizationModule } from '@dxp/ngx-core/authorization'
+import { FundamentalNgxCoreModule } from '@fundamental-ngx/core'
 import { Kubernetes } from '@generated/graphql'
-import { BaseServiceDetailsComponent } from '../base-service-details.component'
 import { GithubService, GithubMetadata } from '../../../services/github.service'
 import { PolicyService } from '../../../services/policy.service'
 import { SecretService } from '../../../services/secret.service'
+import { BaseServiceDetailsComponent } from '../base-service-details.component'
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,

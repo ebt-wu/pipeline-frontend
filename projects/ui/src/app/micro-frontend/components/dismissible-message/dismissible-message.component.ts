@@ -1,8 +1,8 @@
 import { CommonModule } from '@angular/common'
 import { Component, EventEmitter, Input, Output, signal, ChangeDetectionStrategy, OnInit } from '@angular/core'
-import { FundamentalNgxCoreModule, LinkModule, MessageStripType } from '@fundamental-ngx/core'
-import { DxpLuigiContextService, LuigiClient } from '@dxp/ngx-core/luigi'
 import { DxpContext } from '@dxp/ngx-core/common'
+import { DxpLuigiContextService, LuigiClient } from '@dxp/ngx-core/luigi'
+import { FundamentalNgxCoreModule, LinkModule, MessageStripType } from '@fundamental-ngx/core'
 
 /**
  * Permanently dismissible message strip

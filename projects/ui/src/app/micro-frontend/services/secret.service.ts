@@ -1,9 +1,5 @@
 import { Injectable } from '@angular/core'
-import { BaseAPIService } from './base.service'
-import { first, map, mergeMap } from 'rxjs/operators'
-import { combineLatest, firstValueFrom, lastValueFrom, Observable } from 'rxjs'
 import { DxpLuigiContextService } from '@dxp/ngx-core/luigi'
-import { ENSURE_VAULT_ONBOARDING, GET_PIPELINE_SECRETS, WRITE_SECRET } from './queries'
 import {
   EnsureVaultOnboardingMutation,
   EnsureVaultOnboardingMutationVariables,
@@ -12,6 +8,10 @@ import {
   WriteSecretMutation,
   WriteSecretMutationVariables,
 } from '@generated/graphql'
+import { combineLatest, firstValueFrom, lastValueFrom, Observable } from 'rxjs'
+import { first, map, mergeMap } from 'rxjs/operators'
+import { BaseAPIService } from './base.service'
+import { ENSURE_VAULT_ONBOARDING, GET_PIPELINE_SECRETS, WRITE_SECRET } from './queries'
 
 export interface SecretData {
   key: string

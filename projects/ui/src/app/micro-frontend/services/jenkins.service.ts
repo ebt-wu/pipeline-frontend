@@ -1,8 +1,5 @@
 import { Injectable } from '@angular/core'
-import { BaseAPIService } from './base.service'
 import { DxpLuigiContextService } from '@dxp/ngx-core/luigi'
-import { combineLatest, first, map, mergeMap, Observable } from 'rxjs'
-import { CREATE_JENKINS_PIPELINE, DELETE_JENKINS_PIPELINE, GET_JENKINS_PIPELINE } from './queries'
 import {
   CreateJenkinsPipelineMutation,
   CreateJenkinsPipelineMutationVariables,
@@ -11,6 +8,9 @@ import {
   GetJenkinsPipelineQueryVariables,
   LabelInput,
 } from '@generated/graphql'
+import { combineLatest, first, map, mergeMap, Observable } from 'rxjs'
+import { BaseAPIService } from './base.service'
+import { CREATE_JENKINS_PIPELINE, DELETE_JENKINS_PIPELINE, GET_JENKINS_PIPELINE } from './queries'
 
 @Injectable({ providedIn: 'root' })
 export class JenkinsService {
@@ -24,7 +24,7 @@ export class JenkinsService {
     secretPath: string,
     githubRepositoryResource: string,
     githubRepositorySecretPath: string,
-    labels: Array<LabelInput> = [],
+    labels: LabelInput[] = [],
   ): Observable<string> {
     return combineLatest([this.apiService.apollo(), this.luigiService.contextObservable()]).pipe(
       first(),

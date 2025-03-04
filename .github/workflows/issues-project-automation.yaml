@@ -1,27 +1,27 @@
 name: '[Issues] Auto Assign to Project(s)'
 
 on:
-    issues:
-        types: [opened]
-    pull_request:
-        types: [opened]
+  issues:
+    types: [opened]
+  pull_request:
+    types: [opened]
 env:
-    TECHNICAL_USER_GITHUB_TOKEN: ${{ secrets.GH_HYPERSPACE_USER_TOKEN }}
+  TECHNICAL_USER_GITHUB_TOKEN: ${{ secrets.GH_HYPERSPACE_USER_TOKEN }}
 
 jobs:
-    assign_one_project:
-        runs-on: [self-hosted]
-        name: Assign to Backlog Board
-        steps:
-            - name: Assign new issues to column New
-              uses: hyper-pipe/assign-one-project-github-action@master
-              if: github.event_name == 'issues' && github.event.action == 'opened'
-              with:
-                  project: 'https://github.tools.sap/orgs/hyperspace/projects/9'
-                  column_name: 'New'
-            - name: Assign NEW pull requests to column Pull Requests
-              uses: hyper-pipe/assign-one-project-github-action@master
-              if: github.event_name == 'pull_request' && github.event.action == 'opened'
-              with:
-                  project: 'https://github.tools.sap/orgs/hyperspace/projects/9'
-                  column_name: 'Pull Requests'
+  assign_one_project:
+    runs-on: [self-hosted]
+    name: Assign to Backlog Board
+    steps:
+      - name: Assign new issues to column New
+        uses: hyper-pipe/assign-one-project-github-action@master
+        if: github.event_name == 'issues' && github.event.action == 'opened'
+        with:
+          project: 'https://github.tools.sap/orgs/hyperspace/projects/9'
+          column_name: 'New'
+      - name: Assign NEW pull requests to column Pull Requests
+        uses: hyper-pipe/assign-one-project-github-action@master
+        if: github.event_name == 'pull_request' && github.event.action == 'opened'
+        with:
+          project: 'https://github.tools.sap/orgs/hyperspace/projects/9'
+          column_name: 'Pull Requests'

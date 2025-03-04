@@ -1,14 +1,14 @@
-import { SetupBuildComponent } from './setup-build.component'
-import { MockBuilder, MockInstance, MockRender } from 'ng-mocks'
 import { DxpLuigiContextService } from '@dxp/ngx-core/luigi'
-import { PipelineService } from '../../../services/pipeline.service'
-import { of } from 'rxjs'
-import { createPipelineForTests } from '../../../../../../test-utils'
 import { Orchestrators } from '@enums'
 import { BuildTool } from '@generated/graphql'
+import { MockBuilder, MockInstance, MockRender } from 'ng-mocks'
+import { of } from 'rxjs'
+import { createPipelineForTests } from '../../../../../../test-utils'
 import { FeatureFlagService } from '../../../services/feature-flag.service'
-import { GithubService } from '../../../services/github.service'
 import { GithubActionsService } from '../../../services/github-actions.service'
+import { GithubService } from '../../../services/github.service'
+import { PipelineService } from '../../../services/pipeline.service'
+import { SetupBuildComponent } from './setup-build.component'
 
 describe('setup-build-component', () => {
   const context = {

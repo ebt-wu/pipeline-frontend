@@ -20,7 +20,6 @@ import {
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule, InputComponent],
   styleUrl: './form-generator-validator.component.css',
-  // eslint-disable-next-line @angular-eslint/use-component-view-encapsulation
   encapsulation: ViewEncapsulation.None,
 })
 export class PlatformFormGeneratorCustomValidatorComponent extends BaseDynamicFormGeneratorControl {

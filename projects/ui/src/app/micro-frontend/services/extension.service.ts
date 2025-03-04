@@ -1,9 +1,9 @@
+import { Injectable } from '@angular/core'
+import { ExtensionApolloClientService } from '@dxp/ngx-core/apollo'
+import { DxpIContextMessage, DxpLuigiContextService, LuigiClient } from '@dxp/ngx-core/luigi'
 import { gql } from 'apollo-angular'
 import { combineLatest, first, map, mergeMap, Observable } from 'rxjs'
 import { ExtensionClass, ScopeType } from './extension.types'
-import { ExtensionApolloClientService } from '@dxp/ngx-core/apollo'
-import { DxpIContextMessage, DxpLuigiContextService, LuigiClient } from '@dxp/ngx-core/luigi'
-import { Injectable } from '@angular/core'
 
 @Injectable({ providedIn: 'root' })
 export class ExtensionService {
@@ -39,7 +39,7 @@ export class ExtensionService {
 
   public getIcon(extension: ExtensionClass): string {
     let isDark = false
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+
     const theme = this.luigiClient.uxManager().getCurrentTheme()
 
     switch (theme) {

@@ -2,14 +2,14 @@ import { CommonModule } from '@angular/common'
 import { Component, ChangeDetectionStrategy } from '@angular/core'
 import { ReactiveFormsModule } from '@angular/forms'
 import { ButtonComponent, ButtonType } from '@fundamental-ngx/core'
+import { ContentDensityDirective } from '@fundamental-ngx/core/content-density'
 import {
   BaseDynamicFormGeneratorControl,
   dynamicFormFieldProvider,
   dynamicFormGroupChildProvider,
 } from '@fundamental-ngx/platform'
-import { ContentDensityDirective } from '@fundamental-ngx/core/content-density'
 
-export type FormGeneratorButtonAdditionalData = {
+export interface FormGeneratorButtonAdditionalData {
   label: string
   type: ButtonType
   action: () => Promise<void>

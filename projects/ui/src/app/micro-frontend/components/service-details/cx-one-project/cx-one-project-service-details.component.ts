@@ -1,9 +1,9 @@
-import { ChangeDetectionStrategy, Component, Input } from '@angular/core'
-import { FundamentalNgxCoreModule } from '@fundamental-ngx/core'
-import { BaseServiceDetailsComponent } from '../base-service-details.component'
 import { CommonModule } from '@angular/common'
+import { ChangeDetectionStrategy, Component, Input } from '@angular/core'
 import { AuthorizationModule } from '@dxp/ngx-core/authorization'
+import { FundamentalNgxCoreModule } from '@fundamental-ngx/core'
 import { CxOneProject } from '@generated/graphql'
+import { BaseServiceDetailsComponent } from '../base-service-details.component'
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,

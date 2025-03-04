@@ -51,7 +51,9 @@ export default async function customLoader() {
   })
 }
 
-type ResponseData = { data: IntrospectionQuery }
+interface ResponseData {
+  data: IntrospectionQuery
+}
 
 async function tokenResponse(tokenSet: OIDC.TokenEndpointResponse) {
   const introspectionQuery = getIntrospectionQuery()

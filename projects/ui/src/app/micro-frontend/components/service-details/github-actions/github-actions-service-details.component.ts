@@ -1,13 +1,13 @@
 import { CommonModule } from '@angular/common'
 import { Component, Input, OnInit, signal, ChangeDetectionStrategy } from '@angular/core'
-import { FundamentalNgxCoreModule, InlineHelpDirective } from '@fundamental-ngx/core'
-import { SecretService } from '../../../../micro-frontend/services/secret.service'
-import { ErrorMessageComponent } from '../../error-message/error-message.component'
-import { LuigiClient } from '@dxp/ngx-core/luigi'
 import { AuthorizationModule } from '@dxp/ngx-core/authorization'
-import { PolicyService } from '../../../services/policy.service'
-import { BaseServiceDetailsComponent } from '../base-service-details.component'
+import { LuigiClient } from '@dxp/ngx-core/luigi'
+import { FundamentalNgxCoreModule, InlineHelpDirective } from '@fundamental-ngx/core'
 import { GithubActionsDetails } from '@generated/graphql'
+import { SecretService } from '../../../../micro-frontend/services/secret.service'
+import { PolicyService } from '../../../services/policy.service'
+import { ErrorMessageComponent } from '../../error-message/error-message.component'
+import { BaseServiceDetailsComponent } from '../base-service-details.component'
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,

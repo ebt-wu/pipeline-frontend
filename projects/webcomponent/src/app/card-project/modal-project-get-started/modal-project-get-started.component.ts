@@ -1,7 +1,7 @@
 import { CdkScrollable } from '@angular/cdk/scrolling'
 import { Component, ChangeDetectionStrategy } from '@angular/core'
-import { CardModule, DialogModule, DialogRef, ScrollbarDirective } from '@fundamental-ngx/core'
 import { LuigiClient } from '@dxp/ngx-core/luigi'
+import { CardModule, DialogModule, DialogRef, ScrollbarDirective } from '@fundamental-ngx/core'
 
 interface DialogData {
   luigiClient: LuigiClient

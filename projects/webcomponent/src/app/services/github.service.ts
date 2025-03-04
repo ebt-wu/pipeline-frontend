@@ -1,7 +1,7 @@
-import { Observable } from 'rxjs'
-import { map } from 'rxjs/operators'
 import { Injectable } from '@angular/core'
 import { GithubRegistration, GithubService as DXPGithubService } from '@dxp/ngx-core/github'
+import { Observable } from 'rxjs'
+import { map } from 'rxjs/operators'
 
 @Injectable({
   providedIn: 'root',

@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common'
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core'
-import { BusyIndicatorComponent, FundamentalNgxCoreModule, InlineHelpDirective } from '@fundamental-ngx/core'
 import { AuthorizationModule } from '@dxp/ngx-core/authorization'
+import { BusyIndicatorComponent, FundamentalNgxCoreModule, InlineHelpDirective } from '@fundamental-ngx/core'
 import { PpmsFoss } from '@generated/graphql'
 
 @Component({
@@ -13,8 +13,6 @@ import { PpmsFoss } from '@generated/graphql'
   styleUrl: './ppms-foss-service-details.component.css',
 })
 export class PpmsFossServiceDetailsComponent {
-  constructor() {}
-
   @Input() serviceDetails: PpmsFoss
 
   openDocumentation() {

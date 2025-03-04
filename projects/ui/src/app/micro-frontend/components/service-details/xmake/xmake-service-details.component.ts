@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common'
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core'
-import { BusyIndicatorComponent, FundamentalNgxCoreModule, InlineHelpDirective } from '@fundamental-ngx/core'
 import { AuthorizationModule } from '@dxp/ngx-core/authorization'
+import { BusyIndicatorComponent, FundamentalNgxCoreModule, InlineHelpDirective } from '@fundamental-ngx/core'
 import { XMake } from '@generated/graphql'
 import { BaseServiceDetailsComponent } from '../base-service-details.component'
 

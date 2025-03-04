@@ -1,9 +1,9 @@
 import { CommonModule } from '@angular/common'
 import { Component, Input, ChangeDetectionStrategy } from '@angular/core'
-import { FundamentalNgxCoreModule } from '@fundamental-ngx/core'
+import { AuthorizationModule } from '@dxp/ngx-core/authorization'
 import { LuigiClient } from '@dxp/ngx-core/luigi'
 import { Orchestrators } from '@enums'
-import { AuthorizationModule } from '@dxp/ngx-core/authorization'
+import { FundamentalNgxCoreModule } from '@fundamental-ngx/core'
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,

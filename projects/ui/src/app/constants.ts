@@ -1,6 +1,6 @@
 import { Categories, Kinds, Languages, Stages, StepKey } from '@enums'
-import { Extensions } from './micro-frontend/services/extension.types'
 import { ProgrammingLanguage } from '@types'
+import { Extensions } from './micro-frontend/services/extension.types'
 
 export const KindName = {
   [Kinds.CUMULUS_PIPELINE]: 'Cumulus',

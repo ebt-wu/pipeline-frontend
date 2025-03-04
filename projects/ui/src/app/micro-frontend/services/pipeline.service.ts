@@ -1,15 +1,6 @@
 import { Injectable } from '@angular/core'
-import { BaseAPIService } from './base.service'
-import { catchError, first, map, mergeMap } from 'rxjs/operators'
 import { DxpLuigiContextService } from '@dxp/ngx-core/luigi'
-import {
-  CREATE_PIPELINE,
-  DELETE_NOT_MANAGED_SERVICE,
-  DELETE_PIPELINE,
-  WATCH_NOT_MANAGED_SERVICES,
-  WATCH_PIPELINE,
-} from './queries'
-import { Pipeline, ResourceRef } from '@types'
+import { Kinds, ServiceStatus, StepKey } from '@enums'
 import {
   CreatePipelineMutation,
   CreatePipelineMutationVariables,
@@ -25,8 +16,17 @@ import {
   WatchPipelineSubscription,
   WatchPipelineSubscriptionVariables,
 } from '@generated/graphql'
-import { Kinds, ServiceStatus, StepKey } from '@enums'
+import { Pipeline, ResourceRef } from '@types'
 import { combineLatest, Observable, of } from 'rxjs'
+import { catchError, first, map, mergeMap } from 'rxjs/operators'
+import { BaseAPIService } from './base.service'
+import {
+  CREATE_PIPELINE,
+  DELETE_NOT_MANAGED_SERVICE,
+  DELETE_PIPELINE,
+  WATCH_NOT_MANAGED_SERVICES,
+  WATCH_PIPELINE,
+} from './queries'
 
 @Injectable({ providedIn: 'root' })
 export class PipelineService {

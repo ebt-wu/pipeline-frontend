@@ -1,14 +1,14 @@
-import { ServiceDetailsSkeletonComponent } from './service-details-skeleton.component'
-import { MockBuilder, MockedDebugElement, MockProvider, MockRender, ngMocks } from 'ng-mocks'
-import { DebugModeService } from '../../services/debug-mode.service'
-import { Categories, Kinds, ServiceStatus, StepKey } from '@enums'
-import { DxpLuigiContextService } from '@dxp/ngx-core/luigi'
-import { of } from 'rxjs'
-import { APIService } from '../../services/api.service'
-import { GithubService } from '../../services/github.service'
-import { createPipelineForTests } from '../../../../../test-utils'
-import { PolicyService } from '../../services/policy.service'
 import { signal } from '@angular/core'
+import { DxpLuigiContextService } from '@dxp/ngx-core/luigi'
+import { Categories, Kinds, ServiceStatus, StepKey } from '@enums'
+import { MockBuilder, MockedDebugElement, MockProvider, MockRender, ngMocks } from 'ng-mocks'
+import { of } from 'rxjs'
+import { createPipelineForTests } from '../../../../../test-utils'
+import { APIService } from '../../services/api.service'
+import { DebugModeService } from '../../services/debug-mode.service'
+import { GithubService } from '../../services/github.service'
+import { PolicyService } from '../../services/policy.service'
+import { ServiceDetailsSkeletonComponent } from './service-details-skeleton.component'
 
 const context = {
   frameContext: undefined,
@@ -103,7 +103,7 @@ describe('ServiceDetailsSkeletonComponent', () => {
 
     const headerElements: MockedDebugElement<HTMLElement>[] = ngMocks.findAll(fixture, '.header-text')
     expect(headerElements.length).toEqual(1)
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-call,@typescript-eslint/no-unsafe-member-access
+
     expect(headerElements[0].nativeElement.textContent.trim()).toEqual('Static Security Checks')
   })
   it('should create with one activeCategory and one header', () => {
@@ -116,7 +116,7 @@ describe('ServiceDetailsSkeletonComponent', () => {
 
     const headerElements = ngMocks.findAll(fixture, '.header-text')
     expect(headerElements.length).toEqual(1)
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access,@typescript-eslint/no-unsafe-call
+
     expect(headerElements[0].nativeElement.textContent.trim()).toEqual('Orchestration')
   })
 
@@ -133,7 +133,6 @@ describe('ServiceDetailsSkeletonComponent', () => {
     expect(headerElements.length).toEqual(3)
 
     headerElements.forEach((element: MockedDebugElement<HTMLElement>, index: number) => {
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access,@typescript-eslint/no-unsafe-call
       expect(element.nativeElement.textContent.trim()).toEqual(
         ['GitHub Advanced Security', 'Checkmarx ONE', 'Fortify'][index],
       )
@@ -244,7 +243,7 @@ describe('ServiceDetailsSkeletonComponent', () => {
           },
         ),
       })
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+
       expect(fixture.nativeElement.textContent).toContain('Error')
     })
   })

@@ -8,7 +8,7 @@ import {
   dynamicFormGroupChildProvider,
 } from '@fundamental-ngx/platform'
 
-export type FormGeneratorObjectStatusAdditionalData = {
+export interface FormGeneratorObjectStatusAdditionalData {
   status: ObjectStatus
   label?: string
   glyph?: string

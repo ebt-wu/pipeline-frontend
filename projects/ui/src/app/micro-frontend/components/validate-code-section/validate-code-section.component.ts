@@ -10,17 +10,17 @@ import {
   Output,
   signal,
 } from '@angular/core'
+import { KindCategory, KindName, OrderedStepsByCategory } from '@constants'
+import { LuigiClient } from '@dxp/ngx-core/luigi'
+import { Categories, Kinds, ServiceStatus, Stages, StepKey } from '@enums'
 import { ColorAccent, FlexibleColumnLayout, FundamentalNgxCoreModule } from '@fundamental-ngx/core'
 import { CategoryConfig, Pipeline, ResourceRef } from '@types'
-import { Categories, Kinds, ServiceStatus, Stages, StepKey } from '@enums'
-import { LuigiClient } from '@dxp/ngx-core/luigi'
-import { KindCategory, KindName, OrderedStepsByCategory } from '@constants'
-import { CategorySlotComponent } from '../category-slot/category-slot.component'
-import { PolicyService } from '../../services/policy.service'
 import { firstValueFrom } from 'rxjs'
-import { OpenSourceComplianceService } from '../../services/open-source-compliance.service'
 import { CategorySlotConfigService } from '../../services/category-slot-config.service'
 import { FeatureFlagService } from '../../services/feature-flag.service'
+import { OpenSourceComplianceService } from '../../services/open-source-compliance.service'
+import { PolicyService } from '../../services/policy.service'
+import { CategorySlotComponent } from '../category-slot/category-slot.component'
 
 @Component({
   selector: 'app-validate-code-section',
@@ -37,7 +37,7 @@ export class ValidateCodeSectionComponent implements OnChanges, OnInit {
   @Input() pipeline: Pipeline
   @Input() localLayout: FlexibleColumnLayout
   @Output() readonly detailsOpened = new EventEmitter<Categories>()
-  categoryMap: { [key: string]: CategoryConfig }
+  categoryMap: Record<string, CategoryConfig>
   stages = Stages
   protected readonly Categories = Categories
 

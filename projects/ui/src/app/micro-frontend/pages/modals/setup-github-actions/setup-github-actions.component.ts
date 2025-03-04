@@ -1,23 +1,23 @@
-import { ChangeDetectionStrategy, Component, OnInit, signal, ViewChild } from '@angular/core'
-import { DynamicFormItem, FormGeneratorComponent, FormGeneratorService } from '@fundamental-ngx/platform/form'
 import { NgIf } from '@angular/common'
-import { FundamentalNgxPlatformModule, PlatformMessagePopoverModule } from '@fundamental-ngx/platform'
-import { firstValueFrom } from 'rxjs'
+import { ChangeDetectionStrategy, Component, OnInit, signal, ViewChild } from '@angular/core'
 import { LuigiClient } from '@dxp/ngx-core/luigi'
-import { PlatformFormGeneratorCustomHeaderElementComponent } from '../../../components/form-generator/form-generator-header/form-generator-header.component'
 import { FundamentalNgxCoreModule } from '@fundamental-ngx/core'
+import { FundamentalNgxPlatformModule, PlatformMessagePopoverModule } from '@fundamental-ngx/platform'
+import { DynamicFormItem, FormGeneratorComponent, FormGeneratorService } from '@fundamental-ngx/platform/form'
+import { firstValueFrom } from 'rxjs'
 import { ErrorMessageComponent } from '../../../components/error-message/error-message.component'
-import { GithubActionsService } from '../../../services/github-actions.service'
-import { GithubMetadata, GithubService } from '../../../services/github.service'
+import { PlatformFormGeneratorCustomButtonComponent } from '../../../components/form-generator/form-generator-button/form-generator-button.component'
+import { PlatformFormGeneratorCustomHeaderElementComponent } from '../../../components/form-generator/form-generator-header/form-generator-header.component'
 import { PlatformFormGeneratorCustomInfoBoxComponent } from '../../../components/form-generator/form-generator-info-box/form-generator-info-box.component'
 import {
   FormGeneratorMessageStripAdditionalData,
   PlatformFormGeneratorCustomMessageStripComponent,
 } from '../../../components/form-generator/form-generator-message-strip/form-generator-message-strip.component'
-import { PlatformFormGeneratorCustomValidatorComponent } from '../../../components/form-generator/form-generator-validator/form-generator-validator.component'
-import { PlatformFormGeneratorCustomButtonComponent } from '../../../components/form-generator/form-generator-button/form-generator-button.component'
 import { PlatformFormGeneratorCustomObjectStatusComponent } from '../../../components/form-generator/form-generator-object-status/form-generator-object-status.component'
+import { PlatformFormGeneratorCustomValidatorComponent } from '../../../components/form-generator/form-generator-validator/form-generator-validator.component'
 import { GithubActionsFormService } from '../../../services/forms/github-actions-form.service'
+import { GithubActionsService } from '../../../services/github-actions.service'
+import { GithubMetadata, GithubService } from '../../../services/github.service'
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -80,10 +80,10 @@ export class GithubActionsComponent implements OnInit {
         name: 'solinasAppAlreadyInstalledMessage',
         message: '',
         guiOptions: {
-          additionalData: <FormGeneratorMessageStripAdditionalData>{
+          additionalData: {
             type: 'success',
             message: () => Promise.resolve('You have everything in place to get started!'),
-          },
+          } as FormGeneratorMessageStripAdditionalData,
         },
         when: () => isSolinasAppInstalled,
       },

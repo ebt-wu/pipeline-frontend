@@ -1,9 +1,8 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing'
-
-import { AutomateWorkflowsComponent } from './automate-workflows.component'
 import { Categories, Kinds, ServiceStatus } from '@enums'
 import { ResourceRef } from '@generated/graphql'
 import { ExtensionService } from '../../services/extension.service'
+import { AutomateWorkflowsComponent } from './automate-workflows.component'
 
 describe('AutomateWorkflowsComponent', () => {
   let component: AutomateWorkflowsComponent
@@ -156,7 +155,7 @@ describe('AutomateWorkflowsComponent', () => {
               } as ResourceRef,
             }
           : undefined
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+
         component.isBuildPipelinePresent = isBuildPipelineSetup
         fixture.detectChanges()
         expect(component.isGetMoreOutOfActionsBannerShown).toEqual(expectedResult)

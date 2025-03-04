@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core'
-import { combineLatest, Observable } from 'rxjs'
-import { first, map, mergeMap } from 'rxjs/operators'
+import { DxpLuigiContextService } from '@dxp/ngx-core/luigi'
 import {
   CreateOscRegistrationMutation,
   CreateOscRegistrationMutationVariables,
@@ -10,9 +9,10 @@ import {
   GetOscRegistrationQueryVariables,
   OpenSourceComplianceGetResponse,
 } from '@generated/graphql'
-import { CREATE_OPEN_SOURCE_COMPLIANCE, DELETE_OPEN_SOURCE_COMPLIANCE, GET_OPEN_SOURCE_COMPLIANCE } from './queries'
+import { combineLatest, Observable } from 'rxjs'
+import { first, map, mergeMap } from 'rxjs/operators'
 import { BaseAPIService } from './base.service'
-import { DxpLuigiContextService } from '@dxp/ngx-core/luigi'
+import { CREATE_OPEN_SOURCE_COMPLIANCE, DELETE_OPEN_SOURCE_COMPLIANCE, GET_OPEN_SOURCE_COMPLIANCE } from './queries'
 
 @Injectable({
   providedIn: 'root',

@@ -1,9 +1,9 @@
+import { CommonModule } from '@angular/common'
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core'
+import { AuthorizationModule } from '@dxp/ngx-core/authorization'
 import { BusyIndicatorComponent, FundamentalNgxCoreModule, InlineHelpDirective } from '@fundamental-ngx/core'
 import { Checkmarx } from '@generated/graphql'
 import { BaseServiceDetailsComponent } from '../base-service-details.component'
-import { CommonModule } from '@angular/common'
-import { AuthorizationModule } from '@dxp/ngx-core/authorization'
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,

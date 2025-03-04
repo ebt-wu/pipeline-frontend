@@ -1,10 +1,8 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing'
-import { CategorySlotComponent } from './category-slot.component'
 import { AuthorizationTestingModule } from '@dxp/ngx-core/authorization'
 import { Categories, ServiceStatus } from '@enums'
 import { ColorAccent } from '@fundamental-ngx/core'
-
-/* eslint-disable @typescript-eslint/no-unsafe-assignment */
+import { CategorySlotComponent } from './category-slot.component'
 
 describe('CategorySlotComponent HSOBRD-117', () => {
   let component: CategorySlotComponent

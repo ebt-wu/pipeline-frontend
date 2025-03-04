@@ -1,7 +1,7 @@
 import { Pipe, PipeTransform } from '@angular/core'
-import { ResourceRef } from '@types'
-import { Stages } from '@enums'
 import { KindStage } from '@constants'
+import { Stages } from '@enums'
+import { ResourceRef } from '@types'
 
 @Pipe({
   name: 'resourceStage',

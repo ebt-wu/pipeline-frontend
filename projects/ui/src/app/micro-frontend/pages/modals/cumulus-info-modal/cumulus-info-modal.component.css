@@ -20,7 +20,7 @@
   }
 
   .label {
-    color: var(--sapContent_LabelColor)
+    color: var(--sapContent_LabelColor);
   }
   .separator {
     width: 100%;
@@ -45,7 +45,6 @@
   }
 }
 
-
 .link {
   color: var(--sapLink_Active_Color);
   text-decoration: none;
@@ -59,7 +58,6 @@
   color: var(--sapNeutralColor);
   cursor: pointer;
 }
-
 
 .dialog-footer {
   position: fixed;

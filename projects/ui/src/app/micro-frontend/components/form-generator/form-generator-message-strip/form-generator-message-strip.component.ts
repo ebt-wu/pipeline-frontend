@@ -9,7 +9,7 @@ import {
   dynamicFormGroupChildProvider,
 } from '@fundamental-ngx/platform'
 
-export type FormGeneratorMessageStripAdditionalData = {
+export interface FormGeneratorMessageStripAdditionalData {
   message?: () => Promise<string>
   type?: MessageStripType
   addMargins?: boolean

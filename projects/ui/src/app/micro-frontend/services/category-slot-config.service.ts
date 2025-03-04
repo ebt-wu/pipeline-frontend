@@ -1,6 +1,6 @@
-import { ResourceRef } from '@types'
-import { ServiceStatus } from '@enums'
 import { KindName } from '@constants'
+import { ServiceStatus } from '@enums'
+import { ResourceRef } from '@types'
 
 /**
  * Helpers for configuring the category slot which are not category-specific
@@ -9,7 +9,7 @@ export class CategorySlotConfigService {
   static generateNotManagedTooltip(steps: ResourceRef[]) {
     const notManagedStepNames = steps
       .filter((ref) => ref.status === ServiceStatus.NOT_MANAGED)
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-return
+
       .map((ref) => KindName[ref.kind])
 
     if (notManagedStepNames.length === 0) {

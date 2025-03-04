@@ -1,9 +1,9 @@
-import { DebugModeService } from './debug-mode.service'
 import { DxpLuigiContextService } from '@dxp/ngx-core/luigi'
-import { MockService } from 'ng-mocks'
-import { BaseAPIService } from './base.service'
 import { MessageToastService } from '@fundamental-ngx/core'
+import { MockService } from 'ng-mocks'
 import { of } from 'rxjs'
+import { BaseAPIService } from './base.service'
+import { DebugModeService } from './debug-mode.service'
 
 describe('DebugModeService', () => {
   let debugModeService: DebugModeService

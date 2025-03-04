@@ -1,11 +1,11 @@
-import { MockService } from 'ng-mocks'
-import { DxpLuigiContextService } from '@dxp/ngx-core/luigi'
-import { ExtensionService, ScopeType } from '@dxp/ngx-core/extensions'
-import { of } from 'rxjs'
 import { ChangeDetectorRef } from '@angular/core'
-import { ButtonType, DialogService } from '@fundamental-ngx/core'
-import { CardProjectPromotionComponent } from './card-project-promotion.component'
+import { ExtensionService, ScopeType } from '@dxp/ngx-core/extensions'
+import { DxpLuigiContextService } from '@dxp/ngx-core/luigi'
 import { ComponentSearchService } from '@dxp/ngx-core/search'
+import { ButtonType, DialogService } from '@fundamental-ngx/core'
+import { MockService } from 'ng-mocks'
+import { of } from 'rxjs'
+import { CardProjectPromotionComponent } from './card-project-promotion.component'
 jest.mock('@dxp/ngx-core/luigi-webcomponent', () => ({
   getSrc: jest.fn().mockReturnValue('https://this.is.a.domain/main.js'),
 }))

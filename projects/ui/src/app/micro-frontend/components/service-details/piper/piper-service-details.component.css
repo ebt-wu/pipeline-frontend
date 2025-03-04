@@ -1,4 +1,4 @@
-@import "../base-service-details.component.css";
+@import '../base-service-details.component.css';
 
 .code-box {
   background: var(--sapBackgroundColor);

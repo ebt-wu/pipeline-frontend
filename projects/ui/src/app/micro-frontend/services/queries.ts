@@ -1,4 +1,3 @@
-import { gql } from 'apollo-angular'
 import {
   CreatePiperConfigMutation,
   CreatePiperConfigMutationVariables,
@@ -7,6 +6,7 @@ import {
   MutationToggleDebugLabelArgs,
   ToggleDebugLabelMutation,
 } from '@generated/graphql'
+import { gql } from 'apollo-angular'
 
 /**
  * PIPELINE QUERIES

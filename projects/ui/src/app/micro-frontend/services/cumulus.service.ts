@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core'
-import { BaseAPIService } from './base.service'
 import { DxpLuigiContextService } from '@dxp/ngx-core/luigi'
-import { combineLatest, first, map, mergeMap } from 'rxjs'
-import { GET_CUMULUS_PIPELINE } from './queries'
 import { GetCumulusPipelineQuery, GetCumulusPipelineQueryVariables } from '@generated/graphql'
+import { combineLatest, first, map, mergeMap } from 'rxjs'
+import { BaseAPIService } from './base.service'
+import { GET_CUMULUS_PIPELINE } from './queries'
 
 @Injectable({ providedIn: 'root' })
 export class CumulusService {

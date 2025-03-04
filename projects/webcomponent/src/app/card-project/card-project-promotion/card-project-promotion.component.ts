@@ -1,4 +1,11 @@
+import { NgIf } from '@angular/common'
 import { ChangeDetectionStrategy, Component, Input, OnInit, ViewEncapsulation, ChangeDetectorRef } from '@angular/core'
+import { CardAction, DxpActionCardModule, ImageType, HelpLink } from '@dxp/ngx-core/action-card'
+import { AuthorizationModule } from '@dxp/ngx-core/authorization'
+import { DxpContext } from '@dxp/ngx-core/common'
+import { ExtensionService, ScopeType, UpdateExtensionInput } from '@dxp/ngx-core/extensions'
+import { DxpLuigiContextService, LuigiClient } from '@dxp/ngx-core/luigi'
+import { ComponentSearchService } from '@dxp/ngx-core/search'
 import {
   ButtonComponent,
   ButtonType,
@@ -8,16 +15,9 @@ import {
   MessageStripModule,
   SvgConfig,
 } from '@fundamental-ngx/core'
-import { DxpLuigiContextService, LuigiClient } from '@dxp/ngx-core/luigi'
-import { DxpContext } from '@dxp/ngx-core/common'
-import { AuthorizationModule } from '@dxp/ngx-core/authorization'
+import { catchError, combineLatest, first, of } from 'rxjs'
 import { svgRocket } from '../../../assets/ts-svg/rocket'
 import { ModalProjectGetStartedComponent } from '../modal-project-get-started/modal-project-get-started.component'
-import { NgIf } from '@angular/common'
-import { catchError, combineLatest, first, of } from 'rxjs'
-import { ExtensionService, ScopeType, UpdateExtensionInput } from '@dxp/ngx-core/extensions'
-import { CardAction, DxpActionCardModule, ImageType, HelpLink } from '@dxp/ngx-core/action-card'
-import { ComponentSearchService } from '@dxp/ngx-core/search'
 
 @Component({
   standalone: true,
@@ -48,7 +48,7 @@ export class CardProjectPromotionComponent implements OnInit {
 
   @Input()
   currentProjectId: string
-  headerText: string = 'Set Up CI/CD'
+  headerText = 'Set Up CI/CD'
   cardButtons: CardAction[]
   readonly rocketConfig: SvgConfig = {
     spot: {

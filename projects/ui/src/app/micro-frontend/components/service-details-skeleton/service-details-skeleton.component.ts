@@ -39,6 +39,7 @@ import { ExtensionService } from '../../services/extension.service'
 import { ExtensionClass, ServiceLevel } from '../../services/extension.types'
 import { GitHubIssueLinkService } from '../../services/github-issue-link.service'
 import { PipelineService } from '../../services/pipeline.service'
+import { PolicyService } from '../../services/policy.service'
 import { ErrorMessageComponent } from '../error-message/error-message.component'
 import { AzureServiceDetailsComponent } from '../service-details/azure/azure-service-details.component'
 import { BlackDuckServiceDetailsComponent } from '../service-details/black-duck/black-duck-service-details.component'
@@ -48,10 +49,11 @@ import { CnbServiceDetailsComponent } from '../service-details/cnb/cnb-service-d
 import { CommonRepositoryServiceDetailsComponent } from '../service-details/commonrepository/common-repository-service-details.component'
 import { CumlusServiceDetailsComponent } from '../service-details/cumulus/cumulus-service-details.component'
 import { CXOneServiceDetailsComponent } from '../service-details/cx-one/cx-one-service-details.component'
+import { CxOneProjectServiceDetailsComponent } from '../service-details/cx-one-project/cx-one-project-service-details.component'
 import { FortifyServiceDetailsComponent } from '../service-details/fortify/fortify-service-details.component'
+import { GithubServiceDetailsComponent } from '../service-details/github/github-service-details.component'
 import { GithubActionsServiceDetailsComponent } from '../service-details/github-actions/github-actions-service-details.component'
 import { GithubAdvancedSecurityServiceDetailsComponent } from '../service-details/github-advanced-security/github-advanced-security-service-details.component'
-import { GithubServiceDetailsComponent } from '../service-details/github/github-service-details.component'
 import { JenkinServiceDetailsComponent } from '../service-details/jenkins/jenkins-service-details.component'
 import { KubernetesServiceDetailsComponent } from '../service-details/kubernetes/kubernetes-service-details.component'
 import { OpenSourceComplianceDetailsComponent } from '../service-details/open-source-compliance/open-source-compliance-details.component'
@@ -61,8 +63,6 @@ import { SonarServiceDetailsComponent } from '../service-details/sonar/sonar-ser
 import { StagingServiceServiceDetailsComponent } from '../service-details/staging-service/staging-service-service-details.component'
 import { WhiteSourceServiceDetailsComponent } from '../service-details/whitesource/whitesource-service-details.component'
 import { XMakeServiceDetailsComponent } from '../service-details/xmake/xmake-service-details.component'
-import { PolicyService } from '../../services/policy.service'
-import { CxOneProjectServiceDetailsComponent } from '../service-details/cx-one-project/cx-one-project-service-details.component'
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -193,9 +193,8 @@ export class ServiceDetailsSkeletonComponent implements OnInit, OnChanges {
     } else {
       try {
         const details: ServiceDetails = this.serviceDetails().get(kind)
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+
         if (details && details['creationTimestamp']) {
-          // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
           return new Date(details['creationTimestamp'] as string)
         }
       } catch (err) {
@@ -226,7 +225,7 @@ export class ServiceDetailsSkeletonComponent implements OnInit, OnChanges {
         case Kinds.GITHUB_ADVANCED_SECURITY:
           return githubRepoUrl
 
-        case Kinds.OPEN_SOURCE_COMPLIANCE:
+        case Kinds.OPEN_SOURCE_COMPLIANCE: {
           const oscRegistration = serviceDetailsForKind as OpenSourceComplianceGetResponse
           if (oscRegistration.jiraRef === '') {
             return githubRepoUrl + '/issues'
@@ -235,6 +234,7 @@ export class ServiceDetailsSkeletonComponent implements OnInit, OnChanges {
             const jiraItem = jiraItems.find((item) => item.resourceName === oscRegistration.jiraRef)
             return `https://${jiraItem.jiraInstanceUrl}/projects/${jiraItem.projectKey}`
           }
+        }
         case Kinds.SONAR_QUBE_PROJECT:
           return `${(serviceDetailsForKind as SonarQubeProject).host}/dashboard?id=${(serviceDetailsForKind as SonarQubeProject).name}`
       }

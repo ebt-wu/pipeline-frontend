@@ -1,9 +1,7 @@
 import { Injectable } from '@angular/core'
 import { DxpLuigiContextService } from '@dxp/ngx-core/luigi'
 
-type FeatureFlags = {
-  [key in FlagKeys]: boolean | string[]
-}
+type FeatureFlags = Record<FlagKeys, boolean | string[]>
 export const Flags = {
   GITHUB_ACTIONS_ENABLED: 'GITHUB_ACTIONS_ENABLED',
   GHAS_ENABLED: 'GHAS_ENABLED',

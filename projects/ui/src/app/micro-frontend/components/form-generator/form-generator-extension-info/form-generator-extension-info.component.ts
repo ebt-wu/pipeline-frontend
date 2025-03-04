@@ -7,13 +7,13 @@ import {
   dynamicFormFieldProvider,
   dynamicFormGroupChildProvider,
 } from '@fundamental-ngx/platform'
+import { Subscription, firstValueFrom } from 'rxjs'
 import { ExtensionService } from '../../../services/extension.service'
 import { ExtensionClass, Extensions } from '../../../services/extension.types'
-import { Subscription, firstValueFrom } from 'rxjs'
 
-export type FormGeneratorExtensionInfoAdditionalData<T = object> = {
-  extensionName: Extensions | { (formValue: T): Extensions | Promise<Extensions> }
-  popoverHtml?: string | { (formValue: T): string | Promise<string> }
+export interface FormGeneratorExtensionInfoAdditionalData<T = object> {
+  extensionName: Extensions | ((formValue: T) => Extensions | Promise<Extensions>)
+  popoverHtml?: string | ((formValue: T) => string | Promise<string>)
 }
 
 @Component({

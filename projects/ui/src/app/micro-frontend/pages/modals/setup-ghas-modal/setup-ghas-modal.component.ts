@@ -16,14 +16,14 @@ import { BuildTool, Orchestrators } from '@generated/graphql'
 import { EntityContext, Pipeline, ResourceRef, ProgrammingLanguage } from '@types'
 import { debounceTime, firstValueFrom, Observable, Subscription } from 'rxjs'
 import { ErrorMessageComponent } from '../../../components/error-message/error-message.component'
-import { GithubAdvancedSecurityService } from '../../../services/github-advanced-security.service'
-import { GithubService } from '../../../services/github.service'
-import { PipelineService } from '../../../services/pipeline.service'
 import { PlatformFormGeneratorCustomInfoBoxComponent } from '../../../components/form-generator/form-generator-info-box/form-generator-info-box.component'
 import { PlatformFormGeneratorCustomMessageStripComponent } from '../../../components/form-generator/form-generator-message-strip/form-generator-message-strip.component'
 import { PlatformFormGeneratorCustomValidatorComponent } from '../../../components/form-generator/form-generator-validator/form-generator-validator.component'
 import { GithubActionsFormService } from '../../../services/forms/github-actions-form.service'
 import { GithubActionsService } from '../../../services/github-actions.service'
+import { GithubAdvancedSecurityService } from '../../../services/github-advanced-security.service'
+import { GithubService } from '../../../services/github.service'
+import { PipelineService } from '../../../services/pipeline.service'
 
 function getRecommendedValidationTool(language: Languages): ValidationTools | null {
   switch (language) {
@@ -149,7 +149,7 @@ export class SetupGhasModalComponent implements OnInit, OnDestroy {
     }
   }
 
-  getOrchestrator(kinds: Array<Kinds | StepKey>) {
+  getOrchestrator(kinds: (Kinds | StepKey)[]) {
     if (kinds.includes(Kinds.JENKINS_PIPELINE)) {
       return Orchestrators.Jenkins
     } else if (kinds.includes(Kinds.GITHUB_ACTIONS_PIPELINE)) {

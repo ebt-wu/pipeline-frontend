@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common'
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core'
-import { FundamentalNgxCoreModule } from '@fundamental-ngx/core'
 import { AuthorizationModule } from '@dxp/ngx-core/authorization'
+import { FundamentalNgxCoreModule } from '@fundamental-ngx/core'
 import { Cnb } from '@generated/graphql'
 
 @Component({
@@ -13,8 +13,6 @@ import { Cnb } from '@generated/graphql'
   styleUrl: './cnb-service-details.component.css',
 })
 export class CnbServiceDetailsComponent {
-  constructor() {}
-
   @Input() serviceDetails: Cnb
 
   getCnbBuilderLinkUrl(builder: string): string {

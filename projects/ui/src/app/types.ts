@@ -1,31 +1,31 @@
+import { GithubInstances, JiraProjectTypes, Kinds, OSCPlatforms, ServiceStatus, StepKey, Languages } from '@enums'
+import { ButtonType, ColorAccent } from '@fundamental-ngx/core'
 import {
   GithubActionsDetails,
   GitHubAdvancedSecurityGetPayload,
   NotManagedServices,
   PipelineType,
 } from '@generated/graphql'
-import { GithubInstances, JiraProjectTypes, Kinds, OSCPlatforms, ServiceStatus, StepKey, Languages } from '@enums'
-import { ButtonType, ColorAccent } from '@fundamental-ngx/core'
 
 export type AddPrefixToTypeProperties<T, P extends string> = {
   [K in keyof T as `${P}${Capitalize<string & K>}`]: T[K]
 }
 
-export type SetupOSCFormValue = {
+export interface SetupOSCFormValue {
   platform?: OSCPlatforms
   ppmsSoftwareComponentVersion?: string
   jiraProjectType?: JiraProjectTypes
   jiraExistingProjectKey?: string
 }
 
-export type ResourceRef = {
+export interface ResourceRef {
   error?: string
   name?: string
   kind?: Kinds | StepKey
   status?: ServiceStatus
 }
 
-export type Pipeline = {
+export interface Pipeline {
   name?: string
   namespace?: string
   pipelineType?: PipelineType
@@ -35,12 +35,12 @@ export type Pipeline = {
   githubActionsDetails?: GithubActionsDetails
 }
 
-export type Label = {
+export interface Label {
   key: string
   value: string
 }
 
-export type EntityContext = {
+export interface EntityContext {
   component: {
     annotations: {
       ['github.dxp.sap.com/acronym']: string
@@ -83,17 +83,17 @@ export interface CategoryConfig {
   isOpenArrowShown?: boolean
 }
 
-export type ProgrammingLanguage = {
+export interface ProgrammingLanguage {
   id: Languages
   displayName: string
 }
 
-export type GithubTokenMessage = {
+export interface GithubTokenMessage {
   value: string
   domain: GithubInstances
 }
 
-export type ErrorMessage = {
+export interface ErrorMessage {
   title: string
   message: string
 }

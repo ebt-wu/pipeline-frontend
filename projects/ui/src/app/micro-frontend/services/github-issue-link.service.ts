@@ -3,8 +3,6 @@ import { DxpContext } from '@dxp/ngx-core/common'
 
 @Injectable({ providedIn: 'root' })
 export class GitHubIssueLinkService {
-  constructor() {}
-
   getIssueLink(title: string, body: string, labels?: GitHubIssueLabels[]): string {
     const githubUrl = 'https://github.tools.sap'
     const ghIssueURL = new URL(`${githubUrl}/hyperspace/yggdrasil/issues/new`)

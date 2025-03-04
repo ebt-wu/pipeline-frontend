@@ -1,25 +1,25 @@
 .text-flexbox {
-    display: flex;
+  display: flex;
 }
 
 .error-title {
-    flex-grow: 4;
+  flex-grow: 4;
 }
 
 .error-text {
-    margin-right: 0.5rem;
+  margin-right: 0.5rem;
 }
 
 .ticket-button {
-    margin-left: auto;
-    margin-right: 0.5rem;
-    height: 1.2rem;
+  margin-left: auto;
+  margin-right: 0.5rem;
+  height: 1.2rem;
 }
 
 .message-font {
-    font-size: var(--sapFontSmallSize);
+  font-size: var(--sapFontSmallSize);
 }
 
 .message-margin {
-    margin-top: 1rem;
+  margin-top: 1rem;
 }

@@ -1,10 +1,10 @@
 import { Injectable } from '@angular/core'
+import { DxpLuigiContextService } from '@dxp/ngx-core/luigi'
+import { GetJiraProjectsQuery, GetJiraProjectsQueryVariables, JiraProject } from '@generated/graphql'
 import { combineLatest, Observable } from 'rxjs'
 import { map, mergeMap } from 'rxjs/operators'
-import { GetJiraProjectsQuery, GetJiraProjectsQueryVariables, JiraProject } from '@generated/graphql'
-import { GET_JIRA_PROJECTS } from './queries'
 import { BaseAPIService } from './base.service'
-import { DxpLuigiContextService } from '@dxp/ngx-core/luigi'
+import { GET_JIRA_PROJECTS } from './queries'
 
 @Injectable({
   providedIn: 'root',

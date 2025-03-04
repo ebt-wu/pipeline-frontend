@@ -10,8 +10,8 @@ import {
 } from '@fundamental-ngx/platform'
 import { Subscription } from 'rxjs'
 
-export type FormGeneratorHeaderAdditionalData<T = object> = {
-  headerText: string | { (formValue: T): string | Promise<string> }
+export interface FormGeneratorHeaderAdditionalData<T = object> {
+  headerText: string | ((formValue: T) => string | Promise<string>)
   subheaderHtml?: () => string | Promise<string>
   subheaderStyle?: string | object
 

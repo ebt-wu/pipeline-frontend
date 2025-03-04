@@ -1,8 +1,8 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core'
 import { SafeResourceUrl } from '@angular/platform-browser'
-import { ContentDensity, ContentDensityService } from '@fundamental-ngx/core/utils'
-import { ThemingService } from '@fundamental-ngx/core/theming'
 import { RouterOutlet } from '@angular/router'
+import { ThemingService } from '@fundamental-ngx/core/theming'
+import { ContentDensity, ContentDensityService } from '@fundamental-ngx/core/utils'
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,

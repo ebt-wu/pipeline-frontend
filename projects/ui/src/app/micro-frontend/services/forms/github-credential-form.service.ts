@@ -1,10 +1,10 @@
 import { Injectable } from '@angular/core'
-import { lastValueFrom } from 'rxjs'
-import { CredentialTypes, GithubInstances } from '@enums'
 import { Validators } from '@angular/forms'
+import { CredentialTypes, GithubInstances } from '@enums'
 import { DynamicFormItem, FormGeneratorService } from '@fundamental-ngx/platform'
-import { Secret, SecretService } from '../secret.service'
-import { PolicyService } from '../policy.service'
+import { AddPrefixToTypeProperties } from '@types'
+import { lastValueFrom } from 'rxjs'
+import { FormGeneratorHeaderAdditionalData } from '../../components/form-generator/form-generator-header/form-generator-header.component'
 import {
   FormGeneratorInfoBoxAdditionalData,
   PlatformFormGeneratorCustomInfoBoxComponent,
@@ -13,17 +13,17 @@ import {
   FormGeneratorMessageStripAdditionalData,
   PlatformFormGeneratorCustomMessageStripComponent,
 } from '../../components/form-generator/form-generator-message-strip/form-generator-message-strip.component'
-import { GithubService, REQUIRED_SCOPES } from '../github.service'
-import { AddPrefixToTypeProperties } from '@types'
 import { PlatformFormGeneratorCustomValidatorComponent } from '../../components/form-generator/form-generator-validator/form-generator-validator.component'
-import { FormGeneratorHeaderAdditionalData } from '../../components/form-generator/form-generator-header/form-generator-header.component'
+import { GithubService, REQUIRED_SCOPES } from '../github.service'
+import { PolicyService } from '../policy.service'
+import { Secret, SecretService } from '../secret.service'
 
 export type GithubCredentialFormValueP<P extends string = 'github'> = AddPrefixToTypeProperties<
   GithubCredentialFormValue,
   P
 >
 
-type GithubCredentialFormValue = {
+interface GithubCredentialFormValue {
   Token?: string
   CredentialType?: CredentialTypes
   SelectCredential?: string
@@ -52,10 +52,10 @@ export class GithubCredentialFormService {
         name: `${formItemNamePrefix}Header`,
         message: '',
         guiOptions: {
-          additionalData: <FormGeneratorHeaderAdditionalData>{
+          additionalData: {
             headerText: 'Github credentials',
             ignoreBottomMargin: true,
-          },
+          } as FormGeneratorHeaderAdditionalData,
         },
         when: async (formValue: T) => {
           return await showFormItems(formValue)
@@ -156,7 +156,7 @@ export class GithubCredentialFormService {
           return formValue[`${formItemNamePrefix}CredentialType`] === CredentialTypes.NEW && canUserEditCredentials
         },
         guiOptions: {
-          additionalData: <FormGeneratorInfoBoxAdditionalData>{
+          additionalData: {
             header: 'Instructions',
             instructions: async () => {
               const { githubTechnicalUserSelfServiceUrl, githubInstance } = await this.githubService.getGithubMetadata()
@@ -185,7 +185,7 @@ export class GithubCredentialFormService {
                 </li>
               </ol>`
             },
-          },
+          } as FormGeneratorInfoBoxAdditionalData,
         },
       },
       {
@@ -201,10 +201,10 @@ export class GithubCredentialFormService {
           return formValue[`${formItemNamePrefix}CredentialType`] === CredentialTypes.NEW && !canUserEditCredentials
         },
         guiOptions: {
-          additionalData: <FormGeneratorMessageStripAdditionalData>{
+          additionalData: {
             type: 'error',
             message: async () => await this.policyService.getCantAddCredentialsErrorMessage(),
-          },
+          } as FormGeneratorMessageStripAdditionalData,
         },
       },
       {

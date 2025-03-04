@@ -1,27 +1,27 @@
 import { Injectable } from '@angular/core'
-import { firstValueFrom } from 'rxjs'
 import { GithubInstances } from '@enums'
 import { DynamicFormItem, FormGeneratorService } from '@fundamental-ngx/platform'
+import { firstValueFrom } from 'rxjs'
 import {
-  FormGeneratorMessageStripAdditionalData,
-  PlatformFormGeneratorCustomMessageStripComponent,
-} from '../../components/form-generator/form-generator-message-strip/form-generator-message-strip.component'
-import { GithubService } from '../github.service'
+  FormGeneratorButtonAdditionalData,
+  PlatformFormGeneratorCustomButtonComponent,
+} from '../../components/form-generator/form-generator-button/form-generator-button.component'
 import {
   FormGeneratorHeaderAdditionalData,
   PlatformFormGeneratorCustomHeaderElementComponent,
 } from '../../components/form-generator/form-generator-header/form-generator-header.component'
 import {
-  FormGeneratorButtonAdditionalData,
-  PlatformFormGeneratorCustomButtonComponent,
-} from '../../components/form-generator/form-generator-button/form-generator-button.component'
-import { GithubActionsService } from '../github-actions.service'
-import { DebugModeService } from '../debug-mode.service'
+  FormGeneratorMessageStripAdditionalData,
+  PlatformFormGeneratorCustomMessageStripComponent,
+} from '../../components/form-generator/form-generator-message-strip/form-generator-message-strip.component'
 import {
   FormGeneratorObjectStatusAdditionalData,
   PlatformFormGeneratorCustomObjectStatusComponent,
 } from '../../components/form-generator/form-generator-object-status/form-generator-object-status.component'
 import { PlatformFormGeneratorCustomValidatorComponent } from '../../components/form-generator/form-generator-validator/form-generator-validator.component'
+import { DebugModeService } from '../debug-mode.service'
+import { GithubActionsService } from '../github-actions.service'
+import { GithubService } from '../github.service'
 
 @Injectable({ providedIn: 'root' })
 export class GithubActionsFormService {
@@ -56,7 +56,7 @@ export class GithubActionsFormService {
           githubMetadata.githubRepoUrl,
         ),
       )
-    } catch (error) {
+    } catch {
       hasAppInstallationFinished = true
       appInstallationError = "That didn't work. Try re-installing the app."
     }
@@ -67,7 +67,7 @@ export class GithubActionsFormService {
         name: `sugarAppHeader`,
         message: '',
         guiOptions: {
-          additionalData: <FormGeneratorHeaderAdditionalData>{
+          additionalData: {
             headerText: 'Install runners app',
             ignoreTopMargin: true,
             subheaderHtml: async () => {
@@ -77,7 +77,7 @@ export class GithubActionsFormService {
             subheaderStyle: {
               'font-size': '14px',
             },
-          },
+          } as FormGeneratorHeaderAdditionalData,
         },
         when: async (formValue: T) => (await showFormItems(formValue)) && !isAppInstalled,
       },
@@ -94,7 +94,7 @@ export class GithubActionsFormService {
         name: `sugarAppInstallButton`,
         message: '',
         guiOptions: {
-          additionalData: <FormGeneratorButtonAdditionalData>{
+          additionalData: {
             type: 'emphasized',
             label: 'Install App',
             glyph: 'action',
@@ -133,7 +133,7 @@ export class GithubActionsFormService {
               // P.S: signal also doesn't help
               await refreshStepsVisibility()
             },
-          },
+          } as FormGeneratorButtonAdditionalData,
         },
         when: async (formValue: T) => {
           const isInstallationFailed = hasAppInstallationFinished && appInstallationError !== ''
@@ -149,7 +149,7 @@ export class GithubActionsFormService {
         name: `sugarAppInstallationCheckButton`,
         message: '',
         guiOptions: {
-          additionalData: <FormGeneratorButtonAdditionalData>{
+          additionalData: {
             type: 'standard',
             label: 'Check Installation',
             action: async () => {
@@ -166,7 +166,7 @@ export class GithubActionsFormService {
                 if (!isSolinasAppInstalled) {
                   appInstallationError = "That didn't work. Try re-installing the app."
                 }
-              } catch (error) {
+              } catch {
                 appInstallationError = "That didn't work. Try re-installing the app."
               } finally {
                 hasAppInstallationFinished = true
@@ -178,7 +178,7 @@ export class GithubActionsFormService {
               }
             },
             glyph: 'refresh',
-          },
+          } as FormGeneratorButtonAdditionalData,
         },
         when: async (formValue: T) =>
           (await showFormItems(formValue)) &&
@@ -193,10 +193,10 @@ export class GithubActionsFormService {
         when: async (formValue: T) =>
           (await showFormItems(formValue)) && !isAppInstalled && hasAppInstallationFinished && !!appInstallationError,
         guiOptions: {
-          additionalData: <FormGeneratorMessageStripAdditionalData>{
+          additionalData: {
             type: 'error',
             message: () => Promise.resolve(appInstallationError),
-          },
+          } as FormGeneratorMessageStripAdditionalData,
         },
       },
       {
@@ -214,12 +214,12 @@ export class GithubActionsFormService {
         when: async (formValue: T) =>
           (await showFormItems(formValue)) && !isAppInstalled && hasAppInstallationFinished && !appInstallationError,
         guiOptions: {
-          additionalData: <FormGeneratorObjectStatusAdditionalData>{
+          additionalData: {
             status: 'positive',
             label: 'Installed',
             glyph: 'sys-enter-2',
             inverted: true,
-          },
+          } as FormGeneratorObjectStatusAdditionalData,
         },
       },
     ]

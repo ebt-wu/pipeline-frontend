@@ -1,12 +1,12 @@
 import { CommonModule } from '@angular/common'
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, Output, signal } from '@angular/core'
+import { AuthorizationModule } from '@dxp/ngx-core/authorization'
 import { DxpLuigiContextService } from '@dxp/ngx-core/luigi'
 import { FundamentalNgxCoreModule } from '@fundamental-ngx/core'
-import { GitHubIssueLinkService } from '../../services/github-issue-link.service'
 import { DebugModeService } from '../../services/debug-mode.service'
-import { AuthorizationModule } from '@dxp/ngx-core/authorization'
+import { GitHubIssueLinkService } from '../../services/github-issue-link.service'
 
-type ErrorContext = {
+interface ErrorContext {
   showTicketButton?: boolean
   docUrl: string
 }

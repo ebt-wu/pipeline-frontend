@@ -1,10 +1,10 @@
-import { ErrorMessageComponent } from './error-message.component'
+import { signal } from '@angular/core'
+import { DxpLuigiContextService } from '@dxp/ngx-core/luigi'
 import { MockBuilder, MockRender } from 'ng-mocks'
 import { ngMocks } from 'ng-mocks'
 import { DebugModeService } from '../../services/debug-mode.service'
-import { signal } from '@angular/core'
-import { DxpLuigiContextService } from '@dxp/ngx-core/luigi'
 import { GitHubIssueLinkService } from '../../services/github-issue-link.service'
+import { ErrorMessageComponent } from './error-message.component'
 
 describe('ErrorMessageComponent', () => {
   beforeEach(() =>

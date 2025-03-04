@@ -1,14 +1,14 @@
 import { CommonModule } from '@angular/common'
 import { ChangeDetectionStrategy, Component, NO_ERRORS_SCHEMA, OnInit } from '@angular/core'
 import { ReactiveFormsModule } from '@angular/forms'
+import { ButtonComponent } from '@fundamental-ngx/core/button'
 import {
   BaseDynamicFormGeneratorControl,
   dynamicFormFieldProvider,
   dynamicFormGroupChildProvider,
 } from '@fundamental-ngx/platform'
-import { ButtonComponent } from '@fundamental-ngx/core/button'
 
-export type FormGeneratorInfoBoxAdditionalData = {
+export interface FormGeneratorInfoBoxAdditionalData {
   header?: string
   instructions?: () => Promise<string>
   showRefreshButton?: boolean

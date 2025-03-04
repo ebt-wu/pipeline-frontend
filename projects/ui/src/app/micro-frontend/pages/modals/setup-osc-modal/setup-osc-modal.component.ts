@@ -1,7 +1,10 @@
 import { CommonModule } from '@angular/common'
 import { ChangeDetectionStrategy, Component, OnInit, signal, ViewChild } from '@angular/core'
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms'
+import { KindExtensionName, ProgrammingLanguages } from '@constants'
+import { DxpContext } from '@dxp/ngx-core/common'
 import { DxpLuigiContextService, LuigiClient } from '@dxp/ngx-core/luigi'
+import { JiraProjectTypes, Kinds, Languages, OSCPlatforms, StepKey } from '@enums'
 import {
   FormModule,
   FundamentalNgxCoreModule,
@@ -17,28 +20,25 @@ import {
   FundamentalNgxPlatformModule,
 } from '@fundamental-ngx/platform'
 import { PlatformMessagePopoverModule } from '@fundamental-ngx/platform/message-popover'
+import { JiraProject, NotManagedServices, PpmsFoss } from '@generated/graphql'
 import { EntityContext, Pipeline, SetupOSCFormValue, ProgrammingLanguage } from '@types'
-import { JiraProjectTypes, Kinds, Languages, OSCPlatforms, StepKey } from '@enums'
+import { toolsSvg } from 'projects/ui/src/assets/ts-svg/tools'
 import { debounceTime, firstValueFrom, Observable } from 'rxjs'
 import { ErrorMessageComponent } from '../../../components/error-message/error-message.component'
 import {
   FormGeneratorHeaderAdditionalData,
   PlatformFormGeneratorCustomHeaderElementComponent,
 } from '../../../components/form-generator/form-generator-header/form-generator-header.component'
-import { PlatformFormGeneratorCustomMessageStripComponent } from '../../../components/form-generator/form-generator-message-strip/form-generator-message-strip.component'
-import { OpenSourceComplianceService } from '../../../services/open-source-compliance.service'
-import { PlatformFormGeneratorCustomReadOnlyInputComponent } from '../../../components/form-generator/form-generator-read-only-input/form-generator-read-only-input.component'
-import { GithubService } from '../../../services/github.service'
-import { ExtensionService } from '../../../services/extension.service'
-import { KindExtensionName, ProgrammingLanguages } from '@constants'
-import { ExtensionClass } from '../../../services/extension.types'
-import { PipelineService } from '../../../services/pipeline.service'
-import { toolsSvg } from 'projects/ui/src/assets/ts-svg/tools'
-import { JiraService } from '../../../services/jira.service'
 import { PlatformFormGeneratorCustomInfoBoxComponent } from '../../../components/form-generator/form-generator-info-box/form-generator-info-box.component'
-import { DxpContext } from '@dxp/ngx-core/common'
-import { JiraProject, NotManagedServices, PpmsFoss } from '@generated/graphql'
+import { PlatformFormGeneratorCustomMessageStripComponent } from '../../../components/form-generator/form-generator-message-strip/form-generator-message-strip.component'
+import { PlatformFormGeneratorCustomReadOnlyInputComponent } from '../../../components/form-generator/form-generator-read-only-input/form-generator-read-only-input.component'
+import { ExtensionService } from '../../../services/extension.service'
+import { ExtensionClass } from '../../../services/extension.types'
 import { GithubActionsService } from '../../../services/github-actions.service'
+import { GithubService } from '../../../services/github.service'
+import { JiraService } from '../../../services/jira.service'
+import { OpenSourceComplianceService } from '../../../services/open-source-compliance.service'
+import { PipelineService } from '../../../services/pipeline.service'
 
 enum OSCSetupSteps {
   PREREQUISITES_INFO = 'PREREQUISITES_INFO',
@@ -125,10 +125,10 @@ export class SetupOSCModalComponent implements OnInit {
       name: 'platformSelectionHeader',
       message: '',
       guiOptions: {
-        additionalData: <FormGeneratorHeaderAdditionalData>{
+        additionalData: {
           headerText: 'Select where to report issues',
           ignoreTopMargin: true,
-        },
+        } as FormGeneratorHeaderAdditionalData,
       },
     },
     {
@@ -154,10 +154,10 @@ export class SetupOSCModalComponent implements OnInit {
       name: 'jiraNewInstanceHeader',
       message: '',
       guiOptions: {
-        additionalData: <FormGeneratorHeaderAdditionalData>{
+        additionalData: {
           headerText: 'Connect your Jira project:',
           ignoreTopMargin: true,
-        },
+        } as FormGeneratorHeaderAdditionalData,
       },
       when: (formValue: SetupOSCFormValue) => {
         return formValue.platform === OSCPlatforms.JIRA && !this.isJiraInstanceConnected
@@ -189,10 +189,10 @@ export class SetupOSCModalComponent implements OnInit {
       name: 'jiraExistingProjectHeader',
       message: '',
       guiOptions: {
-        additionalData: <FormGeneratorHeaderAdditionalData>{
+        additionalData: {
           headerText: 'Select your Jira project:',
           ignoreTopMargin: true,
-        },
+        } as FormGeneratorHeaderAdditionalData,
       },
       when: (formValue: SetupOSCFormValue) =>
         formValue.platform === OSCPlatforms.JIRA && this.isJiraInstanceConnected && this.jiraProjects().length > 0,
@@ -222,7 +222,7 @@ export class SetupOSCModalComponent implements OnInit {
           header: 'Add Jira project',
           callBeforeRefresh: async () => await this.createMoveToOSCPlatformForm(),
           showRefreshButton: true,
-          // eslint-disable-next-line @typescript-eslint/require-await
+
           instructions: async () => {
             return `<ol>
               <li><a href='${this.context().frameBaseUrl}/projects/${this.context().projectId}/jira?modal=%2Fprojects%2F${this.context().projectId}%2Fcatalog%2Fcreate-res%2Fglobal%2Fjira%2Fjira-tools%3F~type%3Djira-tools&modalParams=%7B%22title%22%3A%22Add%22%2C%22size%22%3A%22s%22%7D', target="_blank">
@@ -291,10 +291,10 @@ export class SetupOSCModalComponent implements OnInit {
       name: 'githubRepositorySpacer',
       message: '',
       guiOptions: {
-        additionalData: <FormGeneratorHeaderAdditionalData>{
+        additionalData: {
           headerText: '',
           ignoreBottomMargin: true,
-        },
+        } as FormGeneratorHeaderAdditionalData,
       },
     },
     {
@@ -317,10 +317,10 @@ export class SetupOSCModalComponent implements OnInit {
       name: 'trackComplianceHeader',
       message: '',
       guiOptions: {
-        additionalData: <FormGeneratorHeaderAdditionalData>{
+        additionalData: {
           headerText: 'Track compliance',
           doubleTopMargin: true,
-        },
+        } as FormGeneratorHeaderAdditionalData,
       },
     },
     {

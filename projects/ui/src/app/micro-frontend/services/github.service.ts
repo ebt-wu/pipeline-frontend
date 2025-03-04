@@ -1,9 +1,8 @@
 import { Injectable } from '@angular/core'
-import { BaseAPIService } from './base.service'
-import { first, map, mergeMap } from 'rxjs/operators'
-import { combineLatest, firstValueFrom, Observable } from 'rxjs'
+import { ApolloQueryResult } from '@apollo/client/core'
+import { MetadataApolloClientService } from '@dxp/ngx-core/apollo'
 import { DxpLuigiContextService } from '@dxp/ngx-core/luigi'
-import { CREATE_GITHUB_REPOSITORY, DELETE_GITHUB_REPOSITORY, GET_GITHUB_REPOSITORY } from './queries'
+import { CredentialTypes, GithubInstances, Languages } from '@enums'
 import {
   CreateGithubRepositoryMutation,
   CreateGithubRepositoryMutationVariables,
@@ -12,13 +11,14 @@ import {
   GetGithubRepositoryQuery,
   GetGithubRepositoryQueryVariables,
 } from '@generated/graphql'
-import { CredentialTypes, GithubInstances, Languages } from '@enums'
-import { SecretData, SecretService } from './secret.service'
 import { EntityContext, ProgrammingLanguage } from '@types'
-import { MetadataApolloClientService } from '@dxp/ngx-core/apollo'
-import { ApolloQueryResult } from '@apollo/client/core'
+import { combineLatest, firstValueFrom, Observable } from 'rxjs'
+import { first, map, mergeMap } from 'rxjs/operators'
+import { BaseAPIService } from './base.service'
 import { GET_REPO_LANGUAGES, GET_REPO_PULLS } from './external-queries'
 import { GithubCredentialFormValueP } from './forms/github-credential-form.service'
+import { CREATE_GITHUB_REPOSITORY, DELETE_GITHUB_REPOSITORY, GET_GITHUB_REPOSITORY } from './queries'
+import { SecretData, SecretService } from './secret.service'
 
 export interface GithubMetadata {
   githubInstance: string
@@ -29,7 +29,7 @@ export interface GithubMetadata {
   githubTechnicalUserSelfServiceUrl: string
 }
 
-export type LanguageQueryResult = {
+export interface LanguageQueryResult {
   component: {
     extensions: {
       languages: {
@@ -39,7 +39,7 @@ export type LanguageQueryResult = {
   }
 }
 
-export type PullRequestQueryResult = {
+export interface PullRequestQueryResult {
   watchComponent: {
     extensions: {
       repository: {

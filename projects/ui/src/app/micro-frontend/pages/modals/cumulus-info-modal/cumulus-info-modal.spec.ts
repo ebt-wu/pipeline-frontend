@@ -1,10 +1,10 @@
-import { MockService } from 'ng-mocks'
 import { LuigiClient } from '@dxp/ngx-core/luigi'
-import { CumulusInfoModalComponent } from './cumulus-info-modal.component'
-import { PipelineService } from '../../../services/pipeline.service'
+import { MockService } from 'ng-mocks'
 import { CumulusService } from '../../../services/cumulus.service'
-import { SecretService } from '../../../services/secret.service'
+import { PipelineService } from '../../../services/pipeline.service'
 import { PolicyService } from '../../../services/policy.service'
+import { SecretService } from '../../../services/secret.service'
+import { CumulusInfoModalComponent } from './cumulus-info-modal.component'
 
 describe('Cumulus Info Modal HSOBRD-74', () => {
   let cumulusInfoModal: CumulusInfoModalComponent
@@ -44,7 +44,6 @@ describe('Cumulus Info Modal HSOBRD-74', () => {
     mockWriteText = jest.fn()
     Object.defineProperty(navigator, 'clipboard', {
       value: {
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
         writeText: mockWriteText,
       },
     })

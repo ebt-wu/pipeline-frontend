@@ -1,11 +1,4 @@
 {
   "backlogIds": ["HSOBRD"],
-  "productStandardsToCheck": [
-    "SLC-25",
-    "SLC-29",
-    "OS3",
-    "FC-1",
-    "FC-3",
-    "SAST"
-  ]
+  "productStandardsToCheck": ["SLC-25", "SLC-29", "OS3", "FC-1", "FC-3", "SAST"]
 }

@@ -1,10 +1,10 @@
-import { DxpLuigiContextService } from '@dxp/ngx-core/luigi'
-import { GithubService } from './github.service'
-import { BaseAPIService } from './base.service'
-import { SecretService } from './secret.service'
-import { MetadataApolloClientService } from '@dxp/ngx-core/apollo'
-import { MockService } from 'ng-mocks'
 import { ProgrammingLanguages } from '@constants'
+import { MetadataApolloClientService } from '@dxp/ngx-core/apollo'
+import { DxpLuigiContextService } from '@dxp/ngx-core/luigi'
+import { MockService } from 'ng-mocks'
+import { BaseAPIService } from './base.service'
+import { GithubService } from './github.service'
+import { SecretService } from './secret.service'
 
 describe('GitHubService', () => {
   let githubService: GithubService

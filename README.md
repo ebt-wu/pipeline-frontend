@@ -1,9 +1,9 @@
 ## The Hyperspace CI/CD Setup frontend
 
- * **🔨 Infrastructure** [ci-cd-setup-stack](https://github.tools.sap/hyperspace/ci-cd-setup-stack).
- * **🐞 Tickets** go into [hyperspace/yggdrasil/issues](https://github.tools.sap/hyperspace/yggdrasil/issues).
- * **🎒 Backend** is in [pipeline-backend](https://github.tools.sap/hyperspace/pipeline-backend).
- 
+- **🔨 Infrastructure** [ci-cd-setup-stack](https://github.tools.sap/hyperspace/ci-cd-setup-stack).
+- **🐞 Tickets** go into [hyperspace/yggdrasil/issues](https://github.tools.sap/hyperspace/yggdrasil/issues).
+- **🎒 Backend** is in [pipeline-backend](https://github.tools.sap/hyperspace/pipeline-backend).
+
 ## Prequisites
 
 ### Setup

@@ -1,11 +1,10 @@
-@import "../base-service-details.component.css";
+@import '../base-service-details.component.css';
 
 .subtitle {
   font-size: 14px;
   font-family: var(--sapFontFamily);
   font-weight: bold;
 }
-
 
 .divider {
   border-top: 1px solid var(--sapNeutralBorderColor);
@@ -23,9 +22,19 @@
 }
 
 @keyframes shake {
-  0% { transform: translateX(0); }
-  25% { transform: translateX(-5px); }
-  50% { transform: translateX(5px); }
-  75% { transform: translateX(-5px); }
-  100% { transform: translateX(0); }
+  0% {
+    transform: translateX(0);
+  }
+  25% {
+    transform: translateX(-5px);
+  }
+  50% {
+    transform: translateX(5px);
+  }
+  75% {
+    transform: translateX(-5px);
+  }
+  100% {
+    transform: translateX(0);
+  }
 }

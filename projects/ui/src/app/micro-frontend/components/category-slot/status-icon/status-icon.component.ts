@@ -1,3 +1,4 @@
+import { NgIf } from '@angular/common'
 import { Component, Input, ChangeDetectionStrategy } from '@angular/core'
 import { ServiceStatus } from '@enums'
 import {
@@ -6,7 +7,6 @@ import {
   InlineHelpDirective,
   ObjectStatusComponent,
 } from '@fundamental-ngx/core'
-import { NgIf } from '@angular/common'
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,

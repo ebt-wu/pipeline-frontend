@@ -1,6 +1,8 @@
 import { CommonModule } from '@angular/common'
 import { ChangeDetectionStrategy, Component, Input, OnDestroy, OnInit, signal } from '@angular/core'
 import { RouterModule } from '@angular/router'
+import { KindCategory, KindExtensionName, KindName } from '@constants'
+import { AuthorizationModule } from '@dxp/ngx-core/authorization'
 import { DxpLuigiContextService, LuigiClient, LuigiDialogUtil } from '@dxp/ngx-core/luigi'
 import { Categories, Kinds, ServiceStatus, Stages, StepKey } from '@enums'
 import {
@@ -12,21 +14,6 @@ import {
   MessageBoxService,
   MessageToastService,
 } from '@fundamental-ngx/core'
-import { DeletionPolicy } from '@generated/graphql'
-import { debounceTime, firstValueFrom, Observable, Subscription, tap } from 'rxjs'
-import { KindCategory, KindExtensionName, KindName } from '@constants'
-import { Pipeline } from '@types'
-import { DeleteBuildModalComponent } from '../modals/delete-build-modal/delete-build-modal.component'
-import { DismissibleMessageComponent } from '../../components/dismissible-message/dismissible-message.component'
-import { ErrorMessageComponent } from '../../components/error-message/error-message.component'
-import { APIService } from '../../services/api.service'
-import { DebugModeService } from '../../services/debug-mode.service'
-import { ExtensionService } from '../../services/extension.service'
-import { ExtensionClass } from '../../services/extension.types'
-import { FeatureFlagService } from '../../services/feature-flag.service'
-import { GithubMetadata } from '../../services/github.service'
-import { AuthorizationModule } from '@dxp/ngx-core/authorization'
-import { ResourceStagePipe } from '../../pipes/resource-stage.pipe'
 import {
   DynamicPageComponent,
   DynamicPageContentComponent,
@@ -34,17 +21,30 @@ import {
   DynamicPageHeaderComponent,
   DynamicPageTitleComponent,
 } from '@fundamental-ngx/platform'
-import { PolicyService } from '../../services/policy.service'
-import { PipelineService } from '../../services/pipeline.service'
+import { DeletionPolicy } from '@generated/graphql'
+import { Pipeline } from '@types'
+import { debounceTime, firstValueFrom, Observable, Subscription, tap } from 'rxjs'
 import { map } from 'rxjs/operators'
-import { CategorySlotComponent } from '../../components/category-slot/category-slot.component'
-import { ValidateCodeSectionComponent } from '../../components/validate-code-section/validate-code-section.component'
-import { GitHubIssueLinkService } from '../../services/github-issue-link.service'
-import { ServiceDetailsSkeletonComponent } from '../../components/service-details-skeleton/service-details-skeleton.component'
-import { CategorySlotConfigService } from '../../services/category-slot-config.service'
 import { AutomateWorkflowsComponent } from '../../components/automate-workflows/automate-workflows.component'
+import { CategorySlotComponent } from '../../components/category-slot/category-slot.component'
+import { DismissibleMessageComponent } from '../../components/dismissible-message/dismissible-message.component'
+import { ErrorMessageComponent } from '../../components/error-message/error-message.component'
+import { ServiceDetailsSkeletonComponent } from '../../components/service-details-skeleton/service-details-skeleton.component'
+import { ValidateCodeSectionComponent } from '../../components/validate-code-section/validate-code-section.component'
+import { ResourceStagePipe } from '../../pipes/resource-stage.pipe'
+import { APIService } from '../../services/api.service'
+import { CategorySlotConfigService } from '../../services/category-slot-config.service'
+import { DebugModeService } from '../../services/debug-mode.service'
+import { ExtensionService } from '../../services/extension.service'
+import { ExtensionClass } from '../../services/extension.types'
+import { FeatureFlagService } from '../../services/feature-flag.service'
+import { GitHubIssueLinkService } from '../../services/github-issue-link.service'
+import { GithubMetadata } from '../../services/github.service'
+import { PipelineService } from '../../services/pipeline.service'
+import { PolicyService } from '../../services/policy.service'
+import { DeleteBuildModalComponent } from '../modals/delete-build-modal/delete-build-modal.component'
 
-type Error = {
+interface Error {
   title: string
   message: string
   resourceName: string
@@ -177,13 +177,13 @@ export class PipelineComponent implements OnInit, OnDestroy {
 
     this.pipelineSubscription = this.pipeline$
       .pipe(
-        debounceTime(100), // eslint-disable-next-line  @typescript-eslint/no-misused-promises
+        debounceTime(100),
         tap(async (pipeline) => {
           await this.getPipelineURL(pipeline)
         }),
       )
       .subscribe((pipeline: Pipeline) => {
-        const errorMap: Map<string, Error> = new Map()
+        const errorMap = new Map<string, Error>()
         const errorKeyPrefix = 'pipeline_subscription'
 
         this.isBuildPipelineSetupAndCreated.set(false)
@@ -200,7 +200,7 @@ export class PipelineComponent implements OnInit, OnDestroy {
         ) {
           let message = ''
           // only print automaticd error number if it is present
-          if (!!pipeline.githubActionsDetails.enablementRef.automaticdErrorNumber) {
+          if (pipeline.githubActionsDetails.enablementRef.automaticdErrorNumber) {
             message += pipeline.githubActionsDetails.enablementRef.automaticdErrorNumber
           }
           message += pipeline.githubActionsDetails.enablementRef.error
@@ -428,7 +428,7 @@ export class PipelineComponent implements OnInit, OnDestroy {
     const componentId = (await this.luigiService.getContextAsync()).componentId
 
     const orchestratorKind = pipeline.resourceRefs.find((ref) =>
-      ([Kinds.GITHUB_ACTIONS_PIPELINE, Kinds.JENKINS_PIPELINE] as Array<Kinds | StepKey>).includes(ref.kind),
+      ([Kinds.GITHUB_ACTIONS_PIPELINE, Kinds.JENKINS_PIPELINE] as (Kinds | StepKey)[]).includes(ref.kind),
     )?.kind
 
     const mb = this.messageBoxService.open(DeleteBuildModalComponent, {

@@ -30,7 +30,6 @@ Object.defineProperty(window, 'crypto', {
   value: { getRandomValues: () => 1 },
 })
 
-/* eslint-disable */
 // browserMocks.js
 const localStorageMock = (() => {
   let store = {}

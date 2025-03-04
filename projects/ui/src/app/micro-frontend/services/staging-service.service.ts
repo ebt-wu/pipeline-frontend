@@ -1,9 +1,9 @@
+import { Injectable } from '@angular/core'
+import { DxpLuigiContextService } from '@dxp/ngx-core/luigi'
+import { GetStagingServiceCredentialQuery, GetStagingServiceCredentialQueryVariables } from '@generated/graphql'
 import { combineLatest, first, map, mergeMap } from 'rxjs'
 import { BaseAPIService } from './base.service'
-import { DxpLuigiContextService } from '@dxp/ngx-core/luigi'
-import { Injectable } from '@angular/core'
 import { GET_STAGING_SERVICE_CREDENTIAL } from './queries'
-import { GetStagingServiceCredentialQuery, GetStagingServiceCredentialQueryVariables } from '@generated/graphql'
 
 @Injectable({ providedIn: 'root' })
 export class StagingServiceService {

@@ -1,4 +1,6 @@
 /* Completely hide form generator item, requires ViewEncapsulation.None */
-fdp-form-generator .fd-container.fd-form-layout-grid-container .fd-row.fd-form-item:has(app-fdp-form-generator-validator) {
-    display: none;
+fdp-form-generator
+  .fd-container.fd-form-layout-grid-container
+  .fd-row.fd-form-item:has(app-fdp-form-generator-validator) {
+  display: none;
 }

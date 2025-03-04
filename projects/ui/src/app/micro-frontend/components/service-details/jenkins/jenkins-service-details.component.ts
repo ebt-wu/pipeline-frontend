@@ -1,8 +1,8 @@
 import { CommonModule } from '@angular/common'
 import { Component, Input, OnInit, signal, ChangeDetectionStrategy } from '@angular/core'
+import { AuthorizationModule } from '@dxp/ngx-core/authorization'
 import { BusyIndicatorModule, FundamentalNgxCoreModule, InlineHelpDirective } from '@fundamental-ngx/core'
 import { GetJenkinsPipelineQuery } from '@generated/graphql'
-import { AuthorizationModule } from '@dxp/ngx-core/authorization'
 import { BaseServiceDetailsComponent } from '../base-service-details.component'
 
 @Component({

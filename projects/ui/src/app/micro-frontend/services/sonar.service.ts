@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core'
-import { BaseAPIService } from './base.service'
 import { DxpLuigiContextService } from '@dxp/ngx-core/luigi'
+import { GetSonarQubeProjectQuery, GetSonarQubeProjectQueryVariables } from '@generated/graphql'
 import { combineLatest } from 'rxjs'
 import { first, map, mergeMap } from 'rxjs/operators'
-import { GetSonarQubeProjectQuery, GetSonarQubeProjectQueryVariables } from '@generated/graphql'
+import { BaseAPIService } from './base.service'
 import { GET_SONARQUBE_PROJECT } from './queries'
 
 @Injectable({ providedIn: 'root' })
