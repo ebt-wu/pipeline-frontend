@@ -4,9 +4,11 @@ on:
   pull_request:
   push:
     branches:
-      - main
-
+      - "main"
 jobs:
   piper:
-    uses: project-piper/piper-pipeline-github/.github/workflows/sap-piper-workflow.yml@main
+    uses: "project-piper/piper-pipeline-github/.github/workflows/sap-piper-workflow.yml@main"
     secrets: inherit
+    permissions:
+      contents: write
+      id-token: write
