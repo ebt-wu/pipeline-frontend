@@ -7,7 +7,6 @@ import { FundamentalNgxCoreModule, SvgConfig } from '@fundamental-ngx/core'
 import { PlatformDynamicPageModule } from '@fundamental-ngx/platform/dynamic-page'
 import { NotManagedServices, PipelineType } from '@generated/graphql'
 import { Pipeline } from '@types'
-import { ApolloModule } from 'apollo-angular'
 import { BehaviorSubject, debounceTime, firstValueFrom, Observable } from 'rxjs'
 import { map } from 'rxjs/operators'
 import { tntSpotSecret } from '../../../../assets/ts-svg/tnt-spot-secret'
@@ -29,7 +28,6 @@ import { PipelineComponent } from '../pipeline/pipeline.component'
     PlatformDynamicPageModule,
     AsyncPipe,
     FundamentalNgxCoreModule,
-    ApolloModule,
     PipelineComponent,
     CommonModule,
   ],

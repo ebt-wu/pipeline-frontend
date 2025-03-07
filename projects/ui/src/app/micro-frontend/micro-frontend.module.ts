@@ -4,6 +4,7 @@ import { NgModule } from '@angular/core'
 import { ContentDensityService, FundamentalNgxCoreModule, ThemingService } from '@fundamental-ngx/core'
 import { FundamentalNgxPlatformModule } from '@fundamental-ngx/platform'
 import { LuigiAngularSupportModule } from '@luigi-project/client-support-angular'
+import { provideNamedApollo } from 'apollo-angular'
 import { CategorySlotComponent } from './components/category-slot/category-slot.component'
 import { DismissibleMessageComponent } from './components/dismissible-message/dismissible-message.component'
 import { ErrorMessageComponent } from './components/error-message/error-message.component'
@@ -27,7 +28,7 @@ import { PipelineComponent } from './pages/pipeline/pipeline.component'
 import { ResourceStagePipe } from './pipes/resource-stage.pipe'
 
 @NgModule({
-  providers: [ContentDensityService, ThemingService, provideHttpClient()],
+  providers: [ContentDensityService, ThemingService, provideHttpClient(), provideNamedApollo(() => undefined)],
   imports: [
     AzureServiceDetailsComponent,
     CategorySlotComponent,
