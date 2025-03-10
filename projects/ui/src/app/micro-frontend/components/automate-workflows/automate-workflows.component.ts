@@ -97,7 +97,7 @@ export class AutomateWorkflowsComponent implements OnInit {
 
   get buttonConfig(): CategoryConfig['buttonConfig'] {
     return {
-      isButtonShown: !this.githubActionsDetails && this.isUserStaffed(),
+      isButtonShown: (!this.githubActionsDetails || !this.githubActionsDetails.enablementRef) && this.isUserStaffed(),
       isButtonDisabled: !this.isUserStaffed(),
       buttonText: 'Enable',
       buttonAction: async (e: Event) => this.openSetupGithubActionsModal(e),
@@ -119,6 +119,6 @@ export class AutomateWorkflowsComponent implements OnInit {
   }
 
   get isGetMoreOutOfActionsBannerShown(): boolean {
-    return !this.isBuildPipelinePresent && !!this.githubActionsDetails
+    return !this.isBuildPipelinePresent && !!(this.githubActionsDetails && this.githubActionsDetails.enablementRef)
   }
 }

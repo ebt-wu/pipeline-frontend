@@ -4,6 +4,12 @@ import { ResourceRef } from '@generated/graphql'
 import { ExtensionService } from '../../services/extension.service'
 import { AutomateWorkflowsComponent } from './automate-workflows.component'
 
+const emptyGhaDetails = {
+  githubInstance: null,
+  githubOrgID: null,
+  githubOrgName: null,
+  enablementRef: null,
+}
 describe('AutomateWorkflowsComponent', () => {
   let component: AutomateWorkflowsComponent
   let fixture: ComponentFixture<AutomateWorkflowsComponent>
@@ -62,7 +68,7 @@ describe('AutomateWorkflowsComponent', () => {
     })
 
     it('should be false when github actions details are not present', () => {
-      component.githubActionsDetails = undefined
+      component.githubActionsDetails = emptyGhaDetails
       fixture.detectChanges()
 
       expect(component.isOpenArrowShown).toBeFalsy()
@@ -95,7 +101,7 @@ describe('AutomateWorkflowsComponent', () => {
     })
 
     it('should not have statusIconConfig when no githubActionsDetails is present', () => {
-      component.githubActionsDetails = undefined
+      component.githubActionsDetails = emptyGhaDetails
       fixture.detectChanges()
       expect(component.statusIconConfig).toBeNull()
     })
@@ -103,13 +109,13 @@ describe('AutomateWorkflowsComponent', () => {
 
   describe('buttonConfig', () => {
     it('isButtonShown should be true for user that is staffed when no gha is setup', () => {
-      component.githubActionsDetails = undefined
+      component.githubActionsDetails = emptyGhaDetails
       component.isUserStaffed.set(true)
       fixture.detectChanges()
       expect(component.buttonConfig.isButtonShown).toBeTruthy()
     })
     it('isButtonShown should be false if user is not staffed', () => {
-      component.githubActionsDetails = undefined
+      component.githubActionsDetails = emptyGhaDetails
       component.isUserStaffed.set(false)
       fixture.detectChanges()
       expect(component.buttonConfig.isButtonShown).toBeFalsy()
@@ -154,7 +160,7 @@ describe('AutomateWorkflowsComponent', () => {
                 error: '',
               } as ResourceRef,
             }
-          : undefined
+          : emptyGhaDetails
 
         component.isBuildPipelinePresent = isBuildPipelineSetup
         fixture.detectChanges()
