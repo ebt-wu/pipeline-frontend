@@ -31,4 +31,14 @@ export class PolicyService {
         Contact a project owner
       </a>`
   }
+
+  async getPiperLibCredentialsMessage(): Promise<string> {
+    return `
+      Please ensure that the library "piper-lib" has valid username/password credentials
+      for github.wdf.sap.corp in your Jenkins settings.
+      <a href="https://github.wdf.sap.corp/pages/ContinuousDelivery/piper-doc/lib/setupLibrary/#set-up" target="_blank" rel="noopener noreferrer">
+      Learn more
+      </a>
+      `
+  }
 }

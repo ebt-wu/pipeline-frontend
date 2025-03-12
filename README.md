@@ -3,6 +3,7 @@
 - **🔨 Infrastructure** [ci-cd-setup-stack](https://github.tools.sap/hyperspace/ci-cd-setup-stack).
 - **🐞 Tickets** go into [hyperspace/yggdrasil/issues](https://github.tools.sap/hyperspace/yggdrasil/issues).
 - **🎒 Backend** is in [pipeline-backend](https://github.tools.sap/hyperspace/pipeline-backend).
+- **📚 Documentation** of [Fundamental-NGX frontend framework](https://sap.github.io/fundamental-ngx/#/core/home).
 
 ## Prequisites
 

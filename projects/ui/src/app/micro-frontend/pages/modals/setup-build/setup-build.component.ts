@@ -135,6 +135,27 @@ export class SetupBuildComponent implements OnInit, OnDestroy {
       },
     },
     {
+      type: 'message-strip',
+      name: 'jenkinsPiperLibCredentialsWarningStrip',
+      message: '',
+      when: async (formValue: SetupBuildFormValue) => {
+        if (formValue.orchestrator !== Orchestrators.JENKINS) {
+          return false
+        }
+        const githubMetadata = await this.githubService.getGithubMetadata()
+        if (githubMetadata.githubInstance === 'https://github.wdf.sap.corp') {
+          return false
+        }
+        return await this.policyService.canUserEditCredentials()
+      },
+      guiOptions: {
+        additionalData: {
+          type: 'information',
+          message: this.policyService.getPiperLibCredentialsMessage,
+        } as FormGeneratorMessageStripAdditionalData,
+      },
+    },
+    {
       type: 'header',
       name: 'jenkinsCredentialHeader',
       message: '',
