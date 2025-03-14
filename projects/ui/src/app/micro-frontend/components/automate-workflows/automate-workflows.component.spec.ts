@@ -36,7 +36,7 @@ describe('AutomateWorkflowsComponent', () => {
     it('should be true when github actions details are present with no error', () => {
       component.githubActionsDetails = {
         githubInstance: 'github.tools.sap',
-        githubOrgID: 192,
+        githubOrgID: '192',
         githubOrgName: 'some-org',
         enablementRef: {
           kind: Kinds.GITHUB_ACTIONS_ENABLEMENT,
@@ -53,7 +53,7 @@ describe('AutomateWorkflowsComponent', () => {
     it('should be false github actions details are present with an error', () => {
       component.githubActionsDetails = {
         githubInstance: 'github.tools.sap',
-        githubOrgID: 192,
+        githubOrgID: '192',
         githubOrgName: 'some-org',
         enablementRef: {
           kind: Kinds.GITHUB_ACTIONS_ENABLEMENT,
@@ -85,7 +85,7 @@ describe('AutomateWorkflowsComponent', () => {
     ])('should use enablementRef status %s when githubActionsDetails is present', (providedStatus) => {
       component.githubActionsDetails = {
         githubInstance: 'github.tools.sap',
-        githubOrgID: 192,
+        githubOrgID: '192',
         githubOrgName: 'some-org',
         enablementRef: {
           kind: Kinds.GITHUB_ACTIONS_ENABLEMENT,
@@ -123,7 +123,7 @@ describe('AutomateWorkflowsComponent', () => {
     it('isButtonShown should be false if gha is setup', () => {
       component.githubActionsDetails = {
         githubInstance: 'github.tools.sap',
-        githubOrgID: 192,
+        githubOrgID: '192',
         githubOrgName: 'some-org',
         enablementRef: {
           kind: Kinds.GITHUB_ACTIONS_ENABLEMENT,
@@ -151,7 +151,7 @@ describe('AutomateWorkflowsComponent', () => {
         component.githubActionsDetails = ghaDetailsPresent
           ? {
               githubInstance: 'github.tools.sap',
-              githubOrgID: 192,
+              githubOrgID: '192',
               githubOrgName: 'some-org',
               enablementRef: {
                 kind: Kinds.GITHUB_ACTIONS_ENABLEMENT,

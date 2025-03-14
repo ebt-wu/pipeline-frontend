@@ -423,13 +423,27 @@ export const TOGGLE_DEBUG_LABEL = gql<ToggleDebugLabelMutation, MutationToggleDe
  */
 
 export const CREATE_GITHUB_ACTIONS_PIPELINE = gql`
-  mutation CreateGithubActionsPipeline($projectId: String!, $componentId: String!) {
-    createGithubActionsPipeline(projectId: $projectId, componentId: $componentId)
+  mutation CreateGithubActionsPipeline(
+    $projectId: String!
+    $componentId: String!
+    $githubInstance: String!
+    $githubOrgName: String!
+  ) {
+    createGithubActionsPipeline(
+      projectId: $projectId
+      componentId: $componentId
+      githubInstance: $githubInstance
+      githubOrgName: $githubOrgName
+    )
   }
 `
 export const CREATE_STANDALONE_GITHUB_ACTIONS_CLAIM = gql`
-  mutation CreateStandaloneGithubActionsClaim($projectId: String!, $componentId: String!) {
-    createStandaloneGithubActionsClaim(projectId: $projectId, componentId: $componentId)
+  mutation CreateStandaloneGithubActionsClaim($projectId: String!, $githubInstance: String!, $githubOrgName: String!) {
+    createStandaloneGithubActionsClaim(
+      projectId: $projectId
+      githubInstance: $githubInstance
+      githubOrgName: $githubOrgName
+    )
   }
 `
 
@@ -440,8 +454,8 @@ export const GET_GITHUB_ACTONS_SOLINAS_VERIFICATION = gql`
 `
 
 export const WATCH_GITHUB_ACTIONS_ENABLEMENT = gql`
-  subscription WatchGithubActionsEnablement($projectId: String!, $componentId: String!) {
-    watchGithubActionsEnablement(projectId: $projectId, componentId: $componentId) {
+  subscription WatchGithubActionsEnablement($githubInstance: String!, $githubOrgName: String!) {
+    watchGithubActionsEnablement(githubInstance: $githubInstance, githubOrgName: $githubOrgName) {
       enablementRef {
         automaticdErrorNumber
         error
@@ -458,8 +472,8 @@ export const WATCH_GITHUB_ACTIONS_ENABLEMENT = gql`
 `
 
 export const DELETE_GITHUB_ACTIONS_PIPELINE = gql`
-  mutation DeleteGithubActionsPipeline($projectId: String!, $componentId: String!, $resourceName: String!) {
-    deleteGithubActionsPipeline(projectId: $projectId, componentId: $componentId, resourceName: $resourceName)
+  mutation DeleteGithubActionsPipeline($projectId: String!, $componentId: String!) {
+    deleteGithubActionsPipeline(projectId: $projectId, componentId: $componentId)
   }
 `
 

@@ -35,10 +35,8 @@ describe('Set Up Github Actions Component', () => {
   describe('onFormSubmitted', () => {
     it('onFormSubmitted should call createGHACStandalone', async () => {
       const createGhActionsMock = jest.fn().mockReturnValue(of('ghac-something-123'))
-      const createGhRepoMock = jest.fn().mockReturnValue(of('ghr-something-123'))
       MockInstance(GithubActionsService, 'createStandaloneGithubActionsClaim', createGhActionsMock)
       MockInstance(GithubActionsService, 'getGithubActionSolinasVerification', jest.fn().mockReturnValue(of(true)))
-      MockInstance(GithubService, 'createGithubRepository', createGhRepoMock)
 
       const fixture = MockRender(GithubActionsComponent)
       const component = fixture.point.componentInstance
@@ -54,7 +52,6 @@ describe('Set Up Github Actions Component', () => {
 
       await component.onFormSubmitted()
 
-      expect(createGhRepoMock).toHaveBeenCalledWith('https://github.tools.sap', 'org-1', 'repo-1', false)
       expect(createGhActionsMock).toHaveBeenCalled()
       expect(luigiCloseCurrentModalMock).toHaveBeenCalled()
     })
@@ -63,11 +60,9 @@ describe('Set Up Github Actions Component', () => {
       const creatGhaWithErrorMock = jest.fn().mockImplementation(() => {
         throw new Error('some error')
       })
-      const createGhRepoMock = jest.fn().mockReturnValue(of('ghr-something-123'))
 
       MockInstance(GithubActionsService, 'createStandaloneGithubActionsClaim', creatGhaWithErrorMock)
       MockInstance(GithubActionsService, 'getGithubActionSolinasVerification', jest.fn().mockReturnValue(of(true)))
-      MockInstance(GithubService, 'createGithubRepository', createGhRepoMock)
 
       const fixture = MockRender(GithubActionsComponent)
       const component = fixture.point.componentInstance
@@ -83,7 +78,6 @@ describe('Set Up Github Actions Component', () => {
 
       await component.onFormSubmitted()
 
-      expect(createGhRepoMock).toHaveBeenCalledWith('https://github.tools.sap', 'org-1', 'repo-1', false)
       expect(creatGhaWithErrorMock).toHaveBeenCalled()
       expect(luigiCloseCurrentModalMock).not.toHaveBeenCalled()
       expect(component.errorMessage()).toEqual('some error')

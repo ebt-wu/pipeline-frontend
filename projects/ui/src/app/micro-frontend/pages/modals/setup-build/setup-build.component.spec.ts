@@ -63,7 +63,7 @@ describe('setup-build-component', () => {
         orchestrator: Orchestrators.GITHUB_ACTIONS_PIPELINE,
       }
       await component.onFormSubmitted(buildFormValue)
-      expect(createGHAPMock).toHaveBeenCalled()
+      expect(createGHAPMock).toHaveBeenCalledWith('test-instance', 'some-org')
     })
   })
 })

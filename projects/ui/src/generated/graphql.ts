@@ -141,7 +141,7 @@ export type GithubActionsDetails = {
   creationTimestamp?: Maybe<Scalars['String']['output']>
   enablementRef?: Maybe<ResourceRef>
   githubInstance: Scalars['String']['output']
-  githubOrgID: Scalars['Int']['output']
+  githubOrgID: Scalars['String']['output']
   githubOrgName: Scalars['String']['output']
 }
 
@@ -276,6 +276,8 @@ export type MutationCreateGitHubAdvancedSecurityArgs = {
 
 export type MutationCreateGithubActionsPipelineArgs = {
   componentId: Scalars['String']['input']
+  githubInstance: Scalars['String']['input']
+  githubOrgName: Scalars['String']['input']
   projectId: Scalars['String']['input']
 }
 
@@ -316,7 +318,8 @@ export type MutationCreateSonarQubeProjectArgs = {
 }
 
 export type MutationCreateStandaloneGithubActionsClaimArgs = {
-  componentId: Scalars['String']['input']
+  githubInstance: Scalars['String']['input']
+  githubOrgName: Scalars['String']['input']
   projectId: Scalars['String']['input']
 }
 
@@ -341,9 +344,7 @@ export type MutationDeleteGitHubAdvancedSecurityArgs = {
 
 export type MutationDeleteGithubActionsPipelineArgs = {
   componentId: Scalars['String']['input']
-  deletionPolicy?: InputMaybe<DeletionPolicy>
   projectId: Scalars['String']['input']
-  resourceName: Scalars['String']['input']
 }
 
 export type MutationDeleteGithubRepositoryArgs = {
@@ -687,8 +688,8 @@ export type Subscription = {
 }
 
 export type SubscriptionWatchGithubActionsEnablementArgs = {
-  componentId: Scalars['String']['input']
-  projectId: Scalars['String']['input']
+  githubInstance: Scalars['String']['input']
+  githubOrgName: Scalars['String']['input']
 }
 
 export type SubscriptionWatchNotManagedServicesArgs = {
@@ -1128,6 +1129,8 @@ export type ToggleDebugLabelMutation = { __typename?: 'Mutation'; toggleDebugLab
 export type CreateGithubActionsPipelineMutationVariables = Exact<{
   projectId: Scalars['String']['input']
   componentId: Scalars['String']['input']
+  githubInstance: Scalars['String']['input']
+  githubOrgName: Scalars['String']['input']
 }>
 
 export type CreateGithubActionsPipelineMutation = {
@@ -1137,7 +1140,8 @@ export type CreateGithubActionsPipelineMutation = {
 
 export type CreateStandaloneGithubActionsClaimMutationVariables = Exact<{
   projectId: Scalars['String']['input']
-  componentId: Scalars['String']['input']
+  githubInstance: Scalars['String']['input']
+  githubOrgName: Scalars['String']['input']
 }>
 
 export type CreateStandaloneGithubActionsClaimMutation = {
@@ -1157,8 +1161,8 @@ export type GetGithubActionsSolinasVerificationQuery = {
 }
 
 export type WatchGithubActionsEnablementSubscriptionVariables = Exact<{
-  projectId: Scalars['String']['input']
-  componentId: Scalars['String']['input']
+  githubInstance: Scalars['String']['input']
+  githubOrgName: Scalars['String']['input']
 }>
 
 export type WatchGithubActionsEnablementSubscription = {
@@ -1166,7 +1170,7 @@ export type WatchGithubActionsEnablementSubscription = {
   watchGithubActionsEnablement?: {
     __typename?: 'GithubActionsDetails'
     githubInstance: string
-    githubOrgID: number
+    githubOrgID: string
     githubOrgName: string
     creationTimestamp?: string | null
     enablementRef?: {
@@ -1183,7 +1187,6 @@ export type WatchGithubActionsEnablementSubscription = {
 export type DeleteGithubActionsPipelineMutationVariables = Exact<{
   projectId: Scalars['String']['input']
   componentId: Scalars['String']['input']
-  resourceName: Scalars['String']['input']
 }>
 
 export type DeleteGithubActionsPipelineMutation = {

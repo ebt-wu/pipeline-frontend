@@ -6,9 +6,10 @@ import {
   GithubActionsDetails,
   WatchGithubActionsEnablementSubscription,
 } from '@generated/graphql'
-import { combineLatest, Observable } from 'rxjs'
-import { first, map, mergeMap, startWith } from 'rxjs/operators'
+import { combineLatest, Observable, startWith } from 'rxjs'
+import { first, map, mergeMap } from 'rxjs/operators'
 import { BaseAPIService } from './base.service'
+import { GithubMetadata, GithubService } from './github.service'
 import {
   CREATE_GITHUB_ACTIONS_PIPELINE,
   CREATE_STANDALONE_GITHUB_ACTIONS_CLAIM,
@@ -22,7 +23,13 @@ export class GithubActionsService {
   constructor(
     private readonly apiService: BaseAPIService,
     private readonly luigiService: DxpLuigiContextService,
-  ) {}
+    private readonly githubService: GithubService,
+  ) {
+    this.githubService.getGithubMetadata().then((metadata) => {
+      this.githubMetadata = metadata
+    })
+  }
+  githubMetadata: GithubMetadata
 
   createStandaloneGithubActionsClaim(): Observable<string> {
     return combineLatest([this.apiService.apollo(), this.luigiService.contextObservable()]).pipe(
@@ -33,7 +40,8 @@ export class GithubActionsService {
             mutation: CREATE_STANDALONE_GITHUB_ACTIONS_CLAIM,
             variables: {
               projectId: ctx.context.projectId,
-              componentId: ctx.context.componentId,
+              githubInstance: this.githubMetadata.githubInstance,
+              githubOrgName: this.githubMetadata.githubOrgName,
             },
           })
           .pipe(map((res) => (res.data ? (res.data as string) : res.errors.map((e) => e.message).join('\n'))))
@@ -41,7 +49,7 @@ export class GithubActionsService {
     )
   }
 
-  createGithubActionsPipeline(): Observable<string> {
+  createGithubActionsPipeline(githubInstance: string, githubOrgName: string): Observable<string> {
     return combineLatest([this.apiService.apollo(), this.luigiService.contextObservable()]).pipe(
       first(),
       mergeMap(([client, ctx]) => {
@@ -51,6 +59,8 @@ export class GithubActionsService {
             variables: {
               projectId: ctx.context.projectId,
               componentId: ctx.context.componentId,
+              githubInstance,
+              githubOrgName,
             },
           })
           .pipe(map((res) => (res.data ? '' : res.errors.map((e) => e.message).join('\n'))))
@@ -61,14 +71,14 @@ export class GithubActionsService {
   watchGithubActionsEnablement(): Observable<GithubActionsDetails> {
     return combineLatest([this.apiService.apollo(), this.luigiService.contextObservable()]).pipe(
       first(),
-      mergeMap(([client, ctx]) => {
+      mergeMap(([client]) => {
         return client
           .subscribe<WatchGithubActionsEnablementSubscription>({
             query: WATCH_GITHUB_ACTIONS_ENABLEMENT,
             fetchPolicy: 'no-cache',
             variables: {
-              projectId: ctx.context.projectId,
-              componentId: ctx.context.componentId,
+              githubInstance: this.githubMetadata.githubInstance,
+              githubOrgName: this.githubMetadata.githubOrgName,
             },
           })
           .pipe(

@@ -102,6 +102,7 @@
     "ng-mocks": "14.13.2",
     "ng-packagr": "18.2.1",
     "ngx-build-plus": "18.0.0",
+    "open": "^10.1.0",
     "openid-client": "6.3.3",
     "prettier": "3.5.3",
     "ts-node": "10.9.2",

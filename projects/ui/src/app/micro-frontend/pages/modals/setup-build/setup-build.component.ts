@@ -475,11 +475,12 @@ export class SetupBuildComponent implements OnInit, OnDestroy {
       )
 
       if (buildFormValue.orchestrator === Orchestrators.GITHUB_ACTIONS_PIPELINE) {
-        // TODO remove this when the ORG ID dependency is removed from the github actions resource
-        // wait 1.5 seconds to give the github resource time to get an orgID in its status
-        await new Promise((resolve) => setTimeout(resolve, 1500))
-
-        await firstValueFrom(this.githubActionsService.createGithubActionsPipeline())
+        await firstValueFrom(
+          this.githubActionsService.createGithubActionsPipeline(
+            githubMetadata.githubInstance,
+            githubMetadata.githubOrgName,
+          ),
+        )
       } else if (buildFormValue.orchestrator === Orchestrators.JENKINS) {
         let jenkinsCredentialPath: string
         // Jenkins credential

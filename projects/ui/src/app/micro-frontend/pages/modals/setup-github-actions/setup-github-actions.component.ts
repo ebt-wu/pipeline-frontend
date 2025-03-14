@@ -104,17 +104,6 @@ export class GithubActionsComponent implements OnInit {
     this.loading.set(true)
 
     try {
-      // TODO remove this when the ORG ID dependency is removed from the github actions resource
-      await firstValueFrom(
-        this.githubService.createGithubRepository(
-          new URL(this.githubMetadata.githubRepoUrl).origin,
-          this.githubMetadata.githubOrgName,
-          this.githubMetadata.githubRepoName,
-          false,
-        ),
-      )
-      // sleep for 1.5 seconds to give the github resource time to get an orgID in its status
-      await new Promise((resolve) => setTimeout(resolve, 1500))
       await firstValueFrom(this.githubActionsService.createStandaloneGithubActionsClaim())
       this.luigiClient.uxManager().closeCurrentModal()
     } catch (error) {
