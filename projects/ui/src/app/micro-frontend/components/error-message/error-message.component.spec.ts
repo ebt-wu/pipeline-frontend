@@ -75,4 +75,14 @@ describe('ErrorMessageComponent', () => {
       showTicketButton: false,
     })
   })
+
+  it('should have a link for STAGING_SERVICE-9', () => {
+    const errorCode = 'STAGING_SERVICE-9'
+    const fixture = MockRender(ErrorMessageComponent, { message: `${errorCode}: Error message` })
+    const component = fixture.point.componentInstance
+    component.ngOnInit()
+    expect(component.troubleshootContext()).toEqual({
+      docUrl: 'https://sap.stackenterprise.co/articles/69311',
+    })
+  })
 })
