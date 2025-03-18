@@ -37,7 +37,6 @@ import { CategorySlotConfigService } from '../../services/category-slot-config.s
 import { DebugModeService } from '../../services/debug-mode.service'
 import { ExtensionService } from '../../services/extension.service'
 import { ExtensionClass } from '../../services/extension.types'
-import { FeatureFlagService } from '../../services/feature-flag.service'
 import { GitHubIssueLinkService } from '../../services/github-issue-link.service'
 import { GithubMetadata } from '../../services/github.service'
 import { PipelineService } from '../../services/pipeline.service'
@@ -101,10 +100,6 @@ export class PipelineComponent implements OnInit, OnDestroy {
   errors = signal<Map<string, Error>>(new Map())
   extensionClasses = signal<ExtensionClass[]>([])
 
-  // Feature flags
-  showGithubActions = signal(false)
-  showOSC = signal(false)
-
   canUserEditCredentials = false
 
   isTransferredTemplatePipeline = signal(false)
@@ -134,7 +129,6 @@ export class PipelineComponent implements OnInit, OnDestroy {
     private readonly extensionService: ExtensionService,
     private readonly messageBoxService: MessageBoxService,
     private readonly luigiDialogUtil: LuigiDialogUtil,
-    private readonly featureFlagService: FeatureFlagService,
     readonly debugModeService: DebugModeService,
     private readonly githubIssueLinkService: GitHubIssueLinkService,
     private readonly policyService: PolicyService,
@@ -153,10 +147,6 @@ export class PipelineComponent implements OnInit, OnDestroy {
     this.projectId = context.projectId
 
     this.canUserEditCredentials = await this.policyService.canUserEditCredentials()
-
-    // Only show GHA and GHAS if their feature flags are toggled on
-    this.showGithubActions.set(await this.featureFlagService.isGithubActionsEnabled())
-    this.showOSC.set(await this.featureFlagService.isOscEnabled())
 
     try {
       await Promise.all([this.getExtensionClasses(), this.checkSugarAppInstallation()])

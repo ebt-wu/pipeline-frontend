@@ -4,7 +4,6 @@ import { BuildTool } from '@generated/graphql'
 import { MockBuilder, MockInstance, MockRender } from 'ng-mocks'
 import { of } from 'rxjs'
 import { createPipelineForTests } from '../../../../../../test-utils'
-import { FeatureFlagService } from '../../../services/feature-flag.service'
 import { GithubActionsService } from '../../../services/github-actions.service'
 import { GithubService } from '../../../services/github.service'
 import { PipelineService } from '../../../services/pipeline.service'
@@ -35,9 +34,6 @@ describe('setup-build-component', () => {
           githubOrgName: 'some-org',
         }),
         createGithubRepository: jest.fn().mockReturnValue(of('some-gh-repo-resource')),
-      })
-      .mock(FeatureFlagService, {
-        isGithubActionsEnabled: jest.fn().mockResolvedValue(true),
       })
       .mock(PipelineService, {
         watchPipeline: jest.fn().mockReturnValue(of(createPipelineForTests())),

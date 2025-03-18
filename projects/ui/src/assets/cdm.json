@@ -24,9 +24,6 @@
               },
               "context": {
                 "featureFlags": {
-                  "GITHUB_ACTIONS_ENABLED": true,
-                  "GHAS_ENABLED": true,
-                  "OSC_ENABLED": true,
                   "CX_ONE_INSTALLATION_ENABLED": true
                 }
               },

@@ -22,7 +22,6 @@ import {
   PlatformFormGeneratorCustomMessageStripComponent,
 } from '../../../components/form-generator/form-generator-message-strip/form-generator-message-strip.component'
 import { PlatformFormGeneratorCustomValidatorComponent } from '../../../components/form-generator/form-generator-validator/form-generator-validator.component'
-import { FeatureFlagService } from '../../../services/feature-flag.service'
 import { GithubActionsFormService } from '../../../services/forms/github-actions-form.service'
 import {
   GithubCredentialFormService,
@@ -77,7 +76,6 @@ export class SetupBuildComponent implements OnInit, OnDestroy {
     private readonly jenkinsService: JenkinsService,
     private readonly pipelineService: PipelineService,
     private readonly piperService: PiperService,
-    private readonly featureFlagService: FeatureFlagService,
     private readonly policyService: PolicyService,
     private readonly githubCredentialFormService: GithubCredentialFormService,
     private readonly githubActionsFormService: GithubActionsFormService,
@@ -91,7 +89,7 @@ export class SetupBuildComponent implements OnInit, OnDestroy {
 
   watch$: Observable<Pipeline>
 
-  defaultOrchestrator = Orchestrators.JENKINS
+  defaultOrchestrator = Orchestrators.GITHUB_ACTIONS_PIPELINE
 
   @ViewChild(FormGeneratorComponent) formGenerator: FormGeneratorComponent
 
@@ -362,15 +360,7 @@ export class SetupBuildComponent implements OnInit, OnDestroy {
       name: 'orchestrator',
       message: '',
       choices: async () => {
-        const orchestrators: Orchestrators[] = []
-
-        if (await this.featureFlagService.isGithubActionsEnabled()) {
-          orchestrators.push(Orchestrators.GITHUB_ACTIONS_PIPELINE)
-        }
-
-        orchestrators.push(Orchestrators.JENKINS)
-
-        return orchestrators
+        return [Orchestrators.GITHUB_ACTIONS_PIPELINE, Orchestrators.JENKINS]
       },
       default: () => {
         return this.defaultOrchestrator
@@ -400,11 +390,6 @@ export class SetupBuildComponent implements OnInit, OnDestroy {
         this.defaultOrchestrator = params.orchestrator
       }
     })
-
-    const isGithubActionsEnabled = await this.featureFlagService.isGithubActionsEnabled()
-    if (isGithubActionsEnabled) {
-      this.defaultOrchestrator = Orchestrators.GITHUB_ACTIONS_PIPELINE
-    }
 
     const jenkinsGithubCredentialFormItems = this.githubCredentialFormService.buildFormItems<
       SetupBuildFormValue,

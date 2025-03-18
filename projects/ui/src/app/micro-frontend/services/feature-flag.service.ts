@@ -3,9 +3,6 @@ import { DxpLuigiContextService } from '@dxp/ngx-core/luigi'
 
 type FeatureFlags = Record<FlagKeys, boolean | string[]>
 export const Flags = {
-  GITHUB_ACTIONS_ENABLED: 'GITHUB_ACTIONS_ENABLED',
-  GHAS_ENABLED: 'GHAS_ENABLED',
-  OSC_ENABLED: 'OSC_ENABLED',
   CX_ONE_INSTALLATION_ENABLED: 'CX_ONE_INSTALLATION_ENABLED',
 } as const
 
@@ -16,16 +13,6 @@ export type FlagKeys = (typeof Flags)[keyof typeof Flags]
 @Injectable({ providedIn: 'root' })
 export class FeatureFlagService {
   constructor(private readonly luigiService: DxpLuigiContextService) {}
-
-  async isGithubActionsEnabled() {
-    const context = await this.luigiService.getContextAsync()
-    return (await this.getFlagValue(Flags.GITHUB_ACTIONS_ENABLED, context.projectId)) || this.isTestTenant()
-  }
-
-  async isOscEnabled() {
-    const context = await this.luigiService.getContextAsync()
-    return (await this.getFlagValue(Flags.OSC_ENABLED, context.projectId)) || this.isTestTenant()
-  }
 
   async isCxOneInstallationEnabled() {
     const context = await this.luigiService.getContextAsync()

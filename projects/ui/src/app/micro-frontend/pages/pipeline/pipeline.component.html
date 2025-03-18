@@ -277,7 +277,6 @@
                 </fd-card>
               </div>
               <app-automate-workflows
-                *ngIf="showGithubActions()"
                 [isServiceDetailOpen]="localLayout !== 'OneColumnStartFullScreen'"
                 [githubActionsDetails]="pipeline.githubActionsDetails"
                 [githubActionsExtensionData]="getExtensionClass(kinds.GITHUB_ACTIONS_ENABLEMENT)"
