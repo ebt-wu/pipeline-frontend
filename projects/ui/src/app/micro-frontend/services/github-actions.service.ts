@@ -9,7 +9,7 @@ import {
 import { combineLatest, Observable, startWith } from 'rxjs'
 import { first, map, mergeMap } from 'rxjs/operators'
 import { BaseAPIService } from './base.service'
-import { GithubMetadata, GithubService } from './github.service'
+import { GithubService } from './github.service'
 import {
   CREATE_GITHUB_ACTIONS_PIPELINE,
   CREATE_STANDALONE_GITHUB_ACTIONS_CLAIM,
@@ -24,24 +24,23 @@ export class GithubActionsService {
     private readonly apiService: BaseAPIService,
     private readonly luigiService: DxpLuigiContextService,
     private readonly githubService: GithubService,
-  ) {
-    this.githubService.getGithubMetadata().then((metadata) => {
-      this.githubMetadata = metadata
-    })
-  }
-  githubMetadata: GithubMetadata
+  ) {}
 
   createStandaloneGithubActionsClaim(): Observable<string> {
-    return combineLatest([this.apiService.apollo(), this.luigiService.contextObservable()]).pipe(
+    return combineLatest([
+      this.apiService.apollo(),
+      this.luigiService.contextObservable(),
+      this.githubService.getGithubMetadata(),
+    ]).pipe(
       first(),
-      mergeMap(([client, ctx]) => {
+      mergeMap(([client, ctx, githubMetadata]) => {
         return client
           .mutate({
             mutation: CREATE_STANDALONE_GITHUB_ACTIONS_CLAIM,
             variables: {
               projectId: ctx.context.projectId,
-              githubInstance: this.githubMetadata.githubInstance,
-              githubOrgName: this.githubMetadata.githubOrgName,
+              githubInstance: githubMetadata.githubInstance,
+              githubOrgName: githubMetadata.githubOrgName,
             },
           })
           .pipe(map((res) => (res.data ? (res.data as string) : res.errors.map((e) => e.message).join('\n'))))
@@ -69,16 +68,16 @@ export class GithubActionsService {
   }
 
   watchGithubActionsEnablement(): Observable<GithubActionsDetails> {
-    return combineLatest([this.apiService.apollo(), this.luigiService.contextObservable()]).pipe(
+    return combineLatest([this.apiService.apollo(), this.githubService.getGithubMetadata()]).pipe(
       first(),
-      mergeMap(([client]) => {
+      mergeMap(([client, githubMetadata]) => {
         return client
           .subscribe<WatchGithubActionsEnablementSubscription>({
             query: WATCH_GITHUB_ACTIONS_ENABLEMENT,
             fetchPolicy: 'no-cache',
             variables: {
-              githubInstance: this.githubMetadata.githubInstance,
-              githubOrgName: this.githubMetadata.githubOrgName,
+              githubInstance: githubMetadata.githubInstance,
+              githubOrgName: githubMetadata.githubOrgName,
             },
           })
           .pipe(
@@ -116,6 +115,7 @@ export class GithubActionsService {
       }),
     )
   }
+
   deleteGithubActionsPipeline(resourceName: string): Observable<string> {
     return combineLatest([this.apiService.apollo(), this.luigiService.contextObservable()]).pipe(
       first(),
