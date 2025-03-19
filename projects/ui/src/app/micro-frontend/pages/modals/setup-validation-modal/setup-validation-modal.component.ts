@@ -296,7 +296,7 @@ export class SetupValidationModalComponent implements OnInit, OnDestroy {
 							href="https://github.wdf.sap.corp/pages/Security-Testing/doc/security%20testing/tools/#sast-tools"
 							target="_blank"
 							rel="noopener noreferred">Open Recommendations</a><br/><br/>
-						
+
 						Need more service info?<br/>
 						<a
 							href="${GHAS_DOCUMENTATION_LINK}"
@@ -411,7 +411,7 @@ export class SetupValidationModalComponent implements OnInit, OnDestroy {
             return `
 							<ol>
 								<li>
-									Install the CxOne extension from the <a href="${context.frameBaseUrl}/projects/${context.projectId}/marketplace" target="_blank" rel="noopener noreferrer">catalog</a>
+									Install the CxOne extension from the <a href="${context.frameBaseUrl}/projects/${context.projectId}/catalog" target="_blank" rel="noopener noreferrer">catalog</a>
 								</li>
 								<li>Create a CxOne account</li>
 							</ol>

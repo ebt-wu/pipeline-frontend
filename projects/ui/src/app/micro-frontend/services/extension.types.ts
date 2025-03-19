@@ -1,6 +1,6 @@
 export enum Extensions {
   GITHUB_WDF = 'git-hub-github-wdf-sap-corp',
-  STAGING_SERVICE_EXTERNAL = 'staging-service-external',
+  STAGING_SERVICE_EXTERNAL = 'staging-service-internet-facing',
   STAGING_SERVICE_INTERNAL = 'staging-service',
   CUMULUS = 'cumulus',
   BLACKDUCK_BINARY_ANALYSIS = 'blackduck-binary-analysis',
