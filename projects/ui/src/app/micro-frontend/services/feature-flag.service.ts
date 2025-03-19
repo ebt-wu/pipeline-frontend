@@ -4,6 +4,7 @@ import { DxpLuigiContextService } from '@dxp/ngx-core/luigi'
 type FeatureFlags = Record<FlagKeys, boolean | string[]>
 export const Flags = {
   CX_ONE_INSTALLATION_ENABLED: 'CX_ONE_INSTALLATION_ENABLED',
+  GHAS_ON_ACTIONS_ENABLED: 'GHAS_ON_ACTIONS_ENABLED',
 } as const
 
 const TEST_TENANT_ID = '01ezesr3cgghmhgpbny04hv8qn'
@@ -17,6 +18,11 @@ export class FeatureFlagService {
   async isCxOneInstallationEnabled() {
     const context = await this.luigiService.getContextAsync()
     return (await this.getFlagValue(Flags.CX_ONE_INSTALLATION_ENABLED, context.projectId)) || this.isTestTenant()
+  }
+
+  async isGhasOnActionsEnabled() {
+    const context = await this.luigiService.getContextAsync()
+    return (await this.getFlagValue(Flags.GHAS_ON_ACTIONS_ENABLED, context.projectId)) || this.isTestTenant()
   }
 
   isTestTenant() {

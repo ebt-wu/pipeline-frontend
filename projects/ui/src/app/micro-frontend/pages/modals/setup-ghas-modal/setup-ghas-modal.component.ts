@@ -19,6 +19,7 @@ import { ErrorMessageComponent } from '../../../components/error-message/error-m
 import { PlatformFormGeneratorCustomInfoBoxComponent } from '../../../components/form-generator/form-generator-info-box/form-generator-info-box.component'
 import { PlatformFormGeneratorCustomMessageStripComponent } from '../../../components/form-generator/form-generator-message-strip/form-generator-message-strip.component'
 import { PlatformFormGeneratorCustomValidatorComponent } from '../../../components/form-generator/form-generator-validator/form-generator-validator.component'
+import { FeatureFlagService } from '../../../services/feature-flag.service'
 import { GithubActionsFormService } from '../../../services/forms/github-actions-form.service'
 import { GithubActionsService } from '../../../services/github-actions.service'
 import { GithubAdvancedSecurityService } from '../../../services/github-advanced-security.service'
@@ -90,6 +91,7 @@ export class SetupGhasModalComponent implements OnInit, OnDestroy {
     private readonly _formGeneratorService: FormGeneratorService,
     private readonly githubActionsService: GithubActionsService,
     private readonly githubActionsFormService: GithubActionsFormService,
+    private readonly featureFlagService: FeatureFlagService,
   ) {
     this._formGeneratorService.addComponent(PlatformFormGeneratorCustomInfoBoxComponent, ['info'])
     this._formGeneratorService.addComponent(PlatformFormGeneratorCustomMessageStripComponent, ['message-strip'])
@@ -162,6 +164,8 @@ export class SetupGhasModalComponent implements OnInit, OnDestroy {
   }
 
   async submit() {
+    const ghasOnActionsEnabled = await this.featureFlagService.isGhasOnActionsEnabled()
+
     let assumedBuildTool: BuildTool
     const metadata = await this.getMetadata()
     this.loading.set(true)
@@ -185,14 +189,24 @@ export class SetupGhasModalComponent implements OnInit, OnDestroy {
     const labels = (await firstValueFrom(this.watch$)).labels
 
     try {
-      await firstValueFrom(
-        this.githubAdvancedSecurityService.createGithubAdvancedSecurity({
-          codeScanJobOrchestrator: metadata.codeScanJobOrchestrator,
-          buildTool: assumedBuildTool,
-          labels: labels,
-        }),
-      )
-
+      if (ghasOnActionsEnabled) {
+        await firstValueFrom(
+          this.githubAdvancedSecurityService.createGithubAdvancedSecurity({
+            codeScanJobOrchestrator: Orchestrators.GitHubActions,
+            buildTool: assumedBuildTool,
+            language: this.languageSelection.value.id,
+            labels: labels,
+          }),
+        )
+      } else {
+        await firstValueFrom(
+          this.githubAdvancedSecurityService.createGithubAdvancedSecurity({
+            codeScanJobOrchestrator: metadata.codeScanJobOrchestrator,
+            buildTool: assumedBuildTool,
+            labels: labels,
+          }),
+        )
+      }
       this.luigiClient.uxManager().closeCurrentModal()
     } catch (error) {
       const errorMessage = (error as Error).message

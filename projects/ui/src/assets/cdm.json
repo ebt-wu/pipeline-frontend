@@ -24,7 +24,8 @@
               },
               "context": {
                 "featureFlags": {
-                  "CX_ONE_INSTALLATION_ENABLED": true
+                  "CX_ONE_INSTALLATION_ENABLED": true,
+                  "GHAS_ON_ACTIONS_ENABLED": true
                 }
               },
               "children": [

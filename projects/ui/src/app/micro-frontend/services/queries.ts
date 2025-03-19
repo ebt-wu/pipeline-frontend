@@ -487,12 +487,18 @@ export const CREATE_GITHUB_ADVANCED_SECURITY = gql`
     $componentId: String!
     $codeScanJobOrchestrator: Orchestrators
     $buildTool: BuildTool
+    $language: Languages
     $labels: [LabelInput!]
   ) {
     createGitHubAdvancedSecurity(
       projectId: $projectId
       componentId: $componentId
-      params: { codeScanJobOrchestrator: $codeScanJobOrchestrator, buildTool: $buildTool, labels: $labels }
+      params: {
+        codeScanJobOrchestrator: $codeScanJobOrchestrator
+        buildTool: $buildTool
+        language: $language
+        labels: $labels
+      }
     )
   }
 `

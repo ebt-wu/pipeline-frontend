@@ -1199,6 +1199,7 @@ export type CreateGitHubAdvancedSecurityMutationVariables = Exact<{
   componentId: Scalars['String']['input']
   codeScanJobOrchestrator?: InputMaybe<Orchestrators>
   buildTool?: InputMaybe<BuildTool>
+  language?: InputMaybe<Languages>
   labels?: InputMaybe<Array<LabelInput> | LabelInput>
 }>
 

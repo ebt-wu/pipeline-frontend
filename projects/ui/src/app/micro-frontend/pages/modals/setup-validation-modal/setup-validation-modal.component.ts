@@ -870,13 +870,25 @@ export class SetupValidationModalComponent implements OnInit, OnDestroy {
           await firstValueFrom(this.cxOneService.createCxOneProject(formValue.cxOnePreset))
         }
         if (validationTool === ValidationTools.GHAS) {
-          await firstValueFrom(
-            this.githubAdvancedSecurityService.createGithubAdvancedSecurity({
-              codeScanJobOrchestrator: orchestrator,
-              buildTool: getBuidTool(formValue.language),
-              labels: labels,
-            }),
-          )
+          const ghasOnActionsEnabled = await this.featureFlagService.isGhasOnActionsEnabled()
+          if (ghasOnActionsEnabled) {
+            await firstValueFrom(
+              this.githubAdvancedSecurityService.createGithubAdvancedSecurity({
+                codeScanJobOrchestrator: Orchestrators.GitHubActions,
+                buildTool: getBuidTool(formValue.language),
+                language: formValue.language,
+                labels: labels,
+              }),
+            )
+          } else {
+            await firstValueFrom(
+              this.githubAdvancedSecurityService.createGithubAdvancedSecurity({
+                codeScanJobOrchestrator: orchestrator,
+                buildTool: getBuidTool(formValue.language),
+                labels: labels,
+              }),
+            )
+          }
         }
       }
 
