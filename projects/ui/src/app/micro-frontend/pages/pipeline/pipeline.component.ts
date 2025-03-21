@@ -188,16 +188,10 @@ export class PipelineComponent implements OnInit, OnDestroy {
           pipeline.githubActionsDetails.enablementRef &&
           pipeline.githubActionsDetails.enablementRef.error
         ) {
-          let message = ''
-          // only print automaticd error number if it is present
-          if (pipeline.githubActionsDetails.enablementRef.automaticdErrorNumber) {
-            message += pipeline.githubActionsDetails.enablementRef.automaticdErrorNumber
-          }
-          message += pipeline.githubActionsDetails.enablementRef.error
           const error = {
             title: 'Configuration of GitHub Actions failed',
             resourceName: pipeline.githubActionsDetails.enablementRef.name,
-            message: `<strong>Error: </strong> ${message}`,
+            message: `<strong>Resource: </strong>${pipeline.githubActionsDetails.enablementRef.name} <br><strong>Status:</strong> ${pipeline.githubActionsDetails.enablementRef.status}<br><strong>Error: </strong> ${pipeline.githubActionsDetails.enablementRef.automaticdErrorNumber ? pipeline.githubActionsDetails.enablementRef.automaticdErrorNumber + ': ' : ''} ${pipeline.githubActionsDetails.enablementRef.error}`,
           }
           errorMap.set(`${errorKeyPrefix}${error.message}`, error)
         }

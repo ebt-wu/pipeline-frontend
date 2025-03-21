@@ -70,7 +70,7 @@ export class ErrorMessageComponent implements OnInit {
 
   ngOnInit() {
     // check messages for error codes to link to troubleshooting instructions instead of offering the option to create a ticket
-    const errorKey = Object.keys(knownErrorCodeMappings).find((s) => this.message.includes(`${s}`))
+    const errorKey = Object.keys(knownErrorCodeMappings).find((s) => this.message.includes(`${s}:`))
     if (this.message && errorKey) {
       this.troubleshootContext.set(knownErrorCodeMappings[errorKey])
     }

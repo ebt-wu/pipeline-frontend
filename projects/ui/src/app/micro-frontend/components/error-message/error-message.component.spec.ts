@@ -85,4 +85,12 @@ describe('ErrorMessageComponent', () => {
       docUrl: 'https://sap.stackenterprise.co/articles/69311',
     })
   })
+
+  it('should not have a link for GITHUB-ACTION-21 (substrings shouldnt be matched)', () => {
+    const errorCode = 'GITHUB-ACTION-21' // GITHUB-ACTION-2 has a link but GITHUB-ACTION-21 does not
+    const fixture = MockRender(ErrorMessageComponent, { message: `${errorCode}: Error message` })
+    const component = fixture.point.componentInstance
+    component.ngOnInit()
+    expect(component.troubleshootContext()).not.toBeDefined()
+  })
 })
