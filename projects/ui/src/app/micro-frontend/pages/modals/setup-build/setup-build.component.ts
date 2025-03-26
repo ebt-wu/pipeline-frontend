@@ -301,6 +301,7 @@ export class SetupBuildComponent implements OnInit, OnDestroy {
         let languages: { Name: string; Bytes: number }[]
         let mostUsedLanguage: ProgrammingLanguage
         try {
+          // Languages returned from GitHub are based on the Linguist library, full list see: https://github.com/github-linguist/linguist/tree/main/samples
           languages = (await firstValueFrom(this.githubService.getComponentExtensions())).languages?.Languages
           mostUsedLanguage = this.githubService.getMostUsedLanguage(languages, ProgrammingLanguages)
         } catch (error) {

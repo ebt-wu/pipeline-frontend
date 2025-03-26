@@ -202,6 +202,11 @@ export class GithubService {
         mostUsedLanguage = language
       }
     }
+
+    if (mostUsedLanguage.Name === 'JavaScript' || mostUsedLanguage.Name === 'TypeScript') {
+      mostUsedLanguage = { Name: 'JavaScript/TypeScript', Bytes: 0 }
+    }
+
     return (
       allowedLanguages.find((lang) => lang.id.toLowerCase() === mostUsedLanguage.Name.toLowerCase()) ??
       allowedLanguages.find((lang) => lang.id === Languages.OTHER)
