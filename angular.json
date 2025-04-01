@@ -134,34 +134,34 @@
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
           "options": {
-            "browserTarget": "ui:build"
+            "buildTarget": "ui:build"
           },
           "defaultConfiguration": "development",
           "configurations": {
             "production": {
-              "browserTarget": "ui:production"
+              "buildTarget": "ui:production"
             },
             "development": {
-              "browserTarget": "ui:build:development"
+              "buildTarget": "ui:build:development"
             },
             "local": {
-              "browserTarget": "ui:build:local"
+              "buildTarget": "ui:build:local"
             },
             "e2e-test": {
-              "browserTarget": "ui:build:e2e-test"
+              "buildTarget": "ui:build:e2e-test"
             },
             "de": {
-              "browserTarget": "ui:build:de"
+              "buildTarget": "ui:build:de"
             },
             "en": {
-              "browserTarget": "ui:build:en"
+              "buildTarget": "ui:build:en"
             }
           }
         },
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "pipeline-ui:build"
+            "buildTarget": "pipeline-ui:build"
           }
         },
         "lint": {
