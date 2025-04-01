@@ -537,7 +537,7 @@ export class SetupOSCModalComponent implements OnInit {
 
   isLanguageUnsupported(): boolean {
     const languageSelected = this.setupPrerequisitesFormGroup.controls.languageSelection.value.id
-    return languageSelected == Languages.PYTHON || languageSelected == Languages.GO
+    return languageSelected == Languages.PYTHON
   }
 
   moveToOscPrerequisitesSetupStep() {
