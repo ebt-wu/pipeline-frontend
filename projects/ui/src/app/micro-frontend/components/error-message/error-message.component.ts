@@ -37,6 +37,10 @@ const knownErrorCodeMappings: Record<string, ErrorContext> = {
     docUrl:
       'https://pages.github.tools.sap/hyperspace/cicd-setup-documentation/managed-services/build/jenkins.html#required-permissions',
   },
+  'GITHUB-28': {
+    showTicketButton: false,
+    docUrl: 'https://sap.stackenterprise.co/articles/68057',
+  },
   'STAGING_SERVICE-9': {
     docUrl: 'https://sap.stackenterprise.co/articles/69311',
   },
