@@ -16,6 +16,7 @@ import { Categories, Kinds, ServiceStatus, Stages, StepKey } from '@enums'
 import { ColorAccent, FlexibleColumnLayout, FundamentalNgxCoreModule } from '@fundamental-ngx/core'
 import { CategoryConfig, Pipeline, ResourceRef } from '@types'
 import { firstValueFrom } from 'rxjs'
+import { isBuildPipelineSetup } from '../../../pipeline-utils'
 import { CategorySlotConfigService } from '../../services/category-slot-config.service'
 import { FeatureFlagService } from '../../services/feature-flag.service'
 import { OpenSourceComplianceService } from '../../services/open-source-compliance.service'
@@ -98,15 +99,8 @@ export class ValidateCodeSectionComponent implements OnChanges, OnInit {
         configuredServicesText: this.generateConfiguredServicesText(Categories.STATIC_CODE_CHECKS),
         buttonConfig: {
           isButtonShown: await this.isButtonShown(Categories.STATIC_CODE_CHECKS),
-          buttonText: 'Add Manually',
-          // buttonAction: async (e: Event) => this.openSetupDialog(e, Categories.STATIC_CODE_CHECKS),
-          buttonAction: () => {
-            window.open(
-              'https://pages.github.tools.sap/hyperspace/academy/bestpractice/CorpReq_FC1_CodingRules/v1.1/#setup',
-              '_blank',
-              'noopener, noreferrer',
-            )
-          },
+          buttonText: (await this.isSonarQubeInstallationAllowed()) ? 'Add' : 'Add Manually',
+          buttonAction: (e) => this.openSetupDialog(e, Categories.STATIC_CODE_CHECKS),
           buttonTestId: 'add-static-code-checks-button',
         },
         statusTagConfig: await this.generateStatusTag(Categories.STATIC_CODE_CHECKS),
@@ -165,10 +159,11 @@ export class ValidateCodeSectionComponent implements OnChanges, OnInit {
     switch (category) {
       case Categories.STATIC_SECURITY_CHECKS:
         if (await this.featureFlagService.isCxOneInstallationEnabled()) {
-          await this.luigiClient
-            .linkManager()
-            .fromVirtualTreeRoot()
-            .openAsModal('setup-validation', { title: 'Add Static Security Checks', width: '420px', height: '630px' })
+          await this.luigiClient.linkManager().fromVirtualTreeRoot().openAsModal('setup-static-security-checks', {
+            title: 'Add Static Security Checks',
+            width: '420px',
+            height: '630px',
+          })
         } else {
           await this.luigiClient
             .linkManager()
@@ -183,6 +178,19 @@ export class ValidateCodeSectionComponent implements OnChanges, OnInit {
           .openAsModal('setup-osc', { title: 'Add Open Source Checks', width: '600px', height: '780px' })
         break
       case Categories.STATIC_CODE_CHECKS:
+        if (await this.isSonarQubeInstallationAllowed()) {
+          await this.luigiClient.linkManager().fromVirtualTreeRoot().openAsModal('setup-static-code-checks', {
+            title: 'Add Static Code Checks',
+            width: '450px',
+            height: '280px',
+          })
+        } else {
+          window.open(
+            'https://pages.github.tools.sap/hyperspace/academy/bestpractice/CorpReq_FC1_CodingRules/v1.1/#setup',
+            '_blank',
+            'noopener, noreferrer',
+          )
+        }
         break
     }
   }
@@ -351,5 +359,19 @@ export class ValidateCodeSectionComponent implements OnChanges, OnInit {
       }
     }
     return null
+  }
+
+  /**
+   * Checks if SonarQube installation is allowed based on the following conditions:
+   * - Feature flag for SonarQube installation is enabled
+   * - Build pipeline is set up
+   * - The orchestrator is GitHub Actions
+   */
+  async isSonarQubeInstallationAllowed() {
+    return (
+      (await this.featureFlagService.isSonarQubeInstallationEnabled()) &&
+      this.pipeline.resourceRefs.find((ref) => ref.kind === Kinds.GITHUB_ACTIONS_PIPELINE) &&
+      isBuildPipelineSetup(this.pipeline.resourceRefs)
+    )
   }
 }

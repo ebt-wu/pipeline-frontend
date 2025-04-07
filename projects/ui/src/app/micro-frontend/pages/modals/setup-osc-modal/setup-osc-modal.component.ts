@@ -22,6 +22,7 @@ import {
 import { PlatformMessagePopoverModule } from '@fundamental-ngx/platform/message-popover'
 import { JiraProject, NotManagedServices, PpmsFoss } from '@generated/graphql'
 import { EntityContext, Pipeline, SetupOSCFormValue, ProgrammingLanguage } from '@types'
+import { isBuildPipelineSetup } from 'projects/ui/src/app/pipeline-utils'
 import { toolsSvg } from 'projects/ui/src/assets/ts-svg/tools'
 import { debounceTime, firstValueFrom, Observable } from 'rxjs'
 import { ErrorMessageComponent } from '../../../components/error-message/error-message.component'
@@ -381,7 +382,7 @@ export class SetupOSCModalComponent implements OnInit {
     this.isxMakePresent.set(resourceRefs.some((ref) => ref.kind === StepKey.XMAKE))
     if (this.isxMakePresent()) this.setupPrerequisitesFormGroup.controls.xMakeOption.setValue('Yes')
 
-    this.isBuildPipelineSetup.set(this.pipelineService.isBuildPipelineSetup(resourceRefs))
+    this.isBuildPipelineSetup.set(isBuildPipelineSetup(resourceRefs))
     this.jiraProjects.set(await firstValueFrom(this.jiraService.getJiraProjects()))
     this.ppmsFossData.set((await firstValueFrom(this.watch$)).notManagedServices?.ppmsFoss)
 

@@ -1,10 +1,15 @@
 import { Injectable } from '@angular/core'
 import { DxpLuigiContextService } from '@dxp/ngx-core/luigi'
-import { GetSonarQubeProjectQuery, GetSonarQubeProjectQueryVariables } from '@generated/graphql'
+import {
+  CreateSonarQubeProjectMutation,
+  DeleteSonarQubeProjectMutation,
+  GetSonarQubeProjectQuery,
+  GetSonarQubeProjectQueryVariables,
+} from '@generated/graphql'
 import { combineLatest } from 'rxjs'
 import { first, map, mergeMap } from 'rxjs/operators'
 import { BaseAPIService } from './base.service'
-import { GET_SONARQUBE_PROJECT } from './queries'
+import { CREATE_SONARQUBE_PROJECT, DELETE_SONARQUBE_PROJECT, GET_SONARQUBE_PROJECT } from './queries'
 
 @Injectable({ providedIn: 'root' })
 export class SonarService {
@@ -13,8 +18,21 @@ export class SonarService {
     private readonly luigiService: DxpLuigiContextService,
   ) {}
 
-  createSonarqubeProject() {
-    // TODO: add once back-end implemention is there
+  createSonarqubeProject(projectName: string) {
+    return combineLatest([this.apiService.apollo(), this.luigiService.contextObservable()]).pipe(
+      first(),
+      mergeMap(([client, ctx]) => {
+        return client.mutate<CreateSonarQubeProjectMutation>({
+          mutation: CREATE_SONARQUBE_PROJECT,
+          variables: {
+            projectId: ctx.context.projectId,
+            componentId: ctx.context.componentId,
+            projectName,
+          },
+        })
+      }),
+      map((result) => result.data?.createSonarQubeProject ?? null),
+    )
   }
 
   getSonarqubeProject(resourceName: string) {
@@ -34,7 +52,20 @@ export class SonarService {
     )
   }
 
-  deleteSonarqubeProject() {
-    // TODO: add once back-end implemention is there
+  deleteSonarqubeProject(resourceName: string) {
+    return combineLatest([this.apiService.apollo(), this.luigiService.contextObservable()]).pipe(
+      first(),
+      mergeMap(([client, ctx]) => {
+        return client.mutate<DeleteSonarQubeProjectMutation>({
+          mutation: DELETE_SONARQUBE_PROJECT,
+          variables: {
+            projectId: ctx.context.projectId,
+            componentId: ctx.context.componentId,
+            resourceName: resourceName,
+          },
+        })
+      }),
+      map((result) => result.data?.deleteSonarQubeProject ?? null),
+    )
   }
 }

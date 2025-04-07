@@ -249,6 +249,7 @@ export type Mutation = {
   deleteOscRegistration?: Maybe<Scalars['String']['output']>
   deletePipeline?: Maybe<Scalars['String']['output']>
   deletePiperConfig?: Maybe<Scalars['String']['output']>
+  deleteSonarQubeProject?: Maybe<Scalars['String']['output']>
   ensureVaultOnboarding: VaultOnboardingInfo
   forceDebugReconciliation?: Maybe<Scalars['String']['output']>
   provideTokenToAutomaticd: Scalars['String']['output']
@@ -379,6 +380,13 @@ export type MutationDeletePipelineArgs = {
 
 export type MutationDeletePiperConfigArgs = {
   componentId: Scalars['String']['input']
+  projectId: Scalars['String']['input']
+  resourceName: Scalars['String']['input']
+}
+
+export type MutationDeleteSonarQubeProjectArgs = {
+  componentId: Scalars['String']['input']
+  deletionPolicy?: InputMaybe<DeletionPolicy>
   projectId: Scalars['String']['input']
   resourceName: Scalars['String']['input']
 }
@@ -632,7 +640,7 @@ export type SonarQubeProject = {
 
 export type SonarQubeProjectCreatePayload = {
   projectName: Scalars['String']['input']
-  secretPath: Scalars['String']['input']
+  secretPath?: InputMaybe<Scalars['String']['input']>
 }
 
 export type SonarQubePullRequest = {
@@ -1347,3 +1355,19 @@ export type GetSonarQubeProjectQuery = {
     configString?: string | null
   } | null
 }
+
+export type CreateSonarQubeProjectMutationVariables = Exact<{
+  projectId: Scalars['String']['input']
+  componentId: Scalars['String']['input']
+  projectName: Scalars['String']['input']
+}>
+
+export type CreateSonarQubeProjectMutation = { __typename?: 'Mutation'; createSonarQubeProject?: string | null }
+
+export type DeleteSonarQubeProjectMutationVariables = Exact<{
+  projectId: Scalars['String']['input']
+  componentId: Scalars['String']['input']
+  resourceName: Scalars['String']['input']
+}>
+
+export type DeleteSonarQubeProjectMutation = { __typename?: 'Mutation'; deleteSonarQubeProject?: string | null }

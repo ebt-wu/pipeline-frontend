@@ -25,7 +25,8 @@
               "context": {
                 "featureFlags": {
                   "CX_ONE_INSTALLATION_ENABLED": true,
-                  "GHAS_ON_ACTIONS_ENABLED": true
+                  "GHAS_ON_ACTIONS_ENABLED": true,
+                  "SONARQUBE_INSTALLATION_ENABLED": true
                 }
               },
               "children": [

@@ -630,3 +630,14 @@ export const GET_SONARQUBE_PROJECT = gql`
     }
   }
 `
+export const CREATE_SONARQUBE_PROJECT = gql`
+  mutation CreateSonarQubeProject($projectId: String!, $componentId: String!, $projectName: String!) {
+    createSonarQubeProject(projectId: $projectId, componentId: $componentId, params: { projectName: $projectName })
+  }
+`
+
+export const DELETE_SONARQUBE_PROJECT = gql`
+  mutation DeleteSonarQubeProject($projectId: String!, $componentId: String!, $resourceName: String!) {
+    deleteSonarQubeProject(projectId: $projectId, componentId: $componentId, resourceName: $resourceName)
+  }
+`

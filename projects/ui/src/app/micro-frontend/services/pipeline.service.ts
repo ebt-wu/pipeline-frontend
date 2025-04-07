@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core'
 import { DxpLuigiContextService } from '@dxp/ngx-core/luigi'
-import { Kinds, ServiceStatus, StepKey } from '@enums'
+import { ServiceStatus, StepKey } from '@enums'
 import {
   CreatePipelineMutation,
   CreatePipelineMutationVariables,
@@ -16,7 +16,7 @@ import {
   WatchPipelineSubscription,
   WatchPipelineSubscriptionVariables,
 } from '@generated/graphql'
-import { Pipeline, ResourceRef } from '@types'
+import { Pipeline } from '@types'
 import { combineLatest, Observable, of } from 'rxjs'
 import { catchError, first, map, mergeMap } from 'rxjs/operators'
 import { BaseAPIService } from './base.service'
@@ -130,54 +130,6 @@ export class PipelineService {
           )
       }),
     )
-  }
-
-  isBuildPipelineSetupAndCreated(resourceRefs: ResourceRef[]): boolean {
-    return this.isBuildPipelineSetup(resourceRefs) && this.areResourcesCompletelyCreated(resourceRefs)
-  }
-
-  isBuildPipelineSetup(resourceRefs: ResourceRef[]): boolean {
-    let isGithubRepositoryPresent = false
-    let isPiperConfigPresent = false
-    let isJenkinsPipelinePresent = false
-    let isGithubActionsPipelinePresent = false
-    let isAzureDevOpsPresent = false
-
-    for (const ref of resourceRefs) {
-      switch (ref.kind) {
-        case Kinds.GITHUB_REPOSITORY: {
-          isGithubRepositoryPresent = true
-          break
-        }
-        case Kinds.PIPER_CONFIG: {
-          isPiperConfigPresent = true
-          break
-        }
-        case Kinds.JENKINS_PIPELINE: {
-          isJenkinsPipelinePresent = true
-          break
-        }
-
-        case Kinds.GITHUB_ACTIONS_PIPELINE: {
-          isGithubActionsPipelinePresent = true
-          break
-        }
-        case StepKey.AZURE_DEV_OPS: {
-          isAzureDevOpsPresent = true
-          break
-        }
-      }
-    }
-
-    const areRequiredResourcesPresent = isGithubRepositoryPresent && isPiperConfigPresent
-    const isOrchestratorPresent = isJenkinsPipelinePresent || isGithubActionsPipelinePresent || isAzureDevOpsPresent
-
-    return areRequiredResourcesPresent && isOrchestratorPresent
-  }
-
-  areResourcesCompletelyCreated(resourceRefs: ResourceRef[]): boolean {
-    const isThereNotCreatedResource = resourceRefs.some((ref) => ref.status !== ServiceStatus.CREATED)
-    return !isThereNotCreatedResource
   }
 
   combinePipelineWithNotManagedServicesAndGithubWatch(

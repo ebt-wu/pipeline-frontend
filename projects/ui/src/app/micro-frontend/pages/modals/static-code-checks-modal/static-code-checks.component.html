@@ -1,0 +1,38 @@
+<div *ngIf="!loading()">
+  <div>
+    <app-error-message
+      (byDismiss)="dismissErrorMessage()"
+      *ngIf="errorMessage()"
+      [message]="errorMessage()"
+      data-testid="static-code-checks-dialog-error-banner"
+      title="Setup static code checks could not be completed"></app-error-message>
+  </div>
+  <div>
+    <fdp-message-popover-form-wrapper [formFields]="formGenerator?.formFields" [forms]="formGenerator?.formGroup">
+      <fdp-form-generator [formItems]="formItems" (formSubmitted)="onFormSubmitted($event)"></fdp-form-generator>
+    </fdp-message-popover-form-wrapper>
+  </div>
+
+  <div fd-bar barDesign="footer" class="actions-footer">
+    <div fd-bar-left></div>
+    <div fd-bar-right class="footer-buttons-gap">
+      <button
+        fd-button
+        (click)="submitForm()"
+        [disabled]="formGenerator?.formGroup?.form && !formGenerator?.formGroup?.form?.valid"
+        type="submit"
+        fdType="emphasized"
+        label="Add Checks"
+        data-testid="static-code-checks-submit-button"></button>
+      <button
+        fd-button
+        fdType="transparent"
+        label="Cancel"
+        (click)="cancel()"
+        data-testid="static-code-checks-cancel-button"></button>
+    </div>
+  </div>
+</div>
+<div *ngIf="loading()" class="loading-indicator">
+  <fd-busy-indicator [loading]="true" ariaLabel="loading" title="Please Wait"></fd-busy-indicator>
+</div>

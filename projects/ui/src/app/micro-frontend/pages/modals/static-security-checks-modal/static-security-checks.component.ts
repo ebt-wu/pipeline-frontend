@@ -162,9 +162,9 @@ function getRequiredValidationTools(language: Languages): ValidationTools[] {
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: true,
-  selector: 'app-setup-validation',
-  templateUrl: './setup-validation-modal.component.html',
-  styleUrl: './setup-validation-modal.component.css',
+  selector: 'app-static-security-checks',
+  templateUrl: './static-security-checks.component.html',
+  styleUrl: './static-security-checks.component.css',
   imports: [
     CommonModule,
     FundamentalNgxCoreModule,
@@ -176,7 +176,7 @@ function getRequiredValidationTools(language: Languages): ValidationTools[] {
     ReactiveFormsModule,
   ],
 })
-export class SetupValidationModalComponent implements OnInit, OnDestroy {
+export class StaticSecurityChecksComponent implements OnInit, OnDestroy {
   watch$: Observable<Pipeline>
   watchCxOneApplication$: Subscription
 

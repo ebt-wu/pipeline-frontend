@@ -25,6 +25,7 @@ import { DeletionPolicy } from '@generated/graphql'
 import { Pipeline } from '@types'
 import { debounceTime, firstValueFrom, Observable, Subscription, tap } from 'rxjs'
 import { map } from 'rxjs/operators'
+import { areResourcesCompletelyCreated, isBuildPipelineSetup } from '../../../pipeline-utils'
 import { AutomateWorkflowsComponent } from '../../components/automate-workflows/automate-workflows.component'
 import { CategorySlotComponent } from '../../components/category-slot/category-slot.component'
 import { DismissibleMessageComponent } from '../../components/dismissible-message/dismissible-message.component'
@@ -263,7 +264,7 @@ export class PipelineComponent implements OnInit, OnDestroy {
             return errs
           })
 
-          if (!this.pipelineService.isBuildPipelineSetup(pipeline.resourceRefs)) {
+          if (!isBuildPipelineSetup(pipeline.resourceRefs)) {
             this.isBuildStageSetup.set(false)
             this.isBuildStageOpen.set(false)
             return
@@ -272,7 +273,7 @@ export class PipelineComponent implements OnInit, OnDestroy {
           this.isBuildStageSetup.set(true)
           this.isBuildStageOpen.set(true)
 
-          if (!this.pipelineService.areResourcesCompletelyCreated(pipeline.resourceRefs)) {
+          if (!areResourcesCompletelyCreated(pipeline.resourceRefs)) {
             // some resources are not in `created` stage
             return
           }
