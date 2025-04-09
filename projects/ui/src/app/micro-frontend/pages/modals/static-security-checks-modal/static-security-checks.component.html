@@ -7,31 +7,91 @@
       *ngIf="errorMessage()"
       data-testid="setup-validation-dialog-error-banner"></app-error-message>
   </div>
-  <div>
-    <fdp-message-popover-form-wrapper [forms]="formGenerator?.formGroup" [formFields]="formGenerator?.formFields">
-      <fdp-form-generator [formItems]="formItems"></fdp-form-generator>
-    </fdp-message-popover-form-wrapper>
-  </div>
-
-  <div fd-bar barDesign="footer" class="actions-footer">
-    <div fd-bar-left></div>
-    <div fd-bar-right class="footer-buttons-gap">
-      <button
-        fd-button
-        (click)="submit()"
-        [disabled]="formGenerator?.formGroup?.form && !formGenerator?.formGroup?.form?.valid"
-        [label]="submitButtonText()"
-        fdType="emphasized"
-        data-testid="setup-validation-dialog-submit-button"></button>
-      <button
-        fd-button
-        (click)="cancel()"
-        label="Cancel"
-        fdType="transparent"
-        data-testid="setup-validation-dialog-cancel-button"></button>
+  @if (!(isBuildPipelineSetup() || getCompliantScansContinuePressed())) {
+    <div>
+      <div class="setup-static-security-margin get-compliant-scans">
+        <figure
+          class="get-compliant-scans-svg"
+          fd-illustrated-message
+          type="spot"
+          [svgConfig]="getCompliantScansStepIconConfig">
+          <figcaption fd-illustrated-message-figcaption>
+            <h3 fd-illustrated-message-title>Get compliant scans</h3>
+            <p fd-illustrated-message-text>
+              To document the results of the static security checks, you need a Cumulus bucket and a Piper configuration
+              in your repository.
+              <br />
+              <br />
+              Set up your build pipeline to get everything you need.
+            </p>
+          </figcaption>
+          <fd-illustrated-message-actions>
+            <button
+              fd-button
+              label="Set Up Build"
+              data-testid="setupBuildModalButton"
+              (click)="openSetupBuildModal()"></button>
+          </fd-illustrated-message-actions>
+        </figure>
+        <div class="get-compliant-scans-subtext">
+          <fd-text text="Already have a Cumulus configuration?"></fd-text>
+          <a
+            fd-link
+            href="https://pages.github.tools.sap/hyperspace/cicd-setup-documentation/use-cases/validate-your-code-SAST.html#validate-your-code-static-security-checks"
+            target="_blank"
+            rel="noopener noreferrer"
+            data-testid="learnToConfigureStaticSecurityChecksLink">
+            Learn how to configure static security checks
+          </a>
+        </div>
+      </div>
+      <div fd-bar barDesign="footer" class="actions-footer">
+        <div fd-bar-left></div>
+        <div fd-bar-right class="footer-buttons-gap">
+          <button
+            fd-button
+            (click)="getCompliantScansContinue()"
+            label="Continue"
+            fdType="emphasized"
+            data-testid="setup-validation-dialog-submit-button"></button>
+          <button
+            fd-button
+            (click)="cancel()"
+            label="Cancel"
+            fdType="transparent"
+            data-testid="setup-validation-dialog-cancel-button"></button>
+        </div>
+      </div>
     </div>
-  </div>
+  } @else {
+    <div>
+      <div>
+        <fdp-message-popover-form-wrapper [forms]="formGenerator?.formGroup" [formFields]="formGenerator?.formFields">
+          <fdp-form-generator [formItems]="formItems"></fdp-form-generator>
+        </fdp-message-popover-form-wrapper>
+      </div>
+      <div fd-bar barDesign="footer" class="actions-footer">
+        <div fd-bar-left></div>
+        <div fd-bar-right class="footer-buttons-gap">
+          <button
+            fd-button
+            (click)="submit()"
+            [disabled]="formGenerator?.formGroup?.form && !formGenerator?.formGroup?.form?.valid"
+            [label]="submitButtonText()"
+            fdType="emphasized"
+            data-testid="setup-validation-dialog-submit-button"></button>
+          <button
+            fd-button
+            (click)="cancel()"
+            label="Cancel"
+            fdType="transparent"
+            data-testid="setup-validation-dialog-cancel-button"></button>
+        </div>
+      </div>
+    </div>
+  }
 </div>
+
 <div *ngIf="loading()" class="loading-indicator">
   <fd-busy-indicator [loading]="true" ariaLabel="loading" title="Please Wait"></fd-busy-indicator>
 </div>

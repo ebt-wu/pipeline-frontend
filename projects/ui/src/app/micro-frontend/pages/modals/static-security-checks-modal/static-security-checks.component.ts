@@ -13,7 +13,7 @@ import { FormsModule, ReactiveFormsModule, Validators } from '@angular/forms'
 import { ProgrammingLanguages } from '@constants'
 import { DxpLuigiContextService, LuigiClient } from '@dxp/ngx-core/luigi'
 import { Kinds, Languages, ValidationTools } from '@enums'
-import { FormModule, FundamentalNgxCoreModule } from '@fundamental-ngx/core'
+import { FormModule, FundamentalNgxCoreModule, SvgConfig } from '@fundamental-ngx/core'
 import {
   DynamicFormFieldGroupMap,
   DynamicFormItem,
@@ -25,8 +25,10 @@ import {
   SelectDynamicFormFieldItem,
   SelectItem,
 } from '@fundamental-ngx/platform'
-import { BuildTool, Orchestrators } from '@generated/graphql'
+import { BuildTool, NotManagedServices, Orchestrators } from '@generated/graphql'
 import { EntityContext, Pipeline } from '@types'
+import { isBuildPipelineSetup } from 'projects/ui/src/app/pipeline-utils'
+import { toolsSvg } from 'projects/ui/src/assets/ts-svg/tools'
 import { debounceTime, first, firstValueFrom, interval, Observable, skipWhile, Subscription, timeout } from 'rxjs'
 import { ErrorMessageComponent } from '../../../components/error-message/error-message.component'
 import {
@@ -180,6 +182,16 @@ export class StaticSecurityChecksComponent implements OnInit, OnDestroy {
   watch$: Observable<Pipeline>
   watchCxOneApplication$: Subscription
 
+  getCompliantScansStepIconConfig: SvgConfig = {
+    spot: {
+      file: toolsSvg,
+      id: 'tools',
+    },
+  }
+
+  isBuildPipelineSetup = signal(false)
+  getCompliantScansContinuePressed = signal(false)
+
   loading = signal(false)
   errorMessage = signal('')
 
@@ -187,9 +199,10 @@ export class StaticSecurityChecksComponent implements OnInit, OnDestroy {
   // 1 - CxOne, GHAS
   // 2 - GithubActions, if required
   formStep = signal<1 | 2>(1)
-  submitButtonDisabled: Signal<boolean> = signal(false)
+  submitButtonDisabled = signal(false)
   submitButtonText: Signal<'Add Checks' | 'Continue'> = signal('Continue')
-  isSolinasAppInstalled = signal<boolean>(false)
+  isSolinasAppInstalled = signal(false)
+
   prevLanguage = signal<Languages | null>(null)
 
   @ViewChild(FormGeneratorComponent) formGenerator: FormGeneratorComponent
@@ -672,7 +685,18 @@ export class StaticSecurityChecksComponent implements OnInit, OnDestroy {
   async ngOnInit() {
     this.loading.set(true)
 
-    this.watch$ = this.pipelineService.watchPipeline().pipe(debounceTime(50))
+    const watchNotManagedServices$ = this.pipelineService
+      .watchNotManagedServicesInPipeline()
+      .pipe(debounceTime(50)) as Observable<NotManagedServices>
+
+    const watchPipeline$ = this.pipelineService.watchPipeline().pipe(debounceTime(50))
+    const watchGHAE$ = this.githubActionsService.watchGithubActionsEnablement().pipe(debounceTime(50))
+
+    this.watch$ = this.pipelineService.combinePipelineWithNotManagedServicesAndGithubWatch(
+      watchPipeline$,
+      watchNotManagedServices$,
+      watchGHAE$,
+    )
     this.watchCxOneApplication$ = this.watchCxOneApplication()
 
     const githubMetadata = await this.githubService.getGithubMetadata()
@@ -687,6 +711,9 @@ export class StaticSecurityChecksComponent implements OnInit, OnDestroy {
       .subscribe((isSolinasAppInstalled) => {
         this.isSolinasAppInstalled.set(isSolinasAppInstalled)
       })
+
+    const resourceRefs = (await firstValueFrom(this.watch$)).resourceRefs
+    this.isBuildPipelineSetup.set(isBuildPipelineSetup(resourceRefs))
 
     try {
       const [cxOneApplication, languageFormItems, githubActionsFormItems] = await Promise.all([
@@ -898,6 +925,18 @@ export class StaticSecurityChecksComponent implements OnInit, OnDestroy {
     } finally {
       this.loading.set(false)
     }
+  }
+
+  getCompliantScansContinue() {
+    this.getCompliantScansContinuePressed.set(true)
+  }
+
+  async openSetupBuildModal() {
+    await this.luigiClient.linkManager().fromVirtualTreeRoot().openAsModal('setup', {
+      title: 'Set up Build Pipeline',
+      width: '27rem',
+      height: '33rem',
+    })
   }
 
   async createGithubResource(): Promise<void> {

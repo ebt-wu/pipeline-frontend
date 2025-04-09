@@ -14,3 +14,27 @@
   justify-content: center;
   height: 100vh;
 }
+
+.setup-static-security-margin {
+  margin: 1rem 0 1rem 0;
+  font-family: var(--sapFontFamily);
+  font-size: var(--sapFontSize);
+  color: var(--sapField_TextColor);
+}
+
+.get-compliant-scans {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+::ng-deep .get-compliant-scans-svg > svg {
+  width: 151px;
+}
+
+.get-compliant-scans-subtext {
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+}

@@ -161,7 +161,7 @@ export class ValidateCodeSectionComponent implements OnChanges, OnInit {
         if (await this.featureFlagService.isCxOneInstallationEnabled()) {
           await this.luigiClient.linkManager().fromVirtualTreeRoot().openAsModal('setup-static-security-checks', {
             title: 'Add Static Security Checks',
-            width: '420px',
+            width: '520px',
             height: '630px',
           })
         } else {
