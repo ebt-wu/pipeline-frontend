@@ -17,6 +17,7 @@ general:
 stages:
   Release:
     githubPublishRelease: true
+    sapDownloadArtifact: false
 steps:
   npmExecuteScripts:
     runScripts: ['build:ci']
