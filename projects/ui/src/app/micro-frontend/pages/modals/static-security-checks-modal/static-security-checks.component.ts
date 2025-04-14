@@ -13,7 +13,7 @@ import { FormsModule, ReactiveFormsModule, Validators } from '@angular/forms'
 import { ProgrammingLanguages } from '@constants'
 import { DxpLuigiContextService, LuigiClient } from '@dxp/ngx-core/luigi'
 import { Kinds, Languages, ValidationTools } from '@enums'
-import { FormModule, FundamentalNgxCoreModule, SvgConfig } from '@fundamental-ngx/core'
+import { FormModule, FundamentalNgxCoreModule } from '@fundamental-ngx/core'
 import {
   DynamicFormFieldGroupMap,
   DynamicFormItem,
@@ -27,8 +27,6 @@ import {
 } from '@fundamental-ngx/platform'
 import { BuildTool, NotManagedServices, Orchestrators } from '@generated/graphql'
 import { EntityContext, Pipeline } from '@types'
-import { isBuildPipelineSetup } from 'projects/ui/src/app/pipeline-utils'
-import { toolsSvg } from 'projects/ui/src/assets/ts-svg/tools'
 import { debounceTime, first, firstValueFrom, interval, Observable, skipWhile, Subscription, timeout } from 'rxjs'
 import { ErrorMessageComponent } from '../../../components/error-message/error-message.component'
 import {
@@ -181,16 +179,6 @@ function getRequiredValidationTools(language: Languages): ValidationTools[] {
 export class StaticSecurityChecksComponent implements OnInit, OnDestroy {
   watch$: Observable<Pipeline>
   watchCxOneApplication$: Subscription
-
-  getCompliantScansStepIconConfig: SvgConfig = {
-    spot: {
-      file: toolsSvg,
-      id: 'tools',
-    },
-  }
-
-  isBuildPipelineSetup = signal(false)
-  getCompliantScansContinuePressed = signal(false)
 
   loading = signal(false)
   errorMessage = signal('')
@@ -712,9 +700,6 @@ export class StaticSecurityChecksComponent implements OnInit, OnDestroy {
         this.isSolinasAppInstalled.set(isSolinasAppInstalled)
       })
 
-    const resourceRefs = (await firstValueFrom(this.watch$)).resourceRefs
-    this.isBuildPipelineSetup.set(isBuildPipelineSetup(resourceRefs))
-
     try {
       const [cxOneApplication, languageFormItems, githubActionsFormItems] = await Promise.all([
         firstValueFrom(this.cxOneService.getCxOneApplication()),
@@ -925,18 +910,6 @@ export class StaticSecurityChecksComponent implements OnInit, OnDestroy {
     } finally {
       this.loading.set(false)
     }
-  }
-
-  getCompliantScansContinue() {
-    this.getCompliantScansContinuePressed.set(true)
-  }
-
-  async openSetupBuildModal() {
-    await this.luigiClient.linkManager().fromVirtualTreeRoot().openAsModal('setup', {
-      title: 'Set up Build Pipeline',
-      width: '27rem',
-      height: '33rem',
-    })
   }
 
   async createGithubResource(): Promise<void> {
