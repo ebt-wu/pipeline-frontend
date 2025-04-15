@@ -14,7 +14,7 @@ import {
   CREATE_GITHUB_ACTIONS_PIPELINE,
   CREATE_STANDALONE_GITHUB_ACTIONS_CLAIM,
   DELETE_GITHUB_ACTIONS_PIPELINE,
-  GET_GITHUB_ACTONS_SOLINAS_VERIFICATION,
+  GET_GITHUB_ACTIONS_SOLINAS_VERIFICATION,
   WATCH_GITHUB_ACTIONS_ENABLEMENT,
 } from './queries'
 
@@ -103,7 +103,7 @@ export class GithubActionsService {
       mergeMap(([client, ctx]) => {
         return client
           .query<GetGithubActionsSolinasVerificationQuery, GetGithubActionsSolinasVerificationQueryVariables>({
-            query: GET_GITHUB_ACTONS_SOLINAS_VERIFICATION,
+            query: GET_GITHUB_ACTIONS_SOLINAS_VERIFICATION,
             fetchPolicy: 'no-cache',
             variables: {
               projectId: ctx.context.projectId,

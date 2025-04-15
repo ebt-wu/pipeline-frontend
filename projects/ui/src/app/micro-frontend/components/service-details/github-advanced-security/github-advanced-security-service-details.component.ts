@@ -14,10 +14,9 @@ import { CumulusPipeline } from '@generated/graphql'
 import { GithubAdvancedSecurityServiceDetails, Pipeline } from '@types'
 import { debounceTime, firstValueFrom, Observable } from 'rxjs'
 import { CumulusService } from '../../../services/cumulus.service'
-import { GithubService } from '../../../services/github.service'
 import { PipelineService } from '../../../services/pipeline.service'
 import { PolicyService } from '../../../services/policy.service'
-import { Secret, SecretService } from '../../../services/secret.service'
+import { SecretService } from '../../../services/secret.service'
 import { BaseServiceDetailsComponent } from '../base-service-details.component'
 
 @Component({
@@ -43,7 +42,6 @@ export class GithubAdvancedSecurityServiceDetailsComponent extends BaseServiceDe
 
   watch$: Observable<Pipeline>
   cumulusInfo: CumulusPipeline
-  githubSecret: Secret
 
   loading = signal(false)
   error: string
@@ -55,7 +53,6 @@ export class GithubAdvancedSecurityServiceDetailsComponent extends BaseServiceDe
   ADD_SCAN_PROJECT_SIRIUS_DOCU_LINK = 'https://wiki.one.int.sap/wiki/x/s9XS7w'
 
   constructor(
-    private readonly githubService: GithubService,
     private readonly pipelineService: PipelineService,
     private readonly cumulusService: CumulusService,
     protected override readonly secretService: SecretService,
@@ -75,20 +72,6 @@ export class GithubAdvancedSecurityServiceDetailsComponent extends BaseServiceDe
 
     if (cumulusRef && cumulusRef.name) {
       this.cumulusInfo = await firstValueFrom(this.cumulusService.getCumulusPipeline(cumulusRef.name))
-    }
-
-    if (await this.policyService.isUserStaffed()) {
-      const secrets = await firstValueFrom(this.secretService.getPipelineSecrets())
-
-      // Try to get a secret from the list that matches the instance
-      const { githubRepoUrl } = await this.githubService.getGithubMetadata()
-
-      const githubInstance = new URL(githubRepoUrl).hostname.replace(/\./g, '-')
-      this.githubSecret = secrets.find((secret) => secret.path.includes(githubInstance))
-      // If no secret matches the instance, just look for one with github in the name (could be the case from transferred pipelines)
-      if (!this.githubSecret) {
-        this.githubSecret = secrets.find((secret) => secret.path.includes('github'))
-      }
     }
     this.loading.set(false)
   }

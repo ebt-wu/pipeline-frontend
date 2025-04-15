@@ -447,7 +447,7 @@ export const CREATE_STANDALONE_GITHUB_ACTIONS_CLAIM = gql`
   }
 `
 
-export const GET_GITHUB_ACTONS_SOLINAS_VERIFICATION = gql`
+export const GET_GITHUB_ACTIONS_SOLINAS_VERIFICATION = gql`
   query getGithubActionsSolinasVerification($projectId: String!, $githubOrg: String!, $githubUrl: String!) {
     getGithubActionsSolinasVerification(projectId: $projectId, githubOrg: $githubOrg, githubUrl: $githubUrl)
   }
