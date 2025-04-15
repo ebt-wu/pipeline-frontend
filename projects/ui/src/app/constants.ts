@@ -139,24 +139,12 @@ export const ProgrammingLanguages: ProgrammingLanguage[] = [
     displayName: 'Golang',
   },
   {
-    id: Languages.RUBY,
-    displayName: 'Ruby',
-  },
-  {
     id: Languages.GROOVY,
     displayName: 'Groovy',
   },
   {
     id: Languages.SCALA,
     displayName: 'Scala',
-  },
-  {
-    id: Languages.SWIFT,
-    displayName: 'Swift',
-  },
-  {
-    id: Languages.PHP,
-    displayName: 'PHP',
   },
   {
     id: Languages.OTHER,

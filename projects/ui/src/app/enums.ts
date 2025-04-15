@@ -71,11 +71,8 @@ export enum Languages {
   JAVA = 'Java',
   JAVA_NODE_CAP = 'Java + Node CAP',
   JAVASCRIPT = 'JavaScript/TypeScript',
-  PHP = 'PHP',
   PYTHON = 'Python',
-  RUBY = 'Ruby',
   SCALA = 'Scala',
-  SWIFT = 'Swift',
   OTHER = 'Other',
 }
 

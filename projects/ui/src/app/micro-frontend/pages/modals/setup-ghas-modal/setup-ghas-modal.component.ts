@@ -34,9 +34,6 @@ function getRecommendedValidationTool(language: Languages): ValidationTools | nu
     case Languages.JAVASCRIPT:
     case Languages.GO:
     case Languages.GROOVY:
-    case Languages.RUBY:
-    case Languages.SWIFT:
-    case Languages.PHP:
       return ValidationTools.CX
     default:
       return null
