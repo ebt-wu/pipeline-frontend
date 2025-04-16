@@ -27,6 +27,7 @@ export enum StepKey {
   CX_ONE = 'checkmarxOne',
   KUBERNETES = 'kubernetes',
   CLOUD_FOUNDRY = 'cloudFoundry',
+  ES_LINT = 'eslint',
 }
 
 export enum Categories {

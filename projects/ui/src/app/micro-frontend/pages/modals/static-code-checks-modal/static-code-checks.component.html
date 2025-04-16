@@ -7,23 +7,42 @@
       data-testid="static-code-checks-dialog-error-banner"
       title="Setup static code checks could not be completed"></app-error-message>
   </div>
-  <div>
-    <fdp-message-popover-form-wrapper [formFields]="formGenerator?.formFields" [forms]="formGenerator?.formGroup">
-      <fdp-form-generator [formItems]="formItems" (formSubmitted)="onFormSubmitted($event)"></fdp-form-generator>
-    </fdp-message-popover-form-wrapper>
-  </div>
+
+  <fdp-message-popover-form-wrapper [formFields]="formGenerator?.formFields" [forms]="formGenerator?.formGroup">
+    <fdp-form-generator
+      *ngIf="isCapMtaFormStep()"
+      [formItems]="usingCAPMTA"
+      (formSubmitted)="continueToSetupStep($event)"></fdp-form-generator>
+    <fdp-form-generator
+      *ngIf="isNoCapMtaSetupStep() || isCapMtaSetupStep()"
+      [formItems]="formItems"
+      (formSubmitted)="onFormSubmitted($event)"></fdp-form-generator>
+  </fdp-message-popover-form-wrapper>
 
   <div fd-bar barDesign="footer" class="actions-footer">
     <div fd-bar-left></div>
     <div fd-bar-right class="footer-buttons-gap">
+      <!-- "Continue" button, rendered on CAP/MTA Form Step -->
       <button
         fd-button
+        *ngIf="isCapMtaFormStep()"
+        (click)="continueToSetupStep(formGenerator?.formGroup?.value)"
+        [disabled]="formGenerator?.formGroup?.form && !formGenerator?.formGroup?.form?.valid"
+        type="submit"
+        fdType="emphasized"
+        label="Continue"
+        data-testid="static-code-checks-submit-button"></button>
+      <!-- "Submit" button, rendered on Setup Step -->
+      <button
+        fd-button
+        *ngIf="isNoCapMtaSetupStep() || isCapMtaSetupStep()"
         (click)="submitForm()"
         [disabled]="formGenerator?.formGroup?.form && !formGenerator?.formGroup?.form?.valid"
         type="submit"
         fdType="emphasized"
         label="Add Checks"
         data-testid="static-code-checks-submit-button"></button>
+      <!-- "Cancel" button, rendered on all Steps -->
       <button
         fd-button
         fdType="transparent"

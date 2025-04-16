@@ -25,6 +25,7 @@ import {
   PlatformMenuButtonModule,
 } from '@fundamental-ngx/platform'
 import {
+  DeletionPolicy,
   GithubRepository,
   JenkinsPipeline,
   OpenSourceComplianceGetResponse,
@@ -375,6 +376,36 @@ export class ServiceDetailsSkeletonComponent implements OnInit, OnChanges {
             message: errorMessage,
           })
           map.set(Kinds.GITHUB_ADVANCED_SECURITY, errorMessages)
+          return map
+        })
+      })
+  }
+
+  async deleteSonar() {
+    await this.luigiClient
+      .uxManager()
+      .showConfirmationModal({
+        header: 'Remove Static Code Checks',
+        body: 'Are you sure you want to remove static code checks?',
+        buttonConfirm: 'Yes',
+        buttonDismiss: 'No',
+      })
+      .then(async () => {
+        const resourceName = this.getResourceNameFromResourceRefs(Kinds.SONAR_QUBE_PROJECT, this.pipeline.resourceRefs)
+        if (!resourceName) {
+          throw new Error('SonarQube resource not found')
+        }
+        await firstValueFrom(this.api.sonarService.deleteSonarqubeProject(resourceName, DeletionPolicy.Orphan))
+      })
+      .catch((err) => {
+        const errorMessage = (err as Error).message
+        this.errors.update((map) => {
+          const errorMessages = map.get(Kinds.SONAR_QUBE_PROJECT) || []
+          errorMessages.push({
+            title: 'Deleting Static Code Checks failed',
+            message: errorMessage,
+          })
+          map.set(Kinds.SONAR_QUBE_PROJECT, errorMessages)
           return map
         })
       })

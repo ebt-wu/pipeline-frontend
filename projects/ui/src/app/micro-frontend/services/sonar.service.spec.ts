@@ -172,6 +172,7 @@ describe('SonarService', () => {
       mutation: DELETE_SONARQUBE_PROJECT,
       variables: {
         projectId: 'test-project-id',
+        deletionPolicy: 'ORPHAN',
         componentId: 'test-component-id',
         resourceName: 'test-resource',
       },

@@ -117,6 +117,24 @@
                 </li>
               </fdp-menu>
               <button
+                *ngIf="serviceKind === kinds.SONAR_QUBE_PROJECT && serviceUrls().get(serviceKind)"
+                ariaLabel="Show Options"
+                class="button-margin"
+                fd-button
+                fdType="transparent"
+                glyph="overflow"
+                [fdpMenuTriggerFor]="sonarDeleteMenu"></button>
+              <!-- Using the deprecated fdp-menu instead of fd-menu because it
+            fixes an issue with the menu items not closing after being clicked -->
+              <fdp-menu #sonarDeleteMenu>
+                <li fd-menu-item>
+                  <a fd-menu-interactive (click)="deleteSonar()">
+                    <fd-menu-addon position="before" glyph="delete"></fd-menu-addon>
+                    <span fd-menu-title>Delete Step</span>
+                  </a>
+                </li>
+              </fdp-menu>
+              <button
                 *ngIf="serviceKind !== kinds.GITHUB_ADVANCED_SECURITY && serviceUrls().get(serviceKind)"
                 fd-button
                 fdType="emphasized"

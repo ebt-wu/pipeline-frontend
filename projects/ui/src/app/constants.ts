@@ -75,6 +75,7 @@ export const KindExtensionName = {
   [StepKey.FORTIFY]: Extensions.FORTIFY,
   [StepKey.PPMS_FOSS]: Extensions.PPMS,
   [StepKey.WHITE_SOURCE]: Extensions.MEND,
+  [StepKey.ES_LINT]: Extensions.ESLINT,
 }
 
 export const KindStage = {

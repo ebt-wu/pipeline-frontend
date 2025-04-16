@@ -637,7 +637,17 @@ export const CREATE_SONARQUBE_PROJECT = gql`
 `
 
 export const DELETE_SONARQUBE_PROJECT = gql`
-  mutation DeleteSonarQubeProject($projectId: String!, $componentId: String!, $resourceName: String!) {
-    deleteSonarQubeProject(projectId: $projectId, componentId: $componentId, resourceName: $resourceName)
+  mutation DeleteSonarQubeProject(
+    $projectId: String!
+    $componentId: String!
+    $resourceName: String!
+    $deletionPolicy: DeletionPolicy
+  ) {
+    deleteSonarQubeProject(
+      projectId: $projectId
+      componentId: $componentId
+      resourceName: $resourceName
+      deletionPolicy: $deletionPolicy
+    )
   }
 `

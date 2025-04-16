@@ -3,6 +3,7 @@ import { ExtensionApolloClientService } from '@dxp/ngx-core/apollo'
 import { DxpIContextMessage, DxpLuigiContextService, LuigiClient } from '@dxp/ngx-core/luigi'
 import { gql } from 'apollo-angular'
 import { combineLatest, first, map, mergeMap, Observable } from 'rxjs'
+import { eslintSvg } from '../../../assets/ts-svg/eslint'
 import { ExtensionClass, ScopeType } from './extension.types'
 
 @Injectable({ providedIn: 'root' })
@@ -30,16 +31,48 @@ export class ExtensionService {
           })
           .pipe(
             map((apolloResponse) => {
-              return apolloResponse.data.getExtensionClassesForScopes
+              // adding eslint data to the list of extensions further explanation down below
+              return this.addEslintData(apolloResponse.data.getExtensionClassesForScopes)
             }),
           )
       }),
     )
   }
 
+  // ESlint is not an extension but we need to add it to the list of extensions because we want to show the information in
+  // the UI. As this is not a service offered by Hyperspace and hardcoding it in the component file(s) was more hacky and a tad
+  // bit more complex we decided to add it here so we have a single source of information and later on if we add service description
+  // for eslint we can simply add it here and not have to changes in the code files(static-code-checks.component.html/ts)
+  eslintData: ExtensionClass = {
+    name: 'eslint',
+    displayName: 'ESLint',
+    image: '',
+    description: 'ESLint is a static code analysis tool for identifying problematic patterns in JavaScript code.',
+    documentation: {
+      url: null,
+    },
+    icon: {
+      light: {
+        url: null,
+        data: eslintSvg,
+      },
+      dark: {
+        url: null,
+        data: eslintSvg,
+      },
+    },
+  }
+
+  private addEslintData(data: ExtensionClass[]): ExtensionClass[] {
+    const eslintData = this.eslintData
+    data.push(eslintData)
+    return data
+  }
+
   public getIcon(extension: ExtensionClass): string {
     let isDark = false
 
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
     const theme = this.luigiClient.uxManager().getCurrentTheme()
 
     switch (theme) {

@@ -632,10 +632,11 @@ export type SonarQubeProject = {
   __typename?: 'SonarQubeProject'
   configString?: Maybe<Scalars['String']['output']>
   host: Scalars['String']['output']
+  key: Scalars['String']['output']
   name: Scalars['String']['output']
   pullRequest?: Maybe<SonarQubePullRequest>
   repositoryRef: Scalars['String']['output']
-  secretPath: Scalars['String']['output']
+  secretPath?: Maybe<Scalars['String']['output']>
 }
 
 export type SonarQubeProjectCreatePayload = {
@@ -1351,7 +1352,7 @@ export type GetSonarQubeProjectQuery = {
     host: string
     name: string
     repositoryRef: string
-    secretPath: string
+    secretPath?: string | null
     configString?: string | null
   } | null
 }
@@ -1368,6 +1369,7 @@ export type DeleteSonarQubeProjectMutationVariables = Exact<{
   projectId: Scalars['String']['input']
   componentId: Scalars['String']['input']
   resourceName: Scalars['String']['input']
+  deletionPolicy?: InputMaybe<DeletionPolicy>
 }>
 
 export type DeleteSonarQubeProjectMutation = { __typename?: 'Mutation'; deleteSonarQubeProject?: string | null }

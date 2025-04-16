@@ -182,7 +182,7 @@ export class ValidateCodeSectionComponent implements OnChanges, OnInit {
           await this.luigiClient.linkManager().fromVirtualTreeRoot().openAsModal('setup-static-code-checks', {
             title: 'Add Static Code Checks',
             width: '450px',
-            height: '280px',
+            height: '215px',
           })
         } else {
           window.open(

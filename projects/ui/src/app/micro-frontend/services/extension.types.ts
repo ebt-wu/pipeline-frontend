@@ -22,6 +22,7 @@ export enum Extensions {
   OPEN_SOURCE_COMPLIANCE = 'hyperspace-open-source-compliance-management',
   XMAKE = 'xmake',
   BLACKDUCK = 'blackduck-detect',
+  ESLINT = 'eslint',
 }
 
 export interface ExtensionClass {

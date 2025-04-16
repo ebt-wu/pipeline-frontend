@@ -6,6 +6,7 @@ import {
   GetSonarQubeProjectQuery,
   GetSonarQubeProjectQueryVariables,
 } from '@generated/graphql'
+import { DeletionPolicy } from '@generated/graphql'
 import { combineLatest } from 'rxjs'
 import { first, map, mergeMap } from 'rxjs/operators'
 import { BaseAPIService } from './base.service'
@@ -52,7 +53,7 @@ export class SonarService {
     )
   }
 
-  deleteSonarqubeProject(resourceName: string) {
+  deleteSonarqubeProject(resourceName: string, deletionPolicy: DeletionPolicy = DeletionPolicy.Orphan) {
     return combineLatest([this.apiService.apollo(), this.luigiService.contextObservable()]).pipe(
       first(),
       mergeMap(([client, ctx]) => {
@@ -62,6 +63,7 @@ export class SonarService {
             projectId: ctx.context.projectId,
             componentId: ctx.context.componentId,
             resourceName: resourceName,
+            deletionPolicy: deletionPolicy,
           },
         })
       }),
