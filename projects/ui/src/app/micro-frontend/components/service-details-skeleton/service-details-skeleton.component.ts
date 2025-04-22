@@ -366,6 +366,7 @@ export class ServiceDetailsSkeletonComponent implements OnInit, OnChanges {
           throw new Error('GHAS resource not found')
         }
         await firstValueFrom(this.api.githubAdvancedSecurityService.deleteGithubAdvancedSecurity(resourceName))
+        this.closeDetails()
       })
       .catch((err) => {
         const errorMessage = (err as Error).message
