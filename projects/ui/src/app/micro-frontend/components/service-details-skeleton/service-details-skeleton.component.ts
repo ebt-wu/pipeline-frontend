@@ -613,7 +613,7 @@ The information might be missing in the Hyperspace portal extension backend, Lea
   async onRetryClicked(resourceRef: ResourceRef): Promise<void> {
     try {
       await firstValueFrom(this.debugModeService.forceDebugReconciliation(resourceRef.kind, resourceRef.name))
-      this.debugModeService.messageToastService.open('Triggered reconciliation')
+      this.debugModeService.messageToastService.open('Retry triggered')
     } catch (e) {
       if (e instanceof ApolloError) {
         this.debugModeService.messageToastService.open(e.message, {

@@ -87,9 +87,8 @@
               </div>
               <button
                 *ngIf="
-                  debugModeService.debugModeEnabled() &&
                   getResourceStatusFromResourceRefs(serviceKind, pipeline.resourceRefs) ===
-                    ServiceStatus.FAILING_CREATION
+                  ServiceStatus.FAILING_CREATION
                 "
                 data-testid="retry-button"
                 fd-button

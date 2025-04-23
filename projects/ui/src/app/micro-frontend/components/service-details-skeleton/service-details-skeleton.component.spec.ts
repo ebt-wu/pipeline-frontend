@@ -271,7 +271,7 @@ describe('ServiceDetailsSkeletonComponent', () => {
       ngMocks.click(retryButton)
       expect(component.onRetryClicked).toHaveBeenCalledWith(ghasRef)
     })
-    it('should show the retry button for a failing service in debug mode', () => {
+    it('should show the retry button for a failing service', () => {
       const fixture = MockRender(ServiceDetailsSkeletonComponent, {
         context,
         activeCategory: Categories.STATIC_SECURITY_CHECKS,
@@ -283,28 +283,9 @@ describe('ServiceDetailsSkeletonComponent', () => {
           },
         ]),
       })
-      const component = fixture.point.componentInstance
-      component.debugModeService.toggleDebugMode() // enable debug mode
       fixture.detectChanges()
       const retryButton = ngMocks.find(fixture, '[data-testid="retry-button"]')
       expect(retryButton).toBeDefined()
-    })
-    it('should not show the retry button when debug mode is off', () => {
-      const fixture = MockRender(ServiceDetailsSkeletonComponent, {
-        context,
-        activeCategory: Categories.STATIC_SECURITY_CHECKS,
-        leanIxData: [],
-        pipeline: createPipelineForTests([
-          {
-            kind: Kinds.GITHUB_ADVANCED_SECURITY,
-            status: ServiceStatus.FAILING_CREATION,
-          },
-        ]),
-      })
-
-      fixture.detectChanges()
-
-      expect(() => ngMocks.find(fixture, '[data-testid="retry-button"]')).toThrow()
     })
     it('should not show the retry button when the service is not failing', () => {
       const fixture = MockRender(ServiceDetailsSkeletonComponent, {
