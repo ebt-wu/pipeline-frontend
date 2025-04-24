@@ -211,7 +211,7 @@ export class StaticCodeChecksComponent implements OnInit {
       {
         type: 'input',
         name: 'sonarProjectName',
-        message: 'SonarQube Project Name',
+        message: 'SonarQube Project Display Name',
         validators: [Validators.required],
         default: async () => {
           const context = await this.luigiService.getContextAsync()

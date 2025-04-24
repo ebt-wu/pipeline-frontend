@@ -32,15 +32,25 @@
         fdType="emphasized"
         label="Continue"
         data-testid="static-code-checks-submit-button"></button>
-      <!-- "Submit" button, rendered on Setup Step -->
+      <!-- "NoCapMtaSetup" submit button -->
       <button
         fd-button
-        *ngIf="isNoCapMtaSetupStep() || isCapMtaSetupStep()"
+        *ngIf="isNoCapMtaSetupStep()"
         (click)="submitForm()"
         [disabled]="formGenerator?.formGroup?.form && !formGenerator?.formGroup?.form?.valid"
         type="submit"
         fdType="emphasized"
         label="Add Checks"
+        data-testid="static-code-checks-submit-button"></button>
+      <!-- "CapMtaSetup" submit button -->
+      <button
+        fd-button
+        *ngIf="isCapMtaSetupStep()"
+        (click)="submitForm()"
+        [disabled]="formGenerator?.formGroup?.form && !formGenerator?.formGroup?.form?.valid"
+        type="submit"
+        fdType="emphasized"
+        label="Add SonarQube"
         data-testid="static-code-checks-submit-button"></button>
       <!-- "Cancel" button, rendered on all Steps -->
       <button
