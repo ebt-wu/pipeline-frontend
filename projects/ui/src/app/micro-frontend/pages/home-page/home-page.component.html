@@ -1,10 +1,34 @@
-<div *ngIf="!loading()" class="home-page-content">
-  <div *ngIf="pipelineAvail | async as pipeline; else errorMessage">
-    <ng-container>
-      <app-pipeline [pipeline$]="watch$"></app-pipeline>
-    </ng-container>
-  </div>
-  <ng-template #errorMessage>
+@if (!loading()) {
+  @if ((pipelineAvail | async) && githubMetadataPresent() && isGhToolsOrGhWdf()) {
+    <div>
+      <ng-container>
+        <app-pipeline [pipeline$]="watch$"></app-pipeline>
+      </ng-container>
+    </div>
+  } @else if (!githubMetadataPresent()) {
+    <div class="unable-to-load-message">
+      <img src="./assets/notFoundPage.svg" alt="Cards with a question mark" width="300px" />
+      <figure fd-illustrated-message [noSvg]="true" type="spot">
+        <figcaption fd-illustrated-message-figcaption id="not-found-description">
+          <h3 fd-illustrated-message-title>Unable to load CI/CD Setup</h3>
+          <p fd-illustrated-message-text>Could not retrieve GitHub information for your component.</p>
+        </figcaption>
+      </figure>
+    </div>
+  } @else if (!isGhToolsOrGhWdf()) {
+    <div class="unable-to-load-message">
+      <img src="./assets/errorPage.svg" alt="Cards with error" width="300px" />
+      <figure fd-illustrated-message [noSvg]="true" type="spot">
+        <figcaption fd-illustrated-message-figcaption id="not-found-description">
+          <h3 fd-illustrated-message-title>CI/CD Setup not supported for component</h3>
+          <p fd-illustrated-message-text>
+            Only components with repositories hosted on github.tools.sap or github.wdf.sap.corp are supported for the
+            CI/CD Setup. The repository for this component is hosted on {{ githubMeta?.githubHostName }}.
+          </p>
+        </figcaption>
+      </figure>
+    </div>
+  } @else {
     <div class="unable-to-load-message">
       <img src="./assets/notFoundPage.svg" alt="Cards with a question mark" width="300px" />
       <figure fd-illustrated-message [noSvg]="true" type="spot">
@@ -14,8 +38,9 @@
         </figcaption>
       </figure>
     </div>
-  </ng-template>
-</div>
-<div class="busy-indicator" *ngIf="loading()">
-  <fd-busy-indicator [loading]="loading()" ariaLabel="loading" title="Please Wait"></fd-busy-indicator>
-</div>
+  }
+} @else {
+  <div class="busy-indicator">
+    <fd-busy-indicator [loading]="loading()" ariaLabel="loading" title="Please Wait"></fd-busy-indicator>
+  </div>
+}

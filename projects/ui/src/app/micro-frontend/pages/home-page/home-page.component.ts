@@ -3,6 +3,7 @@ import { ChangeDetectionStrategy, Component, HostListener, OnInit, signal } from
 import { StepsOverallOrder } from '@constants'
 import { AuthorizationModule } from '@dxp/ngx-core/authorization'
 import { DxpLuigiContextService, LuigiClient } from '@dxp/ngx-core/luigi'
+import { GithubInstances } from '@enums'
 import { FundamentalNgxCoreModule, SvgConfig } from '@fundamental-ngx/core'
 import { PlatformDynamicPageModule } from '@fundamental-ngx/platform/dynamic-page'
 import { NotManagedServices, PipelineType } from '@generated/graphql'
@@ -12,7 +13,7 @@ import { map } from 'rxjs/operators'
 import { tntSpotSecret } from '../../../../assets/ts-svg/tnt-spot-secret'
 import { DebugModeService } from '../../services/debug-mode.service'
 import { GithubActionsService } from '../../services/github-actions.service'
-import { GithubService } from '../../services/github.service'
+import { GithubMetadata, GithubService } from '../../services/github.service'
 import { PipelineService } from '../../services/pipeline.service'
 import { PolicyService } from '../../services/policy.service'
 import { PipelineComponent } from '../pipeline/pipeline.component'
@@ -37,6 +38,10 @@ export class HomePageComponent implements OnInit {
   watch$: Observable<Pipeline>
   pipelineAvail = new BehaviorSubject<boolean>(false)
   loading = signal(false)
+  githubMetadataPresent = signal(true)
+  isGhToolsOrGhWdf = signal(true)
+  githubMeta: GithubMetadata
+
   readonly spotConfig: SvgConfig = {
     spot: {
       file: tntSpotSecret,
@@ -56,6 +61,18 @@ export class HomePageComponent implements OnInit {
 
   async ngOnInit() {
     this.loading.set(true)
+
+    // github preflight checks
+    this.githubMeta = await this.githubService.getGithubMetadata()
+    if (!this.githubMeta.githubRepoUrl || !this.githubMeta.githubOrgName || !this.githubMeta.githubRepoName) {
+      this.githubMetadataPresent.set(false)
+    } else if (
+      this.githubMeta.githubHostName != GithubInstances.TOOLS &&
+      this.githubMeta.githubHostName != GithubInstances.WDF
+    ) {
+      this.isGhToolsOrGhWdf.set(false)
+    }
+
     await this.initializePipeline().finally(() => {
       this.loading.set(false)
     })
