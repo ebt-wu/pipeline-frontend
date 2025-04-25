@@ -78,6 +78,7 @@ export class StaticCodeChecksComponent implements OnInit {
   SONARQUBE_DOCU_LINK =
     'https://pages.github.tools.sap/hyperspace/cicd-setup-documentation/managed-services/validate/sonarqube.html#sonarqube'
   ESLint_DOCU_LINK = 'https://pages.github.tools.sap/hyperspace/academy/bestpractice/CorpReq_FC1_CodingRules/#setup'
+  ESLint_INFO_LINK = 'https://eslint.org/'
   @ViewChild(FormGeneratorComponent) formGenerator: FormGeneratorComponent
   formItems: DynamicFormItem[] = []
   usingCAPMTA: DynamicFormItem[] = []
@@ -171,7 +172,7 @@ export class StaticCodeChecksComponent implements OnInit {
           additionalData: {
             extensionName: KindExtensionName[StepKey.ES_LINT],
             popoverHtml: () => {
-              return `<a href="${this.ESLint_DOCU_LINK}" target="_blank" rel="noopener noreferrer">Learn more</a>`
+              return `<a href="${this.ESLint_INFO_LINK}" target="_blank" rel="noopener noreferrer">Learn more</a>`
             },
           } as FormGeneratorExtensionInfoAdditionalData,
         },
