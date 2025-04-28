@@ -412,7 +412,7 @@ export class StaticSecurityChecksComponent implements OnInit, OnDestroy {
             return `
 							<ol>
 								<li>
-									Install the CxOne extension from the <a href="${context.frameBaseUrl}/projects/${context.projectId}/catalog" target="_blank" rel="noopener noreferrer">catalog</a>
+									Install the CxOne extension from the <a href="${context.frameBaseUrl}/projects/${context.projectId}/marketplace?~q=CheckmarxOne" target="_blank" rel="noopener noreferrer">marketplace</a>
 								</li>
 								<li>Create a CxOne account</li>
 							</ol>
