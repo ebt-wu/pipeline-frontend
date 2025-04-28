@@ -53,7 +53,9 @@
                     glyph="kpi-corporate-performance">
                     Traces
                   </button>
-                  <div (click)="getKubeCtlCmd(pipeline.name, pipeline.namespace)" class="freestyle-pipeline-details">
+                  <div
+                    (click)="getKubeCtlCmd(pipeline.name, pipeline.namespace, $event.metaKey)"
+                    class="freestyle-pipeline-details">
                     <code>FreestylePipeline: {{ pipeline.name }}</code>
                     <code class="namespace">Namespace: {{ pipeline.namespace }}</code>
                   </div>

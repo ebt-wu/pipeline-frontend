@@ -301,10 +301,13 @@ export class PipelineComponent implements OnInit, OnDestroy {
     this.pipelineSubscription.unsubscribe()
   }
 
-  async getKubeCtlCmd(freestylePipelineName: string, namespace: string) {
+  async getKubeCtlCmd(freestylePipelineName: string, namespace: string, cmdPressed: boolean) {
     const cb = navigator.clipboard
-    await cb.writeText(`kubectl describe freestylepipelines ${freestylePipelineName} -n ${namespace}`)
-    this.messageToastService.open('kubectl describe command copied to clipboard', {
+    const cmd = cmdPressed
+      ? `k9s -n ${namespace}`
+      : `kubectl describe freestylepipelines ${freestylePipelineName} -n ${namespace}`
+    await cb.writeText(cmd)
+    this.messageToastService.open(`${cmdPressed ? `k9s` : `kubectl`} describe command copied to clipboard`, {
       duration: 5000,
     })
   }
