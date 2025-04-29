@@ -253,15 +253,17 @@ export class PipelineComponent implements OnInit, OnDestroy {
           }
 
           this.errors.update((errs) => {
+            // newMap is required because Angular's default signal equality check uses reference comparison. Updating the map in place would not trigger change detection.
+            const newMap = new Map(errs)
             errs.forEach((_, key) => {
               if (key.startsWith(errorKeyPrefix)) {
-                errs.delete(key)
+                newMap.delete(key)
               }
             })
             errorMap.forEach((error, key) => {
-              errs.set(key, error)
+              newMap.set(key, error)
             })
-            return errs
+            return newMap
           })
 
           if (!isBuildPipelineSetup(pipeline.resourceRefs)) {
