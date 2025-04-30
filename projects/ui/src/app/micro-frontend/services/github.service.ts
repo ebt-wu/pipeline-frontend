@@ -208,7 +208,7 @@ export class GithubService {
     }
 
     return (
-      allowedLanguages.find((lang) => lang.id.toLowerCase() === mostUsedLanguage.Name.toLowerCase()) ??
+      allowedLanguages.find((lang) => lang.id.toLowerCase() === mostUsedLanguage.Name?.toLowerCase()) ??
       allowedLanguages.find((lang) => lang.id === Languages.OTHER)
     )
   }
