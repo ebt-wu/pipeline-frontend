@@ -46,8 +46,6 @@ export class GithubAdvancedSecurityServiceDetailsComponent extends BaseServiceDe
   loading = signal(false)
   error: string
 
-  GITHUB_ACTIONS_DOCU_LINK =
-    'https://github.wdf.sap.corp/pages/Security-Testing/doc/ghas/producing/#deploying-codeql-using-github-actions'
   AUDIT_FINDINGS_DOCU_LINK =
     'https://github.wdf.sap.corp/pages/Security-Testing/doc/ghas/consuming/#which-findings-to-audit'
   ADD_SCAN_PROJECT_SIRIUS_DOCU_LINK = 'https://wiki.one.int.sap/wiki/x/s9XS7w'
