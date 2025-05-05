@@ -32,7 +32,6 @@ import {
 } from '../../../components/form-generator/form-generator-header/form-generator-header.component'
 import { PlatformFormGeneratorCustomInfoBoxComponent } from '../../../components/form-generator/form-generator-info-box/form-generator-info-box.component'
 import { PlatformFormGeneratorCustomMessageStripComponent } from '../../../components/form-generator/form-generator-message-strip/form-generator-message-strip.component'
-import { PlatformFormGeneratorCustomReadOnlyInputComponent } from '../../../components/form-generator/form-generator-read-only-input/form-generator-read-only-input.component'
 import { ExtensionService } from '../../../services/extension.service'
 import { ExtensionClass } from '../../../services/extension.types'
 import { GithubActionsService } from '../../../services/github-actions.service'
@@ -299,7 +298,7 @@ export class SetupOSCModalComponent implements OnInit {
       },
     },
     {
-      type: 'read-only-input',
+      type: 'input',
       name: 'githubRepository',
       message: 'Repository',
       default: () => {
@@ -307,6 +306,7 @@ export class SetupOSCModalComponent implements OnInit {
         const githubRepoName = entityContext.component?.annotations?.['github.dxp.sap.com/repo-name'] ?? ''
         return `${githubRepoName} (component repository)`
       },
+      readonly: true,
       when: (formValue: SetupOSCFormValue) => {
         return formValue.platform === OSCPlatforms.GITHUB
       },
@@ -360,7 +360,6 @@ export class SetupOSCModalComponent implements OnInit {
   ) {
     this._formGeneratorService.addComponent(PlatformFormGeneratorCustomHeaderElementComponent, ['header'])
     this._formGeneratorService.addComponent(PlatformFormGeneratorCustomMessageStripComponent, ['message-strip'])
-    this._formGeneratorService.addComponent(PlatformFormGeneratorCustomReadOnlyInputComponent, ['read-only-input'])
     this._formGeneratorService.addComponent(PlatformFormGeneratorCustomInfoBoxComponent, ['info'])
   }
 

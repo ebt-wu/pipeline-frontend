@@ -45,7 +45,6 @@ import {
   FormGeneratorMessageStripAdditionalData,
   PlatformFormGeneratorCustomMessageStripComponent,
 } from '../../../components/form-generator/form-generator-message-strip/form-generator-message-strip.component'
-import { PlatformFormGeneratorCustomReadOnlyInputComponent } from '../../../components/form-generator/form-generator-read-only-input/form-generator-read-only-input.component'
 import { PlatformFormGeneratorCustomValidatorComponent } from '../../../components/form-generator/form-generator-validator/form-generator-validator.component'
 import { CxOneService } from '../../../services/cxone.service'
 import { Extensions } from '../../../services/extension.types'
@@ -436,10 +435,11 @@ export class StaticSecurityChecksComponent implements OnInit, OnDestroy {
       },
     },
     {
-      type: 'read-only-input',
+      type: 'input',
       name: 'cxOneApplicationName',
       message: 'CxOne Account',
       default: () => null,
+      readonly: true,
       when: (formValue: SetupValidationFormValue) => {
         if (this.formStep() !== 1) {
           return false
@@ -659,7 +659,6 @@ export class StaticSecurityChecksComponent implements OnInit, OnDestroy {
     this.formGeneratorService.addComponent(PlatformFormGeneratorCustomHeaderElementComponent, ['header'])
     this.formGeneratorService.addComponent(PlatformFormGeneratorCustomInfoBoxComponent, ['info'])
     this.formGeneratorService.addComponent(PlatformFormGeneratorCustomMessageStripComponent, ['message-strip'])
-    this.formGeneratorService.addComponent(PlatformFormGeneratorCustomReadOnlyInputComponent, ['read-only-input'])
     this.formGeneratorService.addComponent(PlatformFormGeneratorCustomValidatorComponent, ['validator'])
 
     this.submitButtonText = computed(() => {
