@@ -13,7 +13,7 @@ import {
   PlatformMessagePopoverModule,
 } from '@fundamental-ngx/platform'
 import { BuildTool, Orchestrators } from '@generated/graphql'
-import { EntityContext, Pipeline, ResourceRef, ProgrammingLanguage } from '@types'
+import { Pipeline, ResourceRef, ProgrammingLanguage } from '@types'
 import { debounceTime, firstValueFrom, Observable, Subscription } from 'rxjs'
 import { ErrorMessageComponent } from '../../../components/error-message/error-message.component'
 import { PlatformFormGeneratorCustomInfoBoxComponent } from '../../../components/form-generator/form-generator-info-box/form-generator-info-box.component'
@@ -242,17 +242,18 @@ export class SetupGhasModalComponent implements OnInit, OnDestroy {
   }
 
   async createGithubResource(): Promise<void> {
-    const context = await this.luigiService.getContextAsync()
-    const entityContext = context.entityContext as unknown as EntityContext
-
-    const repoUrl: string = entityContext?.component?.annotations?.['github.dxp.sap.com/repo-url'] ?? ''
-    const login: string = entityContext?.component?.annotations?.['github.dxp.sap.com/login'] ?? ''
-    const repoName: string = entityContext?.component?.annotations?.['github.dxp.sap.com/repo-name'] ?? ''
-
-    const githubRepoUrl = new URL(repoUrl)
+    const githubMeta = await this.githubService.getGithubMetadata()
+    const githubRepoUrl = new URL(githubMeta.githubRepoUrl)
 
     try {
-      await firstValueFrom(this.githubService.createGithubRepository(githubRepoUrl.origin, login, repoName, false))
+      await firstValueFrom(
+        this.githubService.createGithubRepository(
+          githubRepoUrl.origin,
+          githubMeta.githubOrgName,
+          githubMeta.githubRepoName,
+          false,
+        ),
+      )
     } catch (error) {
       const errorMessage = (error as Error).message
       if (errorMessage) {

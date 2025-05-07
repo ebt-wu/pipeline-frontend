@@ -26,7 +26,7 @@ import {
   SelectItem,
 } from '@fundamental-ngx/platform'
 import { BuildTool, NotManagedServices, Orchestrators } from '@generated/graphql'
-import { EntityContext, Pipeline } from '@types'
+import { Pipeline } from '@types'
 import { debounceTime, first, firstValueFrom, interval, Observable, skipWhile, Subscription, timeout } from 'rxjs'
 import { ErrorMessageComponent } from '../../../components/error-message/error-message.component'
 import {
@@ -912,16 +912,26 @@ export class StaticSecurityChecksComponent implements OnInit, OnDestroy {
   }
 
   async createGithubResource(): Promise<void> {
-    const context = await this.luigiService.getContextAsync()
-    const entityContext = context.entityContext as unknown as EntityContext
+    const githubMeta = await this.githubService.getGithubMetadata()
+    const githubRepoUrl = new URL(githubMeta.githubRepoUrl)
 
-    const repoUrl: string = entityContext?.component?.annotations?.['github.dxp.sap.com/repo-url'] ?? ''
-    const login: string = entityContext?.component?.annotations?.['github.dxp.sap.com/login'] ?? ''
-    const repoName: string = entityContext?.component?.annotations?.['github.dxp.sap.com/repo-name'] ?? ''
-
-    const githubRepoUrl = new URL(repoUrl)
-
-    await firstValueFrom(this.githubService.createGithubRepository(githubRepoUrl.origin, login, repoName, false))
+    try {
+      await firstValueFrom(
+        this.githubService.createGithubRepository(
+          githubRepoUrl.origin,
+          githubMeta.githubOrgName,
+          githubMeta.githubRepoName,
+          false,
+        ),
+      )
+    } catch (error) {
+      const errorMessage = (error as Error).message
+      if (errorMessage) {
+        this.errorMessage.set(errorMessage)
+      } else {
+        this.errorMessage.set('Unknown error')
+      }
+    }
   }
 
   /**
