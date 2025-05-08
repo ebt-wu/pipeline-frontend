@@ -14,12 +14,6 @@ export type Scalars = {
   Float: { input: number; output: number }
 }
 
-export type AutomaticdInput = {
-  githubUrl: Scalars['String']['input']
-  secretName?: InputMaybe<Scalars['String']['input']>
-  useDynamicNamespace?: InputMaybe<Scalars['Boolean']['input']>
-}
-
 export type AzureDevOps = {
   __typename?: 'AzureDevOps'
   azurePipelineId: Scalars['Int']['output']
@@ -252,7 +246,6 @@ export type Mutation = {
   deleteSonarQubeProject?: Maybe<Scalars['String']['output']>
   ensureVaultOnboarding: VaultOnboardingInfo
   forceDebugReconciliation?: Maybe<Scalars['String']['output']>
-  provideTokenToAutomaticd: Scalars['String']['output']
   removeStagingServiceCredential?: Maybe<Scalars['String']['output']>
   toggleDebugLabel?: Maybe<Scalars['String']['output']>
   writeSecret?: Maybe<Scalars['String']['output']>
@@ -264,6 +257,7 @@ export type MutationCreateCumulusPipelineArgs = {
 }
 
 export type MutationCreateCxOneProjectArgs = {
+  buildTool?: InputMaybe<BuildTool>
   portalComponentId: Scalars['String']['input']
   portalProjectId: Scalars['String']['input']
   preset: Scalars['String']['input']
@@ -400,12 +394,6 @@ export type MutationForceDebugReconciliationArgs = {
   kind: Scalars['String']['input']
   projectId: Scalars['String']['input']
   resourceName: Scalars['String']['input']
-}
-
-export type MutationProvideTokenToAutomaticdArgs = {
-  automaticdInput: AutomaticdInput
-  projectId: Scalars['String']['input']
-  tenantId: Scalars['String']['input']
 }
 
 export type MutationRemoveStagingServiceCredentialArgs = {
@@ -631,6 +619,7 @@ export type SecretMetadata = {
 export type SonarQubeProject = {
   __typename?: 'SonarQubeProject'
   configString?: Maybe<Scalars['String']['output']>
+  creationTimestamp?: Maybe<Scalars['String']['output']>
   host: Scalars['String']['output']
   key: Scalars['String']['output']
   name: Scalars['String']['output']
@@ -1275,6 +1264,7 @@ export type CreateCxOneProjectMutationVariables = Exact<{
   portalProjectId: Scalars['String']['input']
   portalComponentId: Scalars['String']['input']
   preset: Scalars['String']['input']
+  buildTool?: InputMaybe<BuildTool>
 }>
 
 export type CreateCxOneProjectMutation = { __typename?: 'Mutation'; createCxOneProject?: string | null }

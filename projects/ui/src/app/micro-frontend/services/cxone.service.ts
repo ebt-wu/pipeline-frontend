@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core'
 import { ApolloError } from '@apollo/client/errors'
 import { DxpLuigiContextService } from '@dxp/ngx-core/luigi'
 import {
+  BuildTool,
   CreateCxOneProjectMutation,
   CreateCxOneProjectMutationVariables,
   DeleteCxOneProjectMutation,
@@ -58,7 +59,7 @@ export class CxOneService {
     )
   }
 
-  createCxOneProject(preset: string) {
+  createCxOneProject(preset: string, buildTool: BuildTool) {
     return combineLatest([this.apiService.apollo(), this.luigiService.contextObservable()]).pipe(
       first(),
       mergeMap(([client, ctx]) => {
@@ -66,6 +67,7 @@ export class CxOneService {
           .mutate<CreateCxOneProjectMutation, CreateCxOneProjectMutationVariables>({
             mutation: CREATE_CX_ONE_PROJECT,
             variables: {
+              buildTool: buildTool,
               portalProjectId: ctx.context.projectId,
               portalComponentId: ctx.context.componentId,
               preset: preset,

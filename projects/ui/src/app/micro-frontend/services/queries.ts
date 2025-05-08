@@ -542,8 +542,18 @@ export const GET_CX_ONE_APPLICATION = gql`
 `
 
 export const CREATE_CX_ONE_PROJECT = gql`
-  mutation CreateCxOneProject($portalProjectId: String!, $portalComponentId: String!, $preset: String!) {
-    createCxOneProject(portalProjectId: $portalProjectId, portalComponentId: $portalComponentId, preset: $preset)
+  mutation CreateCxOneProject(
+    $portalProjectId: String!
+    $portalComponentId: String!
+    $preset: String!
+    $buildTool: BuildTool
+  ) {
+    createCxOneProject(
+      portalProjectId: $portalProjectId
+      portalComponentId: $portalComponentId
+      preset: $preset
+      buildTool: $buildTool
+    )
   }
 `
 

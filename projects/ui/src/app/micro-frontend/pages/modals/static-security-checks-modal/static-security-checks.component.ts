@@ -878,7 +878,9 @@ export class StaticSecurityChecksComponent implements OnInit, OnDestroy {
 
       for (const validationTool of formValue.validationTools) {
         if (validationTool === ValidationTools.CX) {
-          await firstValueFrom(this.cxOneService.createCxOneProject(formValue.cxOnePreset))
+          await firstValueFrom(
+            this.cxOneService.createCxOneProject(formValue.cxOnePreset, getBuidTool(formValue.language)),
+          )
         }
         if (validationTool === ValidationTools.GHAS) {
           const ghasOnActionsEnabled = await this.featureFlagService.isGhasOnActionsEnabled()
