@@ -22,3 +22,9 @@
   overflow-x: auto;
   white-space: pre-wrap;
 }
+
+.code-box .code-button {
+  position: absolute;
+  top: 0.8rem;
+  right: 1rem;
+}

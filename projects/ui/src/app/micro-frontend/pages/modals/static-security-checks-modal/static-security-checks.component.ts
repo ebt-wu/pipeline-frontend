@@ -47,7 +47,9 @@ import {
 } from '../../../components/form-generator/form-generator-message-strip/form-generator-message-strip.component'
 import { PlatformFormGeneratorCustomValidatorComponent } from '../../../components/form-generator/form-generator-validator/form-generator-validator.component'
 import { CxOneService } from '../../../services/cxone.service'
+import { ExtensionService } from '../../../services/extension.service'
 import { Extensions } from '../../../services/extension.types'
+import { ExtensionClass } from '../../../services/extension.types'
 import { FeatureFlagService } from '../../../services/feature-flag.service'
 import { GithubActionsFormService } from '../../../services/forms/github-actions-form.service'
 import { GithubActionsService } from '../../../services/github-actions.service'
@@ -195,140 +197,8 @@ export class StaticSecurityChecksComponent implements OnInit, OnDestroy {
   @ViewChild(FormGeneratorComponent) formGenerator: FormGeneratorComponent
   formItems: DynamicFormItem[] = []
 
-  validationToolSelectFormItems: DynamicFormItem[] = [
-    {
-      type: 'header',
-      name: 'recommendationHeader',
-      message: '',
-      guiOptions: {
-        additionalData: {
-          headerText: (formValue) => {
-            const language = ProgrammingLanguages.find((language) => language.id == formValue.language)
-
-            return `Because you use ${language.displayName}`
-          },
-          ignoreBottomMargin: true,
-        } as FormGeneratorHeaderAdditionalData<SetupValidationFormValue>,
-      },
-      when: (formValue: SetupValidationFormValue) => {
-        if (this.formStep() !== 1) return false
-
-        return getRequiredValidationTools(formValue.language).length >= 1
-      },
-    },
-    {
-      type: 'extension-info',
-      name: 'recommendationExtensionInfo1',
-      message: '',
-      guiOptions: {
-        additionalData: {
-          extensionName: (formValue) => {
-            const requiredValidationTools = getRequiredValidationTools(formValue.language)
-            if (requiredValidationTools.length === 0) {
-              return null
-            }
-            return ValidationToolExtensionName[requiredValidationTools[0]]
-          },
-          popoverHtml: (formValue) => {
-            const requiredValidationTools = getRequiredValidationTools(formValue.language)
-            let link = GHAS_DOCUMENTATION_LINK
-            if (requiredValidationTools[0] === ValidationTools.CX) {
-              link = CX_ONE_DOCUMENTATION_LINK
-            }
-            return `
-							<a
-								href="${link}"
-								target="_blank"
-								rel="noopener noreferrer">Learn more.</a>`
-          },
-        } as FormGeneratorExtensionInfoAdditionalData<SetupValidationFormValue>,
-      },
-      when: (formValue: SetupValidationFormValue) => {
-        if (this.formStep() !== 1) return false
-
-        return getRequiredValidationTools(formValue.language).length >= 1
-      },
-    },
-    {
-      type: 'extension-info',
-      name: 'recommendationExtensionInfo2',
-      message: '',
-      guiOptions: {
-        additionalData: {
-          extensionName: (formValue) => {
-            const requiredValidationTools = getRequiredValidationTools(formValue.language)
-            if (requiredValidationTools.length !== 2) {
-              return null
-            }
-            return ValidationToolExtensionName[requiredValidationTools[1]]
-          },
-          popoverHtml: (formValue) => {
-            const requiredValidationTools = getRequiredValidationTools(formValue.language)
-            let link = GHAS_DOCUMENTATION_LINK
-            if (requiredValidationTools[1] === ValidationTools.CX) {
-              link = CX_ONE_DOCUMENTATION_LINK
-            }
-            return `
-							<a
-								href="${link}"
-								target="_blank"
-								rel="noopener noreferrer">Learn more.</a>`
-          },
-        } as FormGeneratorExtensionInfoAdditionalData<SetupValidationFormValue>,
-      },
-      when: (formValue: SetupValidationFormValue) => {
-        if (this.formStep() !== 1) return false
-
-        return getRequiredValidationTools(formValue.language).length === 2
-      },
-    },
-    {
-      type: 'header',
-      name: 'validationToolsHeader',
-      message: '',
-      guiOptions: {
-        additionalData: {
-          headerText: 'Select services',
-          buttonText: 'Need Help?',
-          buttonInlineHelpHtml: `
-						Unsure which service to choose?<br/>
-						<a
-							href="https://github.wdf.sap.corp/pages/Security-Testing/doc/security%20testing/tools/#sast-tools"
-							target="_blank"
-							rel="noopener noreferred">Open Recommendations</a><br/><br/>
-
-						Need more service info?<br/>
-						<a
-							href="${GHAS_DOCUMENTATION_LINK}"
-							target="_blank"
-							rel="noopener noreferrer">GitHub Advanced Security Documentation</a><br/>
-						<a
-							href="${CX_ONE_DOCUMENTATION_LINK}"
-							target="_blank"
-							rel="noopener noreferrer">CxOne Documentation</a>
-					`,
-          ignoreBottomMargin: true,
-        } as FormGeneratorHeaderAdditionalData<SetupValidationFormValue>,
-      },
-      when: (formValue: SetupValidationFormValue) => {
-        if (this.formStep() !== 1) return false
-
-        return getRequiredValidationTools(formValue.language).length === 0
-      },
-    },
-    {
-      type: 'checkbox',
-      name: 'validationTools',
-      choices: () => [ValidationTools.GHAS, ValidationTools.CX],
-      when: (formValue: SetupValidationFormValue) => {
-        if (this.formStep() !== 1) return false
-
-        return getRequiredValidationTools(formValue.language).length === 0
-      },
-      validators: [Validators.required],
-    },
-  ]
-
+  extensionClasses: ExtensionClass[] = []
+  validationToolSelectFormItems: DynamicFormItem[]
   cxOneFormItems: DynamicFormItem[] = [
     {
       type: 'header',
@@ -654,6 +524,7 @@ export class StaticSecurityChecksComponent implements OnInit, OnDestroy {
     private readonly cxOneService: CxOneService,
     private readonly formGeneratorService: FormGeneratorService,
     private readonly githubActionsFormService: GithubActionsFormService,
+    private readonly extensionService: ExtensionService,
   ) {
     this.formGeneratorService.addComponent(PlatformFormGeneratorCustomExtensionInfoComponent, ['extension-info'])
     this.formGeneratorService.addComponent(PlatformFormGeneratorCustomHeaderElementComponent, ['header'])
@@ -671,6 +542,8 @@ export class StaticSecurityChecksComponent implements OnInit, OnDestroy {
 
   async ngOnInit() {
     this.loading.set(true)
+
+    this.extensionClasses = await firstValueFrom(this.extensionService.getExtensionClassesForScopesQuery())
 
     const watchNotManagedServices$ = this.pipelineService
       .watchNotManagedServicesInPipeline()
@@ -698,6 +571,140 @@ export class StaticSecurityChecksComponent implements OnInit, OnDestroy {
       .subscribe((isSolinasAppInstalled) => {
         this.isSolinasAppInstalled.set(isSolinasAppInstalled)
       })
+
+    this.validationToolSelectFormItems = [
+      {
+        type: 'header',
+        name: 'recommendationHeader',
+        message: '',
+        guiOptions: {
+          additionalData: {
+            headerText: (formValue) => {
+              const language = ProgrammingLanguages.find((language) => language.id == formValue.language)
+              return `Because you use ${language.displayName}`
+            },
+            ignoreBottomMargin: true,
+          } as FormGeneratorHeaderAdditionalData<SetupValidationFormValue>,
+        },
+        when: (formValue: SetupValidationFormValue) => {
+          if (this.formStep() !== 1) return false
+          return getRequiredValidationTools(formValue.language).length >= 1
+        },
+      },
+      {
+        type: 'extension-info',
+        name: 'recommendationExtensionInfo1',
+        message: '',
+        guiOptions: {
+          additionalData: {
+            extensionName: (formValue) => {
+              const requiredValidationTools = getRequiredValidationTools(formValue.language)
+              if (requiredValidationTools.length === 0) {
+                return null
+              }
+              return ValidationToolExtensionName[requiredValidationTools[0]]
+            },
+            popoverHtml: (formValue) => {
+              const requiredValidationTools = getRequiredValidationTools(formValue.language)
+              let link = GHAS_DOCUMENTATION_LINK
+              if (requiredValidationTools[0] === ValidationTools.CX) {
+                link = CX_ONE_DOCUMENTATION_LINK
+              }
+              return `
+                <a
+                  href="${link}"
+                  target="_blank"
+                  rel="noopener noreferrer">Learn more.</a>`
+            },
+            extensionClasses: this.extensionClasses,
+          } as FormGeneratorExtensionInfoAdditionalData<SetupValidationFormValue>,
+        },
+        when: (formValue: SetupValidationFormValue) => {
+          if (this.formStep() !== 1) return false
+
+          return getRequiredValidationTools(formValue.language).length >= 1
+        },
+      },
+      {
+        type: 'extension-info',
+        name: 'recommendationExtensionInfo2',
+        message: '',
+        guiOptions: {
+          additionalData: {
+            extensionName: (formValue) => {
+              const requiredValidationTools = getRequiredValidationTools(formValue.language)
+              if (requiredValidationTools.length !== 2) {
+                return null
+              }
+              return ValidationToolExtensionName[requiredValidationTools[1]]
+            },
+            popoverHtml: (formValue) => {
+              const requiredValidationTools = getRequiredValidationTools(formValue.language)
+              let link = GHAS_DOCUMENTATION_LINK
+              if (requiredValidationTools[1] === ValidationTools.CX) {
+                link = CX_ONE_DOCUMENTATION_LINK
+              }
+              return `
+                <a
+                  href="${link}"
+                  target="_blank"
+                  rel="noopener noreferrer">Learn more.</a>`
+            },
+            extensionClasses: this.extensionClasses,
+          } as FormGeneratorExtensionInfoAdditionalData<SetupValidationFormValue>,
+        },
+        when: (formValue: SetupValidationFormValue) => {
+          if (this.formStep() !== 1) return false
+
+          return getRequiredValidationTools(formValue.language).length === 2
+        },
+      },
+      {
+        type: 'header',
+        name: 'validationToolsHeader',
+        message: '',
+        guiOptions: {
+          additionalData: {
+            headerText: 'Select services',
+            buttonText: 'Need Help?',
+            buttonInlineHelpHtml: `
+              Unsure which service to choose?<br/>
+              <a
+                href="https://github.wdf.sap.corp/pages/Security-Testing/doc/security%20testing/tools/#sast-tools"
+                target="_blank"
+                rel="noopener noreferred">Open Recommendations</a><br/><br/>
+  
+              Need more service info?<br/>
+              <a
+                href="${GHAS_DOCUMENTATION_LINK}"
+                target="_blank"
+                rel="noopener noreferrer">GitHub Advanced Security Documentation</a><br/>
+              <a
+                href="${CX_ONE_DOCUMENTATION_LINK}"
+                target="_blank"
+                rel="noopener noreferrer">CxOne Documentation</a>
+            `,
+            ignoreBottomMargin: true,
+          } as FormGeneratorHeaderAdditionalData<SetupValidationFormValue>,
+        },
+        when: (formValue: SetupValidationFormValue) => {
+          if (this.formStep() !== 1) return false
+
+          return getRequiredValidationTools(formValue.language).length === 0
+        },
+      },
+      {
+        type: 'checkbox',
+        name: 'validationTools',
+        choices: () => [ValidationTools.GHAS, ValidationTools.CX],
+        when: (formValue: SetupValidationFormValue) => {
+          if (this.formStep() !== 1) return false
+
+          return getRequiredValidationTools(formValue.language).length === 0
+        },
+        validators: [Validators.required],
+      },
+    ]
 
     try {
       const [cxOneApplication, languageFormItems, githubActionsFormItems] = await Promise.all([

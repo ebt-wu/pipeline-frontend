@@ -634,9 +634,11 @@ export const GET_SONARQUBE_PROJECT = gql`
     getSonarQubeProject(projectId: $projectId, resourceName: $resourceName) {
       host
       name
+      key
       repositoryRef
       secretPath
       configString
+      creationTimestamp
     }
   }
 `

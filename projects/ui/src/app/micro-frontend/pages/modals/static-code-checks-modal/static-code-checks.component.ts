@@ -27,6 +27,8 @@ import {
   FormGeneratorHeaderAdditionalData,
   PlatformFormGeneratorCustomHeaderElementComponent,
 } from '../../../components/form-generator/form-generator-header/form-generator-header.component'
+import { ExtensionService } from '../../../services/extension.service'
+import { ExtensionClass } from '../../../services/extension.types'
 import { SonarService } from '../../../services/sonar.service'
 
 interface StaticCodeChecksFormValue {
@@ -79,11 +81,12 @@ export class StaticCodeChecksComponent implements OnInit {
     'https://pages.github.tools.sap/hyperspace/cicd-setup-documentation/managed-services/validate/sonarqube.html#sonarqube'
   ESLint_DOCU_LINK = 'https://pages.github.tools.sap/hyperspace/academy/bestpractice/CorpReq_FC1_CodingRules/#setup'
   ESLint_INFO_LINK = 'https://eslint.org/'
+  extensionClasses: ExtensionClass[] = []
   @ViewChild(FormGeneratorComponent) formGenerator: FormGeneratorComponent
-  formItems: DynamicFormItem[] = []
-  usingCAPMTA: DynamicFormItem[] = []
   setUpSonarQubeCapChoice: string[] = ['Yes', 'No']
 
+  usingCAPMTA: DynamicFormItem[]
+  formItems: DynamicFormItem[]
   formStep: SCCSetupSteps = SCCSetupSteps.CAP_MTA_FORM
 
   constructor(
@@ -91,46 +94,17 @@ export class StaticCodeChecksComponent implements OnInit {
     private readonly luigiClient: LuigiClient,
     private readonly luigiService: DxpLuigiContextService,
     private readonly sonarQubeService: SonarService,
+    private readonly extensionService: ExtensionService,
   ) {
     this.formGeneratorService.addComponent(PlatformFormGeneratorCustomExtensionInfoComponent, ['extension-info'])
     this.formGeneratorService.addComponent(PlatformFormGeneratorCustomHeaderElementComponent, ['header'])
     this.formGeneratorService.addComponent(PlatformFormGeneratorCustomButtonComponent, ['button'])
   }
 
-  ngOnInit() {
-    this.usingCAPMTA = [
-      {
-        type: 'header',
-        name: 'setUpSonarQubeCapHeader',
-        message: '',
-        guiOptions: {
-          additionalData: {
-            headerText: 'Are you using CAP (MTA) on this component?',
-            ignoreTopMargin: true,
-            ignoreBottomMargin: true,
-          } as FormGeneratorHeaderAdditionalData,
-        },
-        when: () => {
-          return this.isCapMtaFormStep()
-        },
-      },
-      {
-        type: 'radio',
-        name: 'setUpSonarQubeCapChoice',
-        message: '',
-        choices: async () => {
-          return this.setUpSonarQubeCapChoice
-        },
-        default: () => {
-          return ''
-        },
-        validators: [Validators.required],
-        when: () => {
-          return this.isCapMtaFormStep()
-        },
-      },
-    ]
-
+  async ngOnInit() {
+    // Set the initial form step
+    this.luigiClient.linkManager().updateModalSettings(ModalSettingsBySetupStep[this.formStep])
+    this.extensionClasses = await firstValueFrom(this.extensionService.getExtensionClassesForScopesQuery())
     this.formItems = [
       {
         type: 'header',
@@ -149,18 +123,18 @@ export class StaticCodeChecksComponent implements OnInit {
       },
       {
         type: 'extension-info',
-        name: 'SonarqubeExtensionInfo',
+        name: 'SonarqubeExtensionInfoNoCapMta',
         message: '',
         guiOptions: {
           additionalData: {
             extensionName: KindExtensionName[Kinds.SONAR_QUBE_PROJECT],
-            popoverHtml: () => {
-              return `<a href="${this.SONARQUBE_DOCU_LINK}" target="_blank" rel="noopener noreferrer">Learn more</a>`
-            },
+            isNoPopoverHtmlIcon: true,
+            isNoPopoverHtmlIconLink: this.SONARQUBE_DOCU_LINK,
+            extensionClasses: this.extensionClasses,
           } as FormGeneratorExtensionInfoAdditionalData,
         },
         when: () => {
-          return this.isCapMtaSetupStep() || this.isNoCapMtaSetupStep()
+          return this.isNoCapMtaSetupStep() || this.isCapMtaSetupStep()
         },
       },
       // ESLint Extension Info box
@@ -171,9 +145,9 @@ export class StaticCodeChecksComponent implements OnInit {
         guiOptions: {
           additionalData: {
             extensionName: KindExtensionName[StepKey.ES_LINT],
-            popoverHtml: () => {
-              return `<a href="${this.ESLint_INFO_LINK}" target="_blank" rel="noopener noreferrer">Learn more</a>`
-            },
+            isNoPopoverHtmlIcon: true,
+            isNoPopoverHtmlIconLink: this.ESLint_INFO_LINK,
+            extensionClasses: this.extensionClasses,
           } as FormGeneratorExtensionInfoAdditionalData,
         },
         when: () => {
@@ -270,6 +244,39 @@ export class StaticCodeChecksComponent implements OnInit {
         },
       },
     ]
+    this.usingCAPMTA = [
+      {
+        type: 'header',
+        name: 'setUpSonarQubeCapHeader',
+        message: '',
+        guiOptions: {
+          additionalData: {
+            headerText: 'Are you using CAP (MTA) on this component?',
+            ignoreTopMargin: true,
+            ignoreBottomMargin: true,
+          } as FormGeneratorHeaderAdditionalData,
+        },
+        when: () => {
+          return this.isCapMtaFormStep()
+        },
+      },
+      {
+        type: 'radio',
+        name: 'setUpSonarQubeCapChoice',
+        message: '',
+        choices: async () => {
+          return this.setUpSonarQubeCapChoice
+        },
+        default: () => {
+          return ''
+        },
+        validators: [Validators.required],
+        when: () => {
+          return this.isCapMtaFormStep()
+        },
+      },
+    ]
+    this.loading.set(false)
   }
 
   dismissErrorMessage() {

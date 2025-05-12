@@ -1,19 +1,23 @@
 import { CommonModule } from '@angular/common'
 import { Component, NO_ERRORS_SCHEMA, ChangeDetectionStrategy, OnInit, OnDestroy, signal } from '@angular/core'
 import { ReactiveFormsModule } from '@angular/forms'
-import { AvatarComponent, IconComponent, InlineHelpModule } from '@fundamental-ngx/core'
+import { AvatarComponent, IconComponent, InlineHelpModule, Placement } from '@fundamental-ngx/core'
 import {
   BaseDynamicFormGeneratorControl,
   dynamicFormFieldProvider,
   dynamicFormGroupChildProvider,
 } from '@fundamental-ngx/platform'
-import { Subscription, firstValueFrom } from 'rxjs'
+import { Subscription } from 'rxjs'
 import { ExtensionService } from '../../../services/extension.service'
 import { ExtensionClass, Extensions } from '../../../services/extension.types'
 
 export interface FormGeneratorExtensionInfoAdditionalData<T = object> {
   extensionName: Extensions | ((formValue: T) => Extensions | Promise<Extensions>)
+  extensionClasses: ExtensionClass[]
   popoverHtml?: string | ((formValue: T) => string | Promise<string>)
+  placement?: string
+  isNoPopoverHtmlIcon?: boolean
+  isNoPopoverHtmlIconLink?: string
 }
 
 @Component({
@@ -36,6 +40,10 @@ export class PlatformFormGeneratorCustomExtensionInfoComponent
   extensionClass = signal<ExtensionClass>(undefined)
   extensionImage = signal<string>('')
   popoverHtml = signal<string>(undefined)
+  placement = signal<Placement>('top')
+
+  isNoPopoverHtmlIcon = signal<boolean>(false)
+  isNoPopoverHtmlIconLink = signal<string>('')
 
   constructor(private readonly extensionService: ExtensionService) {
     super()
@@ -44,13 +52,23 @@ export class PlatformFormGeneratorCustomExtensionInfoComponent
   async ngOnInit(): Promise<void> {
     const additionalData = this.formItem.guiOptions?.additionalData as FormGeneratorExtensionInfoAdditionalData
 
+    if (additionalData && additionalData.placement) {
+      this.placement.set(additionalData.placement as Placement)
+    }
+    if (additionalData && additionalData.isNoPopoverHtmlIcon) {
+      this.isNoPopoverHtmlIcon.set(additionalData.isNoPopoverHtmlIcon)
+    }
+    if (additionalData && additionalData.isNoPopoverHtmlIconLink) {
+      this.isNoPopoverHtmlIconLink.set(additionalData.isNoPopoverHtmlIconLink)
+    }
+
     if (typeof additionalData.extensionName === 'function' || typeof additionalData.popoverHtml === 'function') {
       this.formValue$ = this.form.valueChanges.subscribe((formValue) => {
         void this.updateExtensionClass(formValue as Record<string, object>)
       })
     }
 
-    this.extensionClasses = await firstValueFrom(this.extensionService.getExtensionClassesForScopesQuery())
+    this.extensionClasses = additionalData.extensionClasses
     await this.updateExtensionClass(this.form.value as Record<string, object>)
   }
 

@@ -397,6 +397,7 @@ export class ServiceDetailsSkeletonComponent implements OnInit, OnChanges {
           throw new Error('SonarQube resource not found')
         }
         await firstValueFrom(this.api.sonarService.deleteSonarqubeProject(resourceName, DeletionPolicy.Orphan))
+        this.closeDetails()
       })
       .catch((err) => {
         const errorMessage = (err as Error).message

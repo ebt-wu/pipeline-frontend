@@ -1,7 +1,12 @@
 import { CommonModule } from '@angular/common'
 import { ChangeDetectionStrategy, Component, Input, OnInit, signal } from '@angular/core'
 import { AuthorizationModule } from '@dxp/ngx-core/authorization'
-import { BusyIndicatorComponent, FundamentalNgxCoreModule, InlineHelpDirective } from '@fundamental-ngx/core'
+import {
+  BusyIndicatorComponent,
+  FundamentalNgxCoreModule,
+  InlineHelpDirective,
+  MessageToastService,
+} from '@fundamental-ngx/core'
 import { PolicyService } from '../../../services/policy.service'
 import { SecretService } from '../../../services/secret.service'
 
@@ -17,12 +22,14 @@ export class SonarServiceDetailsComponent implements OnInit {
   constructor(
     private readonly secretService: SecretService,
     private readonly policyService: PolicyService,
+    public messageToastService: MessageToastService,
   ) {}
 
   @Input() serviceDetails: {
     secretPath: string
     host: string
     name: string
+    key: string
     creationTimestamp: string
     configString: string
   }
@@ -38,6 +45,14 @@ export class SonarServiceDetailsComponent implements OnInit {
 
   pendingShowInVault = signal(false)
 
+  async copyConfigStringToClipboard(config: string) {
+    const cb = navigator.clipboard
+    await cb.writeText(config)
+    this.messageToastService.open('config.yml copied to clipboard', {
+      duration: 5000,
+    })
+  }
+
   openDocumentation() {
     window.open(
       'https://pages.github.tools.sap/hyperspace/cicd-setup-documentation/managed-services/validate/sonarqube.html',
@@ -52,7 +67,7 @@ export class SonarServiceDetailsComponent implements OnInit {
     this.pendingShowInVault.set(false)
   }
 
-  getSonarProjectLink(serviceDetails: { host: string; name: string }) {
-    return `${serviceDetails.host}/dashboard?id=${serviceDetails.name}`
+  getSonarProjectLink(serviceDetails: { host: string; key: string }) {
+    return `${serviceDetails.host}/dashboard?id=${serviceDetails.key}`
   }
 }

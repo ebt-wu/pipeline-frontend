@@ -1,6 +1,16 @@
 <div *ngIf="!loading()">
   <div class="flex-box">
-    <h3 class="heading-margin">SonarQube Project Display Name</h3>
+    <h3 class="heading-margin">SonarQube Configuration</h3>
+    <button
+      class="left-margin"
+      role="button"
+      fdType="transparent"
+      glyph="hint"
+      fd-button
+      placement="top"
+      [fd-inline-help]="sonarConfigHelp"
+      [triggers]="['click']"
+      [closeOnOutsideClick]="true"></button>
     <button
       class="auto-left-margin"
       role="button"
@@ -10,13 +20,41 @@
       (click)="openDocumentation()"
       fd-button></button>
   </div>
-  <a [href]="getSonarProjectLink(serviceDetails)" target="_blank" rel="noopener noreferrer">
-    {{ serviceDetails.name }}
-  </a>
+  <div>
+    <div>
+      <b>SonarQube Project Display Name</b>
+    </div>
+    <a [href]="getSonarProjectLink(serviceDetails)" target="_blank" rel="noopener noreferrer">
+      {{ serviceDetails.name }}
+    </a>
+  </div>
   <div class="top-margin">
     <b>sonar-project.properties</b>
   </div>
   <div class="code-box">
     <div class="code">{{ serviceDetails.configString?.trim() }}</div>
+    <button
+      fd-button
+      label="Copy"
+      fdType="transparent"
+      glyph="copy"
+      ariaLabel="Copy config.yml"
+      (click)="copyConfigStringToClipboard(serviceDetails.configString)"
+      class="code-button"></button>
   </div>
 </div>
+
+<ng-template #sonarConfigHelp>
+  <div>
+    We have a created a
+    <a
+      href="https://www.project-piper.io/steps/sonarExecuteScan/#prerequisites"
+      target="_blank"
+      rel="noopener noreferrer">
+      SonarQube properties file
+    </a>
+    for you
+    <br />
+    and added it via pull request to your GitHub repository.
+  </div>
+</ng-template>

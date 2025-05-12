@@ -12,14 +12,17 @@
         </span>
       </div>
       <fd-icon
-        *ngIf="popoverHtml()"
+        *ngIf="popoverHtml() && !isNoPopoverHtmlIcon()"
         class="extension-info-icon"
         glyph="hint"
-        placement="top"
+        [placement]="placement()"
         color="information"
         [fd-inline-help]="extensionInfoPopover"
         [triggers]="['click']"
         [closeOnOutsideClick]="true"></fd-icon>
+      <a [href]="isNoPopoverHtmlIconLink()" target="_blank" rel="noopener noreferrer" class="extension-info-icon">
+        <fd-icon *ngIf="isNoPopoverHtmlIcon()" glyph="hint" color="information"></fd-icon>
+      </a>
       <ng-template #extensionInfoPopover>
         <div [innerHTML]="popoverHtml()"></div>
       </ng-template>

@@ -44,6 +44,4 @@ in the browser console.
 
 - To update the graphQL schema in the frontend against a local version of the backend, you need to first start the backend on `localhost:3000`
 - And then add the new queries to `queries.ts`.
-- Then open the `custom-loader.ts` and uncomment the line that sets the API URL to `localhost:3000`.
-- Run the `codegen` script again. This will regenerate the file `graphql.ts`.
-- Make sure to revert the change to the `custom-loader.ts`
+- Run the `codegen:local` script again. This will regenerate the file `graphql.ts`.

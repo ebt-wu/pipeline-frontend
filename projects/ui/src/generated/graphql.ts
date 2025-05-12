@@ -1341,9 +1341,11 @@ export type GetSonarQubeProjectQuery = {
     __typename?: 'SonarQubeProject'
     host: string
     name: string
+    key: string
     repositoryRef: string
     secretPath?: string | null
     configString?: string | null
+    creationTimestamp?: string | null
   } | null
 }
 
