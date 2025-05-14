@@ -511,7 +511,6 @@ export class SetupBuildComponent implements OnInit, OnDestroy {
 
       await firstValueFrom(
         this.piperService.createPiperConfig(
-          githubSecretPath,
           repositoryResourceName,
           buildFormValue.buildTool,
           false,

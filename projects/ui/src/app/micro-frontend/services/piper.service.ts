@@ -20,7 +20,6 @@ export class PiperService {
   ) {}
 
   createPiperConfig(
-    githubSecretRef: string | null,
     repositoryResource: string,
     buildTool: BuildTool,
     pipelineOptimization: boolean,
@@ -36,7 +35,6 @@ export class PiperService {
             variables: {
               projectId: ctx.context.projectId,
               componentId: ctx.context.componentId,
-              githubSecretRef: githubSecretRef,
               repositoryResource: repositoryResource,
               buildTool: buildTool,
               pipelineOptimization: pipelineOptimization,

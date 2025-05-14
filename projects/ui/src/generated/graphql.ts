@@ -483,7 +483,6 @@ export type PiperConfig = {
 }
 
 export type PiperConfigCreationRequest = {
-  githubSecretRef?: InputMaybe<Scalars['String']['input']>
   labels?: InputMaybe<Array<LabelInput>>
   repositoryResource: Scalars['String']['input']
   templateArgs?: InputMaybe<PiperTemplateArgs>
@@ -1064,7 +1063,6 @@ export type DeleteJenkinsPipelineMutation = { __typename?: 'Mutation'; deleteJen
 export type CreatePiperConfigMutationVariables = Exact<{
   projectId: Scalars['String']['input']
   componentId: Scalars['String']['input']
-  githubSecretRef?: InputMaybe<Scalars['String']['input']>
   repositoryResource: Scalars['String']['input']
   buildTool: BuildTool
   pipelineOptimization: Scalars['Boolean']['input']

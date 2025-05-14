@@ -351,7 +351,6 @@ export const CREATE_PIPER_CONFIG = gql<CreatePiperConfigMutation, CreatePiperCon
   mutation CreatePiperConfig(
     $projectId: String!
     $componentId: String!
-    $githubSecretRef: String
     $repositoryResource: String!
     $buildTool: BuildTool!
     $pipelineOptimization: Boolean!
@@ -363,7 +362,6 @@ export const CREATE_PIPER_CONFIG = gql<CreatePiperConfigMutation, CreatePiperCon
       componentId: $componentId
       params: {
         repositoryResource: $repositoryResource
-        githubSecretRef: $githubSecretRef
         templateArgs: {
           general: { buildTool: $buildTool, pipelineOptimization: $pipelineOptimization }
           stagingService: { dockerImageName: $dockerImageName }
