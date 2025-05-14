@@ -25,6 +25,7 @@ import {
   PlatformMenuButtonModule,
 } from '@fundamental-ngx/platform'
 import {
+  CxOneProject,
   DeletionPolicy,
   GithubRepository,
   JenkinsPipeline,
@@ -238,6 +239,8 @@ export class ServiceDetailsSkeletonComponent implements OnInit, OnChanges {
         }
         case Kinds.SONAR_QUBE_PROJECT:
           return `${(serviceDetailsForKind as SonarQubeProject).host}/dashboard?id=${(serviceDetailsForKind as SonarQubeProject).name}`
+        case Kinds.CX_ONE_PROJECT:
+          return (serviceDetailsForKind as CxOneProject).applicationUrl
       }
     } catch (err) {
       const errorMessage = (err as Error).message
