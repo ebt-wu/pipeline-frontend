@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing'
 import { KindName } from '@constants'
 import { Categories, Kinds, ServiceStatus, StepKey } from '@enums'
 import { ColorAccent } from '@fundamental-ngx/core'
-import { MockInstance, MockService } from 'ng-mocks'
+import { MockService } from 'ng-mocks'
 import { createPipelineForTests } from '../../../../../test-utils'
 import { FeatureFlagService } from '../../services/feature-flag.service'
 import { OpenSourceComplianceService } from '../../services/open-source-compliance.service'
@@ -383,7 +383,10 @@ describe('ValidateCodeSectionComponent', () => {
     it('should have `1 Not Managed.` and a tooltip text if there is only one not managed service and a managed one', () => {
       component = fixture.componentInstance
       component.pipeline = createPipelineForTests([
-        { kind: StepKey.FORTIFY, status: ServiceStatus.NOT_MANAGED },
+        {
+          kind: StepKey.FORTIFY,
+          status: ServiceStatus.NOT_MANAGED,
+        },
         { kind: Kinds.GITHUB_ADVANCED_SECURITY },
       ])
       fixture.detectChanges()
@@ -413,31 +416,85 @@ describe('ValidateCodeSectionComponent', () => {
     })
   })
   describe('feature flags', () => {
-    it('when SonarQube is not enabled, the button should say "Add Manually" and open a link', async () => {
+    let component: ValidateCodeSectionComponent
+    let featureFlagService: FeatureFlagService
+
+    beforeEach(() => {
       component = fixture.componentInstance
-      MockInstance(FeatureFlagService, 'isSonarQubeInstallationEnabled', jest.fn().mockResolvedValue(false))
+      featureFlagService = TestBed.inject(FeatureFlagService)
+    })
+    it('when SonarQube is not enabled, the button should say "Add Manually"', async () => {
+      jest.spyOn(featureFlagService, 'isSonarQubeInstallationEnabled').mockResolvedValue(false)
 
       component.pipeline = createPipelineForTests([])
       await component.ngOnChanges()
       expect(component.categoryMap[Categories.STATIC_CODE_CHECKS]?.buttonConfig.buttonText).toEqual('Add Manually')
     })
+
     it('when SonarQube is enabled and the user has a Github Actions build, the button should say "Add"', async () => {
-      component = fixture.componentInstance
-      MockInstance(FeatureFlagService, 'isSonarQubeInstallationEnabled', jest.fn().mockResolvedValue(true))
+      jest.spyOn(featureFlagService, 'isSonarQubeInstallationEnabled').mockResolvedValue(true)
 
       component.pipeline = createPipelineForTests([{ kind: Kinds.GITHUB_ACTIONS_PIPELINE }])
       await component.ngOnChanges()
 
       expect(component.categoryMap[Categories.STATIC_CODE_CHECKS]?.buttonConfig.buttonText).toEqual('Add')
     })
+
     it('when SonarQube is enabled and the user has a Jenkins build, the button should say "Add Manually"', async () => {
-      component = fixture.componentInstance
-      MockInstance(FeatureFlagService, 'isSonarQubeInstallationEnabled', jest.fn().mockResolvedValue(true))
+      jest.spyOn(featureFlagService, 'isSonarQubeInstallationEnabled').mockResolvedValue(true)
 
       component.pipeline = createPipelineForTests([{ kind: Kinds.JENKINS_PIPELINE }])
       await component.ngOnChanges()
 
       expect(component.categoryMap[Categories.STATIC_CODE_CHECKS]?.buttonConfig.buttonText).toEqual('Add Manually')
+    })
+
+    it('when SonarQube is enabled and there is no build pipeline, the button should say "Add Manually"', async () => {
+      jest.spyOn(featureFlagService, 'isSonarQubeInstallationEnabled').mockResolvedValue(true)
+
+      // No build pipeline present
+      component.pipeline = createPipelineForTests([])
+      await component.ngOnChanges()
+
+      expect(component.categoryMap[Categories.STATIC_CODE_CHECKS]?.buttonConfig.buttonText).toEqual('Add Manually')
+    })
+  })
+
+  describe('getSonarQubeInstallationButtonSettings', () => {
+    let component: ValidateCodeSectionComponent
+    let featureFlagService: FeatureFlagService
+
+    beforeEach(() => {
+      component = fixture.componentInstance
+      featureFlagService = TestBed.inject(FeatureFlagService)
+    })
+
+    it('should return "AddManuallyLink" if feature flag is not enabled', async () => {
+      jest.spyOn(featureFlagService, 'isSonarQubeInstallationEnabled').mockResolvedValue(false)
+      component.pipeline = createPipelineForTests([])
+      const result = await component.getSonarQubeInstallationButtonSettings()
+      expect(result).toBe('AddManuallyLink')
+    })
+
+    it('should return "AddManuallyLink" if orchestrator is Jenkins', async () => {
+      jest.spyOn(featureFlagService, 'isSonarQubeInstallationEnabled').mockResolvedValue(true)
+      component.pipeline = createPipelineForTests([{ kind: Kinds.JENKINS_PIPELINE }])
+      const result = await component.getSonarQubeInstallationButtonSettings()
+      expect(result).toBe('AddManuallyLink')
+    })
+
+    it('should return "Add" if feature flag is enabled and orchestrator is GitHub Actions', async () => {
+      jest.spyOn(featureFlagService, 'isSonarQubeInstallationEnabled').mockResolvedValue(true)
+      component.pipeline = createPipelineForTests([{ kind: Kinds.GITHUB_ACTIONS_PIPELINE }])
+      const result = await component.getSonarQubeInstallationButtonSettings()
+      expect(result).toBe('Add')
+    })
+
+    it('should return "AddManuallyDialog" if feature flag is enabled and there is no build pipeline', async () => {
+      jest.spyOn(featureFlagService, 'isSonarQubeInstallationEnabled').mockResolvedValue(true)
+      component.pipeline = createPipelineForTests([])
+      const result = await component.getSonarQubeInstallationButtonSettings()
+      expect(result).toBe('AddManuallyDialog')
     })
   })
 })

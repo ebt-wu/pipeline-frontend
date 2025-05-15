@@ -1,0 +1,10 @@
+.dialog-footer {
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    display: flex;
+    align-items: center;
+}
+.illustrated-message-padding {
+    padding-top: 2rem;
+}

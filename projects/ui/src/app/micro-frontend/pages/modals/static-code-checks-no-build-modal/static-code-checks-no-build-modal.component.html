@@ -1,0 +1,32 @@
+<div>
+  <figure class="illustrated-message-padding" fd-illustrated-message type="spot" [svgConfig]="svgConfig">
+    <figcaption fd-illustrated-message-figcaption>
+      <h3 fd-illustrated-message-title>No Build Pipeline</h3>
+      <p fd-illustrated-message-text>
+        To add Static Code Checks, you need a build pipeline.
+        <br />
+        Set up one first if you don’t have one.
+      </p>
+    </figcaption>
+    <fd-illustrated-message-actions>
+      <button
+        fdType="emphasized"
+        fd-button
+        label="Set Up Build"
+        (click)="openSetupBuildModal()"
+        data-testid="setupBuildModalButton"></button>
+      <button
+        fd-button
+        label="Add Checks Manually"
+        (click)="openDocumentation()"
+        data-testid="add-checks-manually-button"></button>
+    </fd-illustrated-message-actions>
+  </figure>
+</div>
+
+<div fd-bar barDesign="footer" class="dialog-footer">
+  <div fd-bar-left></div>
+  <div fd-bar-right>
+    <button (click)="closeDialog()" ariaLabel="Close" fdCompact fd-button fdType="transparent" label="Close"></button>
+  </div>
+</div>

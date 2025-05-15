@@ -27,6 +27,7 @@ describe('SonarService', () => {
       data: {
         getSonarQubeProject: {
           host: 'http://sonarqube.example.com',
+          key: 'test-project-key',
           name: 'Test Project',
           repositoryRef: 'test-repo',
           secretPath: 'secret/path',
@@ -52,6 +53,7 @@ describe('SonarService', () => {
 
     expect(result).toEqual({
       host: 'http://sonarqube.example.com',
+      key: 'test-project-key',
       name: 'Test Project',
       repositoryRef: 'test-repo',
       secretPath: 'secret/path',

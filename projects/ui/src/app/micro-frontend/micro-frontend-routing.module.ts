@@ -10,6 +10,7 @@ import { SetupGhasModalComponent } from './pages/modals/setup-ghas-modal/setup-g
 import { GithubActionsComponent } from './pages/modals/setup-github-actions/setup-github-actions.component'
 import { SetupOSCModalComponent } from './pages/modals/setup-osc-modal/setup-osc-modal.component'
 import { StaticCodeChecksComponent } from './pages/modals/static-code-checks-modal/static-code-checks.component'
+import { StaticCodeChecksNoBuildModalComponent } from './pages/modals/static-code-checks-no-build-modal/static-code-checks-no-build-modal.component'
 import { StaticSecurityChecksComponent } from './pages/modals/static-security-checks-modal/static-security-checks.component'
 
 const routes: Routes = [
@@ -32,6 +33,10 @@ const routes: Routes = [
       {
         path: 'setup-static-code-checks',
         component: StaticCodeChecksComponent,
+      },
+      {
+        path: 'static-code-checks-no-build',
+        component: StaticCodeChecksNoBuildModalComponent,
       },
       {
         path: 'setup-ghas',

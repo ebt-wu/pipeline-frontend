@@ -41,6 +41,11 @@ export class ValidateCodeSectionComponent implements OnChanges, OnInit {
   categoryMap: Record<string, CategoryConfig>
   stages = Stages
   protected readonly Categories = Categories
+  sonarButtonTextMap = {
+    Add: 'Add',
+    AddManuallyLink: 'Add Manually',
+    AddManuallyDialog: 'Add Manually',
+  }
 
   constructor(
     private readonly luigiClient: LuigiClient,
@@ -99,7 +104,7 @@ export class ValidateCodeSectionComponent implements OnChanges, OnInit {
         configuredServicesText: this.generateConfiguredServicesText(Categories.STATIC_CODE_CHECKS),
         buttonConfig: {
           isButtonShown: await this.isButtonShown(Categories.STATIC_CODE_CHECKS),
-          buttonText: (await this.isSonarQubeInstallationAllowed()) ? 'Add' : 'Add Manually',
+          buttonText: this.sonarButtonTextMap[await this.getSonarQubeInstallationButtonSettings()],
           buttonAction: (e) => this.openSetupDialog(e, Categories.STATIC_CODE_CHECKS),
           buttonTestId: 'add-static-code-checks-button',
         },
@@ -178,18 +183,25 @@ export class ValidateCodeSectionComponent implements OnChanges, OnInit {
           .openAsModal('setup-osc', { title: 'Add Open Source Checks', width: '600px', height: '780px' })
         break
       case Categories.STATIC_CODE_CHECKS:
-        if (await this.isSonarQubeInstallationAllowed()) {
+        if ((await this.getSonarQubeInstallationButtonSettings()) === 'Add') {
           await this.luigiClient.linkManager().fromVirtualTreeRoot().openAsModal('setup-static-code-checks', {
             title: 'Add Static Code Checks',
             width: '450px',
             height: '215px',
           })
-        } else {
+        } else if ((await this.getSonarQubeInstallationButtonSettings()) === 'AddManuallyLink') {
           window.open(
             'https://pages.github.tools.sap/hyperspace/academy/bestpractice/CorpReq_FC1_CodingRules/v1.1/#setup',
             '_blank',
             'noopener, noreferrer',
           )
+        } else {
+          // Add manually dialog
+          await this.luigiClient.linkManager().fromVirtualTreeRoot().openAsModal('static-code-checks-no-build', {
+            title: 'Add Static Code Checks',
+            width: '420px',
+            height: '420px',
+          })
         }
         break
     }
@@ -362,16 +374,29 @@ export class ValidateCodeSectionComponent implements OnChanges, OnInit {
   }
 
   /**
-   * Checks if SonarQube installation is allowed based on the following conditions:
-   * - Feature flag for SonarQube installation is enabled
-   * - Build pipeline is set up
-   * - The orchestrator is GitHub Actions
+   * Gives mode for SonarQube installation based on the following conditions:
+   * If the feature flag is not enabled, or if the orchestrator is Jenkins, returns 'AddManuallyLink'
+   * If the feature flag is enabled, and the orchestrator is GitHub Actions, returns 'Add'
+   * If the feature flag is enabled, and there is no build pipeline at all, returns 'AddManuallyDialog'
+   *
+   * AddManuallyLink: Opens a link to the SonarQube installation page
+   * Add: Opens a dialog to add SonarQube
+   * AddManuallyDialog: Opens a dialog to nudge users to set up a build pipeline
    */
-  async isSonarQubeInstallationAllowed() {
-    return (
-      (await this.featureFlagService.isSonarQubeInstallationEnabled()) &&
-      this.pipeline.resourceRefs.find((ref) => ref.kind === Kinds.GITHUB_ACTIONS_PIPELINE) &&
-      isBuildPipelineSetup(this.pipeline.resourceRefs)
-    )
+  async getSonarQubeInstallationButtonSettings() {
+    if (await this.featureFlagService.isSonarQubeInstallationEnabled()) {
+      // feature flag enabled
+      if (this.pipeline.resourceRefs.find((ref) => ref.kind === Kinds.JENKINS_PIPELINE)) {
+        return 'AddManuallyLink'
+      }
+      if (this.pipeline.resourceRefs.find((ref) => ref.kind === Kinds.GITHUB_ACTIONS_PIPELINE)) {
+        return 'Add'
+      }
+      // No build pipeline opens the no build dialog
+      if (!isBuildPipelineSetup(this.pipeline.resourceRefs)) {
+        return 'AddManuallyDialog'
+      }
+    }
+    return 'AddManuallyLink'
   }
 }

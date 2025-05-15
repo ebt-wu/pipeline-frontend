@@ -9,6 +9,7 @@ import { SonarService } from '../../../services/sonar.service'
 import { StaticCodeChecksComponent } from './static-code-checks.component'
 
 describe('StaticCodeChecksComponent', () => {
+  MockInstance.scope('case')
   beforeEach(() => {
     ngMocks.reset()
     jest.resetAllMocks()
