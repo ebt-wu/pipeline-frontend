@@ -60,44 +60,6 @@ describe('ValidateCodeSectionComponent', () => {
   })
 
   describe('isButtonShown', () => {
-    it('isButtonShown should return true when no resourceRefs are present', async () => {
-      component = fixture.componentInstance
-      component.pipeline = createPipelineForTests()
-      fixture.detectChanges()
-      expect(await component.isButtonShown(Categories.STATIC_SECURITY_CHECKS)).toBeTruthy()
-    })
-
-    it('isButtonShown should return true when only CumulusPipeline and StagingService refs are present', async () => {
-      component = fixture.componentInstance
-      component.pipeline = createPipelineForTests([
-        { kind: Kinds.CUMULUS_PIPELINE },
-        { kind: Kinds.STAGING_SERVICE_CREDENTIAL },
-      ])
-      fixture.detectChanges()
-      expect(await component.isButtonShown(Categories.STATIC_SECURITY_CHECKS)).toBeTruthy()
-    })
-
-    it('isButtonShown should return true when only Fortify and no other validation tools are present', async () => {
-      component = fixture.componentInstance
-      component.pipeline = createPipelineForTests([{ kind: StepKey.FORTIFY }])
-      fixture.detectChanges()
-      expect(await component.isButtonShown(Categories.STATIC_SECURITY_CHECKS)).toBeTruthy()
-    })
-
-    it('isButtonShown should return false when Fortify and Checkmarx are present', async () => {
-      component = fixture.componentInstance
-      component.pipeline = createPipelineForTests([{ kind: StepKey.FORTIFY }, { kind: StepKey.CHECKMARX }])
-      fixture.detectChanges()
-      expect(await component.isButtonShown(Categories.STATIC_SECURITY_CHECKS)).toBeFalsy()
-    })
-
-    it('isButtonShown should return false when GHAS is present', async () => {
-      component = fixture.componentInstance
-      component.pipeline = createPipelineForTests([{ kind: Kinds.GITHUB_ADVANCED_SECURITY }])
-      fixture.detectChanges()
-      expect(await component.isButtonShown(Categories.STATIC_SECURITY_CHECKS)).toBeFalsy()
-    })
-
     it('isButtonShown should return true when no open source check services exist', async () => {
       component = fixture.componentInstance
       component.pipeline = createPipelineForTests([
@@ -107,8 +69,43 @@ describe('ValidateCodeSectionComponent', () => {
       fixture.detectChanges()
       expect(await component.isButtonShown(Categories.OPEN_SOURCE_CHECKS)).toBeTruthy()
     })
-  })
 
+    describe('isButtonShown for Static Security Checks', () => {
+      const cases = [
+        { refs: [], expected: true },
+        {
+          refs: [Kinds.CUMULUS_PIPELINE, Kinds.STAGING_SERVICE_CREDENTIAL],
+          expected: true,
+        },
+        { refs: [StepKey.FORTIFY], expected: true },
+        {
+          refs: [StepKey.CHECKMARX],
+          expected: true,
+        },
+        {
+          refs: [StepKey.FORTIFY, StepKey.CHECKMARX],
+          expected: true,
+        },
+        {
+          refs: [StepKey.FORTIFY, StepKey.CHECKMARX, StepKey.CX_ONE],
+          expected: false,
+        },
+        { refs: [Kinds.GITHUB_ADVANCED_SECURITY], expected: false },
+      ]
+
+      cases.forEach(({ refs, expected }) => {
+        const kindsString = refs.join(', ')
+        it(`should return ${expected} when resourceRefs are [${kindsString}]`, async () => {
+          component = fixture.componentInstance
+
+          const resourceRefs = refs.map((kind) => ({ kind }))
+          component.pipeline = createPipelineForTests(resourceRefs)
+          fixture.detectChanges()
+          expect(await component.isButtonShown(Categories.STATIC_SECURITY_CHECKS)).toBe(expected)
+        })
+      })
+    })
+  })
   describe('generateStatusTag', () => {
     it('should show statusTag with Not Managed label for Static Security Checks when only Fortify is present HSOBRD-117', async () => {
       component = fixture.componentInstance

@@ -40,12 +40,12 @@ export class ValidateCodeSectionComponent implements OnChanges, OnInit {
   @Output() readonly detailsOpened = new EventEmitter<Categories>()
   categoryMap: Record<string, CategoryConfig>
   stages = Stages
-  protected readonly Categories = Categories
   sonarButtonTextMap = {
     Add: 'Add',
     AddManuallyLink: 'Add Manually',
     AddManuallyDialog: 'Add Manually',
   }
+  protected readonly Categories = Categories
 
   constructor(
     private readonly luigiClient: LuigiClient,
@@ -222,9 +222,10 @@ export class ValidateCodeSectionComponent implements OnChanges, OnInit {
     const stepsOfCategory = this.pipelineStepsByCategory.get(category)
     switch (category) {
       case Categories.STATIC_SECURITY_CHECKS:
-        // show the button if there are no steps or only fortify step
+        // show the button if there are no steps, or if there is fortify or legacy checkmarx or both but no other steps
         return (
-          stepsOfCategory.length === 0 || (stepsOfCategory.length === 1 && stepsOfCategory[0].kind === StepKey.FORTIFY)
+          stepsOfCategory.length === 0 ||
+          stepsOfCategory.every((ref) => ref.kind === StepKey.FORTIFY || ref.kind === StepKey.CHECKMARX)
         )
 
       case Categories.STATIC_CODE_CHECKS:
