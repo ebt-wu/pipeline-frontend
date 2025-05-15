@@ -1,15 +1,18 @@
-const { defaultTransformerOptions } = require('jest-preset-angular/presets')
+import type { Config } from 'jest'
+import { defaultTransformerOptions } from 'jest-preset-angular/build/presets'
+import { createCjsPreset } from 'jest-preset-angular/presets'
 
 globalThis.ngJest = {
   skipNgcc: true,
   tsconfig: 'tsconfig.spec.json',
 }
 
-/** @type {import('ts-jest/dist/types').JestConfigWithTsJest} */
-module.exports = {
-  displayName: 'ui',
-  preset: 'jest-preset-angular',
-  setupFilesAfterEnv: ['<rootDir>/test-setup.ts'],
+const presetConfig = createCjsPreset({
+  tsconfig: 'tsconfig.spec.json',
+})
+
+export default {
+  ...presetConfig,
   globalSetup: 'jest-preset-angular/global-setup',
   moduleNameMapper: {
     '^lodash-es(.*)': 'lodash',
@@ -18,7 +21,6 @@ module.exports = {
     '@constants': '<rootDir>/src/app/constants.ts',
     '@generated/graphql': '<rootDir>/src/generated/graphql.ts',
   },
-
   transform: {
     '^.+\\.(ts|js|mjs|html|svg)$': [
       'jest-preset-angular',
@@ -28,4 +30,6 @@ module.exports = {
     ],
   },
   transformIgnorePatterns: ['/node_modules/?!@angular'],
-}
+  displayName: 'ui',
+  setupFilesAfterEnv: ['<rootDir>/test-setup.ts'],
+} satisfies Config
