@@ -68,12 +68,10 @@ export enum ServiceStatus {
 export enum Languages {
   DOCKERFILE = 'Dockerfile',
   GO = 'Go',
-  GROOVY = 'Groovy',
   JAVA = 'Java',
   JAVA_NODE_CAP = 'Java + Node CAP',
   JAVASCRIPT = 'JavaScript/TypeScript',
   PYTHON = 'Python',
-  SCALA = 'Scala',
   OTHER = 'Other',
 }
 

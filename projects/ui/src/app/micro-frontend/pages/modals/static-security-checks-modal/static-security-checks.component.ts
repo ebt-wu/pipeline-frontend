@@ -48,8 +48,7 @@ import {
 import { PlatformFormGeneratorCustomValidatorComponent } from '../../../components/form-generator/form-generator-validator/form-generator-validator.component'
 import { CxOneService } from '../../../services/cxone.service'
 import { ExtensionService } from '../../../services/extension.service'
-import { Extensions } from '../../../services/extension.types'
-import { ExtensionClass } from '../../../services/extension.types'
+import { ExtensionClass, Extensions } from '../../../services/extension.types'
 import { FeatureFlagService } from '../../../services/feature-flag.service'
 import { GithubActionsFormService } from '../../../services/forms/github-actions-form.service'
 import { GithubActionsService } from '../../../services/github-actions.service'
@@ -67,6 +66,9 @@ interface SetupValidationFormValue {
 
 const GHAS_DOCUMENTATION_LINK =
   'https://pages.github.tools.sap/hyperspace/cicd-setup-documentation/managed-services/validate/ghas.html'
+
+const GHAS_SUPPORTED_LANGUAGES_DOCU_LINK =
+  'https://github.wdf.sap.corp/pages/Security-Testing/doc/ghas/producing/#reusable-workflow-for-codeql'
 const CX_ONE_DOCUMENTATION_LINK =
   'https://pages.github.tools.sap/hyperspace/cicd-setup-documentation/managed-services/validate/cxone.html'
 const VALIDATE_CODE_DOCUMENTATION_LINK =
@@ -704,6 +706,30 @@ export class StaticSecurityChecksComponent implements OnInit, OnDestroy {
         },
         validators: [Validators.required],
       },
+      {
+        type: 'message-strip',
+        name: 'GHAS-language-not-supported',
+        message: '',
+        guiOptions: {
+          additionalData: {
+            type: 'warning',
+            message: () => {
+              return Promise.resolve(
+                `You have selected "Other" as your programming language. After adding GitHub Advanced Security,
+                     please refer to the
+                     <a href="${GHAS_SUPPORTED_LANGUAGES_DOCU_LINK}" target="_blank" rel="noopener noreferrer">documentation</a>
+                     for information on how to make your workflow run.`,
+              )
+            },
+          } as FormGeneratorMessageStripAdditionalData,
+        },
+        when: (formValue: SetupValidationFormValue) => {
+          if (!formValue.validationTools) {
+            return false
+          }
+          return formValue.validationTools.includes(ValidationTools.GHAS) && formValue.language === Languages.OTHER
+        },
+      },
     ]
 
     try {
@@ -848,6 +874,7 @@ export class StaticSecurityChecksComponent implements OnInit, OnDestroy {
     const cxOneApplicationNameControl = this.formGenerator.formControlItems[0].get('cxOneApplicationName')
     cxOneApplicationNameControl.setValue(cxOneApplicationName)
   }
+
   async submitForm(formValue: SetupValidationFormValue) {
     this.loading.set(true)
 

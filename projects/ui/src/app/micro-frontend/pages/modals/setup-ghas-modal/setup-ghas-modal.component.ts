@@ -33,7 +33,6 @@ function getRecommendedValidationTool(language: Languages): ValidationTools | nu
       return ValidationTools.GHAS
     case Languages.JAVASCRIPT:
     case Languages.GO:
-    case Languages.GROOVY:
       return ValidationTools.CX
     default:
       return null

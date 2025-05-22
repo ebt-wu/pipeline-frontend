@@ -140,14 +140,6 @@ export const ProgrammingLanguages: ProgrammingLanguage[] = [
     displayName: 'Golang',
   },
   {
-    id: Languages.GROOVY,
-    displayName: 'Groovy',
-  },
-  {
-    id: Languages.SCALA,
-    displayName: 'Scala',
-  },
-  {
     id: Languages.OTHER,
     displayName: 'Other',
   },
