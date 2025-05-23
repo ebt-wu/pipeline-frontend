@@ -1,15 +1,8 @@
-import { AsyncPipe, NgIf } from '@angular/common'
+import { NgIf } from '@angular/common'
 import { ChangeDetectionStrategy, Component, Input, OnInit, signal } from '@angular/core'
 import { AuthorizationModule } from '@dxp/ngx-core/authorization'
 import { Kinds } from '@enums'
-import {
-  BusyIndicatorModule,
-  ButtonComponent,
-  FacetModule,
-  IconComponent,
-  InlineHelpDirective,
-  LinkModule,
-} from '@fundamental-ngx/core'
+import { BusyIndicatorModule, ButtonComponent, FacetModule, LinkModule } from '@fundamental-ngx/core'
 import { CumulusPipeline } from '@generated/graphql'
 import { GithubAdvancedSecurityServiceDetails, Pipeline } from '@types'
 import { debounceTime, firstValueFrom, Observable } from 'rxjs'
@@ -25,17 +18,7 @@ import { BaseServiceDetailsComponent } from '../base-service-details.component'
   selector: 'app-github-advanced-security-service-details',
   templateUrl: './github-advanced-security-service-details.component.html',
   styleUrl: './github-advanced-security-service-details.component.css',
-  imports: [
-    BusyIndicatorModule,
-    FacetModule,
-    LinkModule,
-    AsyncPipe,
-    NgIf,
-    AuthorizationModule,
-    ButtonComponent,
-    IconComponent,
-    InlineHelpDirective,
-  ],
+  imports: [BusyIndicatorModule, FacetModule, LinkModule, NgIf, AuthorizationModule, ButtonComponent],
 })
 export class GithubAdvancedSecurityServiceDetailsComponent extends BaseServiceDetailsComponent implements OnInit {
   @Input() serviceDetails: GithubAdvancedSecurityServiceDetails

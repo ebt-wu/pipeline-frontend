@@ -1,11 +1,2 @@
 @import '../base-service-details.component.css';
 
-.divider {
-  border-top: 1px solid var(--sapNeutralBorderColor);
-  width: 100%;
-  margin: 18px 0;
-}
-
-.no-margin {
-  margin: 0;
-}

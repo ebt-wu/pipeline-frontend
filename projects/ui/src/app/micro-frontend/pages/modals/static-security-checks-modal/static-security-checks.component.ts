@@ -208,7 +208,7 @@ export class StaticSecurityChecksComponent implements OnInit, OnDestroy {
       message: '',
       guiOptions: {
         additionalData: {
-          headerText: 'Set up CxOne',
+          headerText: 'Set up Checkmarx ONE',
           ignoreBottomMargin: true,
         } as FormGeneratorHeaderAdditionalData<SetupValidationFormValue>,
       },
@@ -232,7 +232,7 @@ export class StaticSecurityChecksComponent implements OnInit, OnDestroy {
       message: '',
       guiOptions: {
         additionalData: {
-          subheaderHtml: () => 'No account found',
+          subheaderHtml: () => 'No account found.',
           subheaderStyle: 'margin: 0.5rem 0; color: var(--sapTextColor);',
           ignoreTopMargin: true,
           ignoreBottomMargin: true,
@@ -277,15 +277,15 @@ export class StaticSecurityChecksComponent implements OnInit, OnDestroy {
       message: '',
       guiOptions: {
         additionalData: {
-          header: 'Add CxOne account',
+          header: 'Add Checkmarx ONE account',
           instructions: async () => {
             const context = await this.luigiService.getContextAsync()
             return `
 							<ol>
 								<li>
-									Install the CxOne extension from the <a href="${context.frameBaseUrl}/projects/${context.projectId}/marketplace?~q=CheckmarxOne" target="_blank" rel="noopener noreferrer">marketplace</a>
+									Install the Checkmarx ONE extension from the <a href="${context.frameBaseUrl}/projects/${context.projectId}/marketplace?~q=CheckmarxOne" target="_blank" rel="noopener noreferrer">marketplace.</a>
 								</li>
-								<li>Create a CxOne account</li>
+								<li>Create a Checkmarx ONE account and return to this screen.</li>
 							</ol>
 						`
           },
@@ -309,7 +309,7 @@ export class StaticSecurityChecksComponent implements OnInit, OnDestroy {
     {
       type: 'input',
       name: 'cxOneApplicationName',
-      message: 'CxOne Account',
+      message: 'Checkmarx ONE Account',
       default: () => null,
       readonly: true,
       when: (formValue: SetupValidationFormValue) => {
@@ -330,7 +330,7 @@ export class StaticSecurityChecksComponent implements OnInit, OnDestroy {
     {
       type: 'input',
       name: 'cxOneProjectName',
-      message: 'CxOne Project Name',
+      message: 'Checkmarx ONE Project Name',
       default: async () => {
         const context = await this.luigiService.getContextAsync()
         return context.componentId
@@ -353,7 +353,7 @@ export class StaticSecurityChecksComponent implements OnInit, OnDestroy {
     {
       type: 'select',
       name: 'cxOnePreset',
-      message: 'Checkmarx Preset',
+      message: 'Checkmarx ONE Preset',
       placeholder: 'Select',
       choices: (formValue: SetupValidationFormValue) => getCxOnePresets(formValue.language),
       when: (formValue: SetupValidationFormValue) => {
@@ -453,7 +453,7 @@ export class StaticSecurityChecksComponent implements OnInit, OnDestroy {
         additionalData: {
           message: () =>
             Promise.resolve(`
-							CxOne will run on a <b>GitHub Actions workflow.</b>
+							Checkmarx ONE will run on a <b>GitHub Actions workflow.</b>
 							<a
 								href="${CX_ONE_DOCUMENTATION_LINK}"
 								target="_blank" rel="noopener noreferrer">
@@ -487,7 +487,7 @@ export class StaticSecurityChecksComponent implements OnInit, OnDestroy {
         additionalData: {
           message: () =>
             Promise.resolve(`
-							GitHub Advanced Security and CxOne will run as <b>GitHub Actions workflows.</b>
+							GitHub Advanced Security and Checkmarx ONE will run as <b>GitHub Actions workflows.</b>
 							<a
 								href="${VALIDATE_CODE_DOCUMENTATION_LINK}"
 								target="_blank" rel="noopener noreferrer">
@@ -684,7 +684,7 @@ export class StaticSecurityChecksComponent implements OnInit, OnDestroy {
               <a
                 href="${CX_ONE_DOCUMENTATION_LINK}"
                 target="_blank"
-                rel="noopener noreferrer">CxOne Documentation</a>
+                rel="noopener noreferrer">Checkmarx ONE Documentation</a>
             `,
             ignoreBottomMargin: true,
           } as FormGeneratorHeaderAdditionalData<SetupValidationFormValue>,

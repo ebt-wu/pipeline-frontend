@@ -88,7 +88,7 @@ export enum CredentialTypes {
 
 export enum ValidationTools {
   GHAS = 'GitHub Advanced Security',
-  CX = 'CxONE',
+  CX = 'Checkmarx ONE',
 }
 
 export enum GithubInstances {

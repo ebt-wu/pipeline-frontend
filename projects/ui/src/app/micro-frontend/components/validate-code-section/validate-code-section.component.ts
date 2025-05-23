@@ -97,7 +97,7 @@ export class ValidateCodeSectionComponent implements OnChanges, OnInit {
         ),
         infoIconConfig: {
           isIconShown: this.pipelineStepsByCategory.get(Categories.STATIC_SECURITY_CHECKS).length === 0,
-          iconInlineHelpText: 'Configure Static Security services like GitHub Advanced Security and CxONE',
+          iconInlineHelpText: 'Configure Static Security services like GitHub Advanced Security and Checkmarx ONE',
         },
       },
       [Categories.STATIC_CODE_CHECKS]: {
@@ -167,7 +167,7 @@ export class ValidateCodeSectionComponent implements OnChanges, OnInit {
           await this.luigiClient.linkManager().fromVirtualTreeRoot().openAsModal('setup-static-security-checks', {
             title: 'Add Static Security Checks',
             width: '420px',
-            height: '630px',
+            height: '660px',
           })
         } else {
           await this.luigiClient

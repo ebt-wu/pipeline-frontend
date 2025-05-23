@@ -1,86 +1,49 @@
 <div *ngIf="!loading()">
-  <div class="flex-box">
+  <div class="content">
+    <div class="main">
+      <div class="fields">
+        <div class="field">
+          <div class="field-title">Enabled for GitHub Repository</div>
+          <a
+            [href]="serviceDetails.repoUrl"
+            class="field-value--link"
+            fd-link
+            rel="noopener noreferrer"
+            target="_blank">
+            {{ serviceDetails.githubOrganization }}/{{ serviceDetails.githubRepoName }}
+          </a>
+        </div>
+        <div class="field">
+          <div class="field-title">Runs On:</div>
+          <span class="field-value">GitHub Actions</span>
+        </div>
+      </div>
+      <button
+        (click)="openDocumentation()"
+        class="auto-left-margin"
+        fd-button
+        fdType="transparent"
+        glyph="question-mark"
+        label="Learn More"></button>
+    </div>
     <div>
-      <h3 class="heading-margin">Enabled for GitHub Repository</h3>
-      <a [href]="serviceDetails.repoUrl" fd-link rel="noopener noreferrer" target="_blank">
-        {{ serviceDetails.githubOrganization }}/{{ serviceDetails.githubRepoName }}
-      </a>
+      <div class="divider"></div>
+      <h3>Get started with GitHub Advanced Security</h3>
+      <ul class="no-margin">
+        <li>
+          <a [href]="AUDIT_FINDINGS_DOCU_LINK" rel="noopener noreferrer" target="_blank">
+            Learn which findings to audit
+          </a>
+        </li>
+        <li>
+          <a [href]="ADD_SCAN_PROJECT_SIRIUS_DOCU_LINK" rel="noopener noreferrer" target="_blank">Add your results</a>
+          as a Scan Project in Sirius
+        </li>
+      </ul>
     </div>
-
-    <button
-      role="button"
-      class="auto-left-margin"
-      glyph="question-mark"
-      label="Learn More"
-      fdType="transparent"
-      fd-button
-      (click)="openDocumentation()"></button>
-  </div>
-  <div *dxpRequiredPolicies="['member', 'owner', 'vault_maintainer']; operator: 'or'">
-    <div *ngIf="cumulusInfo && cumulusInfo.id">
-      <h3 class="heading-margin">Cumulus Pipeline</h3>
-      <div class="flex-box">
-        <strong>Pipeline ID</strong>
-        <button
-          [fdType]="'transparent'"
-          fd-button
-          class="left-margin"
-          glyph="hint"
-          placement="top"
-          [fd-inline-help]="pipelineIdPopover"
-          [triggers]="['click']"
-          [closeOnOutsideClick]="true"></button>
-        <ng-template #pipelineIdPopover>
-          <div>
-            Use this ID to
-            <a
-              class="link"
-              href="https://github.wdf.sap.corp/pages/ContinuousDelivery/piper-doc/steps/sapCumulusUpload/"
-              target="_blank"
-              rel="noopener noreferrer">
-              upload your pipeline's results
-            </a>
-            <br />
-            using the sapCumulusUpload Piper step
-          </div>
-        </ng-template>
-      </div>
-      {{ cumulusInfo.id }}
-      <div style="margin-top: 1rem">
-        <span>
-          <em>
-            Don't have a Build Pipeline set up in the Hyperspace Portal, but you're using Cumulus?
-            <br />
-            <a
-              href="https://pages.github.tools.sap/hyperspace/cicd-setup-documentation/managed-services/validate/ghas.html#enabling-github-advanced-security-without-a-build-pipeline"
-              fd-link
-              target="_blank"
-              rel="noopener noreferrer">
-              See how to choose the right Pipeline ID
-            </a>
-          </em>
-        </span>
-      </div>
-    </div>
-    <div class="divider"></div>
-    <h3>Get started with GitHub Advanced Security</h3>
-    <ul class="no-margin">
-      <li>
-        <a [href]="AUDIT_FINDINGS_DOCU_LINK" target="_blank" rel="noopener noreferrer">Learn which findings to audit</a>
-      </li>
-      <li>
-        <a [href]="ADD_SCAN_PROJECT_SIRIUS_DOCU_LINK" target="_blank" rel="noopener noreferrer">Add your results</a>
-        as a Scan Project in Sirius
-      </li>
-    </ul>
   </div>
 </div>
+
 <div *ngIf="loading()">
   <fd-busy-indicator [loading]="true" ariaLabel="loading" title="Please Wait"></fd-busy-indicator>
 </div>
-
-<ng-template #insufficientVaultPermissions>
-  You need to be 'Vault Maintainer' to see credentials.
-  <br />
-  Go to the members list to contact a project owner.
-</ng-template>

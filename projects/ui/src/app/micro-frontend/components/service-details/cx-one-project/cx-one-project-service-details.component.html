@@ -1,17 +1,17 @@
 <div class="content">
   <fd-message-strip type="information">
-    Run your workflow to complete the creation of your CxOne project.
+    Run your workflow to complete the creation of your Checkmarx ONE project.
   </fd-message-strip>
   <div class="main">
     <div class="fields">
       <div class="field">
-        <div class="field-title">CxOne Application:</div>
+        <div class="field-title">Checkmarx ONE Application:</div>
         <a
           *ngIf="serviceDetails.applicationUrl"
-          class="field-value field-value--link"
           [href]="serviceDetails.applicationUrl"
-          target="_blank"
-          rel="noopener noreferrer">
+          class="field-value field-value--link"
+          rel="noopener noreferrer"
+          target="_blank">
           {{ serviceDetails.applicationName }}
         </a>
         <span *ngIf="!serviceDetails.applicationUrl" class="field-value">
@@ -19,7 +19,7 @@
         </span>
       </div>
       <div class="field">
-        <div class="field-title">CxOne Project Name:</div>
+        <div class="field-title">Checkmarx ONE Project Name:</div>
         <span class="field-value">
           {{ serviceDetails.projectName }}
         </span>
@@ -30,12 +30,27 @@
       </div>
     </div>
     <button
+      (click)="openDocumentation()"
       class="auto-left-margin"
-      role="button"
+      fd-button
       fdType="transparent"
       glyph="question-mark"
-      label="Learn More"
-      (click)="openDocumentation()"
-      fd-button></button>
+      label="Learn More"></button>
+  </div>
+  <div>
+    <div class="divider"></div>
+    <h3>Get started with Checkmarx ONE</h3>
+    <ul class="no-margin">
+      <li>
+        <a [href]="AUDIT_CXONE_FINDINGS_DOCU_LINK" rel="noopener noreferrer" target="_blank">
+          Learn which findings to audit
+        </a>
+      </li>
+      <li>
+        <a [href]="ADD_SCAN_PROJECT_CXONE_SIRIUS_DOCU_LINK" rel="noopener noreferrer" target="_blank">
+          Add your Checkmarx ONE project in Sirius
+        </a>
+      </li>
+    </ul>
   </div>
 </div>

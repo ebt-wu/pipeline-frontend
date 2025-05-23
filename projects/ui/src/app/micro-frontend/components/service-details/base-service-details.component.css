@@ -36,3 +36,59 @@ a {
   color: var(--sapNeutralColor);
   cursor: pointer;
 }
+
+.divider {
+  border-top: 1px solid var(--sapNeutralBorderColor);
+  width: 100%;
+  margin: 18px 0;
+}
+
+.no-margin {
+  margin: 0;
+}
+.content {
+  margin-top: 16px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  gap: 16px;
+
+  .main {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    .fields {
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
+      gap: 16px;
+
+      .field {
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-start;
+        gap: 4px;
+      }
+    }
+
+  }
+
+}
+
+.field-title {
+  color: var(--sapContent_LabelColor);
+  font-family: var(--sapFontFamily), sans-serif;
+  font-size: 14px;
+  line-height: 16.1px;
+}
+
+.field-value {
+  color: var(--sapTextColor);
+  font-family: var(--sapFontFamily), sans-serif;
+  font-size: 14px;
+  line-height: 16.1px;
+}
+
+.field-value--link {
+  color: var(--sapLinkColor);
+}
