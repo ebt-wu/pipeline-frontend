@@ -58,9 +58,10 @@ export class GithubAdvancedSecurityService {
         lang = GhasLanguagues.Java
         break
       case Languages.OTHER:
-        // In case of 'OTHER', we don't know the language but for the operator to commit the GHAS workflow file,
-        // we choose Java here. Out of the three options for GHAS (Java, Python and Go), Java the most popular at SAP.
-        lang = GhasLanguagues.Java
+        lang = GhasLanguagues.Unknown
+        break
+      default:
+        // For any other language, don't set the language field on the resource
         break
     }
 

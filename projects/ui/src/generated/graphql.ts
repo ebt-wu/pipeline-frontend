@@ -218,6 +218,7 @@ export enum Languages {
   Golang = 'Golang',
   Java = 'Java',
   Python = 'Python',
+  Unknown = 'Unknown',
 }
 
 export type Mutation = {
@@ -628,6 +629,7 @@ export type SonarQubeProject = {
 }
 
 export type SonarQubeProjectCreatePayload = {
+  projectKey?: InputMaybe<Scalars['String']['input']>
   projectName: Scalars['String']['input']
   secretPath?: InputMaybe<Scalars['String']['input']>
 }
