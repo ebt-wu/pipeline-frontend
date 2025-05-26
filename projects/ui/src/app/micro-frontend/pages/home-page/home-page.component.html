@@ -5,7 +5,7 @@
         <app-pipeline [pipeline$]="watch$"></app-pipeline>
       </ng-container>
     </div>
-  } @else if (!githubMetadataPresent()) {
+  } @else if (!githubMetadataPresent() && isAppInitialized()) {
     <div class="unable-to-load-message">
       <img src="./assets/notFoundPage.svg" alt="Cards with a question mark" width="300px" />
       <figure fd-illustrated-message [noSvg]="true" type="spot">
@@ -15,7 +15,7 @@
         </figcaption>
       </figure>
     </div>
-  } @else if (!isGhToolsOrGhWdf()) {
+  } @else if (!isGhToolsOrGhWdf() && isAppInitialized()) {
     <div class="unable-to-load-message">
       <img src="./assets/errorPage.svg" alt="Cards with error" width="300px" />
       <figure fd-illustrated-message [noSvg]="true" type="spot">
@@ -28,9 +28,19 @@
         </figcaption>
       </figure>
     </div>
+  } @else if (!isAppInitialized()) {
+    <div class="unable-to-load-message">
+      <img src="./assets/unableToLoad.svg" alt="Cards with red cross" width="300px" />
+      <figure fd-illustrated-message [noSvg]="true" type="spot">
+        <figcaption fd-illustrated-message-figcaption id="not-found-description">
+          <h3 fd-illustrated-message-title>Unable to connect to server</h3>
+          <p fd-illustrated-message-text>Please try again later</p>
+        </figcaption>
+      </figure>
+    </div>
   } @else {
     <div class="unable-to-load-message">
-      <img src="./assets/notFoundPage.svg" alt="Cards with a question mark" width="300px" />
+      <img src="./assets/notFoundPage-large.svg" alt="Cards with a question mark" width="300px" />
       <figure fd-illustrated-message [noSvg]="true" type="spot">
         <figcaption fd-illustrated-message-figcaption id="not-found-description">
           <h3 fd-illustrated-message-title>Failed to load CI/CD Setup</h3>

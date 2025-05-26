@@ -1,5 +1,4 @@
-import { Injectable } from '@angular/core'
-import { DxpLuigiContextService } from '@dxp/ngx-core/luigi'
+import { inject, Injectable } from '@angular/core'
 import { ServiceStatus, StepKey } from '@enums'
 import {
   CreatePipelineMutation,
@@ -18,8 +17,8 @@ import {
 } from '@generated/graphql'
 import { Pipeline } from '@types'
 import { combineLatest, Observable, of } from 'rxjs'
-import { catchError, first, map, mergeMap } from 'rxjs/operators'
-import { BaseAPIService } from './base.service'
+import { catchError, map } from 'rxjs/operators'
+import { CONTEXT, CLIENT } from '../providers/app-state.provider'
 import {
   CREATE_PIPELINE,
   DELETE_NOT_MANAGED_SERVICE,
@@ -30,106 +29,79 @@ import {
 
 @Injectable({ providedIn: 'root' })
 export class PipelineService {
-  constructor(
-    private readonly apiService: BaseAPIService,
-    private readonly luigiService: DxpLuigiContextService,
-  ) {}
+  private readonly ctx = inject(CONTEXT)
+  private readonly client = inject(CLIENT)
 
   createPipeline(params: PipelineCreationRequest): Observable<string> {
-    return combineLatest([this.apiService.apollo(), this.luigiService.contextObservable()]).pipe(
-      first(),
-      mergeMap(([client, ctx]) => {
-        return client
-          .mutate<CreatePipelineMutation, CreatePipelineMutationVariables>({
-            mutation: CREATE_PIPELINE,
-            variables: {
-              projectId: ctx.context.projectId,
-              componentId: ctx.context.componentId,
-              params: params,
-            },
-          })
-          .pipe(map((res) => res.data?.createPipeline ?? ''))
-      }),
-    )
+    return this.client
+      .mutate<CreatePipelineMutation, CreatePipelineMutationVariables>({
+        mutation: CREATE_PIPELINE,
+        variables: {
+          projectId: this.ctx.context.projectId,
+          componentId: this.ctx.context.componentId,
+          params: params,
+        },
+      })
+      .pipe(map((res) => res.data?.createPipeline ?? ''))
   }
 
   deletePipeline(): Observable<string> {
-    return combineLatest([this.apiService.apollo(), this.luigiService.contextObservable()]).pipe(
-      first(),
-      mergeMap(([client, ctx]) => {
-        return client
-          .mutate<DeletePipelineMutation, DeletePipelineMutationVariables>({
-            mutation: DELETE_PIPELINE,
-            variables: {
-              projectId: ctx.context.projectId,
-              componentId: ctx.context.componentId,
-            },
-          })
-          .pipe(map((res) => res.data?.deletePipeline ?? ''))
-      }),
-    )
+    return this.client
+      .mutate<DeletePipelineMutation, DeletePipelineMutationVariables>({
+        mutation: DELETE_PIPELINE,
+        variables: {
+          projectId: this.ctx.context.projectId,
+          componentId: this.ctx.context.componentId,
+        },
+      })
+      .pipe(map((res) => res.data?.deletePipeline ?? ''))
   }
 
   deleteNotManagedService(stepKey: StepKey): Observable<string> {
-    return combineLatest([this.apiService.apollo(), this.luigiService.contextObservable()]).pipe(
-      first(),
-      mergeMap(([client, ctx]) => {
-        return client
-          .mutate<DeleteNotManagedServiceMutation, DeleteNotManagedServiceMutationVariables>({
-            mutation: DELETE_NOT_MANAGED_SERVICE,
-            variables: {
-              stepKey: stepKey,
-              projectId: ctx.context.projectId,
-              componentId: ctx.context.componentId,
-            },
-          })
-          .pipe(map((res) => res.data?.deleteNotManagedService ?? ''))
-      }),
-    )
+    return this.client
+      .mutate<DeleteNotManagedServiceMutation, DeleteNotManagedServiceMutationVariables>({
+        mutation: DELETE_NOT_MANAGED_SERVICE,
+        variables: {
+          stepKey: stepKey,
+          projectId: this.ctx.context.projectId,
+          componentId: this.ctx.context.componentId,
+        },
+      })
+      .pipe(map((res) => res.data?.deleteNotManagedService ?? ''))
   }
 
   watchPipeline(): Observable<Pipeline> {
-    return combineLatest([this.apiService.apollo(), this.luigiService.contextObservable()]).pipe(
-      first(),
-      mergeMap(([client, ctx]) => {
-        return client
-          .subscribe<WatchPipelineSubscription, WatchPipelineSubscriptionVariables>({
-            query: WATCH_PIPELINE,
-            variables: {
-              projectId: ctx.context.projectId,
-              componentId: ctx.context.componentId,
-            },
-          })
-          .pipe(
-            map((res) => res.data?.watchPipeline ?? {}),
-            catchError(() => of({})),
-          )
-      }),
-    )
+    return this.client
+      .subscribe<WatchPipelineSubscription, WatchPipelineSubscriptionVariables>({
+        query: WATCH_PIPELINE,
+        variables: {
+          projectId: this.ctx.context.projectId,
+          componentId: this.ctx.context.componentId,
+        },
+      })
+      .pipe(
+        map((res) => res.data?.watchPipeline ?? {}),
+        catchError(() => of({})),
+      )
   }
 
   watchNotManagedServicesInPipeline(): Observable<NotManagedServices | { error: string }> {
-    return combineLatest([this.apiService.apollo(), this.luigiService.contextObservable()]).pipe(
-      first(),
-      mergeMap(([client, ctx]) => {
-        return client
-          .subscribe<Subscription, SubscriptionWatchNotManagedServicesArgs>({
-            query: WATCH_NOT_MANAGED_SERVICES,
-            variables: {
-              projectId: ctx.context.projectId,
-              componentId: ctx.context.componentId,
-            },
-          })
-          .pipe(
-            map((res) => {
-              return res.data?.watchNotManagedServices
-            }),
-            catchError(() => {
-              return of({ error: 'Failed at watch_not_managed_service(s)' })
-            }),
-          )
-      }),
-    )
+    return this.client
+      .subscribe<Subscription, SubscriptionWatchNotManagedServicesArgs>({
+        query: WATCH_NOT_MANAGED_SERVICES,
+        variables: {
+          projectId: this.ctx.context.projectId,
+          componentId: this.ctx.context.componentId,
+        },
+      })
+      .pipe(
+        map((res) => {
+          return res.data?.watchNotManagedServices
+        }),
+        catchError(() => {
+          return of({ error: 'Failed at watch_not_managed_service(s)' })
+        }),
+      )
   }
 
   combinePipelineWithNotManagedServicesAndGithubWatch(

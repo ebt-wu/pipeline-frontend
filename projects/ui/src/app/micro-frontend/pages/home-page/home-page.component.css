@@ -22,3 +22,12 @@
 .card-footer {
   margin: 0 auto;
 }
+
+.unable-to-load-message {
+  margin-top: 20vh;
+}
+
+.unable-to-load-message img {
+
+  margin-bottom: .75rem;
+}

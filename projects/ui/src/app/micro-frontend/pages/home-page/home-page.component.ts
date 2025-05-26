@@ -1,16 +1,18 @@
 import { AsyncPipe, CommonModule } from '@angular/common'
-import { ChangeDetectionStrategy, Component, HostListener, OnInit, signal } from '@angular/core'
+import { ChangeDetectionStrategy, Component, computed, HostListener, inject, OnInit, signal } from '@angular/core'
 import { StepsOverallOrder } from '@constants'
 import { AuthorizationModule } from '@dxp/ngx-core/authorization'
-import { DxpLuigiContextService, LuigiClient } from '@dxp/ngx-core/luigi'
+import { DxpIContextMessage, DxpLuigiContextService, LuigiClient } from '@dxp/ngx-core/luigi'
 import { GithubInstances } from '@enums'
 import { FundamentalNgxCoreModule, SvgConfig } from '@fundamental-ngx/core'
 import { PlatformDynamicPageModule } from '@fundamental-ngx/platform/dynamic-page'
 import { NotManagedServices, PipelineType } from '@generated/graphql'
 import { Pipeline } from '@types'
+import { ApolloBase } from 'apollo-angular'
 import { BehaviorSubject, debounceTime, firstValueFrom, Observable } from 'rxjs'
 import { map } from 'rxjs/operators'
 import { tntSpotSecret } from '../../../../assets/ts-svg/tnt-spot-secret'
+import { CLIENT, CONTEXT } from '../../providers/app-state.provider'
 import { DebugModeService } from '../../services/debug-mode.service'
 import { GithubActionsService } from '../../services/github-actions.service'
 import { GithubMetadata, GithubService } from '../../services/github.service'
@@ -34,12 +36,18 @@ import { PipelineComponent } from '../pipeline/pipeline.component'
   ],
 })
 export class HomePageComponent implements OnInit {
+  apolloClient: ApolloBase = inject(CLIENT)
+  ctx: DxpIContextMessage = inject(CONTEXT)
   pipelineType = PipelineType
   watch$: Observable<Pipeline>
   pipelineAvail = new BehaviorSubject<boolean>(false)
   loading = signal(false)
   githubMetadataPresent = signal(true)
   isGhToolsOrGhWdf = signal(true)
+  isAppInitialized = computed(() => {
+    // if one of these is null the app is not
+    return !!this.apolloClient && !!this.ctx
+  })
   githubMeta: GithubMetadata
 
   readonly spotConfig: SvgConfig = {
