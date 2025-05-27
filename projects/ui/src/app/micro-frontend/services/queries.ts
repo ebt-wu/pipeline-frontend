@@ -637,6 +637,7 @@ export const GET_SONARQUBE_PROJECT = gql`
       secretPath
       configString
       creationTimestamp
+      hasInactiveUsers
     }
   }
 `

@@ -1,4 +1,10 @@
 <div *ngIf="!loading()">
+  <fd-message-strip *ngIf="serviceDetails.hasInactiveUsers" type="warning" class="inactive-users-warning">
+    <span>
+      The SonarQube project has inactive users. You can activate you account by logging in to SonarQube. It may take up
+      to 10 hours until permissions are restored in the SonarQube project.
+    </span>
+  </fd-message-strip>
   <div class="flex-box">
     <h3 class="heading-margin">SonarQube Configuration</h3>
     <button

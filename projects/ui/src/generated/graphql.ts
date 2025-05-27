@@ -620,6 +620,7 @@ export type SonarQubeProject = {
   __typename?: 'SonarQubeProject'
   configString?: Maybe<Scalars['String']['output']>
   creationTimestamp?: Maybe<Scalars['String']['output']>
+  hasInactiveUsers?: Maybe<Scalars['Boolean']['output']>
   host: Scalars['String']['output']
   key: Scalars['String']['output']
   name: Scalars['String']['output']

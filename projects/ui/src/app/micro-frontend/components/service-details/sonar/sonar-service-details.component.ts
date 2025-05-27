@@ -26,6 +26,7 @@ export class SonarServiceDetailsComponent implements OnInit {
     key: string
     creationTimestamp: string
     configString: string
+    hasInactiveUsers: boolean
   }
 
   canUserEditCredentials = signal(false)
