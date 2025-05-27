@@ -17,7 +17,6 @@ import {
   selector: 'app-fdp-form-generator-validator',
   templateUrl: './form-generator-validator.component.html',
   viewProviders: [dynamicFormFieldProvider, dynamicFormGroupChildProvider],
-  standalone: true,
   imports: [CommonModule, ReactiveFormsModule, InputComponent],
   styleUrl: './form-generator-validator.component.css',
   encapsulation: ViewEncapsulation.None,

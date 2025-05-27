@@ -25,7 +25,6 @@ import { CategorySlotComponent } from '../category-slot/category-slot.component'
 
 @Component({
   selector: 'app-validate-code-section',
-  standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [FundamentalNgxCoreModule, NgIf, CategorySlotComponent],
   templateUrl: './validate-code-section.component.html',

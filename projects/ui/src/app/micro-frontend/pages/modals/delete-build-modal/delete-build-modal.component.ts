@@ -6,7 +6,6 @@ import { FormModule, FundamentalNgxCoreModule, MessageBoxRef } from '@fundamenta
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
-  standalone: true,
   selector: 'app-delete-build-modal',
   templateUrl: './delete-build-modal.component.html',
   styleUrl: './delete-build-modal.component.css',

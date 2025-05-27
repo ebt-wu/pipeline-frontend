@@ -2,7 +2,6 @@ import { CommonModule } from '@angular/common'
 import { Component, ChangeDetectionStrategy } from '@angular/core'
 import { ReactiveFormsModule } from '@angular/forms'
 import { ButtonComponent, ButtonType } from '@fundamental-ngx/core'
-import { ContentDensityDirective } from '@fundamental-ngx/core/content-density'
 import {
   BaseDynamicFormGeneratorControl,
   dynamicFormFieldProvider,
@@ -21,8 +20,7 @@ export interface FormGeneratorButtonAdditionalData {
   selector: 'app-fdp-form-generator-button',
   templateUrl: './form-generator-button.component.html',
   viewProviders: [dynamicFormFieldProvider, dynamicFormGroupChildProvider],
-  standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, ButtonComponent, ContentDensityDirective],
+  imports: [CommonModule, ReactiveFormsModule, ButtonComponent],
 })
 export class PlatformFormGeneratorCustomButtonComponent extends BaseDynamicFormGeneratorControl {
   constructor() {

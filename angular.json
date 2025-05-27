@@ -25,13 +25,16 @@
       },
       "architect": {
         "build": {
-          "builder": "@angular-devkit/build-angular:browser",
+          "builder": "@angular/build:application",
           "options": {
             "localize": ["en-US", "de"],
-            "outputPath": "dist/ui",
+            "outputPath": {
+              "base": "dist/ui"
+            },
             "index": "projects/ui/src/index.html",
-            "main": "projects/ui/src/main.ts",
-            "polyfills": "projects/ui/src/polyfills.ts",
+            "polyfills": [
+              "projects/ui/src/polyfills.ts"
+            ],
             "tsConfig": "projects/ui/tsconfig.app.json",
             "aot": true,
             "assets": [
@@ -52,18 +55,18 @@
               "projects/ui/src/styles.css",
               "node_modules/fundamental-styles/dist/icon.css",
               {
-                "input": "projects/ui/src/theming/sap_fiori_3_fonts.css",
-                "inject": false,
-                "bundleName": "sap_fiori_3_fonts"
-              },
-              {
                 "input": "projects/ui/src/theming/sap_horizon_fonts.css",
                 "inject": false,
                 "bundleName": "sap_horizon_fonts"
               }
             ],
             "scripts": [],
-            "allowedCommonJsDependencies": ["graphql-tag", "hammerjs", "zen-observable"]
+            "allowedCommonJsDependencies": [
+              "graphql-tag",
+              "hammerjs",
+              "zen-observable"
+            ],
+            "browser": "projects/ui/src/main.ts"
           },
           "configurations": {
             "production": {
@@ -78,8 +81,6 @@
               "sourceMap": false,
               "namedChunks": false,
               "extractLicenses": true,
-              "vendorChunk": false,
-              "buildOptimizer": true,
               "budgets": [
                 {
                   "type": "initial",
@@ -100,9 +101,7 @@
                   "with": "projects/ui/src/environments/environment.local.ts"
                 }
               ],
-              "buildOptimizer": false,
               "optimization": false,
-              "vendorChunk": true,
               "extractLicenses": false,
               "sourceMap": true,
               "namedChunks": true,
@@ -115,9 +114,7 @@
                   "with": "projects/ui/src/environments/environment.development.ts"
                 }
               ],
-              "buildOptimizer": false,
               "optimization": false,
-              "vendorChunk": true,
               "extractLicenses": false,
               "sourceMap": true,
               "namedChunks": true,
@@ -132,7 +129,7 @@
           }
         },
         "serve": {
-          "builder": "@angular-devkit/build-angular:dev-server",
+          "builder": "@angular/build:dev-server",
           "options": {
             "buildTarget": "ui:build"
           },
@@ -159,7 +156,7 @@
           }
         },
         "extract-i18n": {
-          "builder": "@angular-devkit/build-angular:extract-i18n",
+          "builder": "@angular/build:extract-i18n",
           "options": {
             "buildTarget": "pipeline-ui:build"
           }
@@ -245,16 +242,16 @@
           "builder": "ngx-build-plus:dev-server",
           "configurations": {
             "production": {
-              "browserTarget": "wc:build:production"
+              "buildTarget": "wc:build:production"
             },
             "development": {
-              "browserTarget": "wc:build:development"
+              "buildTarget": "wc:build:development"
             },
             "de": {
-              "browserTarget": "wc:build:de"
+              "buildTarget": "wc:build:de"
             },
             "en": {
-              "browserTarget": "wc:build:en"
+              "buildTarget": "wc:build:en"
             }
           },
           "defaultConfiguration": "development"

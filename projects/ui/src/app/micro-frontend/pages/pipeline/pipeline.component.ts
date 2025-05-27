@@ -54,7 +54,6 @@ interface Error {
   changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-pipeline',
   templateUrl: './pipeline.component.html',
-  standalone: true,
   styleUrl: './pipeline.component.css',
   imports: [
     CommonModule,

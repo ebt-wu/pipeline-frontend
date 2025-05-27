@@ -11,7 +11,6 @@ interface DialogData {
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
-  standalone: true,
   selector: 'app-cicd-modal-project-get-started',
   templateUrl: './modal-project-get-started.component.html',
   styleUrl: './modal-project-get-started.component.css',

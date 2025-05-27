@@ -19,7 +19,6 @@ import { StatusIconComponent } from './status-icon/status-icon.component'
 
 @Component({
   selector: 'app-category-slot',
-  standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     AuthorizationModule,

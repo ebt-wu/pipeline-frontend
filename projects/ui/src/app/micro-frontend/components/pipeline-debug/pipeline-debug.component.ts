@@ -11,7 +11,6 @@ import { PipelineService } from '../../services/pipeline.service'
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
-  standalone: true,
   selector: 'app-pipeline-debug',
   templateUrl: './pipeline-debug.component.html',
   styleUrl: './pipeline-debug.component.css',

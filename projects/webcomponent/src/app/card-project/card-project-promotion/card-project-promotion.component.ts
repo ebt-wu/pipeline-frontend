@@ -1,4 +1,3 @@
-import { NgIf } from '@angular/common'
 import { ChangeDetectionStrategy, Component, Input, OnInit, ViewEncapsulation, ChangeDetectorRef } from '@angular/core'
 import { CardAction, DxpActionCardModule, ImageType, HelpLink } from '@dxp/ngx-core/action-card'
 import { AuthorizationModule } from '@dxp/ngx-core/authorization'
@@ -7,7 +6,6 @@ import { ExtensionService, ScopeType, UpdateExtensionInput } from '@dxp/ngx-core
 import { DxpLuigiContextService, LuigiClient } from '@dxp/ngx-core/luigi'
 import { ComponentSearchService } from '@dxp/ngx-core/search'
 import {
-  ButtonComponent,
   ButtonType,
   CardModule,
   DialogService,
@@ -20,7 +18,6 @@ import { svgRocket } from '../../../assets/ts-svg/rocket'
 import { ModalProjectGetStartedComponent } from '../modal-project-get-started/modal-project-get-started.component'
 
 @Component({
-  standalone: true,
   selector: 'app-cicd-card-project-promotion',
   templateUrl: './card-project-promotion.component.html',
   styleUrl: './card-project-promotion.component.css',
@@ -28,10 +25,9 @@ import { ModalProjectGetStartedComponent } from '../modal-project-get-started/mo
   imports: [
     CardModule,
     IllustratedMessageModule,
-    NgIf,
+    MessageStripModule,
     MessageStripModule,
     AuthorizationModule,
-    ButtonComponent,
     DxpActionCardModule,
   ],
   encapsulation: ViewEncapsulation.ShadowDom,

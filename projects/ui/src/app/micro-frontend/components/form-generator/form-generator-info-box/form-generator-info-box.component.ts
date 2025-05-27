@@ -22,7 +22,6 @@ export interface FormGeneratorInfoBoxAdditionalData {
   selector: 'app-fdp-form-generator-info-box',
   templateUrl: './form-generator-info-box.component.html',
   viewProviders: [dynamicFormFieldProvider, dynamicFormGroupChildProvider],
-  standalone: true,
   imports: [CommonModule, ReactiveFormsModule, ButtonComponent],
   schemas: [NO_ERRORS_SCHEMA],
   styleUrl: './form-generator-info-box.component.css',

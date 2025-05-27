@@ -11,7 +11,6 @@ import {
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-status-icon',
-  standalone: true,
   imports: [ObjectStatusComponent, InlineHelpDirective, BusyIndicatorComponent, IconComponent, NgIf],
   templateUrl: './status-icon.component.html',
   styleUrl: './status-icon.component.css',

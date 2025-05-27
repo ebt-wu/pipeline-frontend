@@ -4,7 +4,6 @@ import { ReactiveFormsModule } from '@angular/forms'
 import { MessageStripModule, MessageStripType } from '@fundamental-ngx/core'
 import {
   BaseDynamicFormGeneratorControl,
-  InputComponent,
   dynamicFormFieldProvider,
   dynamicFormGroupChildProvider,
 } from '@fundamental-ngx/platform'
@@ -20,8 +19,7 @@ export interface FormGeneratorMessageStripAdditionalData {
   selector: 'app-fdp-form-generator-message-strip',
   templateUrl: './form-generator-message-strip.component.html',
   viewProviders: [dynamicFormFieldProvider, dynamicFormGroupChildProvider],
-  standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, MessageStripModule, InputComponent],
+  imports: [CommonModule, ReactiveFormsModule, MessageStripModule],
   styleUrl: './form-generator-message-strip.component.css',
 })
 export class PlatformFormGeneratorCustomMessageStripComponent

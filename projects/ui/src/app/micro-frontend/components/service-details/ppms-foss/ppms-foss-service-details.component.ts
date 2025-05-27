@@ -1,15 +1,14 @@
 import { CommonModule } from '@angular/common'
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core'
 import { AuthorizationModule } from '@dxp/ngx-core/authorization'
-import { BusyIndicatorComponent, FundamentalNgxCoreModule, InlineHelpDirective } from '@fundamental-ngx/core'
+import { FundamentalNgxCoreModule } from '@fundamental-ngx/core'
 import { PpmsFoss } from '@generated/graphql'
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
-  standalone: true,
   selector: 'app-ppms-foss-service-details',
   templateUrl: './ppms-foss-service-details.component.html',
-  imports: [BusyIndicatorComponent, CommonModule, FundamentalNgxCoreModule, AuthorizationModule, InlineHelpDirective],
+  imports: [CommonModule, FundamentalNgxCoreModule, AuthorizationModule],
   styleUrl: './ppms-foss-service-details.component.css',
 })
 export class PpmsFossServiceDetailsComponent {

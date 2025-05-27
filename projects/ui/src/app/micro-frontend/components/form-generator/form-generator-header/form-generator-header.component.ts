@@ -29,7 +29,6 @@ export interface FormGeneratorHeaderAdditionalData<T = object> {
   selector: 'app-fdp-form-generator-header',
   templateUrl: './form-generator-header.component.html',
   viewProviders: [dynamicFormFieldProvider, dynamicFormGroupChildProvider],
-  standalone: true,
   imports: [CommonModule, ReactiveFormsModule, ButtonComponent, InlineHelpModule],
   schemas: [NO_ERRORS_SCHEMA],
   styleUrl: './form-generator-header.component.css',

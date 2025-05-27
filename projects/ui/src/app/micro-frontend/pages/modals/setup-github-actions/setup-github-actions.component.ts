@@ -21,7 +21,6 @@ import { GithubMetadata, GithubService } from '../../../services/github.service'
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
-  standalone: true,
   selector: 'app-setup-github-actions',
   templateUrl: './setup-github-actions.component.html',
   styleUrl: './setup-github-actions.component.css',

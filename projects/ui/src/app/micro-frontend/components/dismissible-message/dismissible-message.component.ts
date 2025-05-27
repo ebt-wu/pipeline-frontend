@@ -10,7 +10,6 @@ import { FundamentalNgxCoreModule, LinkModule, MessageStripType } from '@fundame
  */
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
-  standalone: true,
   selector: 'app-dismissible-message',
   templateUrl: './dismissible-message.component.html',
   styleUrl: './dismissible-message.component.css',

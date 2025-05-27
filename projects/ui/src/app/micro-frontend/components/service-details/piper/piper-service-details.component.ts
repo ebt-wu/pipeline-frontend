@@ -7,7 +7,6 @@ import { GetPiperConfigQuery } from '@generated/graphql'
   changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-piper-service-details',
   templateUrl: './piper-service-details.component.html',
-  standalone: true,
   styleUrl: './piper-service-details.component.css',
   imports: [CommonModule, FundamentalNgxCoreModule],
 })

@@ -25,7 +25,6 @@ import { PipelineComponent } from '../pipeline/pipeline.component'
   selector: 'app-home-page',
   templateUrl: './home-page.component.html',
   styleUrl: './home-page.component.css',
-  standalone: true,
   imports: [
     AuthorizationModule,
     PlatformDynamicPageModule,

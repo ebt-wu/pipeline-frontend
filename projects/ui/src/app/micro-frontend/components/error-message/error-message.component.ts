@@ -48,7 +48,6 @@ const knownErrorCodeMappings: Record<string, ErrorContext> = {
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
-  standalone: true,
   selector: 'app-error-message',
   templateUrl: './error-message.component.html',
   styleUrl: './error-message.component.css',

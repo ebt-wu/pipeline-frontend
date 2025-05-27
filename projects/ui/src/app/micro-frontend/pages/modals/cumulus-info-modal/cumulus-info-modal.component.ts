@@ -17,7 +17,6 @@ import { SecretService } from '../../../services/secret.service'
   selector: 'app-cumulus-info-modal',
   templateUrl: './cumulus-info-modal.component.html',
   styleUrl: './cumulus-info-modal.component.css',
-  standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [NgIf, FundamentalNgxCoreModule, InlineHelpModule, PlatformButtonModule, AuthorizationModule],
 })

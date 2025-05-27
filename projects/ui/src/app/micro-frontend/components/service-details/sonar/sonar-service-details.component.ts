@@ -1,21 +1,15 @@
 import { CommonModule } from '@angular/common'
 import { ChangeDetectionStrategy, Component, Input, OnInit, signal } from '@angular/core'
 import { AuthorizationModule } from '@dxp/ngx-core/authorization'
-import {
-  BusyIndicatorComponent,
-  FundamentalNgxCoreModule,
-  InlineHelpDirective,
-  MessageToastService,
-} from '@fundamental-ngx/core'
+import { FundamentalNgxCoreModule, InlineHelpDirective, MessageToastService } from '@fundamental-ngx/core'
 import { PolicyService } from '../../../services/policy.service'
 import { SecretService } from '../../../services/secret.service'
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
-  standalone: true,
   selector: 'app-sonar-service-details',
   templateUrl: './sonar-service-details.component.html',
-  imports: [BusyIndicatorComponent, CommonModule, FundamentalNgxCoreModule, AuthorizationModule, InlineHelpDirective],
+  imports: [CommonModule, FundamentalNgxCoreModule, AuthorizationModule, InlineHelpDirective],
   styleUrl: './sonar-service-details.component.css',
 })
 export class SonarServiceDetailsComponent implements OnInit {

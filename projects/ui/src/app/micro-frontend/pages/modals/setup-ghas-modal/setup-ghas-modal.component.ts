@@ -41,7 +41,6 @@ function getRecommendedValidationTool(language: Languages): ValidationTools | nu
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
-  standalone: true,
   selector: 'app-setup-ghas',
   templateUrl: './setup-ghas-modal.component.html',
   styleUrl: './setup-ghas-modal.component.css',

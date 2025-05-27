@@ -9,7 +9,6 @@ import { BaseServiceDetailsComponent } from '../base-service-details.component'
   changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-jenkins-service-details',
   templateUrl: './jenkins-service-details.component.html',
-  standalone: true,
   styleUrl: './jenkins-service-details.component.css',
   imports: [BusyIndicatorModule, CommonModule, FundamentalNgxCoreModule, AuthorizationModule, InlineHelpDirective],
 })

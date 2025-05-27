@@ -59,7 +59,6 @@ const ModalSettingsBySetupStep = {
 @Component({
   selector: 'app-static-code-checks',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  standalone: true,
   imports: [
     BarComponent,
     ErrorMessageComponent,

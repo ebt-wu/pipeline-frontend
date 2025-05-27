@@ -20,7 +20,6 @@ export interface FormGeneratorObjectStatusAdditionalData {
   selector: 'app-fdp-form-generator-object-status',
   templateUrl: './form-generator-object-status.component.html',
   viewProviders: [dynamicFormFieldProvider, dynamicFormGroupChildProvider],
-  standalone: true,
   imports: [CommonModule, ReactiveFormsModule, ObjectStatusComponent],
 })
 export class PlatformFormGeneratorCustomObjectStatusComponent extends BaseDynamicFormGeneratorControl {

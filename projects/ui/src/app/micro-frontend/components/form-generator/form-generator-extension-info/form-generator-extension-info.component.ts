@@ -25,7 +25,6 @@ export interface FormGeneratorExtensionInfoAdditionalData<T = object> {
   selector: 'app-fdp-form-generator-extension-info',
   templateUrl: './form-generator-extension-info.component.html',
   viewProviders: [dynamicFormFieldProvider, dynamicFormGroupChildProvider],
-  standalone: true,
   imports: [CommonModule, ReactiveFormsModule, AvatarComponent, IconComponent, InlineHelpModule],
   schemas: [NO_ERRORS_SCHEMA],
   styleUrl: './form-generator-extension-info.component.css',

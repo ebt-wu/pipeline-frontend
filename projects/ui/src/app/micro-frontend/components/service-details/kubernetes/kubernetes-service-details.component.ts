@@ -10,7 +10,6 @@ import { BaseServiceDetailsComponent } from '../base-service-details.component'
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
-  standalone: true,
   selector: 'app-kubernetes-service-details',
   templateUrl: './kubernetes-service-details.component.html',
   imports: [CommonModule, FundamentalNgxCoreModule, AuthorizationModule],

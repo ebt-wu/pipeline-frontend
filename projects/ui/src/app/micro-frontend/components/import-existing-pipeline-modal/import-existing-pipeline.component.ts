@@ -5,7 +5,6 @@ import { FundamentalNgxCoreModule } from '@fundamental-ngx/core'
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
-  standalone: true,
   selector: 'app-import-existing-pipeline-modal',
   templateUrl: './import-existing-pipeline.component.html',
   styleUrl: './import-existing-pipeline.component.scss',

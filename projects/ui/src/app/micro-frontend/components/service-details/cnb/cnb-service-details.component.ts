@@ -6,7 +6,6 @@ import { Cnb } from '@generated/graphql'
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
-  standalone: true,
   selector: 'app-cnb-service-details',
   templateUrl: './cnb-service-details.component.html',
   imports: [CommonModule, FundamentalNgxCoreModule, AuthorizationModule],

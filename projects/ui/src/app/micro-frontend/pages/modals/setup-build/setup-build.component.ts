@@ -52,7 +52,6 @@ type JenkinsGithubCredentialFormValue = GithubCredentialFormValueP<JenkinsGithub
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
-  standalone: true,
   selector: 'app-setup-build',
   templateUrl: './setup-build.component.html',
   styleUrl: './setup-build.component.css',

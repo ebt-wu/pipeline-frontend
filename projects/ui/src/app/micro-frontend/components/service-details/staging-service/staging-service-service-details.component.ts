@@ -9,7 +9,6 @@ import { BaseServiceDetailsComponent } from '../base-service-details.component'
   changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-staging-service-service-details',
   templateUrl: './staging-service-service-details.component.html',
-  standalone: true,
   styleUrl: './staging-service-service-details.component.css',
   imports: [BusyIndicatorModule, CommonModule, FundamentalNgxCoreModule, AuthorizationModule, InlineHelpDirective],
 })

@@ -22,7 +22,6 @@ import { UpgradeBannerComponent } from '../upgrade-banner/upgrade-banner.compone
 @Component({
   selector: 'app-automate-workflows',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  standalone: true,
   imports: [
     AuthorizationModule,
     AvatarComponent,

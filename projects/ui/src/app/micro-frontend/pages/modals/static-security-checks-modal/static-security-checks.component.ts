@@ -164,7 +164,6 @@ function getRequiredValidationTools(language: Languages): ValidationTools[] {
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
-  standalone: true,
   selector: 'app-static-security-checks',
   templateUrl: './static-security-checks.component.html',
   styleUrl: './static-security-checks.component.css',

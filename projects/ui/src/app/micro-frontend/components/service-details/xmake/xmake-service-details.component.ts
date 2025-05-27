@@ -7,7 +7,6 @@ import { BaseServiceDetailsComponent } from '../base-service-details.component'
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
-  standalone: true,
   selector: 'app-xmake-service-details',
   templateUrl: './xmake-service-details.component.html',
   imports: [BusyIndicatorComponent, CommonModule, FundamentalNgxCoreModule, AuthorizationModule, InlineHelpDirective],

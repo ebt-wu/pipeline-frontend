@@ -63,7 +63,6 @@ const ModalSettingsBySetupStep = {
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
-  standalone: true,
   selector: 'app-setup-osc',
   templateUrl: './setup-osc-modal.component.html',
   styleUrl: './setup-osc-modal.component.css',

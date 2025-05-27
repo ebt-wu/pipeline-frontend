@@ -13,7 +13,6 @@ import { BaseServiceDetailsComponent } from '../base-service-details.component'
   changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-github-actions-service-details',
   templateUrl: './github-actions-service-details.component.html',
-  standalone: true,
   imports: [CommonModule, FundamentalNgxCoreModule, ErrorMessageComponent, AuthorizationModule, InlineHelpDirective],
   styleUrl: './github-actions-service-details.component.css',
 })

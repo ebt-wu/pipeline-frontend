@@ -14,7 +14,6 @@ import { BaseServiceDetailsComponent } from '../base-service-details.component'
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
-  standalone: true,
   selector: 'app-github-advanced-security-service-details',
   templateUrl: './github-advanced-security-service-details.component.html',
   styleUrl: './github-advanced-security-service-details.component.css',

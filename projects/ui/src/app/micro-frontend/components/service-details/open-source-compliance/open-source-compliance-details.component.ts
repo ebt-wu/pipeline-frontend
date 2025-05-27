@@ -12,7 +12,6 @@ import { BaseServiceDetailsComponent } from '../base-service-details.component'
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
-  standalone: true,
   selector: 'app-open-source-compliance-details',
   templateUrl: './open-source-compliance-details.component.html',
   styleUrl: './open-source-compliance-details.component.css',

@@ -14,7 +14,6 @@ import { toolsSvg } from '../../../../../assets/ts-svg/tools'
 
 @Component({
   selector: 'app-static-code-checks-no-build-modal',
-  standalone: true,
   imports: [
     IllustratedMessageComponent,
     IllustratedMessageTitleDirective,

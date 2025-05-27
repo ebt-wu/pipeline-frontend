@@ -10,7 +10,6 @@ import { FundamentalNgxCoreModule } from '@fundamental-ngx/core'
   selector: 'app-upgrade-banner',
   templateUrl: './upgrade-banner.component.html',
   styleUrl: './upgrade-banner.component.css',
-  standalone: true,
   imports: [CommonModule, FundamentalNgxCoreModule, AuthorizationModule],
 })
 export class UpgradeBannerComponent {

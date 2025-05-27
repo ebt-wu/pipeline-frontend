@@ -1,16 +1,15 @@
 import { CommonModule } from '@angular/common'
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core'
 import { AuthorizationModule } from '@dxp/ngx-core/authorization'
-import { BusyIndicatorComponent, FundamentalNgxCoreModule, InlineHelpDirective } from '@fundamental-ngx/core'
+import { FundamentalNgxCoreModule } from '@fundamental-ngx/core'
 import { CloudFoundry } from '@generated/graphql'
 import { BaseServiceDetailsComponent } from '../base-service-details.component'
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
-  standalone: true,
   selector: 'app-cloud-foundry-service-details',
   templateUrl: './cloud-foundry-service-details.component.html',
-  imports: [BusyIndicatorComponent, CommonModule, FundamentalNgxCoreModule, AuthorizationModule, InlineHelpDirective],
+  imports: [CommonModule, FundamentalNgxCoreModule, AuthorizationModule],
   styleUrl: './cloud-foundry-service-details.component.css',
 })
 export class CloudFoundryServiceDetailsComponent extends BaseServiceDetailsComponent {

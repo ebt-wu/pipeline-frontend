@@ -70,7 +70,6 @@ import { XMakeServiceDetailsComponent } from '../service-details/xmake/xmake-ser
   changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-service-details-skeleton',
   templateUrl: './service-details-skeleton.component.html',
-  standalone: true,
   styleUrl: './service-details-skeleton.component.css',
   imports: [
     AuthorizationModule,
