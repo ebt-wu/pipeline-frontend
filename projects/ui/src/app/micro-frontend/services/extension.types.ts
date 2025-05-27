@@ -12,7 +12,7 @@ export enum Extensions {
   VAULT = 'hashicorp-vault-vault-tools-sap',
   CHECKMARX = 'checkmarx',
   MEND = 'mend',
-  CHECKMARX_ONE = 'cxone',
+  CHECKMARX_ONE = 'cxone-app',
   AZURE_PIPELINES = 'azure-pipelines',
   GITHUB_TOOLS = 'git-hub-github-tools-sap',
   GITHUB_ACTIONS_TOOLS_SAP = 'git-hub-actions-github-tools-sap',
