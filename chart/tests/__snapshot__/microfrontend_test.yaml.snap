@@ -24,7 +24,7 @@ Has CDM for live:
                         {
                           "pathSegment": "pipeline-ui",
                           "label": "CI/CD Setup",
-                          "url": "https://test-domain/{i18n.currentLocale}/#/pipeline-ui",
+                          "url": "https://test-domain/browser/{i18n.currentLocale}/#/pipeline-ui",
                           "hideSideNav": false,
                           "icon": "process",
                           "entityType": "project.component",
@@ -36,31 +36,31 @@ Has CDM for live:
                             {
                               "pathSegment": "setup",
                               "entityType": "project.component",
-                              "url": "https://test-domain/{i18n.currentLocale}/#/pipeline-ui/setup",
+                              "url": "https://test-domain/browser/{i18n.currentLocale}/#/pipeline-ui/setup",
                               "hideSideNav": false
                             },
                             {
                               "pathSegment": "pipeline-debug",
                               "entityType": "project.component",
-                              "url": "https://test-domain/{i18n.currentLocale}/#/pipeline-ui/pipeline-debug",
+                              "url": "https://test-domain/browser/{i18n.currentLocale}/#/pipeline-ui/pipeline-debug",
                               "hideSideNav": false
                             },
                             {
                               "pathSegment": "feedback",
                               "entityType": "project.component",
-                              "url": "https://test-domain/{i18n.currentLocale}/#/pipeline-ui/feedback",
+                              "url": "https://test-domain/browser/{i18n.currentLocale}/#/pipeline-ui/feedback",
                               "hideSideNav": false
                             },
                             {
                               "pathSegment": "import-pipeline",
                               "entityType": "project.component",
-                              "url": "https://test-domain/{i18n.currentLocale}/#/pipeline-ui/import-pipeline",
+                              "url": "https://test-domain/browser/{i18n.currentLocale}/#/pipeline-ui/import-pipeline",
                               "hideSideNav": false
                             },
                             {
                               "pathSegment": "cumulus-info",
                               "entityType": "project.component",
-                              "urlSuffix": "https://test-domain/{i18n.currentLocale}/#/pipeline-ui/cumulus-info",
+                              "urlSuffix": "https://test-domain/browser/{i18n.currentLocale}/#/pipeline-ui/cumulus-info",
                               "hideSideNav": false
                             }
                           ]
@@ -68,7 +68,7 @@ Has CDM for live:
                         {
                           "pathSegment": "modal",
                           "entityType": "project.component",
-                          "url": "https://test-domain/{i18n.currentLocale}/#/modal",
+                          "url": "https://test-domain/browser/{i18n.currentLocale}/#/modal",
                           "hideSideNav": false
                         }
                       ]
@@ -222,7 +222,7 @@ Test Extension matches the snapshot:
                         {
                           "pathSegment": "pipeline-ui",
                           "label": "CI/CD Setup",
-                          "url": "https://test-domain/{i18n.currentLocale}/#/pipeline-ui",
+                          "url": "https://test-domain/browser/{i18n.currentLocale}/#/pipeline-ui",
                           "hideSideNav": false,
                           "icon": "process",
                           "entityType": "project.component",
@@ -237,31 +237,31 @@ Test Extension matches the snapshot:
                             {
                               "pathSegment": "setup",
                               "entityType": "project.component",
-                              "url": "https://test-domain/{i18n.currentLocale}/#/pipeline-ui/setup",
+                              "url": "https://test-domain/browser/{i18n.currentLocale}/#/pipeline-ui/setup",
                               "hideSideNav": false
                             },
                             {
                               "pathSegment": "pipeline-debug",
                               "entityType": "project.component",
-                              "url": "https://test-domain/{i18n.currentLocale}/#/pipeline-ui/pipeline-debug",
+                              "url": "https://test-domain/browser/{i18n.currentLocale}/#/pipeline-ui/pipeline-debug",
                               "hideSideNav": false
                             },
                             {
                               "pathSegment": "feedback",
                               "entityType": "project.component",
-                              "url": "https://test-domain/{i18n.currentLocale}/#/pipeline-ui/feedback",
+                              "url": "https://test-domain/browser/{i18n.currentLocale}/#/pipeline-ui/feedback",
                               "hideSideNav": false
                             },
                             {
                               "pathSegment": "import-pipeline",
                               "entityType": "project.component",
-                              "url": "https://test-domain/{i18n.currentLocale}/#/pipeline-ui/import-pipeline",
+                              "url": "https://test-domain/browser/{i18n.currentLocale}/#/pipeline-ui/import-pipeline",
                               "hideSideNav": false
                             },
                             {
                               "pathSegment": "cumulus-info",
                               "entityType": "project.component",
-                              "urlSuffix": "https://test-domain/{i18n.currentLocale}/#/pipeline-ui/cumulus-info",
+                              "urlSuffix": "https://test-domain/browser/{i18n.currentLocale}/#/pipeline-ui/cumulus-info",
                               "hideSideNav": false
                             }
                           ]
@@ -269,7 +269,7 @@ Test Extension matches the snapshot:
                         {
                           "pathSegment": "modal",
                           "entityType": "project.component",
-                          "url": "https://test-domain/{i18n.currentLocale}/#/modal",
+                          "url": "https://test-domain/browser/{i18n.currentLocale}/#/modal",
                           "hideSideNav": false
                         }
                       ]
@@ -423,7 +423,7 @@ githubActions feature enabled for some projects:
                         {
                           "pathSegment": "pipeline-ui",
                           "label": "CI/CD Setup",
-                          "url": "https://test-domain/{i18n.currentLocale}/#/pipeline-ui",
+                          "url": "https://test-domain/browser/{i18n.currentLocale}/#/pipeline-ui",
                           "hideSideNav": false,
                           "icon": "process",
                           "entityType": "project.component",
@@ -438,31 +438,31 @@ githubActions feature enabled for some projects:
                             {
                               "pathSegment": "setup",
                               "entityType": "project.component",
-                              "url": "https://test-domain/{i18n.currentLocale}/#/pipeline-ui/setup",
+                              "url": "https://test-domain/browser/{i18n.currentLocale}/#/pipeline-ui/setup",
                               "hideSideNav": false
                             },
                             {
                               "pathSegment": "pipeline-debug",
                               "entityType": "project.component",
-                              "url": "https://test-domain/{i18n.currentLocale}/#/pipeline-ui/pipeline-debug",
+                              "url": "https://test-domain/browser/{i18n.currentLocale}/#/pipeline-ui/pipeline-debug",
                               "hideSideNav": false
                             },
                             {
                               "pathSegment": "feedback",
                               "entityType": "project.component",
-                              "url": "https://test-domain/{i18n.currentLocale}/#/pipeline-ui/feedback",
+                              "url": "https://test-domain/browser/{i18n.currentLocale}/#/pipeline-ui/feedback",
                               "hideSideNav": false
                             },
                             {
                               "pathSegment": "import-pipeline",
                               "entityType": "project.component",
-                              "url": "https://test-domain/{i18n.currentLocale}/#/pipeline-ui/import-pipeline",
+                              "url": "https://test-domain/browser/{i18n.currentLocale}/#/pipeline-ui/import-pipeline",
                               "hideSideNav": false
                             },
                             {
                               "pathSegment": "cumulus-info",
                               "entityType": "project.component",
-                              "urlSuffix": "https://test-domain/{i18n.currentLocale}/#/pipeline-ui/cumulus-info",
+                              "urlSuffix": "https://test-domain/browser/{i18n.currentLocale}/#/pipeline-ui/cumulus-info",
                               "hideSideNav": false
                             }
                           ]
@@ -470,7 +470,7 @@ githubActions feature enabled for some projects:
                         {
                           "pathSegment": "modal",
                           "entityType": "project.component",
-                          "url": "https://test-domain/{i18n.currentLocale}/#/modal",
+                          "url": "https://test-domain/browser/{i18n.currentLocale}/#/modal",
                           "hideSideNav": false
                         }
                       ]

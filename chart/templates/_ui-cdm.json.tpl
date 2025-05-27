@@ -1,5 +1,6 @@
 {{- define "ui.cdm" }}
 {{ $url := printf "%s://%s" .Values.protocol .Values.site.domain -}}
+{{ $pipelineUIPath := printf "%s/browser/{i18n.currentLocale}/#/pipeline-ui" $url -}}
 {
   "_version": "3.0",
   "payload": {
@@ -14,7 +15,7 @@
             {
               "pathSegment": "pipeline-ui",
               "label": "CI/CD Setup",
-              "url": "{{$url}}/{i18n.currentLocale}/#/pipeline-ui",
+              "url": "{{$pipelineUIPath}}",
               "hideSideNav": false,
               "icon": "process",
               "entityType": "project.component",
@@ -31,31 +32,31 @@
                 {
                   "pathSegment": "setup",
                   "entityType": "project.component",
-                  "url": "{{$url}}/{i18n.currentLocale}/#/pipeline-ui/setup",
+                  "url": "{{$pipelineUIPath}}/setup",
                   "hideSideNav": false
                 },
                 {
                   "pathSegment": "pipeline-debug",
                   "entityType": "project.component",
-                  "url": "{{$url}}/{i18n.currentLocale}/#/pipeline-ui/pipeline-debug",
+                  "url": "{{$pipelineUIPath}}/pipeline-debug",
                   "hideSideNav": false
                 },
                 {
                   "pathSegment": "feedback",
                   "entityType": "project.component",
-                  "url": "{{$url}}/{i18n.currentLocale}/#/pipeline-ui/feedback",
+                  "url": "{{$pipelineUIPath}}/feedback",
                   "hideSideNav": false
                 },
                 {
                   "pathSegment": "import-pipeline",
                   "entityType": "project.component",
-                  "url": "{{$url}}/{i18n.currentLocale}/#/pipeline-ui/import-pipeline",
+                  "url": "{{$pipelineUIPath}}/import-pipeline",
                   "hideSideNav": false
                 },
                 {
                   "pathSegment": "cumulus-info",
                   "entityType": "project.component",
-                  "urlSuffix": "{{$url}}/{i18n.currentLocale}/#/pipeline-ui/cumulus-info",
+                  "urlSuffix": "{{$pipelineUIPath}}/cumulus-info",
                   "hideSideNav": false
                 }
               ]
@@ -63,7 +64,7 @@
             {
               "pathSegment": "modal",
               "entityType": "project.component",
-              "url": "{{$url}}/{i18n.currentLocale}/#/modal",
+              "url": "{{$url}}/browser/{i18n.currentLocale}/#/modal",
               "hideSideNav": false
             }
           ]
