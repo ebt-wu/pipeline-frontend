@@ -87,7 +87,7 @@
     "@types/node": "22.15.3",
     "@typescript-eslint/eslint-plugin": "8.31.1",
     "@typescript-eslint/parser": "8.31.1",
-    "angular-eslint": "18.4.3",
+    "angular-eslint": "19.5.0",
     "eslint": "^9.23.0",
     "eslint-config-prettier": "10.1.2",
     "eslint-plugin-import": "2.31.0",
